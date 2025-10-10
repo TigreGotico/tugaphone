@@ -3,6 +3,7 @@ from typing import Optional
 
 from tugaphone.lexicon import TugaLexicon
 from tugaphone.pos import TugaTagger
+from tugaphone.regional import DialectTransforms
 from tugaphone.tokenizer import Sentence as Tokenizer, EuropeanPortuguese, BrazilianPortuguese
 
 
@@ -26,9 +27,9 @@ class TugaPhonemizer:
     }
 
     def __init__(self, dictionary_path: str = None,
+                 regional_dialect: Optional[DialectTransforms] = None,
                  postag_engine="auto",
                  postag_model="pt_core_news_lg"):
-
         """
         Initialize the TugaPhonemizer by loading the regional lexicon and configuring the part-of-speech tagger.
 
@@ -37,6 +38,7 @@ class TugaPhonemizer:
             postag_engine (str): Tagging engine selection passed to TugaTagger (e.g., "auto" to let the tagger choose the best available engine).
             postag_model (str): Model name or identifier used by the POS tagger (for engines that accept a model parameter).
         """
+        self.regional_dialect = regional_dialect  # post-processor
         self.dictionary_path = dictionary_path or os.path.join(
             os.path.dirname(__file__), "regional_dict.csv"
         )
@@ -101,9 +103,22 @@ class TugaPhonemizer:
         Returns:
             phonemized (str): Space-separated phoneme tokens for each word; punctuation tokens are preserved unchanged.
         """
-        phonemized = [self._get_phones(word=tok, lang=lang, pos=pos)
-                      if pos != "PUNCT" else tok
-                      for tok, pos in self.postag.tag(sentence)]
+        if self.regional_dialect:
+            phonemiz = lambda tok, pos: self._get_phones(
+                word=self.regional_dialect.apply_morpheme(word=tok, postag=pos),
+                lang=lang,
+                pos=pos,
+                region=self.regional_dialect.base_region)
+            ipa_transform = lambda tok, pos: self.regional_dialect.apply_ipa(word=tok,
+                                                                             phonemes=phonemiz(tok, pos),
+                                                                             postag=pos)
+            phonemized = [ipa_transform(tok, pos)
+                          if pos != "PUNCT" else tok
+                          for tok, pos in self.postag.tag(sentence)]
+        else:
+            phonemized = [self._get_phones(word=tok, lang=lang, pos=pos)
+                          if pos != "PUNCT" else tok
+                          for tok, pos in self.postag.tag(sentence)]
 
         return " ".join(phonemized)
 
