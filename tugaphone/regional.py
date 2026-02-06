@@ -39,7 +39,7 @@ INVERSE_RULE_MAP: Dict[IPATransform, str] = {v: k for k, v in RULE_MAP.items()}
 
 
 @dataclass
-class DialectTransforms:
+class RegionalTransforms:
     morpheme_rules: List[MorphemeTransform] = field(default_factory=list)  # transform word before g2p
     ipa_rules: List[IPATransform] = field(default_factory=list)  # transform ipa after g2p
     base_region: Optional[str] = None  # for the bundled lexicon
@@ -76,7 +76,7 @@ class DialectTransforms:
         return word
 
     @staticmethod
-    def from_dict(data: Dict[str, str | List[str]]) -> 'DialectTransforms':
+    def from_dict(data: Dict[str, str | List[str]]) -> 'RegionalTransforms':
         """
         Create a DialectTransforms instance from a dictionary configuration.
 
@@ -87,7 +87,7 @@ class DialectTransforms:
                 - 'base_region': optional base lexicon identifier.
 
         Returns:
-            DialectTransforms: A new instance with `ipa_rules` set to the functions named in
+            RegionalTransforms: A new instance with `ipa_rules` set to the functions named in
             `data['ipa_rules']`, `morpheme_rules` left empty (pending implementation), and
             `base_region` set from the input (or None).
 
@@ -110,7 +110,7 @@ class DialectTransforms:
             # TODO - implement morpheme rules and update lookup map
             print(f"Warning: Morpheme rule '{rule_name}' is not yet implemented.")
 
-        return DialectTransforms(
+        return RegionalTransforms(
             ipa_rules=ipa_rules,
             morpheme_rules=morpheme_rules,
             base_region=base_region
@@ -149,21 +149,21 @@ COMMON_NORTHERN_RULES = [
     rhotic_realization  # Alveolar rhotic
 ]
 
-LisbonDialect = DialectTransforms(
+LisbonDialect = RegionalTransforms(
     base_region="lbx"  # Base G2P output, no additional transformations
 )
 
-CoimbraDialect = DialectTransforms(
+CoimbraDialect = RegionalTransforms(
     ipa_rules=NEUTRAL_RULES,
     base_region="lbx"
 )
 
-MinhoDialect = DialectTransforms(
+MinhoDialect = RegionalTransforms(
     ipa_rules=COMMON_NORTHERN_RULES,
     base_region="lbx"
 )
 
-BragaDialect = DialectTransforms(
+BragaDialect = RegionalTransforms(
     ipa_rules=[
         nasal_glide_palatalization,  # 'mãe' [mˈɐ̃j] → [mˈɐ̃jɲ]
         epenthetic_j_before_palatal,  # "bolacha" -> "bolaicha"  / "abelha" -> "abeilha"
@@ -172,7 +172,7 @@ BragaDialect = DialectTransforms(
     base_region="lbx"
 )
 
-FamalicaoDialect = DialectTransforms(
+FamalicaoDialect = RegionalTransforms(
     ipa_rules=[
         conservative_o_nasal_retention,  # "Famalicão" -> "Famalicoum"
         *COMMON_NORTHERN_RULES
@@ -180,7 +180,7 @@ FamalicaoDialect = DialectTransforms(
     base_region="lbx"
 )
 
-TrasMontanoDialect = DialectTransforms(
+TrasMontanoDialect = RegionalTransforms(
     ipa_rules=[
         palatal_affrication_ch,  # <ch> affrication  "tchouriço", "tchuva", "tchaves"
         initial_z_devoicing,  # 'zero' [ˈzeɾu] → [ˈseɾu]
@@ -191,7 +191,7 @@ TrasMontanoDialect = DialectTransforms(
     base_region="lbx"
 )
 
-PortoDialect = DialectTransforms(
+PortoDialect = RegionalTransforms(
     ipa_rules=[
         rising_diphthong_o,  # Puorto
         *COMMON_NORTHERN_RULES
@@ -199,7 +199,7 @@ PortoDialect = DialectTransforms(
     base_region="lbx"
 )
 
-FafeDialect = DialectTransforms(
+FafeDialect = RegionalTransforms(
     ipa_rules=[
         nasal_diphthongization_e, # "a geinte só sabe verdadeirameinte o que seinte quando esta doeinte"
         *COMMON_NORTHERN_RULES
@@ -207,11 +207,11 @@ FafeDialect = DialectTransforms(
     base_region="lbx"
 )
 
-RioJaneiroDialect = DialectTransforms(
+RioJaneiroDialect = RegionalTransforms(
     base_region="rjx"  # Base G2P output, no additional transformations
 )
 
-SaoPauloDialect = DialectTransforms(
+SaoPauloDialect = RegionalTransforms(
     base_region="spx"  # Base G2P output, no additional transformations
 )
 
@@ -257,7 +257,7 @@ if __name__ == "__main__":
     print(f"Porto Config (Serialized):\n{porto_config}")
 
     # Demonstrate deserialization
-    recreated_porto = DialectTransforms.from_dict(porto_config)
+    recreated_porto = RegionalTransforms.from_dict(porto_config)
     print(f"\nRecreated Porto has {len(recreated_porto.ipa_rules)} IPA rules.")
     # Show that the specific Porto rule (rising_diphthong_o) is present
     print(f"First rule is: {recreated_porto.ipa_rules[0].__name__}")

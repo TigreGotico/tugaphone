@@ -1,11 +1,12 @@
 from typing import Optional
 
+from tugaphone.dialects import (DialectInventory, LEXICON,
+                                EuropeanPortuguese, BrazilianPortuguese,
+                                AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
 from tugaphone.lexicon import TugaLexicon
 from tugaphone.pos import TugaTagger
-from tugaphone.regional import DialectTransforms
-from tugaphone.tokenizer import EuropeanPortuguese, BrazilianPortuguese, AngolanPortuguese, MozambicanPortuguese, \
-    TimoresePortuguese
-from tugaphone.tokenizer import Sentence, DialectInventory, LEXICON
+from tugaphone.regional import RegionalTransforms
+from tugaphone.tokenizer import Sentence, DialectInventory
 
 
 class TugaPhonemizer:
@@ -47,7 +48,7 @@ class TugaPhonemizer:
         return EuropeanPortuguese()
 
     def phonemize_sentence(self, sentence: str, lang: str = "pt-PT",
-                           regional_dialect: Optional[DialectTransforms] = None) -> str:
+                           regional_dialect: Optional[RegionalTransforms] = None) -> str:
         """
         Phonemizes a sentence for the given Portuguese dialect.
 
@@ -58,25 +59,26 @@ class TugaPhonemizer:
         Returns:
             phonemized (str): Space-separated phoneme tokens for each word; punctuation tokens are preserved unchanged.
         """
-        if regional_dialect:
-            tagged = self.postag.tag(sentence)
+        tagged = self.postag.tag(sentence)
 
+        if regional_dialect:
             # 1. apply morpheme transforms
             morph = lambda tok, pos: regional_dialect.apply_morpheme(word=tok, postag=pos)
-            words = [morph(tok, pos) for tok, pos in tagged]
-            morphed_sentence = " ".join(words)
+            tagged = [(morph(tok, pos), pos) for tok, pos in tagged]
+            morphed_sentence = " ".join([w[0] for w in tagged])
 
             # 2. phonemize
-            nlp = Sentence(surface=morphed_sentence, dialect=self.get_dialect_inventory(lang))
+            nlp = Sentence.from_postagged(surface=morphed_sentence,
+                                          tags=tagged,
+                                          dialect=self.get_dialect_inventory(lang))
             ipa_str = nlp.ipa
 
             # 3. apply IPA transforms
             ipa_transform = lambda ipa, tok, pos: regional_dialect.apply_ipa(word=tok, phonemes=ipa, postag=pos)
             morphed_ipa = [ipa_transform(ipa, word, pos) for ipa, (word, pos) in zip(ipa_str.split(), tagged)]
-
             return " ".join(morphed_ipa)
 
-        nlp = Sentence(surface=sentence, dialect=self.get_dialect_inventory(lang))
+        nlp = Sentence.from_postagged(surface=sentence, tags=tagged, dialect=self.get_dialect_inventory(lang))
         return nlp.ipa
 
 
