@@ -1439,7 +1439,7 @@ class EuropeanPortuguese(DialectInventory):
 class LisbonPortuguese(EuropeanPortuguese):
     def __init__(self):
         super().__init__(
-            dialect_code="pt-BR-x-lisbon",
+            dialect_code="pt-PT-x-lisbon",
         )
 
 
