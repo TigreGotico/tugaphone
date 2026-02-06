@@ -37,7 +37,87 @@ Portuguese exhibits significant phonological variation across regions:
 QUICK REFERENCES:
 ===========
 - http://www.portaldalinguaportuguesa.org
+- https://pt.wikipedia.org/wiki/Dialeto
+- https://pt.wikipedia.org/wiki/Dialetos_da_l%C3%ADngua_portuguesa
+- https://pt.wikipedia.org/wiki/L%C3%ADnguas_galaico-portuguesas
+- https://pt.wikipedia.org/wiki/Galego-portugu%C3%AAs
 
+pt-PT dialects:
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_europeu
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_do_Norte
+- https://pt.wikipedia.org/wiki/Dialecto_alentejano
+- https://pt.wikipedia.org/wiki/Dialecto_algarvio
+- https://pt.wikipedia.org/wiki/Dialecto_estremenho
+- https://pt.wikipedia.org/wiki/Dialecto_transmontano
+- https://pt.wikipedia.org/wiki/Dialecto_a%C3%A7oriano
+- https://pt.wikipedia.org/wiki/Dialecto_madeirense
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_oliventino
+
+pt-BR dialects:
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_brasileiro
+- https://pt.wikipedia.org/wiki/Dialeto_neutro
+- https://pt.wikipedia.org/wiki/Dialeto_da_costa_norte
+- https://pt.wikipedia.org/wiki/Dialeto_caipira
+- https://pt.wikipedia.org/wiki/Dialeto_baiano
+- https://pt.wikipedia.org/wiki/Dialeto_fluminense
+- https://pt.wikipedia.org/wiki/Dialeto_ga%C3%BAcho
+- https://pt.wikipedia.org/wiki/Dialeto_mineiro
+- https://pt.wikipedia.org/wiki/Dialeto_nordestino
+- https://pt.wikipedia.org/wiki/Dialeto_nortista
+- https://pt.wikipedia.org/wiki/Dialeto_paulistano
+- https://pt.wikipedia.org/wiki/Dialeto_sertanejo
+- https://pt.wikipedia.org/wiki/Dialeto_sulista_(Brasil)
+- https://pt.wikipedia.org/wiki/Dialeto_florianopolitano
+- https://pt.wikipedia.org/wiki/Dialeto_Carioca
+- https://pt.wikipedia.org/wiki/Dialeto_brasiliense
+- https://pt.wikipedia.org/wiki/Dialeto_da_serra_amaz%C3%B4nica
+- https://pt.wikipedia.org/wiki/Dialeto_recifense
+- https://pt.wikipedia.org/wiki/Amazofonia#Dialeto_Amaz%C3%B4nico_Ocidental
+
+African dialects:
+- https://pt.wikipedia.org/wiki/L%C3%ADngua_portuguesa_em_%C3%81frica
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_de_Angola
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_cabo-verdiano
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_da_Guin%C3%A9-Bissau
+- https://pt.wikipedia.org/wiki/L%C3%ADnguas_da_Guin%C3%A9_Equatorial#Portugu%C3%AAs
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_de_S%C3%A3o_Tom%C3%A9_e_Pr%C3%ADncipe
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_de_Mo%C3%A7ambique
+
+Angolan dialects:
+- https://pt.wikipedia.org/wiki/Dialeto_benguelense
+- https://pt.wikipedia.org/wiki/Dialeto_luandense
+- https://pt.wikipedia.org/wiki/Dialeto_sulista_(Angola)
+- https://pt.wikipedia.org/wiki/Dialeto_huambense
+
+Asian dialects:
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_de_Goa
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_de_Timor-Leste
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_de_Macau
+
+portuguese adjacent minority languages:
+- https://pt.wikipedia.org/wiki/L%C3%ADngua_mirandesa
+- https://pt.wikipedia.org/wiki/Dialeto_barranquenho
+- https://es.wikipedia.org/wiki/Leon%C3%A9s_rionor%C3%A9s
+- https://bibliotecadigital.ipb.pt/bitstream/10198/213/1/64%20-%20Dialecto%20rionor%C3%AAs.pdf
+- https://pt.wikipedia.org/wiki/Xalimego
+
+portuguese as a minority language
+- https://pt.wikipedia.org/wiki/L%C3%ADngua_portuguesa_na_Espanha
+- https://pt.wikipedia.org/wiki/Portugu%C3%AAs_uruguaio
+- https://pt.wikipedia.org/wiki/L%C3%ADnguas_da_%C3%81frica_do_Sul#L%C3%ADngua_portuguesa
+- https://pt.wikipedia.org/wiki/L%C3%ADnguas_de_Maur%C3%ADcio#L%C3%ADngua_portuguesa
+- https://pt.wikipedia.org/wiki/L%C3%ADnguas_da_Nam%C3%ADbia#L%C3%ADngua_portuguesa
+- https://pt.wikipedia.org/wiki/L%C3%ADnguas_do_Senegal#Portugu.C3.AAs
+- https://pt.wikipedia.org/wiki/L%C3%ADnguas_de_Essuat%C3%ADni#L%C3%ADngua_portuguesa
+- https://pt.wikipedia.org/wiki/L%C3%ADnguas_da_Z%C3%A2mbia#L.C3.ADngua_portuguesa
+
+portuguese creoles
+- https://pt.wikipedia.org/wiki/L%C3%ADnguas_crioulas_de_base_portuguesa
+- https://pt.wikipedia.org/wiki/Crioulos_afro-portugueses
+- https://pt.wikipedia.org/wiki/Crioulos_indo-portugueses
+- https://pt.wikipedia.org/wiki/Crioulos_malaio-portugueses
+- https://pt.wikipedia.org/wiki/Crioulos_sino-portugueses
+- https://pt.wikipedia.org/wiki/Crioulos_luso-americanos
 """
 import dataclasses
 import string
