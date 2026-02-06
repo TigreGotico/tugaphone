@@ -1,5 +1,6 @@
 import os
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Set
+from functools import cached_property
 
 # Typing helpers
 IPA_MAP = Dict[str, Dict[str, Dict[str, str]]]
@@ -38,10 +39,10 @@ class TugaLexicon:
         self.dictionary_path = dictionary_path or os.path.join(
             os.path.dirname(__file__), "regional_dict.csv"
         )
-        self.ipa, self.syllables = self._load_lang_map(self.dictionary_path)
+        self._ipa, self._syllables, self._regions = {}, {}, set() # lazy loaded
 
     @staticmethod
-    def _load_lang_map(path: str) -> Tuple[IPA_MAP, SYLLABLE_MAP]:
+    def _load_lang_map(path: str) -> Tuple[IPA_MAP, SYLLABLE_MAP, Set[str]]:
         """
         Load phoneme and syllable mappings from a CSV into region-indexed lookup structures.
 
@@ -59,6 +60,7 @@ class TugaLexicon:
         """
         ipa: IPA_MAP = {}
         syllables: SYLLABLE_MAP = {}
+        regions: Set[str] = set()
 
         with open(path, "r", encoding="utf-8") as f:
             for line in f.read().splitlines()[1:]:  # skip header
@@ -66,6 +68,7 @@ class TugaLexicon:
                 phonemes = phonemes.replace("|", "·").strip()
                 word = word.strip().lower()
                 region = region.strip()
+                regions.add(region)
                 if region not in syllables:
                     syllables[region] = {}
                 if region not in ipa:
@@ -75,7 +78,25 @@ class TugaLexicon:
                 syllables[region][word] = syl.strip().replace(" ", "|").split("|")
                 ipa[region][word][pos.upper()] = phonemes
 
-        return ipa, syllables
+        return ipa, syllables, regions
+
+    @property
+    def ipa(self) -> IPA_MAP:
+        if not self._ipa:
+            self._ipa, self._syllables, self._regions = self._load_lang_map(self.dictionary_path)
+        return self._ipa
+
+    @property
+    def syllables(self) -> SYLLABLE_MAP:
+        if not self._syllables:
+            self._ipa, self._syllables, self._regions = self._load_lang_map(self.dictionary_path)
+        return self._syllables
+
+    @property
+    def regions(self) -> Set[str]:
+        if not self._regions:
+            self._ipa, self._syllables, self._regions = self._load_lang_map(self.dictionary_path)
+        return self._regions
 
     def lang_to_region(self, lang: str) -> str:
         """
@@ -160,10 +181,26 @@ class TugaLexicon:
         except KeyError as e:
             raise ValueError(f"Unsupported dialect: {region}") from e
 
+    def get_ipa_map(self, pos: str = "NOUN", region: str = "lbx") -> Dict[str, str]:
+        return {
+            word: self.ipa[region][word][pos]
+            for word in self.ipa[region] if pos in self.ipa[region][word]
+        }
+
+    @cached_property
+    def possible_postags(self) -> Dict[str, List[str]]:
+        return {
+            word: list(self.ipa["lbx"][word].keys())
+            for word in self.ipa["lbx"]
+        }
+
+
 if __name__ == "__main__":
     ph = TugaLexicon()
+    print(ph.regions)
+    print(ph.possible_postags)
 
-    for w in ph.get_wordlist():
-        gold_pho = ph.get_phonemes(w)
-        if gold_pho:
-            print(w, gold_pho)
+    phoneme_dataset = ph.get_ipa_map()
+    for word, ipa in phoneme_dataset.items():
+        print(word, ipa)
+
