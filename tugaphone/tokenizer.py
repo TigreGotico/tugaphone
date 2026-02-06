@@ -3,7 +3,8 @@ Portuguese Orthography → IPA Transcription System
 
 This module provides comprehensive conversion from Portuguese orthography to
 International Phonetic Alphabet (IPA) notation, following prescriptive norms
-for European Portuguese (pt-PT) and Brazilian Portuguese (pt-BR).
+for European Portuguese (pt-PT), Brazilian Portuguese (pt-BR), and African
+Portuguese variants (pt-AO, pt-MZ, pt-TL).
 
 LINGUISTIC BACKGROUND:
 ======================
@@ -11,6 +12,41 @@ Portuguese orthography uses Latin script with diacritical marks to represent
 a rich phonological system. The relationship between spelling and pronunciation
 is relatively regular but includes context-sensitive rules, silent letters,
 and dialectal variations.
+
+DIALECTAL VARIATION:
+====================
+Portuguese exhibits significant phonological variation across regions:
+
+1. EUROPEAN PORTUGUESE (pt-PT):
+   - Heavy vowel reduction in unstressed positions
+   - Post-alveolar fricatives for syllable-final /s, z/
+   - Velarized/dark [ɫ] in coda position
+   - Uvular [ʁ] for strong R in most regions
+
+2. BRAZILIAN PORTUGUESE (pt-BR):
+   - Less vowel reduction (fuller vowel quality)
+   - Palatalization: /t, d/ → [tʃ, dʒ] before [i]
+   - L-vocalization: coda /l/ → [w] (creates new diphthongs)
+   - Glottal/velar [h, x] for strong R (region-dependent)
+   - Alveolar [s] for syllable-final /s/ (not palatalized)
+   - Nasal vowels less nasalized than European
+
+3. ANGOLAN PORTUGUESE (pt-AO):
+   - Similar to European but with substrate influence
+   - Less vowel reduction than European
+   - Consistent alveolar trill [r] for R
+   - Substrate-influenced prosody from Bantu languages
+
+4. MOZAMBICAN PORTUGUESE (pt-MZ):
+   - Similar to European with Bantu substrate
+   - Less vowel reduction
+   - May preserve distinctions lost in European
+   - Regional variation (north vs. south)
+
+5. TIMORESE PORTUGUESE (pt-TL):
+   - Influenced by Tetum and other Austronesian languages
+   - Similar to European base with local adaptations
+   - Less widespread native use (L2 features common)
 
 KEY PHONOLOGICAL CONCEPTS:
 --------------------------
@@ -22,15 +58,18 @@ KEY PHONOLOGICAL CONCEPTS:
 2. VOWEL QUALITY: Stressed vs unstressed vowels differ in quality and reduction
    - Stressed: fuller realization, can be open [ɛ, ɔ] or closed [e, o]
    - Unstressed: typically reduced to [ɨ] or [ɐ] in European Portuguese
+   - Brazilian: less reduction, maintains [e, o, a] quality
 
 3. NASALIZATION: Vowels can be oral or nasal
    - Marked by tilde (ã, õ) or followed by nasal consonant (m, n)
    - Creates distinct phonemes, not just allophones
+   - Less nasalized in Brazilian Portuguese
 
 4. DIPHTHONGS: Sequences of vowel + semivowel or semivowel + vowel
    - Falling/descending: vowel → semivowel (rei [ˈʁej])
    - Rising/ascending: semivowel → vowel (piano [ˈpjɐnu])
    - Can be oral or nasal
+   - Brazilian: additional diphthongs from L-vocalization
 
 IMPLEMENTATION ARCHITECTURE:
 ============================
@@ -62,6 +101,7 @@ QUICK REFERENCES:
 - https://pt.wikipedia.org/wiki/D%C3%ADgrafo
 - https://pt.wikipedia.org/wiki/Fonema
 - https://pt.wikipedia.org/wiki/Alofonia
+- http://www.portaldalinguaportuguesa.org
 """
 
 import dataclasses
@@ -69,6 +109,7 @@ import string
 from functools import cached_property
 from typing import List, Optional, Dict, Set
 
+from tugaphone.number_utils import normalize_numbers
 from tugaphone.syl import syllabify
 
 
@@ -239,10 +280,10 @@ class DialectInventory:
     # Organized by complexity: multigraphs first, then digraphs, then single chars
 
     # TETRAGRAPHS (4-letter sequences with special pronunciation)
-    TETRAGRAPH2IPA: Dict[str, str] = dataclasses.field(default_factory=dict)
+    TETRAGRAM2IPA: Dict[str, str] = dataclasses.field(default_factory=dict)
 
     # TRIGRAPHS (3-letter sequences)
-    TRIGRAPH2IPA: Dict[str, str] = dataclasses.field(default_factory=dict)
+    TRIGRAM2IPA: Dict[str, str] = dataclasses.field(default_factory=dict)
 
     # TRIPHTHONGS (vowel + semivowel + vowel in one syllable)
     # Rare in Portuguese: mostly in derived forms
@@ -344,8 +385,8 @@ class DialectInventory:
         self._initialize_hiatus_prefixes()
         self._initialize_diphthongs()
         self._initialize_triphthongs()
-        self._initialize_trigraphs()
-        self._initialize_tetragraphs()
+        self._initialize_trigrams()
+        self._initialize_tetragrams()
         self._initialize_default_chars()
         self._initialize_stress_rules()
         self._compile_grapheme_inventory()
@@ -868,7 +909,6 @@ class DialectInventory:
                 "ẽj": "em",  # bem, também (final position)
                 "õj": "õe",  # põe, limões
                 "ɐ̃w": "ão",  # cão, mão, pão
-                "ũj": "ui",  # muito (special nasalized case)
             }
 
         if not self.PTBR_DIPHTHONGS:
@@ -926,22 +966,13 @@ class DialectInventory:
         """
         if not self.TRIPHTHONG2IPA:
             self.TRIPHTHONG2IPA = {
-                # [j-e-j] sequence
-                "iei": "jej",  # chieira, macieira, pardieiro
-                # Alternative Lisbon realization:
-                # "iei": "jɐj",  # with vowel reduction
-
-                # [j-a-w] sequence
-                "iau": "jaw",  # miau
-
                 # [w-a-j] sequence
                 "uai": "waj",  # rare: Uruguai, Paraguai
-
                 # [w-ɐ̃-j] nasal sequence
                 "uão": "wɐ̃w",  # rare: saguão
             }
 
-    def _initialize_trigraphs(self):
+    def _initialize_trigrams(self):
         """
         Define three-letter graphemes with special pronunciations.
 
@@ -975,9 +1006,9 @@ class DialectInventory:
 
         We mark these for context-sensitive handling.
         """
-        if not self.TRIGRAPH2IPA:
-            self.TRIGRAPH2IPA = {
-                "tch": "tʃ", # the only true trigraph in portuguese
+        if not self.TRIGRAM2IPA:
+            self.TRIGRAM2IPA = {
+                "tch": "tʃ",  # the only true trigraph in portuguese
 
                 # QU/GU patterns (context-dependent, flagged for special handling)
                 "que": "kɨ",  # quero (default: u silent)
@@ -1007,7 +1038,7 @@ class DialectInventory:
                 "ões": "õj̃ʃ",  # plural -ões
             }
 
-    def _initialize_tetragraphs(self):
+    def _initialize_tetragrams(self):
         """
         Define four-letter graphemes (very rare).
 
@@ -1030,8 +1061,8 @@ class DialectInventory:
 
         Syllabification is variable and dialect-dependent.
         """
-        if not self.TETRAGRAPH2IPA:
-            self.TETRAGRAPH2IPA = {
+        if not self.TETRAGRAM2IPA:
+            self.TETRAGRAM2IPA = {
                 "aien": "ɐj.ẽ",  # gaiense, praiense, xangaiense
 
                 # Foreign words / proper nouns
@@ -1253,8 +1284,8 @@ class DialectInventory:
             all_graphemes.update(self.ALL_VOWEL_CHARS)
 
             # Add from all mapping dictionaries
-            all_graphemes.update(self.TETRAGRAPH2IPA.keys())
-            all_graphemes.update(self.TRIGRAPH2IPA.keys())
+            all_graphemes.update(self.TETRAGRAM2IPA.keys())
+            all_graphemes.update(self.TRIGRAM2IPA.keys())
             all_graphemes.update(self.TRIPHTHONG2IPA.keys())
             all_graphemes.update(self.DIGRAPH2IPA.keys())
             all_graphemes.update(self.DIPHTHONG2IPA.keys())
@@ -1277,6 +1308,12 @@ class DialectInventory:
             )
 
 
+# the base ruleset is based on Acordo Ortográfico de 1990, in effect since 2009
+# https://pt.wikipedia.org/wiki/Acordo_Ortogr%C3%A1fico_de_1990
+# http://www.portaldalinguaportuguesa.org/acordo.php
+AO1990 = DialectInventory(dialect_code="pt")
+
+
 # =============================================================================
 # DIALECT INSTANCES
 # =============================================================================
@@ -1287,55 +1324,59 @@ class EuropeanPortuguese(DialectInventory):
 
     CHARACTERISTIC FEATURES:
     ------------------------
-    1. Vowel reduction: Unstressed vowels reduce to [ɨ], [ɐ], [u]
-       - casa [ˈkazɐ]: first 'a' → [ɐ]
-       - pedir [pɨˈdiɾ]: first 'e' → [ɨ]
+    1. VOWEL REDUCTION: Unstressed vowels reduce heavily
+       - /a/ → [ɐ] in unstressed positions
+       - /e/ → [ɨ] (close central) in unstressed positions
+       - /o/ → [u] in unstressed positions
+       Example: "pedir" [pɨˈdiɾ], "casa" [ˈkazɐ]
 
-    2. Fricative coda: Final /s/ and /z/ → [ʃ] and [ʒ]
-       - três [ˈtɾeʃ]
-       - luz [ˈluʃ]
+    2. FRICATIVE PALATALIZATION: Final /s, z/ → [ʃ, ʒ]
+       - "três" [ˈtɾeʃ]
+       - "luz" [ˈluʃ]
+       - Before voiceless consonants: /s/ → [ʃ]
+       - Before voiced consonants: /s/ → [ʒ]
 
-    3. Dark L: Coda /l/ realized as velarized [ɫ] or vocalized [w]
-       - Brasil [bɾɐˈziɫ]
+    3. DARK L: Coda /l/ realized as velarized [ɫ]
+       - "Brasil" [bɾɐˈziɫ]
+       - "mal" [ˈmaɫ]
 
-    4. Uvular R: /ʁ/ (uvular fricative) common in Lisbon
-       - rato [ˈʁatu]
+    4. UVULAR R: Strong /R/ often realized as uvular [ʁ]
+       - "rato" [ˈʁatu]
+       - "carro" [ˈkaʁu]
+       (Some regions use alveolar trill [r])
 
-    Regional variation exists (Porto vs Lisbon vs Algarve),
-    but we implement a standard/Lisbon-based system.
+    5. NASAL VOWELS: Highly nasalized
+       - "mão" [ˈmɐ̃w̃]
+       - "bem" [ˈbẽj̃]
     """
 
     def __init__(self):
-        super().__init__(dialect_code="pt-PT")
-        # European-specific irregular words
-        self.IRREGULAR_WORDS = {
-            # "ui" nasalized in "muito"
-            "muito": "ˈmũj.tu",
-            # Single-syllable special cases
-            "miau": "ˈmjaw",
-        }
+        super().__init__(
+            dialect_code="pt-PT",
+            FALLING_NASAL_DIPHTHONGS={
+                **AO1990.FALLING_NASAL_DIPHTHONGS,
+                "ũj": "ui",  # muito (special nasalized case)
+            },
+            TRIPHTHONG2IPA={
+                **AO1990.TRIPHTHONG2IPA,
+                # [j-e-j] sequence
+                "iei": "jej",  # chieira, macieira, pardieiro
+                # Alternative Lisbon realization:
+                # "iei": "jɐj",  # with vowel reduction
+                # [j-a-w] sequence
+                "iau": "jaw",  # miau
+            },
+            IRREGULAR_WORDS={
+                # "ui" nasalized in "muito"
+                "muito": "ˈmũj.tu",
+                # Single-syllable special cases
+                "miau": "ˈmjaw",
+            })
 
 
-class EuropeanPortugueseLisbon(EuropeanPortuguese):
-    """
-    Lisbon dialect of European Portuguese.
-
-    DISTINGUISHING FEATURES:
-    ------------------------
-    1. Diphthong reduction: [ej] → [ɐj] in unstressed position
-       - caseira [kɐˈzɐjɾɐ] (Lisbon) vs [kɐˈzejɾɐ] (general)
-
-    2. /ɛ/ raising: Sometimes [ɛ] → [ɐ] in unstressed syllables
-
-    3. Vowel centralization: More extreme reduction than other regions
-
-    This is a placeholder for future Lisbon-specific rules.
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.dialect_code = "pt-PT-x-lisbon"
-
+# =============================================================================
+# BRAZILIAN PORTUGUESE (pt-BR)
+# =============================================================================
 
 class BrazilianPortuguese(DialectInventory):
     """
@@ -1343,40 +1384,213 @@ class BrazilianPortuguese(DialectInventory):
 
     MAJOR DIFFERENCES FROM EUROPEAN:
     --------------------------------
-    1. Less vowel reduction: Unstressed vowels keep fuller quality
-       - casa [ˈkazɐ] (European) vs [ˈkaza] (Brazilian)
-       - pedir [pɨˈdiɾ] (European) vs [peˈdʒiɾ] (Brazilian)
+    1. LESS VOWEL REDUCTION: Unstressed vowels maintain quality
+       - European: "pedir" [pɨˈdiɾ] vs. Brazilian: "pedir" [peˈdʒiɾ]
+       - European: "casa" [ˈkazɐ] vs. Brazilian: "casa" [ˈkaza]
+       - /a/ stays [a] (not reduced to [ɐ])
+       - /e/ stays [e] (not reduced to [ɨ])
+       - /o/ stays [o] (not reduced to [u])
 
-    2. Palatalization: /t, d/ → [tʃ, dʒ] before [i]
-       - tia [ˈtʃiɐ] (Brazilian) vs [ˈtiɐ] (European)
-       - dia [ˈdʒiɐ] (Brazilian) vs [ˈdiɐ] (European)
+    2. PALATALIZATION: /t, d/ → [tʃ, dʒ] before [i]
+       - "tia" [ˈtʃiɐ] (European: [ˈtiɐ])
+       - "dia" [ˈdʒiɐ] (European: [ˈdiɐ])
+       - "noite" [ˈnojtʃi] (European: [ˈnojtɨ])
+       - "grande" [ˈɡɾɐ̃dʒi] (European: [ˈɡɾɐ̃dɨ])
 
-    3. L-vocalization: Coda /l/ → [w] (creates new diphthongs)
-       - Brasil [bɾaˈziw]
-       - mal [ˈmaw]
-       - sol [ˈsɔw]
+    3. L-VOCALIZATION: Syllable-final /l/ → [w]
+       - "Brasil" [bɾaˈziw] (European: [bɾɐˈziɫ])
+       - "mal" [ˈmaw] (European: [ˈmaɫ])
+       - "sol" [ˈsɔw] (European: [ˈsɔɫ])
+       - Creates new diphthongs: -al, -el, -il, -ol, -ul
 
-    4. Different R: [h], [x], or [ʁ] depending on region
-       - Rio: carro [ˈkaху]
-       - São Paulo: carro [ˈkaʁu]
-       - Rural: carro [ˈkaʀu] (trill preserved)
+    4. DIFFERENT R SOUNDS: Regional variation
+       - São Paulo/South: [ɾ] (tap) and [x]/[h] (velar/glottal fricative)
+       - Rio: [ʁ] (uvular) and [x]/[h]
+       - Rural areas: May preserve alveolar trill [r]
+       - "carro" [ˈkaxu] (SP) vs. [ˈkaʁu] (Rio) vs. [ˈkaru] (rural)
 
-    5. Final /s/: Stays [s], doesn't palatalize to [ʃ]
-       - três [ˈtɾes] (Brazilian) vs [ˈtɾeʃ] (European)
+    5. FINAL /s/: Stays [s], doesn't palatalize
+       - "três" [ˈtɾes] (European: [ˈtɾeʃ])
+       - "nós" [ˈnɔs] (European: [ˈnɔʃ])
 
-    6. Nasal vowels: Less nasalization than European
+    6. LESS NASAL: Nasal vowels less nasalized than European
+       - Nasalization is lighter
+       - May have shorter nasal quality
 
-    Regional variation is EXTENSIVE (Northeast vs Southeast vs South).
-    We implement a relatively neutral/São Paulo-based system.
+    7. OPEN VOWELS IN STRESSED POSITION:
+       - Greater tendency toward open vowels [ɛ, ɔ] when stressed
+       - "café" [kaˈfɛ]
+       - "avô" [aˈvɔ]
     """
 
     def __init__(self):
-        super().__init__(dialect_code="pt-BR")
+        super().__init__(
+            dialect_code="pt-BR",
+            DIGRAPH2IPA = {
+                **AO1990.DIGRAPH2IPA,
+                "rr": "h"  # DIVERGENCE: Brazilian uses [h] or [x] instead of [ʁ]
+            },
+            DEFAULT_CHAR2PHONEMES={
+                **AO1990.DEFAULT_CHAR2PHONEMES,
+                # VOWELS - LESS REDUCTION IN BRAZILIAN
+                "a": "a",  # DIVERGENCE: stays [a], not [ɐ]
+                "â": "a",  # DIVERGENCE: stays [a], not [ɐ]
+                "e": "e",  # DIVERGENCE: stays [e], not [ɨ]
+                "o": "o",  # DIVERGENCE: stays [o], not [u]
+                # CONSONANTS
+                "r": "ɾ",  # DIVERGENCE: tap, strong R is [h]
+            }
+        )
 
-        # Brazilian-specific features
-        # TODO: Implement palatalization rules (t/d before i)
-        # TODO: Implement L-vocalization (activate PTBR_DIPHTHONGS)
-        # TODO: Implement different vowel reduction patterns
+
+# =============================================================================
+# ANGOLAN PORTUGUESE (pt-AO)
+# =============================================================================
+
+class AngolanPortuguese(DialectInventory):
+    """
+    Angolan Portuguese phonological inventory.
+
+    CHARACTERISTIC FEATURES:
+    ------------------------
+    1. BASE: Similar to European Portuguese but with modifications
+
+    2. VOWEL REDUCTION: Less reduction than European, more than Brazilian
+       - Intermediate between European and Brazilian
+       - Influenced by Bantu substrate (Kimbundu, Umbundu, Kikongo)
+
+    3. R SOUNDS: Consistent alveolar trill [r]
+       - Preserves distinction between tap [ɾ] and trill [r]
+       - More conservative than European or Brazilian
+       - "carro" [ˈkaru] (not [ˈkaʁu] or [ˈkaxu])
+
+    4. PROSODY: Influenced by Bantu tone languages
+       - May have different intonation patterns
+       - Stress patterns similar to European
+
+    5. FINAL /s/: Generally [ʃ] like European
+       - "três" [ˈtɾeʃ]
+
+    6. SUBSTRATE INFLUENCE: Phonological features from Bantu languages
+       - May preserve some consonant distinctions
+       - Prosodic patterns influenced by L1 Bantu speakers
+    """
+
+    def __init__(self):
+        super().__init__(dialect_code="pt-AO",
+                         DIGRAPH2IPA={
+                             **AO1990.DIGRAPH2IPA,
+                             "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
+                         },
+                         # Moderate vowel reduction (between European and Brazilian)
+                         DEFAULT_CHAR2PHONEMES={
+                             **AO1990.DEFAULT_CHAR2PHONEMES,
+                             "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
+                             "o": "o",  # DIVERGENCE: Less reduction than European [u]
+                             "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
+                         }
+         )
+
+
+# =============================================================================
+# MOZAMBICAN PORTUGUESE (pt-MZ)
+# =============================================================================
+
+class MozambicanPortuguese(DialectInventory):
+    """
+    Mozambican Portuguese phonological inventory.
+
+    CHARACTERISTIC FEATURES:
+    ------------------------
+    1. BASE: Similar to European Portuguese with Bantu substrate
+
+    2. VOWEL REDUCTION: Variable, generally less than European
+       - Influenced by substrate languages (Makhuwa, Tsonga, Sena)
+       - May preserve more vowel distinctions
+
+    3. R SOUNDS: Alveolar trill [r] common
+       - Similar to Angolan Portuguese
+       - "carro" [ˈkaru]
+
+    4. REGIONAL VARIATION:
+       - North (Nampula): More substrate influence
+       - South (Maputo): Closer to European/South African Portuguese
+
+    5. FINAL /s/: Generally [ʃ] like European
+       - "nós" [ˈnɔʃ]
+
+    6. PROSODY: Bantu-influenced intonation
+       - May have different rhythm patterns
+    """
+
+    def __init__(self):
+        super().__init__(dialect_code="pt-MZ",
+                         DIGRAPH2IPA={
+                             **AO1990.DIGRAPH2IPA,
+                             "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
+                         },
+                         # Moderate vowel reduction (between European and Brazilian)
+                         DEFAULT_CHAR2PHONEMES={
+                             **AO1990.DEFAULT_CHAR2PHONEMES,
+                             "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
+                             "o": "o",  # DIVERGENCE: Less reduction than European [u]
+                             "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
+                         }
+         )
+
+
+# =============================================================================
+# TIMORESE PORTUGUESE (pt-TL)
+# =============================================================================
+
+class TimoresePortuguese(DialectInventory):
+    """
+    Timorese Portuguese (East Timor) phonological inventory.
+
+    CHARACTERISTIC FEATURES:
+    ------------------------
+    1. BASE: European Portuguese with Austronesian substrate influence
+       - Primary substrate: Tetum
+       - Also influenced by Indonesian
+
+    2. L2 FEATURES: Portuguese often learned as second language
+       - May show substrate transfer from Tetum
+       - More conservative/formal pronunciation
+       - Less naturalistic reduction
+
+    3. VOWEL SYSTEM: Similar to European but may be simpler
+       - Less vowel reduction than European
+       - May neutralize some distinctions
+
+    4. R SOUNDS: Variable
+       - May use alveolar tap [ɾ] and trill [r]
+       - Less uvular [ʁ] than European
+
+    5. FINAL /s/: Generally [ʃ] like European
+       - "nós" [ˈnɔʃ]
+
+    6. SMALLER SPEAKER BASE: Portuguese is official but less widely native
+       - More formal/prescriptive forms common
+       - Less dialectal innovation
+    """
+
+    def __init__(self):
+        super().__init__(dialect_code="pt-TL")
+
+        super().__init__(dialect_code="pt-MZ",
+                         DIGRAPH2IPA={
+                             **AO1990.DIGRAPH2IPA,
+                             "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
+                         },
+                         # Moderate vowel reduction (between European and Brazilian)
+                         DEFAULT_CHAR2PHONEMES={
+                             **AO1990.DEFAULT_CHAR2PHONEMES,
+                             "a": "a",  # DIVERGENCE: Less reduction
+                             "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
+                             "o": "o",  # DIVERGENCE: Less reduction than European [u]
+                             "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
+                         }
+         )
 
 
 # =============================================================================
@@ -1933,18 +2147,30 @@ class CharToken:
                      "lhe", "lho", "lha",
                      "lhes", "lhos", "lhas"]
             if word in preps + dets + prons + contr:
-                if s == "a":
-                    return "ɐ"
-                if s == "e":
-                    return "ɨ"
-                if s == "o":
-                    return "u"
+                # Brazilian Portuguese: less reduction
+                if self.dialect.dialect_code.startswith("pt-BR"):
+                    if s == "a":
+                        return "a"  # Less reduction
+                    if s == "e":
+                        return "e"  # Less reduction
+                    if s == "o":
+                        return "o"  # Less reduction
+                else:
+                    # European/African: more reduction
+                    if s == "a":
+                        return "ɐ"
+                    if s == "e":
+                        return "ɨ"
+                    if s == "o":
+                        return "u"
 
             # Override with stress-based quality for ambiguous vowels
             if s == "a":
                 return "a" if self.has_primary_stress or self.has_secondary_stress else "ɐ"
             elif s == "e":
-                return "ɛ" if self.has_primary_stress else "ɨ"
+                if self.dialect.dialect_code.startswith("pt-PT"):
+                    return "ɛ" if self.has_primary_stress else "ɨ"
+                return "ɛ" if self.has_primary_stress else "e"
             elif s == "o":
                 return "ɔ" if self.has_primary_stress or self.has_secondary_stress else "u"
 
@@ -1972,9 +2198,21 @@ class CharToken:
         next_char = self.next_char.normalized if self.next_char else ""
         prev_char = self.prev_char.normalized if self.prev_char else ""
 
+        # BRAZILIAN PORTUGUESE: t/d palatalization before [i]
+        if self.dialect.dialect_code.startswith("pt-BR"):
+            if s == "t" and next_char == "i":
+                return "tʃ"
+            if s == "d" and next_char == "i":
+                return "dʒ"
+
+            # L-vocalization in coda position
+            if s == "l" and self.is_last_word_letter:
+                return "w"
+            if s == "l" and self.next_char and self.next_char.is_consonant:
+                return "w"
+
         # C before front vowels → [s]
         if s == "c" and next_char in self.dialect.FRONT_VOWEL_CHARS:
-            print(s, next_char, self.dialect.FRONT_VOWEL_CHARS)
             return "s"
 
         # G before front vowels → [ʒ]
@@ -1983,11 +2221,21 @@ class CharToken:
 
         # Initial R → strong R [ʁ]
         if s == "r" and self.is_first_word_letter:
-            return "ʁ"
+            if self.dialect.dialect_code.startswith("pt-BR"):
+                return "h"  # Brazilian [h] or [x]
+            elif self.dialect.dialect_code.startswith("pt-PT"):
+                return "ʁ"  # European uvular
+            else:
+                return "r"  # African/Timorese alveolar trill
 
         # R after l, n, s → strong R
         if s == "r" and prev_char in "lns":
-            return "ʁ"
+            if self.dialect.dialect_code.startswith("pt-BR"):
+                return "h"  # Brazilian [h] or [x]
+            elif self.dialect.dialect_code.startswith("pt-PT"):
+                return "ʁ"  # European uvular
+            else:
+                return "r"  # African/Timorese alveolar trill
 
         # S between vowels → [z]
         if s == "s" and self.is_intervocalic:
@@ -2010,7 +2258,15 @@ class CharToken:
 
         # Z word-finally → [ʃ] (European) or [s]
         if s == "z" and self.is_last_word_letter:
-            return "ʃ" if self.dialect.dialect_code.startswith("pt-PT") else "s"
+            if self.dialect.dialect_code.startswith("pt-BR"):
+                return "s"  # Brazilian: [s]
+            else:
+                return "ʃ"  # European/African: [ʃ]
+
+        # L word-finally (Brazilian vocalization handled above)
+        if s == "l" and self.is_last_word_letter:
+            if self.dialect.dialect_code.startswith("pt-PT"):
+                return "ɫ"  # European dark L
 
         # Default mapping
         return self.dialect.DEFAULT_CHAR2PHONEMES.get(s, s)
@@ -2585,7 +2841,7 @@ class GraphemeToken:
         - coo: prefix boundary
         - ção: common suffix
         """
-        return self.normalized in self.dialect.TRIGRAPH2IPA
+        return self.normalized in self.dialect.TRIGRAM2IPA
 
     @cached_property
     def is_consonant_hiatus(self) -> bool:
@@ -2684,11 +2940,11 @@ class GraphemeToken:
             return "ũj"
 
         # Check multi-character lookups (longest first)
-        if s in self.dialect.TETRAGRAPH2IPA:
-            return self.dialect.TETRAGRAPH2IPA[s]
+        if s in self.dialect.TETRAGRAM2IPA:
+            return self.dialect.TETRAGRAM2IPA[s]
 
-        if s in self.dialect.TRIGRAPH2IPA:
-            return self.dialect.TRIGRAPH2IPA[s]
+        if s in self.dialect.TRIGRAM2IPA:
+            return self.dialect.TRIGRAM2IPA[s]
 
         if s in self.dialect.NASAL_DIGRAPHS:
             return self.dialect.NASAL_DIGRAPHS[s]
@@ -3217,12 +3473,12 @@ class Sentence:
     # =========================================================================
     # BASIC PROPERTIES
     # =========================================================================
-
     @cached_property
     def normalized(self) -> str:
         """Lowercase, stripped form of sentence."""
         # Remove leading/trailing punctuation and whitespace
-        return self.surface.lower().strip(string.punctuation + string.whitespace)
+        text = self.surface.lower().strip(string.punctuation + string.whitespace)
+        return normalize_numbers(text)
 
     @property
     def n_words(self) -> int:
@@ -3369,7 +3625,6 @@ if __name__ == "__main__":
     - Consonant digraphs
     - Challenging orthographic patterns
     """
-
     print("=" * 80)
     print("PORTUGUESE ORTHOGRAPHY → IPA TRANSCRIPTION SYSTEM")
     print("=" * 80)
@@ -3404,3 +3659,30 @@ if __name__ == "__main__":
         print()
 
     print("\nTranscription complete!")
+
+    examples = [
+        "O cão comeu o pão.",
+        "Três tigres tristes.",
+        "Brasil é bonito.",
+        "A tia comeu muito.",
+    ]
+
+    dialects = [
+        ("European", EuropeanPortuguese()),
+        ("Brazilian", BrazilianPortuguese()),
+        ("Angolan", AngolanPortuguese()),
+        ("Mozambican", MozambicanPortuguese()),
+        ("Timorese", TimoresePortuguese()),
+    ]
+
+    for example in examples:
+        print(f"\nExample: {example}")
+        print("-" * 80)
+        for name, dialect in dialects:
+            sent = Sentence(example, dialect=dialect)
+            print(f"{name:15} [{dialect.dialect_code}]: {sent.ipa}")
+        print()
+
+    print("\nDetailed analysis: pt-BR")
+    print("=" * 80)
+    demonstrate_transcription("A tia comeu muito pão.", BrazilianPortuguese())
