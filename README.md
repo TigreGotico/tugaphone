@@ -1,24 +1,29 @@
 # TugaPhone — Dialect-aware Portuguese Phonemizer
 
-**TugaPhone** is a Python library that phonemizes arbitrary Portuguese text across major Lusophone dialects (pt-PT, pt-BR, pt-AO, pt-MZ, pt-TL). It uses a curated phonetic lexicon plus eSpeak fallback to deliver plausible phoneme transcriptions while preserving dialectal variation.
+**TugaPhone** is a Python library that phonemizes arbitrary Portuguese text across major Lusophone dialects (pt-PT, pt-BR, pt-AO, pt-MZ, pt-TL). It uses a curated phonetic lexicon plus a rule-based fallback to deliver plausible phoneme transcriptions while preserving dialectal variation.
 
 ```
-O comboio chegou à estação.
-pt-PT → u kõbˈɔju ʃɨɡˈow ˌɐ iʃtɐsˈɐ̃w .
-pt-BR → u kõbˈojʊ ʃɨɡˈow ˌɐ iʃtasˈɐ̃w .
-pt-AO → u kõmbˈɔjʊ ʃɨɡˈow ˌɐ ɨʃtɐsˈɐ̃w .
-pt-MZ → u kõbˈɔju ʃɨɡˈow ˌɐ eʃtɐsˈãw .
-pt-TL → u kõmbˈɔjʊ ʃɨɡˈow ˌɐ ʃtəsˈə̃w .
+Choveu muito ontem à noite.
+pt-PT-x-porto → ˈʃɔ·vew mˈũj·tu õ·ˈtẽ ˈa nˈuoj·tɨ 
+pt-PT → ˈʃɔ·vew mˈũj·tu õ·ˈtẽ ˈa nˈoj·tɨ 
+pt-BR → ˈʃɔ·vew mwˈĩ·tʊ õ·ˈtẽ ˈa nˈoj·tʃɪ 
+pt-AO → ˈʃɔ·vew mˈũjn·tʊ õ·ˈtẽ ˈa nˈoj·tɨ 
+pt-MZ → ˈʃɔ·vew mˈũj·tu õ·ˈtẽ ˈa nˈɔj·tɨ 
+pt-TL → ˈʃɔ·vew mˈuj·tʊ õ·ˈtẽ ˈa nˈojtʰ 
 ```
 
 ---
 
 ## 🚀 Features
 
-* Converts from ISO dialect codes like `pt-PT`, `pt-BR`, `pt-AO`, `pt-MZ`, `pt-TL` to internal region codes.
-* Uses a **phonetic dictionary** ([Portuguese Phonetic Lexicon](](https://huggingface.co/datasets/TigreGotico/portuguese_phonetic_lexicon))) for known words.
-* Takes postag into account when looking up words (via spacy)
-* Falls back to **eSpeak** for unseen words.
+- **Multi-dialect support**: European Portuguese (pt-PT), Brazilian Portuguese (pt-BR), Angolan (pt-AO), Mozambican (pt-MZ), and Timorese (pt-TL)
+- **Regional accent modeling**: Additional micro-dialects like Porto, Minho, Braga, Trás-os-Montes, and more
+- **Hybrid approach**: Combines a curated phonetic lexicon ([Portuguese Phonetic Lexicon](https://huggingface.co/datasets/TigreGotico/portuguese_phonetic_lexicon)) with rule-based G2P fallback
+- **Context-aware**: Takes part-of-speech tags into account for homograph disambiguation
+- **Number normalization**: Automatically converts digits to their Portuguese spoken forms with proper gender agreement
+- **Syllabification**: Rule-based syllable boundary detection (~99.6% accuracy on benchmark)
+- **Stress detection**: Automatic stress placement following Portuguese phonological rules
+- **IPA output**: Full International Phonetic Alphabet transcription with stress markers and syllable boundaries
 
 ---
 
@@ -26,24 +31,13 @@ pt-TL → u kõmbˈɔjʊ ʃɨɡˈow ˌɐ ʃtəsˈə̃w .
 
 ```bash
 pip install tugaphone
-# or if developing:
-pip install -e .
-```
-
-Ensure you also have `pt_core_news_lg` model for SpaCy:
-
-```bash
-python -m spacy download pt_core_news_lg
-```
-
-the `espeak` binary needs to be available, installing it will depend on your distro
-```bash
-sudo apt-get install espeak-ng
 ```
 
 ---
 
 ## 🧰 Usage
+
+### Basic Phonemization
 
 ```python
 from tugaphone import TugaPhonemizer
@@ -64,24 +58,187 @@ for s in sentences:
         phones = ph.phonemize_sentence(s, code)
         print(f"  {code} → {phones}")
     print("-----")
+```
 
+### Regional Dialects
+
+```python
+from tugaphone import TugaPhonemizer
+from tugaphone.regional import PortoDialect, MinhoDialect, BragaDialect
+
+ph = TugaPhonemizer()
+
+sentence = "O Porto é uma cidade bonita."
+
+# Standard European Portuguese
+print(f"pt-PT: {ph.phonemize_sentence(sentence, 'pt-PT')}")
+
+# Porto accent (rising diphthongs, rhotic realization)
+print(f"Porto: {ph.phonemize_sentence(sentence, regional_dialect=PortoDialect)}")
+
+# Minho accent (vowel resistance, open vowels)
+print(f"Minho: {ph.phonemize_sentence(sentence, regional_dialect=MinhoDialect)}")
+```
+
+### Number Normalization
+
+```python
+from tugaphone.number_utils import normalize_numbers
+
+# Automatic gender agreement
+print(normalize_numbers("vou comprar 1 casa"))    # uma casa
+print(normalize_numbers("vou comprar 2 casas"))   # duas casas
+print(normalize_numbers("vou adotar 1 cão"))      # um cão
+print(normalize_numbers("vou adotar 2 cães"))     # dois cães
+
+# Ordinals
+print(normalize_numbers("1º lugar"))              # primeiro lugar
+print(normalize_numbers("1ª vez"))                # primeira vez
+
+# Large numbers with scale differences
+print(normalize_numbers("897654356789098", "pt-PT"))  # long-scale (biliões)
+print(normalize_numbers("897654356789098", "pt-BR"))  # short-scale (trilhões)
+```
+
+### Syllabification
+
+```python
+from tugaphone.syl import syllabify
+
+words = ["casa", "Brasil", "extraordinário", "português"]
+
+for word in words:
+    syllables = syllabify(word)
+    print(f"{word} → {'.'.join(syllables)}")
+
+# Output:
+# casa → ca.sa
+# Brasil → bra.sil
+# extraordinário → ex.tra.or.di.ná.rio
+# português → por.tu.guês
+```
+
+### Advanced: Tokenization and Features
+
+```python
+from tugaphone.tokenizer import Sentence
+from tugaphone.dialects import EuropeanPortuguese
+
+sentence = Sentence("O cão comeu o pão.", dialect=EuropeanPortuguese())
+
+print(f"IPA: {sentence.ipa}")
+
+# Access word-level details
+for word in sentence.words:
+    print(f"\nWord: {word.surface}")
+    print(f"  Syllables: {'.'.join(word.syllables)}")
+    print(f"  Stress: syllable {word.stressed_syllable_idx}")
+    print(f"  IPA: {word.ipa}")
+    
+    # Access grapheme-level details
+    for grapheme in word.graphemes:
+        if grapheme.is_diphthong:
+            print(f"  Diphthong: {grapheme.surface} → {grapheme.ipa}")
 ```
 
 ---
 
-## 🔧 Implementation Notes
+## 📖 Documentation
 
-* The mapping from dialect code → region is deterministic. `pt-BR → rjx` (Rio de Janeiro) is chosen as the canonical Brazilian accent.
-* If a word is in the dictionary for the relevant region, it’s used (with part-of-speech fallback).
-* Otherwise, `eSpeak` is invoked with the dialect code (either `pt-PT` or `pt-BR`).
-* The library normalizes input text (numbers, dates, time...) before tokenization.
-* SpaCy is used only for POS tags (no parsing or NER).
+### Supported Dialects
+
+| Dialect Code | Region | Characteristics |
+|-------------|--------|-----------------|
+| `pt-PT` | European Portuguese (Lisbon) | Heavy vowel reduction, fricative palatalization, uvular /r/ |
+| `pt-BR` | Brazilian Portuguese (Rio) | Less vowel reduction, t/d palatalization, l-vocalization |
+| `pt-AO` | Angolan Portuguese (Luanda) | Moderate vowel reduction, alveolar trill /r/, Bantu substrate |
+| `pt-MZ` | Mozambican Portuguese (Maputo) | Similar to European with regional variation, Bantu influence |
+| `pt-TL` | Timorese Portuguese (Dili) | Conservative pronunciation, Tetum substrate influence |
+
+### Regional Accents (Experimental)
+
+TugaPhone includes experimental support for sub-regional Portuguese accents:
+
+- **PortoDialect**: Rising diphthongs (o → uo), rhotic realization
+- **MinhoDialect**: Reduced vowel centralization, open vowel preference
+- **BragaDialect**: Palatal epenthesis (abelha → abeilha)
+- **TrasMontanoDialect**: Palatal affrication, s-voicing, final nasal denasalization
+- **FafeDialect**: Nasal diphthongization (gente → geinte)
+
+**Note**: These are based on documented phonological features but should be considered approximate. Real-world variation is more complex.
+
+### Part-of-Speech Tagging
+
+TugaPhone uses POS tags to disambiguate homographs:
+
+```python
+from tugaphone import TugaPhonemizer
+
+ph = TugaPhonemizer(postag_engine="spacy")  # or "brill", "auto"
+
+# "para" has different pronunciations as preposition vs. verb
+print(ph.phonemize_sentence("Vou para casa."))      # preposition
+print(ph.phonemize_sentence("Ele para o carro."))   # verb
+```
+
+Supported engines:
+- `spacy`: Requires `spacy` and Portuguese model (most accurate)
+- `brill`: Requires `brill-postaggers` (lighter, faster)
+- `lexicon`: Uses built-in lexicon lookup (limited coverage)
+- `auto`: Falls back through available engines
+- `dummy`: Simple rule-based fallback (no dependencies)
+
+---
+
+## 🏗️ Architecture
+
+TugaPhone uses a hierarchical tokenization model:
+
+```
+Sentence → Words → Graphemes → Characters
+```
+
+Each level applies context-sensitive phonological rules:
+
+1. **Character level**: Vowel quality, consonant allophones
+2. **Grapheme level**: Digraphs (ch, nh), diphthongs (ai, ou)
+3. **Word level**: Stress assignment, syllabification
+4. **Sentence level**: Prosodic boundaries (future: liaison, phrasal stress)
+
+The phonemization process:
+
+1. Normalize text (numbers → words)
+2. POS tagging (for homograph disambiguation)
+3. Lexicon lookup (for known words)
+4. Rule-based G2P fallback (for unknown words)
+5. Dialect-specific transformations (regional accents)
 
 ---
 
 ## ⚠️ Limitations & Future Work
 
-* Many words (especially names, foreign words, neologisms) will not be in the dictionary; they rely solely on eSpeak fallback.
-* The phonetic dictionary is region-specific; for some dialects (pt-AO, pt-MZ, pt-TL), coverage may be sparser.
-* Lexical variation (e.g. “trem” vs “comboio”) is **not** handled automatically; text is assumed orthographically consistent.
-* Prosody, stress, intonation, and variation beyond segment-level phonemes are not modeled.
+### Current Limitations
+
+- **Lexicon coverage**: Many words (especially names, foreign words, neologisms) rely solely on rule-based fallback
+- **Sparse coverage**: African and Timorese dialects have less lexicon data than European/Brazilian
+- **Lexical variation**: Dialect-specific vocabulary (e.g., "trem" vs "comboio") is not handled; text is assumed orthographically consistent
+- **Regional accents**: Sub-regional dialects are experimental and approximate
+- **Prosody**: Sentence-level features (liaison, phrasal stress, intonation) are simplified
+- **Homograph disambiguation**: Limited to POS-based rules; doesn't handle semantic context
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Areas where help is especially needed:
+
+- **Lexicon expansion**: Especially for pt-AO, pt-MZ, pt-TL
+- **Regional accent validation**: Native speaker verification of dialectal features
+- **Test cases**: Edge cases, challenging words, dialectal examples
+- **Documentation**: Usage examples, linguistic explanations
+
+---
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0. See LICENSE for details.
