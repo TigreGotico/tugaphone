@@ -250,17 +250,16 @@ def rising_diphthong_o(word: str, phonemes: str, postag: str = "NOUN") -> str:
     Realizes stressed /o/ as the rising diphthong /uo/ in an IPA phoneme string.
 
     Replaces tonic marker sequence `ˈo` with `ˈuo`, producing rising-diphthong realizations for stressed /o/ (e.g., Porto: /puoɾtu/, Bolo: /buoɫu/).
-
+def rising_diphthong_o(word: str, phonemes: str, postag: str = "NOUN") -> str:
+    """
+    Rising diphthongization of /o/ → /uo/ in stressed syllables.
     Example:
         Porto  → /puoɾtu/
         Bolo   → /buoɫu/
-
-    Returns:
-        The input phoneme string with stressed /o/ converted to /uo/.
     """
     # Match tonic /o/ (ˈo) at word-initial or after consonant in stressed syllable
-    phonemes = re.sub(r'ˈo', 'ˈuo', phonemes)  # tonic /o/ → /uo/
-
+    phonemes = re.sub(r'ˈo(?![wj])', 'ˈuo', phonemes)  # tonic /o/ → /uo/ (but not ˈow/ˈoj)
+    return phonemes
     return phonemes
 
 
