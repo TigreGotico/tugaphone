@@ -1,12 +1,12 @@
 # Changelog
 
-## [0.0.2a1](https://github.com/TigreGotico/tugaphone/tree/0.0.2a1) (2025-10-12)
+## [0.1.0a1](https://github.com/TigreGotico/tugaphone/tree/0.1.0a1) (2026-02-06)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/f6c50d8226b24b4dad362d73a2d62629fc2fd5e4...0.0.2a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.0.2...0.1.0a1)
 
 **Merged pull requests:**
 
-- automations [\#2](https://github.com/TigreGotico/tugaphone/pull/2) ([JarbasAl](https://github.com/JarbasAl))
+- feat: new phonemizer + postag backends [\#4](https://github.com/TigreGotico/tugaphone/pull/4) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
