@@ -13,41 +13,6 @@ a rich phonological system. The relationship between spelling and pronunciation
 is relatively regular but includes context-sensitive rules, silent letters,
 and dialectal variations.
 
-DIALECTAL VARIATION:
-====================
-Portuguese exhibits significant phonological variation across regions:
-
-1. EUROPEAN PORTUGUESE (pt-PT):
-   - Heavy vowel reduction in unstressed positions
-   - Post-alveolar fricatives for syllable-final /s, z/
-   - Velarized/dark [ɫ] in coda position
-   - Uvular [ʁ] for strong R in most regions
-
-2. BRAZILIAN PORTUGUESE (pt-BR):
-   - Less vowel reduction (fuller vowel quality)
-   - Palatalization: /t, d/ → [tʃ, dʒ] before [i]
-   - L-vocalization: coda /l/ → [w] (creates new diphthongs)
-   - Glottal/velar [h, x] for strong R (region-dependent)
-   - Alveolar [s] for syllable-final /s/ (not palatalized)
-   - Nasal vowels less nasalized than European
-
-3. ANGOLAN PORTUGUESE (pt-AO):
-   - Similar to European but with substrate influence
-   - Less vowel reduction than European
-   - Consistent alveolar trill [r] for R
-   - Substrate-influenced prosody from Bantu languages
-
-4. MOZAMBICAN PORTUGUESE (pt-MZ):
-   - Similar to European with Bantu substrate
-   - Less vowel reduction
-   - May preserve distinctions lost in European
-   - Regional variation (north vs. south)
-
-5. TIMORESE PORTUGUESE (pt-TL):
-   - Influenced by Tetum and other Austronesian languages
-   - Similar to European base with local adaptations
-   - Less widespread native use (L2 features common)
-
 KEY PHONOLOGICAL CONCEPTS:
 --------------------------
 1. STRESS: Portuguese uses lexical stress (word-level prominence of syllables)
@@ -1897,6 +1862,7 @@ class WordToken:
             "n_syllables": self.n_syllables,
             "idx_in_sentence": self.idx_in_sentence,
             "stressed_syllable_idx": self.stressed_syllable_idx,
+            "pos": self.postag,
         }
 
         for grapheme in self.graphemes:

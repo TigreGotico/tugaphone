@@ -1,4 +1,7 @@
-"""each function in this file is a transformation of ipa: str -> ipa: str
+"""
+NOTE: dialect modeling is a work in progress. Use at your own risk.
+
+each function in this file is a transformation of ipa: str -> ipa: str
 
 any number of transformations can be applied at runtime, a set of transformations models a regional accent
 """

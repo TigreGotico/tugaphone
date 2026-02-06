@@ -100,16 +100,15 @@ class TugaTagger:
                 continue
         return self.tag_dummy(sentence)
 
-    @staticmethod
-    def tag_dummy(sentence: str) -> List[Tuple[str, str]]:
+    @classmethod
+    def tag_dummy(cls, sentence: str) -> List[Tuple[str, str]]:
         """
         Split the sentence on whitespace and tag each token as the noun "NOUN".
 
         Returns:
             List[Tuple[str, str]]: A list of (word, tag) tuples where each whitespace-separated token from the input is paired with the tag "NOUN".
         """
-        words = sentence.split()
-        return [(word, "NOUN") for word in words]
+        return [(word, cls._guess_pos(word)) for word in sentence.split()]
 
     def tag_brill(self, sentence: str) -> List[Tuple[str, str]]:
         """
@@ -139,7 +138,81 @@ class TugaTagger:
         doc = self._spacy(sentence)
         return [(tok.text, tok.pos_) for tok in doc]
 
+    @staticmethod
+    def _guess_pos(word: str) -> str:
+        """Applies heuristic rules to guess the POS tag."""
+        lower_word = word.lower()
 
+        # Rule 0: Punctuation
+        if not word.isalnum():
+            return "PUNCT"
+
+        # Rule 0.5: Numbers
+        if word.isdigit():
+            return "NUM"
+
+        # 1. Closed-class words (Functional words that rarely change category)
+        COMMON_WORDS = {
+            # Articles
+            "o": "DET", "a": "DET", "os": "DET", "as": "DET", "um": "DET", "uma": "DET",
+            # Prepositions
+            "de": "ADP", "do": "ADP", "da": "ADP", "em": "ADP", "no": "ADP", "na": "ADP",
+            "por": "ADP", "para": "ADP", "com": "ADP", "sem": "ADP", #"a": "ADP",
+            # Conjunctions
+            "e": "CCONJ", "mas": "CCONJ", "ou": "CCONJ", "que": "SCONJ", "se": "SCONJ",
+            # Pronouns
+            "eu": "PRON", "ele": "PRON", "ela": "PRON", "nós": "PRON", "eles": "PRON",
+            "isso": "PRON", "aquilo": "PRON",
+            # Common Verbs (Auxiliary/Copula)
+            "é": "AUX", "foi": "AUX", "são": "AUX", "está": "AUX", "ser": "AUX", "ter": "AUX",
+            # Adverbs
+            "não": "ADV", "sim": "ADV", "muito": "ADV", "mais": "ADV"
+        }
+
+        # 2. Suffix Rules (Order matters: check longer suffixes first)
+        SUFFIX_RULES = [
+            ("mente", "ADV"),   # rapidamente
+            ("ando", "VERB"),   # cantando
+            ("endo", "VERB"),   # correndo
+            ("indo", "VERB"),   # partindo
+            ("aram", "VERB"),   # cantaram
+            ("eram", "VERB"),   # correram
+            ("iram", "VERB"),   # partiram
+            ("ava", "VERB"),    # cantava
+            ("ria", "VERB"),    # cantaria
+            ("dor", "NOUN"),    # jogador
+            ("ção", "NOUN"),    # ação
+            ("são", "NOUN"),    # tensão
+            ("dade", "NOUN"),   # cidade
+            ("ismo", "NOUN"),   # realismo
+            ("ista", "NOUN"),   # realista
+            ("oso", "ADJ"),     # formoso
+            ("osa", "ADJ"),     # formosa
+            ("vel", "ADJ"),     # amável
+            ("al", "ADJ"),      # nacional
+            ("ar", "VERB"),     # amar
+            ("er", "VERB"),     # comer
+            ("ir", "VERB"),     # partir (careful with 'ir' the verb itself)
+        ]
+
+        # Rule 1: Dictionary Lookup (O(1) speed)
+        if lower_word in COMMON_WORDS:
+            return COMMON_WORDS[lower_word]
+
+        # Rule 2: Suffix Morphology
+        for suffix, tag in SUFFIX_RULES:
+            if lower_word.endswith(suffix):
+                # Exception: prevent very short words triggering rules (e.g. "lar" ending in "ar")
+                if len(lower_word) > len(suffix):
+                    return tag
+
+        # Rule 3: Capitalization (Proper Noun heuristic)
+        # If it's not the start of the sentence (hard to know context-free here) but matches Title case
+        if word[0].isupper() and word[1:].islower():
+            return "PROPN"
+
+        # Rule 4: Fallback
+        return "NOUN"
 
 if __name__ == "__main__":
     # Initialize with 'auto' to use the best available engine
