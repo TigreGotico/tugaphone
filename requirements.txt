@@ -1,1 +1,2 @@
-spacy
+brill_postagger
+unicode_rbnf
