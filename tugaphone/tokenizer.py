@@ -112,6 +112,10 @@ from typing import List, Optional, Dict, Set
 
 from tugaphone.number_utils import normalize_numbers
 from tugaphone.syl import syllabify
+from tugaphone.lexicon import TugaLexicon
+
+# singleton - load .csv into memory only once
+LEXICON = TugaLexicon()
 
 
 # =============================================================================
@@ -1312,7 +1316,15 @@ class DialectInventory:
 # the base ruleset is based on Acordo Ortográfico de 1990, in effect since 2009
 # https://pt.wikipedia.org/wiki/Acordo_Ortogr%C3%A1fico_de_1990
 # http://www.portaldalinguaportuguesa.org/acordo.php
-AO1990 = DialectInventory(dialect_code="pt")
+AO1990 = DialectInventory(
+    dialect_code="pt",
+    IRREGULAR_WORDS={
+        # "ui" nasalized in "muito"
+        "muito": "ˈmũj.tu",
+        # Single-syllable special case
+        "miau": "ˈmjaw",
+    }
+)
 
 
 # =============================================================================
@@ -1367,12 +1379,7 @@ class EuropeanPortuguese(DialectInventory):
                 # [j-a-w] sequence
                 "iau": "jaw",  # miau
             },
-            IRREGULAR_WORDS={
-                # "ui" nasalized in "muito"
-                "muito": "ˈmũj.tu",
-                # Single-syllable special cases
-                "miau": "ˈmjaw",
-            })
+            IRREGULAR_WORDS=LEXICON.get_ipa_map(region="lbx")) # Lisbon
 
 
 # =============================================================================
@@ -1440,7 +1447,8 @@ class BrazilianPortuguese(DialectInventory):
                 "o": "o",  # DIVERGENCE: stays [o], not [u]
                 # CONSONANTS
                 "r": "ɾ",  # DIVERGENCE: tap, strong R is [h]
-            }
+            },
+            IRREGULAR_WORDS=LEXICON.get_ipa_map(region="rjx")
         )
 
 
@@ -1489,7 +1497,8 @@ class AngolanPortuguese(DialectInventory):
                              "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
                              "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
-                         }
+                         },
+                         IRREGULAR_WORDS=LEXICON.get_ipa_map(region="lda") # Luanda
          )
 
 
@@ -1536,7 +1545,8 @@ class MozambicanPortuguese(DialectInventory):
                              "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
                              "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
-                         }
+                         },
+                         IRREGULAR_WORDS=LEXICON.get_ipa_map(region="mpx") # Maputo
          )
 
 
@@ -1590,7 +1600,8 @@ class TimoresePortuguese(DialectInventory):
                              "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
                              "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
-                         }
+                         },
+                         IRREGULAR_WORDS=LEXICON.get_ipa_map(region="dli") # Dili
          )
 
 
@@ -3447,6 +3458,7 @@ class Sentence:
         - Contractions: do → de + o
         - Punctuation separation
         """
+        # TODO: integrate postag info
         if not self.words:
             # Tokenize on whitespace and hyphen
             word_surfaces = self.normalized.replace('-', ' ').split()
