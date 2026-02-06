@@ -42,7 +42,6 @@ INVERSE_RULE_MAP: Dict[IPATransform, str] = {v: k for k, v in RULE_MAP.items()}
 class RegionalTransforms:
     morpheme_rules: List[MorphemeTransform] = field(default_factory=list)  # transform word before g2p
     ipa_rules: List[IPATransform] = field(default_factory=list)  # transform ipa after g2p
-    base_region: Optional[str] = None  # for the bundled lexicon
 
     def apply_ipa(self, word: str, phonemes: str, postag: str = "NOUN") -> str:
         """
@@ -112,8 +111,7 @@ class RegionalTransforms:
 
         return RegionalTransforms(
             ipa_rules=ipa_rules,
-            morpheme_rules=morpheme_rules,
-            base_region=base_region
+            morpheme_rules=morpheme_rules
         )
 
     @property
@@ -128,7 +126,6 @@ class RegionalTransforms:
                 - "ipa_rules": list of IPA rule names for rules that have a known string mapping.
         """
         return {
-            "base_region": self.base_region or "lbx",  # Default to Lisbon
             "morpheme_rules": [INVERSE_RULE_MAP[rule] for rule in self.morpheme_rules if rule in INVERSE_RULE_MAP],
             "ipa_rules": [INVERSE_RULE_MAP[rule] for rule in self.ipa_rules if rule in INVERSE_RULE_MAP]
         }
@@ -149,18 +146,12 @@ COMMON_NORTHERN_RULES = [
     rhotic_realization  # Alveolar rhotic
 ]
 
-LisbonDialect = RegionalTransforms(
-    base_region="lbx"  # Base G2P output, no additional transformations
-)
-
 CoimbraDialect = RegionalTransforms(
-    ipa_rules=NEUTRAL_RULES,
-    base_region="lbx"
+    ipa_rules=NEUTRAL_RULES
 )
 
 MinhoDialect = RegionalTransforms(
-    ipa_rules=COMMON_NORTHERN_RULES,
-    base_region="lbx"
+    ipa_rules=COMMON_NORTHERN_RULES
 )
 
 BragaDialect = RegionalTransforms(
@@ -168,16 +159,14 @@ BragaDialect = RegionalTransforms(
         nasal_glide_palatalization,  # 'mãe' [mˈɐ̃j] → [mˈɐ̃jɲ]
         epenthetic_j_before_palatal,  # "bolacha" -> "bolaicha"  / "abelha" -> "abeilha"
         *COMMON_NORTHERN_RULES
-    ],
-    base_region="lbx"
+    ]
 )
 
 FamalicaoDialect = RegionalTransforms(
     ipa_rules=[
         conservative_o_nasal_retention,  # "Famalicão" -> "Famalicoum"
         *COMMON_NORTHERN_RULES
-    ],
-    base_region="lbx"
+    ]
 )
 
 TrasMontanoDialect = RegionalTransforms(
@@ -187,32 +176,21 @@ TrasMontanoDialect = RegionalTransforms(
         intervocalic_s_voicing,  # 'moço' [ˈmosu] → [ˈmozu]
         final_nasal_denasalization,  # 'viagem' -> 'viage' / [viˈaʒẽ] → [viˈaʒe]
         *COMMON_NORTHERN_RULES
-    ],
-    base_region="lbx"
+    ]
 )
 
 PortoDialect = RegionalTransforms(
     ipa_rules=[
         rising_diphthong_o,  # Puorto
         *COMMON_NORTHERN_RULES
-    ],
-    base_region="lbx"
+    ]
 )
 
 FafeDialect = RegionalTransforms(
     ipa_rules=[
         nasal_diphthongization_e, # "a geinte só sabe verdadeirameinte o que seinte quando esta doeinte"
         *COMMON_NORTHERN_RULES
-    ],
-    base_region="lbx"
-)
-
-RioJaneiroDialect = RegionalTransforms(
-    base_region="rjx"  # Base G2P output, no additional transformations
-)
-
-SaoPauloDialect = RegionalTransforms(
-    base_region="spx"  # Base G2P output, no additional transformations
+    ]
 )
 
 if __name__ == "__main__":

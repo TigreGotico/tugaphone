@@ -960,8 +960,7 @@ class GraphemeToken:
                 CharToken(
                     surface=c,
                     char_idx=i,
-                    parent_grapheme=self,
-                    dialect=self.dialect
+                    parent_grapheme=self
                 )
                 for i, c in enumerate(self.surface)
             ]
@@ -1633,8 +1632,7 @@ class WordToken:
                                 surface=syllable[syl_pos:syl_pos + len(grapheme)],
                                 grapheme_idx=len(graphemes),
                                 syllable_idx=syl_idx,
-                                parent_word=self,
-                                dialect=self.dialect
+                                parent_word=self
                             )
                         )
                         syl_pos += len(grapheme)
@@ -1648,8 +1646,7 @@ class WordToken:
                             surface=syllable[syl_pos],
                             grapheme_idx=len(graphemes),
                             syllable_idx=syl_idx,
-                            parent_word=self,
-                            dialect=self.dialect
+                            parent_word=self
                         )
                     )
                     syl_pos += 1

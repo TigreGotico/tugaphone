@@ -1415,9 +1415,9 @@ class EuropeanPortuguese(DialectInventory):
        - "bem" [ˈbẽj̃]
     """
 
-    def __init__(self):
+    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
         super().__init__(
-            dialect_code="pt-PT",
+            dialect_code=dialect_code or "pt-PT",
             FALLING_NASAL_DIPHTHONGS={
                 **AO1990.FALLING_NASAL_DIPHTHONGS,
                 "ũj": "ui",  # muito (special nasalized case)
@@ -1431,7 +1431,16 @@ class EuropeanPortuguese(DialectInventory):
                 # [j-a-w] sequence
                 "iau": "jaw",  # miau
             },
-            IRREGULAR_WORDS=LEXICON.get_ipa_map(region="lbx")) # Lisbon
+            IRREGULAR_WORDS=IRREGULAR_WORDS or LEXICON.get_ipa_map(region="lbx"), # Lisbon
+            **kwargs
+        )
+
+
+class LisbonPortuguese(EuropeanPortuguese):
+    def __init__(self):
+        super().__init__(
+            dialect_code="pt-BR-x-lisbon",
+        )
 
 
 # =============================================================================
@@ -1483,14 +1492,14 @@ class BrazilianPortuguese(DialectInventory):
        - "avô" [aˈvɔ]
     """
 
-    def __init__(self):
+    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
         super().__init__(
-            dialect_code="pt-BR",
+            dialect_code=dialect_code or "pt-BR",
             DIGRAPH2IPA = {
                 **AO1990.DIGRAPH2IPA,
                 "rr": "h"  # DIVERGENCE: Brazilian uses [h] or [x] instead of [ʁ]
             },
-            DEFAULT_CHAR2PHONEMES={
+            DEFAULT_CHAR2PHONEMES = {
                 **AO1990.DEFAULT_CHAR2PHONEMES,
                 # VOWELS - LESS REDUCTION IN BRAZILIAN
                 "a": "a",  # DIVERGENCE: stays [a], not [ɐ]
@@ -1500,7 +1509,23 @@ class BrazilianPortuguese(DialectInventory):
                 # CONSONANTS
                 "r": "ɾ",  # DIVERGENCE: tap, strong R is [h]
             },
-            IRREGULAR_WORDS=LEXICON.get_ipa_map(region="rjx")
+            IRREGULAR_WORDS=IRREGULAR_WORDS or LEXICON.get_ipa_map(region="rjx"),
+            **kwargs
+        )
+
+
+class RioJaneiroPortuguese(BrazilianPortuguese):
+    def __init__(self):
+        super().__init__(
+            dialect_code="pt-BR-x-rio-janeiro",
+        )
+
+
+class SaoPauloPortuguese(BrazilianPortuguese):
+    def __init__(self):
+        super().__init__(
+            dialect_code="pt-BR-x-sao-paulo",
+            IRREGULAR_WORDS=LEXICON.get_ipa_map(region="spx")
         )
 
 
