@@ -228,13 +228,11 @@ class CharToken:
         surface: The actual character string (may include diacritics)
         char_idx: Position within parent grapheme (0-based)
         parent_grapheme: GraphemeToken containing this character
-        dialect: DialectInventory with phonological rules
     """
 
     surface: str
     char_idx: int = 0  # parent_grapheme.characters[idx] == self
     parent_grapheme: Optional["GraphemeToken"] = None
-    dialect: DialectInventory = dataclasses.field(default_factory=EuropeanPortuguese)
 
     # Precomputed indices (set during initialization)
     _idx_in_word: int = -1
@@ -257,6 +255,10 @@ class CharToken:
     # =========================================================================
     # BASIC PROPERTIES
     # =========================================================================
+
+    @property
+    def dialect(self):
+        return self.parent_grapheme.dialect
 
     @cached_property
     def normalized(self) -> str:
@@ -934,7 +936,6 @@ class GraphemeToken:
         syllable_idx: Which syllable this grapheme belongs to
         characters: List of CharToken objects composing this grapheme
         parent_word: WordToken containing this grapheme
-        dialect: DialectInventory with rules
     """
 
     surface: str
@@ -942,7 +943,6 @@ class GraphemeToken:
     syllable_idx: int = 0  # parent_word.normalized_syllables[idx] == self.surface
     characters: List[CharToken] = dataclasses.field(default_factory=list)
     parent_word: Optional["WordToken"] = None
-    dialect: DialectInventory = dataclasses.field(default_factory=EuropeanPortuguese)
 
     # Precomputed indices
     _idx_in_word: int = -1
@@ -969,6 +969,9 @@ class GraphemeToken:
     # =========================================================================
     # BASIC PROPERTIES
     # =========================================================================
+    @property
+    def dialect(self):
+        return self.parent_word.dialect
 
     @cached_property
     def normalized(self) -> str:
@@ -1577,6 +1580,9 @@ class WordToken:
         # Step 3: Compute all indices top-down
         self._compute_indices()
 
+        if not self.dialect and self.parent_sentence:
+            self.dialect = self.parent_sentence.dialect
+
     def _tokenize_graphemes(self) -> List[GraphemeToken]:
         """
         Tokenize word into graphemes aligned with syllables.
@@ -1733,7 +1739,6 @@ class WordToken:
     # =========================================================================
     # BASIC PROPERTIES
     # =========================================================================
-
     @cached_property
     def normalized(self) -> str:
         """Lowercase, stripped form of word."""
@@ -1930,8 +1935,8 @@ class Sentence:
         # Compute word positions in sentence
         char_position = 0
         for idx, (word_surface, pos) in enumerate(tags):
-            # Find word in original sentence (preserve case)
-            word_start = surface.lower().find(word_surface, char_position)
+            # Find word in original sentence
+            word_start = surface.find(word_surface, char_position)
 
             # Create word token
             word_token = WordToken(
@@ -1970,8 +1975,7 @@ class Sentence:
             # Compute word positions in sentence
             char_position = 0
             for idx, word_surface in enumerate(word_surfaces):
-                # Find word in original sentence (preserve case)
-                word_start = self.surface.lower().find(word_surface, char_position)
+                word_start = self.normalized.find(word_surface, char_position)
 
                 # Create word token
                 word_token = WordToken(
@@ -1991,6 +1995,7 @@ class Sentence:
             # ensure parent sentence object is linked
             for w in self.words:
                 w.parent_sentence = self
+                w.dialect = w.dialect or self.dialect  # allow mixing dialects if manually constructed
 
     # =========================================================================
     # BASIC PROPERTIES

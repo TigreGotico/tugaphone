@@ -218,7 +218,7 @@ SaoPauloDialect = RegionalTransforms(
 if __name__ == "__main__":
     from tugaphone import TugaPhonemizer
 
-    pho = TugaPhonemizer(regional_dialect=FafeDialect)
+    pho = TugaPhonemizer()
 
     sentences = [
         # --- Diphthongs (rule_m_d1 + rule_m_d2) ---
@@ -248,7 +248,7 @@ if __name__ == "__main__":
     ]
 
     for s in sentences:
-        phonemes = pho.phonemize_sentence(s, "pt-PT")
+        phonemes = pho.phonemize_sentence(s, "pt-PT", regional_dialect=FafeDialect)
         print(f"'{s:30s}' -> {phonemes}")
 
     # Demonstrate serialization

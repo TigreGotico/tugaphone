@@ -412,8 +412,8 @@ class DialectInventory:
 
         # words with different IPA depending on postag
         self.HOMOGRAPHS = self.HOMOGRAPHS or {
-            "para": {"PREP": "ˈpɐɾɐ", "VERB": "ˈpaɾɐ"}, # para (preposição) vs pára (verbo) - sem distinção desde o AO1990
-            "pelo": {"PREP": "ˈpɨlu", "NOUN": "ˈpelu", "VERB": "ˈpɛlu"}, # pelo, pélo, pêlo - sem distinção desde o AO1990
+            "para": {"ADP": "ˈpɐɾɐ", "VERB": "ˈpaɾɐ"}, # para (preposição) vs pára (verbo) - sem distinção desde o AO1990
+            "pelo": {"ADP": "ˈpɨlu", "NOUN": "ˈpelu", "VERB": "ˈpɛlu"}, # pelo, pélo, pêlo - sem distinção desde o AO1990
 
             "tola": {"NOUN": "ˈtɔlɐ", "ADJ": "ˈtolɐ"},  # tola (feminino de tolo, «tonto») – tola («cabeça», informal);
             "seco": {"ADJ": "ˈseku", "VERB": "ˈsɛku"},  # "sêco" vs "séco"
@@ -1638,9 +1638,7 @@ class TimoresePortuguese(DialectInventory):
     """
 
     def __init__(self):
-        super().__init__(dialect_code="pt-TL")
-
-        super().__init__(dialect_code="pt-MZ",
+        super().__init__(dialect_code="pt-TL",
                          DIGRAPH2IPA={
                              **AO1990.DIGRAPH2IPA,
                              "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
