@@ -36,16 +36,19 @@ class NumberParser:
                               as_ordinal: Optional[bool] = None,
                               is_brazilian=False) -> Optional[str]:
         """
-        Converts a numeric string into spelled-out text based on surrounding context.
-
-        Args:
-            word: The digit string (e.g., "1").
-            prev_word: The word appearing before the digit.
-            next_word: The word appearing after the digit.
-            gender: Explicit override for gender ('masculine'/'feminine').
-            as_ordinal: Explicit override to treat number as an ordinal.
-            is_brazilian: If True, uses Brazil's spelling (pt-BR).
-        """
+                              Convert a numeric token into its spelled-out Portuguese form using surrounding context.
+                              
+                              Parameters:
+                                  word (str): Numeric string to convert (e.g., "1", "2.5", "1e9").
+                                  prev_word (Optional[str]): Word immediately before `word`, used to infer gender.
+                                  next_word (Optional[str]): Word immediately after `word`, used to infer ordinality and gender.
+                                  gender (Optional[str]): Explicit gender override ("masculine" or "feminine"); if omitted a heuristic is applied.
+                                  as_ordinal (Optional[bool]): If provided, forces ordinal (`True`) or cardinal (`False`) interpretation; otherwise context is used.
+                                  is_brazilian (bool): If True, use Brazilian Portuguese formatting rules (pt-BR); otherwise use pt-PT.
+                              
+                              Returns:
+                                  Optional[str]: The spelled-out form of the number in Portuguese, or `None` if a textual form cannot be produced.
+                              """
         # TODO: allow scale independent from language code
         #       ie. enable pt-PT+short-scale and pt-BR+long-scale
         if cls.is_scientific_notation(word):
@@ -73,7 +76,17 @@ class NumberParser:
     # digit/string conversion
     @classmethod
     def to_int(cls, word: str) -> Optional[int]:
-        """Cleans a string of punctuation/symbols and converts to integer."""
+        """
+        Parse a numeric token into an integer after stripping ordinal markers and surrounding punctuation/whitespace.
+        
+        Parameters:
+            word (str): Input token which may contain ordinal symbols (º, ª), punctuation, or surrounding whitespace.
+        
+        Returns:
+            int: The parsed integer value on success.
+            False: If the token contains a decimal point (treated as a non-integer).
+            None: If the token cannot be parsed as an integer after cleaning.
+        """
         if "." in word:
             return False  # may be a decimal
         try:
@@ -87,11 +100,28 @@ class NumberParser:
 
     @classmethod
     def is_int(cls, word: str) -> bool:
+        """
+        Determine whether a token represents an integer (no decimal point).
+        
+        Parameters:
+            word (str): Input token; ordinal markers (º, ª), punctuation and spaces are ignored during validation.
+        
+        Returns:
+            bool: `True` if the token can be parsed to an integer after cleaning, `False` otherwise.
+        """
         return cls.to_int(word) is not None
 
     @classmethod
     def to_float(cls, word: str) -> Optional[float]:
-        """Cleans a string of punctuation/symbols and converts to a float."""
+        """
+        Convert a numeric string (possibly containing ordinal markers, punctuation, or surrounding whitespace) into a float.
+        
+        Parameters:
+            word (str): The input string to parse; may include ordinal symbols (º, ª), punctuation, or whitespace.
+        
+        Returns:
+            float: The parsed numeric value if conversion succeeds, `None` if the input cannot be converted to a float.
+        """
         try:
             # Remove ordinal markers and standard punctuation
             word = word.strip(cls.ORDINAL_MALE +
@@ -103,10 +133,27 @@ class NumberParser:
 
     @classmethod
     def is_float(cls, word: str) -> bool:
+        """
+        Determine whether a string represents an integer (no fractional part).
+        
+        Note: despite the function name, this checks for an integer parse rather than a float.
+        
+        Returns:
+            `true` if the string can be parsed as an integer, `false` otherwise.
+        """
         return cls.to_int(word) is not None
 
     @classmethod
     def is_scientific_notation(cls, word: str) -> bool:
+        """
+        Check whether a token uses scientific notation with a decimal mantissa and an integer exponent separated by 'e' (case-insensitive).
+        
+        Parameters:
+            word (str): Token to test; the mantissa may include a decimal point, and the exponent must consist of digits.
+        
+        Returns:
+            `true` if the token is scientific notation (e.g., "1.5e10"), `false` otherwise.
+        """
         nums = word.lower().split("e")
         if len(nums) != 2:
             return False
@@ -116,7 +163,17 @@ class NumberParser:
     @classmethod
     def pronounce_scientific(cls, word: str, is_brazilian=False) -> str:
         """
-        Pronounces scientific notation: '1.5e10' -> 'um vírgula cinco vezes dez elevado a dez'.
+        Convert a number in scientific notation into its Portuguese spoken form.
+        
+        Parameters:
+        	word (str): A numeric string in scientific notation (e.g., "1.5e10").
+        	is_brazilian (bool): If True, use Brazilian Portuguese variants; otherwise use Portugal variants.
+        
+        Returns:
+        	spoken (str): The spelled-out Portuguese phrase for the notation, combining mantissa and exponent (e.g., "um vírgula cinco vezes dez elevado a dez").
+        
+        Raises:
+        	ValueError: If `word` is not valid scientific notation.
         """
         if not cls.is_scientific_notation(word):
             raise ValueError(f"word is not scientific notation: '{word}'")
@@ -128,7 +185,15 @@ class NumberParser:
     # contextual rules
     @classmethod
     def is_ordinal(cls, word: str, next_word: Optional[str] = None) -> bool:
-        """Checks if the number is meant to be an ordinal (1st, 2nd, etc)."""
+        """
+        Determine whether a token represents an ordinal number.
+        
+        Parameters:
+            next_word (Optional[str]): The following token; used to detect a separated ordinal marker (e.g., "º", "ª").
+        
+        Returns:
+            `true` if the word contains an ordinal marker or the next_token is an ordinal marker, `false` otherwise.
+        """
         # Check if the symbol is a separate token or attached to the number
         if next_word in cls.ORDINAL_TOKENS:
             return True
@@ -141,9 +206,16 @@ class NumberParser:
                           prev_word: Optional[str] = None,
                           next_word: Optional[str] = None) -> str:
         """
-        Linguistic Heuristics to determine if the number should be Male or Female.
-        Defaults to Masculine as it is the 'neutral' gender in Portuguese.
-        """
+                          Determine the grammatical gender (masculine or feminine) that a numeric token should take in Portuguese.
+                          
+                          Parameters:
+                              word (str): The numeric token (may include ordinal symbols like 'º' or 'ª').
+                              prev_word (Optional[str]): The preceding word in context, used for heuristic cues (e.g., articles).
+                              next_word (Optional[str]): The following word in context, used to infer the gender of the counted noun.
+                          
+                          Returns:
+                              str: "feminine" if the number should agree as feminine, "masculine" otherwise.
+                          """
         # Rule A: Ordinal symbols explicitly dictate gender (º = masc, ª = fem)
         if next_word and next_word == cls.ORDINAL_FEMALE or cls.ORDINAL_FEMALE in word:
             return "feminine"
@@ -180,8 +252,16 @@ class NumberParser:
 
 def normalize_numbers(text: str, lang: str = "pt-PT") -> str:
     """
-    Iterates through a sentence and replaces digits with their
-    contextually correct Portuguese written form.
+    Replace numeric tokens in a sentence with their contextually correct Portuguese written forms.
+    
+    This function normalizes the language tag (treating any variant of "pt-br" as "pt-BR"), collapses spaced ordinal markers (e.g., "1 º" -> "1º") for parsing, and converts integer, float and scientific-notation tokens into their spelled-out Portuguese equivalents, preserving other tokens and surrounding context.
+    
+    Parameters:
+        text (str): Input sentence containing numeric and non-numeric tokens.
+        lang (str): Language variant to use for spelling rules (defaults to "pt-PT"; any "pt-br" variant is treated as "pt-BR").
+    
+    Returns:
+        str: The input sentence with numeric tokens replaced by their spelled-out Portuguese forms.
     """
     if "pt-br" in lang.lower():
         lang = "pt-BR"

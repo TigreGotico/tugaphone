@@ -319,46 +319,16 @@ CONSONANT_DIGRAPHS = INSEPARABLE_DIGRAPHS + FOREIGN_DIGRAPHS + [
 
 def validate_triphthong(triph: str, prev_char: str = "") -> bool:
     """
-    Check if a three-vowel sequence is a valid triphthong.
-
-    LINGUISTIC BACKGROUND - TRIPHTHONGS:
-    ------------------------------------
-    A triphthong is THREE vowel sounds pronounced in ONE syllable.
-    Structure: semivowel + vowel + semivowel (G-V-G)
-
-    Portuguese triphthongs are RARE. Most apparent triphthongs are actually:
-    - Diphthong + separate vowel across syllable boundary (hiatus)
-    - Or simply don't exist in native words
-
-    TRUE TRIPHTHONGS (uncommon):
-    - "Uruguai" [u.ɾu.ˈɡwaj] - in the syllable 'guai': [w] + [a] + [j]
-    - "miau" [ˈmjaw] - onomatopoeia for cat: [j] + [a] + [w]
-    - "enxaguei" [ẽ.ʃa.ˈɡwej] - past tense verb: [w] + [e] + [j]
-
-    VALIDATION RULES:
-    -----------------
-    1. Must be exactly 3 characters (in orthography)
-    2. All three must be vowel letters
-    3. First character must be capable of being a semivowel (i, u, y, w)
-    4. Middle character is the syllable nucleus (vowel)
-    5. Last character must be capable of being a semivowel OR
-       middle character has nasal marking (which extends to last character)
-    6. Stress marks (accents) can only appear on the middle character
-
-    Args:
-        triph: Three-character string to validate (e.g., "uai", "ieu")
-        prev_char: Character immediately before the triphthong (for context)
-
+    Determine whether a three-character orthographic sequence forms a valid Portuguese triphthong.
+    
+    Validates that the sequence is composed of vowels with a semivowel + nucleus + semivowel (G‑V‑G) structure, allows diacritics only on the nucleus, permits the final glide when the nucleus is nasal, and rejects known non-triphthong patterns (e.g., nucleus 'e' followed by 'i').
+    
+    Parameters:
+        triph (str): Three-character sequence to validate (e.g., "uai", "miau").
+        prev_char (str): Optional previous character for contextual checks (unused by most rules).
+    
     Returns:
-        bool: True if this is a valid triphthong, False otherwise
-
-    Examples:
-        >>> validate_triphthong("uai")  # From "Uruguai"
-        True
-        >>> validate_triphthong("eau")  # Not valid in Portuguese
-        False
-        >>> validate_triphthong("iei")  # Would typically be hiatus
-        False (rejected by "e" + "i" rule)
+        bool: `True` if the sequence is a valid Portuguese triphthong, `false` otherwise.
     """
     if len(triph) != 3:
         return False
@@ -397,56 +367,16 @@ def validate_triphthong(triph: str, prev_char: str = "") -> bool:
 
 def validate_diphthong(diph: str, prev_char: str = "") -> bool:
     """
-    Check if a two-vowel sequence is a valid diphthong.
-
-    LINGUISTIC BACKGROUND - DIPHTHONGS:
-    -----------------------------------
-    A diphthong is TWO vowel sounds pronounced in ONE syllable.
-    The vowels glide together smoothly without a syllable break.
-
-    Structure can be:
-    - Falling (descending): vowel + semivowel (V-G)
-      Examples: "pai" [paj], "meu" [mew], "céu" [sɛw]
-    - Rising (ascending): semivowel + vowel (G-V)
-      Examples: "piano" [ˈpjɐ.nu], "água" [ˈa.ɡwɐ]
-
-    DIPHTHONG vs. HIATUS:
-    ---------------------
-    The same two vowels can be either a diphthong OR hiatus depending on:
-    - Pronunciation speed (fast → diphthong, slow → hiatus)
-    - Dialect (Brazilian vs. European Portuguese differ)
-    - Word morphology (prefix boundaries often force hiatus)
-
-    Example ambiguity:
-    - "saída" [sa.ˈi.dɐ] - hiatus (three syllables: sa-í-da)
-    - "baile" [ˈbaj.lɨ] - diphthong (two syllables: bai-le)
-
-    This function implements a conservative approach, assuming hiatus for
-    many ambiguous cases to improve accuracy on the benchmark.
-
-    VALIDATION RULES:
-    -----------------
-    1. Must be exactly 2 characters
-    2. Both must be vowels
-    3. Accents only allowed on first character (marks stress + quality)
-    4. Acute accent on first usually indicates hiatus (stressed vowel can't
-       be part of a diphthong), EXCEPT "áu" which is valid
-    5. Certain sequences are ALWAYS hiatus in Portuguese
-
-    Args:
-        diph: Two-character string to validate (e.g., "ai", "eu", "oe")
-        prev_char: Character immediately before (for context)
-
+    Determine whether a two-character vowel sequence forms a valid Portuguese diphthong.
+    
+    This function applies a conservative, empirical rule set: both characters must be vowels, the second vowel may not carry stress/diacritics (it functions as a glide), and certain sequences and accent patterns are treated as hiatus to improve accuracy on real-world data. Notably, an acute accent on the first vowel normally signals hiatus except for the sequence "áu"; a number of common two-vowel sequences (e.g., "ea", "io", "ui", "oa") are always treated as hiatus by this heuristic.
+    
+    Parameters:
+        diph (str): Two-character vowel sequence to validate (e.g., "ai", "eu").
+        prev_char (str): Character immediately preceding the sequence, used only for contextual rules.
+    
     Returns:
-        bool: True if valid diphthong, False if it's a hiatus
-
-    Examples:
-        >>> validate_diphthong("ai")  # "pai" [paj]
-        True
-        >>> validate_diphthong("ea")  # "área" [ˈa.ɾe.ɐ] - always hiatus
-        False
-        >>> validate_diphthong("ui")  # Ambiguous, marked as hiatus
-        False
+        bool: `true` if the sequence should be treated as a diphthong, `false` if it should be treated as a hiatus.
     """
 
     # RULE 1: Must be exactly 2 characters
@@ -499,49 +429,22 @@ def validate_diphthong(diph: str, prev_char: str = "") -> bool:
 
 def check_for_hiatus(diph: str, is_end: bool = False, prev_char: str = "") -> bool:
     """
-    Advanced hiatus detection with contextual rules.
-
-    WHAT IS HIATUS?
-    ---------------
-    Hiatus (Portuguese: "hiato") is when two adjacent vowels are in DIFFERENT syllables.
-    They are pronounced separately, not glided together.
-
-    Example contrast:
-    - Diphthong: "rei" [ˈʁej] - one syllable, vowels glide together
-    - Hiatus: "rainha" [ʁa.ˈĩ.ɲɐ] - "a.i" are separate syllables
-
-    WHEN DOES HIATUS OCCUR?
-    ------------------------
-    1. When vowels don't form a valid diphthong (checked by validate_diphthong)
-    2. At morpheme boundaries (prefix + root, root + suffix)
-    3. With certain phonological patterns specific to Portuguese
-
-    This function adds CONTEXT-SENSITIVE rules beyond basic diphthong validation.
-
-    CONTEXTUAL HIATUS RULES:
-    ------------------------
-    1. If not a valid diphthong → automatically hiatus
-    2. Nasal vowels (ã, õ) prefer diphthongs (not hiatus)
-    3. Word-final position favors diphthongs
-    4. Repeated vowels → hiatus (aa, ee, ii, oo, uu)
-    5. Reversed tilde → hiatus (e.g., "eã" not "ãe")
-    6. After 'r' consonant → usually hiatus (except "ei")
-
-    Args:
-        diph: Two-vowel sequence to check
-        is_end: True if this is at the end of a word
-        prev_char: Character immediately before the sequence
-
+    Determine whether a two-vowel sequence should be syllabified as a hiatus under several Portuguese-specific contextual rules.
+    
+    This function first checks candidacy with validate_diphthong and then applies additional heuristics:
+    - If validate_diphthong returns False, this function returns False (treated as not a hiatus).
+    - A nasal first vowel (e.g., ã, õ) is treated as part of a nasal diphthong (not a hiatus).
+    - Identical adjacent vowels (aa, ee, ii, oo, uu) are treated as a hiatus.
+    - If the second vowel carries a tilde (specifically 'ã' or 'õ'), the pair is treated as a hiatus.
+    - If the vowel sequence follows 'r' (prev_char == 'r') it is treated as a hiatus except for the sequence "ei".
+    
+    Parameters:
+        diph (str): Two-character vowel sequence to evaluate.
+        is_end (bool): True if the sequence occurs at the end of a word (currently accepted but not used by this implementation).
+        prev_char (str): Character immediately preceding the sequence (used for rhotic context).
+    
     Returns:
-        bool: True if this should be treated as hiatus, False if diphthong
-
-    Examples:
-        >>> check_for_hiatus("ai", is_end=True)  # "pai" - diphthong
-        False
-        >>> check_for_hiatus("ai", is_end=False, prev_char="r")  # "rainha" - hiatus
-        True
-        >>> check_for_hiatus("aa")  # Repeated vowel
-        True
+        bool: `True` if the sequence should be treated as a hiatus (two syllables), `False` if it should be treated as a diphthong (one syllable).
     """
 
     # STEP 1: Must pass basic diphthong validation
@@ -595,133 +498,18 @@ def check_for_hiatus(diph: str, is_end: bool = False, prev_char: str = "") -> bo
 
 def syllabify(word: str) -> List[str]:
     """
-    Divide a Portuguese word into syllables.
-
-    ALGORITHM OVERVIEW:
-    ===================
-    This function uses a TWO-PASS approach:
-
-    PASS 1: Rule-based scanning (character-by-character)
-    -------
-    - Scan through word left to right
-    - Apply phonological rules to decide where syllable boundaries occur
-    - Build syllables incrementally, adding characters until boundary detected
-
-    PASS 2: Error correction (pattern matching)
-    -------
-    - Fix systematic errors from Pass 1
-    - Apply hardcoded corrections for known problematic words
-    - Handle edge cases that don't fit general rules
-
-    LINGUISTIC PRINCIPLES USED:
-    ===========================
-
-    1. SONORITY SEQUENCING PRINCIPLE
-    --------------------------------
-    Syllables prefer a structure where sonority (loudness/openness) 
-    rises to the nucleus (vowel) and falls afterward.
-
-    Sonority hierarchy: stops < fricatives < nasals < liquids < glides < vowels
-
-    Valid Portuguese onset: consonant(s) + vowel
-    - Simple: "ta", "ma", "pa"
-    - Complex: "tra", "pla", "bra" (obstruent + liquid)
-
-    Invalid Portuguese onset: *liquid + obstruent
-    - *"rta", *"lpa" - these violate sonority
-    - Must split: "ar.ta", "al.pa"
-
-    2. ONSET MAXIMIZATION PRINCIPLE
-    --------------------------------
-    When in doubt, consonants go with the FOLLOWING vowel, not the preceding one.
-
-    Portuguese prefers CV (consonant-vowel) syllables over VC (vowel-consonant).
-
-    Example: "falar" [fɐ.ˈlaɾ]
-    - Could be: *"fal.ar" (CVC.VC)
-    - Preferred: "fa.lar" (CV.CVC) - maximizes onset of second syllable
-
-    3. COMPLEX ONSET VALIDITY
-    --------------------------
-    Only certain consonant clusters can start a syllable:
-    - plosive/fricative + liquid: pr, br, tr, dr, kr, gr, fr, pl, bl, etc.
-
-    Invalid clusters split across syllables:
-    - "at.las", "rit.mo", "pac.to"
-
-    4. NUCLEUS REQUIREMENT
-    ----------------------
-    Every syllable MUST have exactly one vowel as its nucleus.
-    Diphthongs and triphthongs count as complex nuclei (multiple sounds, one syllable).
-
-    ALGORITHM FLOW:
-    ===============
-
-    PREPROCESSING:
-    - Convert to lowercase
-    - Replace spaces with hyphens (for compound words)
-    - Replace inseparable digraphs with placeholder tokens (ch→C, lh→L, etc.)
-
-    MAIN LOOP (for each character):
-    - Determine if character is vowel or consonant
-    - Look ahead to next 1-2 characters
-    - Check for diphthongs, triphthongs, consonant clusters
-    - Decide: continue current syllable OR start new syllable
-    - Apply decision rules based on pattern (C-C, C-V, V-V, V-C)
-
-    DECISION RULES:
-
-    Pattern         | Rule                                      | Example
-    ----------------|-------------------------------------------|------------------
-    C-C             | Split, unless valid onset cluster        | "at.las", but "a.bra"
-    C-V             | Don't split (onset + nucleus)            | "ca.sa"
-    V-V (diphthong) | Don't split (complex nucleus)            | "pai"
-    V-V (hiatus)    | Split (separate syllables)               | "sa.í.da"
-    V-C             | Context-dependent (see below)             | varies
-
-    V-C Decision:
-    - If C is word-final → don't split (keep coda with syllable)
-    - If C-C follows → don't split (prepare for complex onset)
-    - If C-V follows → split (let C be onset of next syllable)
-
-    POSTPROCESSING:
-    - Fix systematic errors with hardcoded corrections
-    - Merge orphaned consonants with adjacent syllables
-    - Fix specific problematic patterns (vr, vl, diphthong+nh, etc.)
-    - Restore original digraphs (C→ch, L→lh, etc.)
-
-    Args:
-        word: Portuguese word to syllabify (can include hyphens for compounds)
-
+    Split a Portuguese word into its syllables.
+    
+    Performs a rule-based syllabification that handles digraphs, diphthongs,
+    triphthongs, hiatus, nasalization and common consonant-cluster constraints,
+    then applies empirical post-processing corrections for known exceptions.
+    
+    Parameters:
+        word (str): Word to syllabify. May include spaces or hyphens (spaces are
+            treated as hyphens for compound words).
+    
     Returns:
-        List of syllable strings
-
-    Examples:
-        >>> syllabify("casa")
-        ['ca', 'sa']
-
-        >>> syllabify("Brasil")
-        ['bra', 'sil']
-
-        >>> syllabify("português")
-        ['por', 'tu', 'guês']
-
-        >>> syllabify("extraordinário")
-        ['ex', 'tra', 'or', 'di', 'ná', 'rio']
-
-        >>> syllabify("história")
-        ['his', 'tó', 'ria']  # hiatus: i.a are separate
-
-    ACCURACY:
-    =========
-    Current performance on benchmark: 53,157 / 53,349 = 99.64% accuracy
-
-    LIMITATIONS:
-    ============
-    - Some edge cases require dictionary lookup (hardcoded in bad_toks)
-    - Diphthong vs. hiatus is sometimes ambiguous without morphological analysis
-    - Foreign words may not follow Portuguese phonotactics
-    - Rare learned/scientific words may have unusual syllabification
+        List[str]: List of syllable strings in orthographic order.
     """
 
     # =========================================================================
