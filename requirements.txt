@@ -1,2 +1,2 @@
-brill_postagger
-unicode_rbnf
+brill-postagger
+unicode-rbnf

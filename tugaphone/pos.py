@@ -5,18 +5,24 @@ class TugaTagger:
     """
     A unified interface for Portuguese Part-of-Speech (POS) tagging.
 
-    Supports multiple backends including spaCy, NLTK, and Brill-style taggers.
+    Supports multiple backends including spaCy and Brill-style taggers.
     The 'auto' mode provides a fallback mechanism to ensure tagging works
     even if specific dependencies are missing.
     """
 
     def __init__(self, engine: str = "auto", spacy_model: str = "pt_core_news_lg"):
         """
-        Initializes the TugaTagger with a specific engine.
+        Create a TugaTagger configured for the chosen tagging engine and optionally preload backend models.
 
-        Args:
-            engine (str): The tagging engine to use ('spacy', 'brill', 'nltk', 'dummy', or 'auto').
-            spacy_model (str): The spaCy model name to load if using the spaCy engine.
+        Parameters:
+            engine (str): Tagging engine to use: "spacy", "brill", "dummy", or "auto".
+                - "spacy": preload the spaCy model in strict mode.
+                - "brill": preload the Brill tagger in strict mode.
+                - "auto": attempt to preload both spaCy and Brill (not strict).
+            spacy_model (str): Name of the spaCy Portuguese model to load when using spaCy (default "pt_core_news_lg").
+
+        Notes:
+            Load failures for a backend will be propagated when that backend is loaded in strict mode.
         """
         self.engine = engine
         self._spacy = self._brill = None
@@ -27,7 +33,16 @@ class TugaTagger:
             self.load_brill(strict=(engine == "brill"))
 
     def load_spacy(self, spacy_model: str = "pt_core_news_lg", strict: bool = True):
-        """Loads the spaCy NLP model for Portuguese."""
+        """
+        Load and cache a spaCy Portuguese NLP model on the instance.
+
+        Parameters:
+            spacy_model (str): Name of the spaCy model to load (e.g., "pt_core_news_lg").
+            strict (bool): If True, re-raise any exception encountered while loading; if False, suppress the exception and leave `self._spacy` as None.
+
+        Side effects:
+            Assigns the loaded spaCy model to `self._spacy`.
+        """
         try:
             import spacy
             self._spacy = spacy.load(spacy_model, disable=["ner", "parser"])
@@ -36,7 +51,13 @@ class TugaTagger:
                 raise e
 
     def load_brill(self, strict: bool = True):
-        """Loads the Brill-style POS tagger."""
+        """
+        Load and cache a Brill-style Portuguese POS tagger on the instance.
+
+        Parameters:
+            strict (bool): If True, re-raise any exception encountered while importing or loading the tagger;
+                if False, suppress load errors and leave `self._brill` unset when loading fails.
+        """
         try:
             from brill_postaggers import BrillPostagger
             self._brill = BrillPostagger.from_pretrained("pt")
@@ -66,7 +87,12 @@ class TugaTagger:
         return handler(sentence)
 
     def tag_auto(self, sentence: str) -> List[Tuple[str, str]]:
-        """Attempts tagging via Spacy, then Brill, falling back to Dummy."""
+        """
+        Tag a sentence by trying spaCy then Brill and using the dummy tagger if both fail.
+
+        Returns:
+            List[Tuple[str, str]]: A list of (word, POS-tag) tuples produced by the first successful tagger; if both spaCy and Brill raise exceptions, returns the dummy tagger's output.
+        """
         for method in [self.tag_spacy, self.tag_brill]:
             try:
                 return method(sentence)
@@ -76,20 +102,40 @@ class TugaTagger:
 
     @staticmethod
     def tag_dummy(sentence: str) -> List[Tuple[str, str]]:
-        """Simple fallback: splits by whitespace and tags everything as NOUN."""
+        """
+        Split the sentence on whitespace and tag each token as the noun "NOUN".
+
+        Returns:
+            List[Tuple[str, str]]: A list of (word, tag) tuples where each whitespace-separated token from the input is paired with the tag "NOUN".
+        """
         words = sentence.split()
         return [(word, "NOUN") for word in words]
 
     def tag_brill(self, sentence: str) -> List[Tuple[str, str]]:
-        """Tags text using the BrillPostagger."""
+        """
+        Tag a sentence using the Brill-style POS tagger.
+
+        If the Brill tagger is not yet loaded, it will be initialized automatically.
+
+        Parameters:
+            sentence (str): Raw text sentence to be tagged.
+
+        Returns:
+            List[Tuple[str, str]]: List of (token, POS-tag) pairs for the input sentence.
+        """
         if self._brill is None:
-            self.load_brill()
+            self.load_brill(strict=True)
         return self._brill.tag(sentence)
 
     def tag_spacy(self, sentence: str) -> List[Tuple[str, str]]:
-        """Tags text using spaCy's POS model."""
+        """
+        Tag a sentence using the configured spaCy Portuguese model.
+
+        Returns:
+            List[Tuple[str, str]]: A list of (token_text, POS_tag) tuples, one per token. `POS_tag` is spaCy's coarse-grained part-of-speech label.
+        """
         if self._spacy is None:
-            self.load_spacy()
+            self.load_spacy(strict=True)
         doc = self._spacy(sentence)
         return [(tok.text, tok.pos_) for tok in doc]
 

@@ -54,11 +54,10 @@ This implementation is EMPIRICAL rather than purely theoretical:
 """
 
 import string
-from typing import List, Tuple, Optional
+from typing import List
 from logging import getLogger
 
 LOG = getLogger()
-LOG.setLevel("DEBUG")
 
 # =============================================================================
 # DIACRITIC CONSTANTS: Portuguese Accent Marks
@@ -833,7 +832,7 @@ def syllabify(word: str) -> List[str]:
                 if char + next_char in SEPARABLE_DIGRAPHS:
                     # These clusters MUST be separated
                     # Example: "rr" in "carro" → "car.ro"
-                    LOG.debug("boundary C-C :", char, "/", next_char, "-> digraph must be separated")
+                    #LOG.debug("boundary C-C :", char, "/", next_char, "-> digraph must be separated")
                     is_end_of_syl = True
 
                 elif is_first_syl and not syl_has_vowel:
@@ -842,7 +841,7 @@ def syllabify(word: str) -> List[str]:
                     # palavras são mantidos juntos na divisão silábica"
                     # (Consonant clusters that begin words stay together)
                     # Example: "bra.sil" not "b.ra.sil", "pra.to" not "p.ra.to"
-                    LOG.debug("not-boundary:", char, "/", next_char, "-> no vowels yet")
+                    #LOG.debug("not-boundary:", char, "/", next_char, "-> no vowels yet")
                     is_end_of_syl = False
 
                 elif next_is_soft_consonant:
@@ -852,13 +851,13 @@ def syllabify(word: str) -> List[str]:
                     # (Consonant clusters should be separated, except when the
                     # second consonant is 'l' or 'r')
                     # Example: "a.pren.der" keeps "pr" together
-                    LOG.debug("not-boundary:", char, "/", next_char, "-> soft consonant")
+                    #LOG.debug("not-boundary:", char, "/", next_char, "-> soft consonant")
                     is_end_of_syl = False
 
                 else:
                     # Default for C-C: split them
                     # Example: "pac.to", "rit.mo"
-                    LOG.debug("boundary C-C :", char, "/", next_char)
+                    #LOG.debug("boundary C-C :", char, "/", next_char)
                     is_end_of_syl = True
 
             # RULE 3: C-V (Consonant-Vowel) patterns
@@ -866,14 +865,14 @@ def syllabify(word: str) -> List[str]:
                 # Consonant + vowel always stay together (onset + nucleus)
                 # This is the most fundamental syllable structure in Portuguese
                 # Example: "ca.sa", "me.sa", "pa.to"
-                LOG.debug("not-boundary C-V :", char, "/", next_char, "-> consonant+vowel")
+                #LOG.debug("not-boundary C-V :", char, "/", next_char, "-> consonant+vowel")
                 is_end_of_syl = False
 
             # RULE 4: V-V (Vowel-Vowel) patterns
             elif is_hiatus:
                 # Two vowels in hiatus → separate syllables
                 # Example: "sa.í.da" (exit), "pa.ís" (country)
-                LOG.debug("boundary V-V :", char, "/", next_char, "-> hiatus")
+                #LOG.debug("boundary V-V :", char, "/", next_char, "-> hiatus")
                 is_end_of_syl = True
 
             elif is_triphthong:
@@ -881,7 +880,7 @@ def syllabify(word: str) -> List[str]:
                 # Portuguese rule: "Tritongos devem permanecer na mesma sílaba"
                 # (Triphthongs must remain in the same syllable)
                 # Example: "Uru.guai" - "uai" is one syllable
-                LOG.debug("not-boundary VVV :", char, "/", next_char, "-> triphthong")
+                #LOG.debug("not-boundary VVV :", char, "/", next_char, "-> triphthong")
                 is_end_of_syl = False
 
             elif is_diphthong:
@@ -889,13 +888,13 @@ def syllabify(word: str) -> List[str]:
                 # Portuguese rule: "Ditongos devem permanecer na mesma sílaba"
                 # (Diphthongs must remain in the same syllable)
                 # Example: "pai", "rei", "meu"
-                LOG.debug("not-boundary VV :", char, "/", next_char, "-> diphthong")
+                #LOG.debug("not-boundary VV :", char, "/", next_char, "-> diphthong")
                 is_end_of_syl = False
 
             elif is_vowel_char and next_is_vowel:
                 # Two vowels that don't form a valid diphthong → hiatus
                 # Example: "co.o.pe.rar" (cooperate) - "oo" is hiatus
-                LOG.debug("boundary V-V :", char, "/", next_char, "-> invalid diphthong")
+                #LOG.debug("boundary V-V :", char, "/", next_char, "-> invalid diphthong")
                 is_end_of_syl = True
 
             # RULE 5: V-C (Vowel-Consonant) patterns
@@ -905,22 +904,21 @@ def syllabify(word: str) -> List[str]:
                 if is_pn_char:
                     # Penultimate position: keep final consonant with this syllable
                     # Example: "por.tal" - 'l' stays with "tal", not separate
-                    LOG.debug("not-boundary V-C :", char, "/", next_char, "-> consonant at end of word")
+                    #LOG.debug("not-boundary V-C :", char, "/", next_char, "-> consonant at end of word")
                     is_end_of_syl = False
 
                 elif nnext_char and nnext_char not in VOWELS:
                     # V-C-C pattern: keep first C with current syllable as coda
                     # This prepares for the C-C split or complex onset
                     # Example: "cos.ta" (coast) - 's' stays with "cos"
-                    LOG.debug("not-boundary V-C-C :", char, "/", next_char, "/", nnext_char,
-                              "-> vowel merge with next consonant")
+                    #LOG.debug("not-boundary V-C-C :", char, "/", next_char, "/", nnext_char, "-> vowel merge with next consonant")
                     is_end_of_syl = False
 
                 else:
                     # V-C-V pattern: split after vowel (let C start next syllable)
                     # ONSET MAXIMIZATION: consonant prefers to start next syllable
                     # Example: "ca.sa" not "cas.a", "me.sa" not "mes.a"
-                    LOG.debug("boundary V-C :", char, "/", next_char, "-> vowel marks end of syl")
+                    #LOG.debug("boundary V-C :", char, "/", next_char, "-> vowel marks end of syl")
                     is_end_of_syl = True
 
             # -----------------------------------------------------------------
@@ -1041,9 +1039,11 @@ def syllabify(word: str) -> List[str]:
                 if ends_vowel:
                     # Previous syllable ends with vowel → merge 'w' with it
                     clean_toks[-1] = clean_toks[-1] + tok
-                else:
+                elif idx < len(sub_tokens) - 1:
                     # Merge with next token
                     sub_tokens[idx + 1] = tok + sub_tokens[idx + 1]
+                else:
+                    clean_toks.append(tok)
 
             # -----------------------------------------------------------------
             # CORRECTION RULE 3: 'vr' and 'vl' clusters
@@ -1074,9 +1074,11 @@ def syllabify(word: str) -> List[str]:
                 if idx > 0:
                     # Merge with previous syllable
                     clean_toks[-1] = clean_toks[-1] + tok
-                else:
+                elif idx < len(sub_tokens) - 1:
                     # Merge with next syllable
                     sub_tokens[idx + 1] = tok + sub_tokens[idx + 1]
+                else:
+                    clean_toks.append(tok)
 
             # -----------------------------------------------------------------
             # CORRECTION RULE 6: Standalone final vowels
@@ -1118,7 +1120,7 @@ def syllabify(word: str) -> List[str]:
                 clean_toks.append(tok)
 
         # Log the result for this subword
-        LOG.debug(subword, clean_toks)
+        #LOG.debug(subword, clean_toks)
 
         # Add this subword's syllables to the overall token list
         tokens += clean_toks
