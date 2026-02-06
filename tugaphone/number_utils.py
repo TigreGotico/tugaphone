@@ -18,6 +18,7 @@ class NumberParser:
 
     Limitations:
         - Can not set number scale independently of language
+        - Can not handle very large numbers  TODO: document max value
     """
     engine_pt = RbnfEngine.for_language("pt_PT")
     engine_br = RbnfEngine.for_language("pt")
@@ -47,10 +48,8 @@ class NumberParser:
         """
         # TODO: allow scale independent from language code
         #       ie. enable pt-PT+short-scale and pt-BR+long-scale
-        # TODO: if scientific notation, pronounce explicitly
         if cls.is_scientific_notation(word):
-            scale = "short" if is_brazilian else "long"
-            pass
+            return cls.pronounce_scientific(word, is_brazilian=is_brazilian)
 
         # 1. Determine if the number is an ordinal (1st, 2nd) or cardinal (1, 2)
         is_ord = cls.is_ordinal(word, next_word) if as_ordinal is None else as_ordinal
@@ -111,7 +110,20 @@ class NumberParser:
         nums = word.lower().split("e")
         if len(nums) != 2:
             return False
-        return nums[0].isdigit() and nums[1].isdigit()
+        # NOTE: cant use .isdigit() in order to allow decimals
+        return cls.is_float(nums[0]) and nums[1].isdigit()
+
+    @classmethod
+    def pronounce_scientific(cls, word: str, is_brazilian=False) -> str:
+        """
+        Pronounces scientific notation: '1.5e10' -> 'um vírgula cinco vezes dez elevado a dez'.
+        """
+        if not cls.is_scientific_notation(word):
+            raise ValueError(f"word is not scientific notation: '{word}'")
+        a, b = word.lower().split("e")
+        a_str = cls.pronounce_number_word(a, is_brazilian=is_brazilian)
+        b_str = cls.pronounce_number_word(b, is_brazilian=is_brazilian)
+        return f"{a_str} vezes dez elevado a {b_str}"
 
     # contextual rules
     @classmethod
@@ -180,8 +192,8 @@ def normalize_numbers(text: str, lang: str = "pt-PT") -> str:
 
     for idx, word in enumerate(words):
         # is this word a number?
-        int_word = NumberParser.to_int(word)
-        if int_word is not None:
+        num_word = NumberParser.to_int(word) or NumberParser.to_float(word)
+        if num_word is not None:
             # Lookahead and Lookbehind for grammatical context
             next_word = words[idx + 1] if idx + 1 < len(words) else None
             prev_word = words[idx - 1] if idx - 1 >= 0 else None
@@ -216,4 +228,6 @@ if __name__ == "__main__":
     print(normalize_numbers("897654356789098", "pt-BR")) # short-scale
     # oitocentos e noventa e sete trilhões seiscentos e cinquenta e quatro bilhões trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito
 
-    print(normalize_numbers("1e9"))  # TODO
+    print(normalize_numbers("1e9")) # um vezes dez elevado a nove
+    print(normalize_numbers("1.5e10"))  # um vírgula cinco vezes dez elevado a dez
+    print(normalize_numbers("1.5e10000000")) # um vírgula cinco vezes dez elevado a dez milhões
