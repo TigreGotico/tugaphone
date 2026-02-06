@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0a1](https://github.com/TigreGotico/tugaphone/tree/0.2.0a1) (2026-02-06)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.1.0a1...0.2.0a1)
+
+**Merged pull requests:**
+
+- feat: regional accent transformations [\#1](https://github.com/TigreGotico/tugaphone/pull/1) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.1.0a1](https://github.com/TigreGotico/tugaphone/tree/0.1.0a1) (2026-02-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.0.2...0.1.0a1)
