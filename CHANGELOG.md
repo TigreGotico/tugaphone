@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0a2](https://github.com/TigreGotico/tugaphone/tree/0.2.0a2) (2026-02-06)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.0a1...0.2.0a2)
+
+**Merged pull requests:**
+
+- Configure Renovate [\#3](https://github.com/TigreGotico/tugaphone/pull/3) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [0.2.0a1](https://github.com/TigreGotico/tugaphone/tree/0.2.0a1) (2026-02-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.1.0a1...0.2.0a1)
