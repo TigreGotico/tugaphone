@@ -359,6 +359,9 @@ class DialectInventory:
     # These override all other rules
     IRREGULAR_WORDS: Dict[str, str] = dataclasses.field(default_factory=dict)
 
+    # words with different IPA depending on postag
+    HOMOGRAPHS: Dict[str, Dict[str, str]] = dataclasses.field(default_factory=dict)
+
     # =========================================================================
     # STRESS RULES
     # =========================================================================
@@ -406,6 +409,44 @@ class DialectInventory:
         self._initialize_default_chars()
         self._initialize_stress_rules()
         self._compile_grapheme_inventory()
+
+        # words with different IPA depending on postag
+        self.HOMOGRAPHS = self.HOMOGRAPHS or {
+            "para": {"PREP": "ˈpɐɾɐ", "VERB": "ˈpaɾɐ"}, # para (preposição) vs pára (verbo) - sem distinção desde o AO1990
+            "pelo": {"PREP": "ˈpɨlu", "NOUN": "ˈpelu", "VERB": "ˈpɛlu"}, # pelo, pélo, pêlo - sem distinção desde o AO1990
+
+            "tola": {"NOUN": "ˈtɔlɐ", "ADJ": "ˈtolɐ"},  # tola (feminino de tolo, «tonto») – tola («cabeça», informal);
+            "seco": {"ADJ": "ˈseku", "VERB": "ˈsɛku"},  # "sêco" vs "séco"
+
+            "acordo": {"NOUN": "ɐˈkoɾdu", "VERB": "ɐˈkɔɾdu"}, # acordo («entendimento») – acordo (verbo acordar);
+            "acerto": {"NOUN": "ɐˈseɾtu", "VERB": "ɐˈsɛɾtu"}, # acerto («acordo», «correção») – acerto (verbo acertar);
+            "cerro": {"NOUN": "ˈseʁu", "VERB": "ˈsɛʁu"}, # cerro («elevação, colina») – cerro (verbo cerrar);
+            "choro": {"NOUN": "ˈʃoɾu", "VERB": "ˈʃɔɾu"}, # choro («pranto») – choro (verbo chorar);
+            "colher": {"NOUN": "kuˈʎɛɾ", "VERB": "kuˈʎeɾ"}, # colher («utensílio de mesa») – colher («apanhar»);
+            "começo": {"NOUN": "kuˈmesu", "VERB": "kuˈmɛsu"}, # começo («início») – começo (verbo começar);
+            "conserto": {"NOUN": "kõˈseɾtu", "VERB": "kõˈsɛɾtu"}, #  conserto (substantivo) - conserto (1.ª pess.sing. pres. ind. - verbo consertar)
+            "coro": {"NOUN": "ˈkoɾu", "VERB": "ˈkɔɾu"}, # coro («conjunto de cantores») – coro (verbo corar);
+            "corte": {"NOUN": "ˈkoɾtɨ", "VERB": "ˈkɔɾtɨ"}, # corte («morada do rei») – corte («ato de cortar»; verbo cortar);
+            "gozo": {"NOUN": "ˈgozu", "VERB": "ˈgɔzu"}, # gozo («prazer»; «troça») – gozo (verbo gozar);
+            "gosto": {"NOUN": "ˈgoʃtu", "VERB": "ˈgɔʃt"}, #   gosto (substantivo) - gosto (1.ª pess.sing. pres. ind. - verbo gostar)
+            "jogo": {"NOUN": "ˈʒoɡu", "VERB": "ˈʒɔɡu"}, # jogo («divertimento») – jogo (verbo jogar);
+            "molho": {"NOUN": "ˈmoʎu", "VERB": "ˈmɔʎu"}, # molho («líquido, caldo») – molho («feixe»; verbo molhar);
+            "olho": {"NOUN": "ˈoʎu", "VERB": "ˈɔʎu"}, # olho («órgão da visão») – olho (verbo olhar);
+            "rego": {"NOUN": "ˈʁeɡu", "VERB": "ˈʁɛɡu"}, # rego («sulco, vala») – rego (verbo regar);
+            "sede": {"NOUN": "ˈsɛdɨ", "VERB": "ˈsedɨ"}, # sede («vontade de beber») – sede («lugar»);
+            "sobre": {"NOUN": "ˈsobɾɨ", "VERB": "ˈsɔbɾɨ"}, # sobre («em cima») – sobre (verbo sobrar);
+            "torre": {"NOUN": "ˈtoʁɨ", "VERB": "ˈtɔʁɨ"}, # torre («coluna») – torre (verbo torrar);
+            "transtorno": {"NOUN": "tɾɐ̃ʃˈtoɾnu", "VERB": "tɾɐ̃ʃˈtɔɾnu"}, # transtorno («contrariedade») – transtorno (verbo transtornar);
+
+            "peso":  {"NOUN": "ˈpezu",  "VERB": "ˈpɛzu"},  # "pêso" vs "péso"
+            "porto": {"NOUN": "ˈpoɾtu", "VERB": "ˈpɔɾtu"},
+            "posto": {"NOUN": "ˈpoʃtu", "VERB": "ˈpɔʃtu"}, # eu "pósto" , o meu "pôsto", está "pôsto"
+            #"borra": {"NOUN": "ˈboʁɐ", "VERB": "ˈbɔʁɐ"}, # borra («resíduo») – borra (verbo borrar);  SKIP: uncommon - dialectal
+
+            # SKIP: disambiguation based on verb tense out of scope
+            # "vede": {"VERB": "ˈveðɨ", "VERB": "ˈvɛðɨ"}, # vede (verbo ver) – vede (verbo vedar).'
+            # "pode": {"PRESENT": "ˈpɔðɨ", "PAST": "ˈpoðɨ"},  # pode vs pôde
+        }
 
         # Até ao início do século XX, tanto em Portugal como no Brasil,
         # seguia-se uma ortografia que, por regra, baseava-se nos étimos latino ou grego para escrever cada palavra

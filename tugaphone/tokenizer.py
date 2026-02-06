@@ -656,9 +656,9 @@ class CharToken:
             if s == "a":
                 return "a" if self.has_primary_stress or self.has_secondary_stress else "ɐ"
             elif s == "e":
-                if self.dialect.dialect_code.startswith("pt-PT"):
-                    return "ɛ" if self.has_primary_stress else "ɨ"
-                return "ɛ" if self.has_primary_stress else "e"
+                if self.has_primary_stress:
+                    return "ɛ"
+                return "ɨ" if self.dialect.dialect_code.startswith("pt-PT") else "e"
             elif s == "o":
                 return "ɔ" if self.has_primary_stress or self.has_secondary_stress else "u"
 
@@ -1820,6 +1820,8 @@ class WordToken:
             Full IPA transcription with stress and syllable marks
         """
         # Check irregular words first
+        if self.postag and self.normalized in self.dialect.HOMOGRAPHS and self.postag in self.dialect.HOMOGRAPHS[self.normalized]:
+            return self.dialect.HOMOGRAPHS[self.normalized][self.postag]
         if self.normalized in self.dialect.IRREGULAR_WORDS:
             return self.dialect.IRREGULAR_WORDS[self.normalized]
 
