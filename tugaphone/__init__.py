@@ -1,9 +1,12 @@
-import os
-from typing import Dict, List, Tuple
+from typing import Optional
 
-import spacy
-from tugaphone.espeak import EspeakPhonemizer
-from tugaphone.util import normalize
+from tugaphone.dialects import (DialectInventory, LEXICON,
+                                EuropeanPortuguese, BrazilianPortuguese,
+                                AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
+from tugaphone.lexicon import TugaLexicon
+from tugaphone.pos import TugaTagger
+from tugaphone.regional import RegionalTransforms
+from tugaphone.tokenizer import Sentence, DialectInventory
 
 
 class TugaPhonemizer:
@@ -17,92 +20,71 @@ class TugaPhonemizer:
         - pt-MZ (Mozambique)
         - pt-TL (Timor-Leste)
     """
-    _DIALECT_REGIONS = {
-        "pt-PT": "lbx",
-        "pt-BR": "rjx",
-        "pt-AO": "lda",
-        "pt-MZ": "mpx",
-        "pt-TL": "dli",
-    }
 
-    def __init__(self, dictionary_path: str = None, spacy_model: str = "pt_core_news_lg"):
-        self._nlp = spacy.load(spacy_model, disable=["ner", "parser"])
-
-        self._normalize = normalize
-        self._espeak = EspeakPhonemizer()
-
-        dictionary_path = dictionary_path or os.path.join(
-            os.path.dirname(__file__), "regional_dict.csv"
-        )
-        self.lang_map, self.word_list = self._load_lang_map(dictionary_path)
-
-    def _load_lang_map(self, path: str) -> Tuple[Dict[str, Dict[str, Dict[str, str]]], List[str]]:
-        """Load region/language phoneme mappings from a CSV file.
-
-        Expected CSV columns:
-            _, word, pos, _, phonemes, _, region
+    def __init__(self,
+                 postag_engine="auto",
+                 postag_model="pt_core_news_lg"):
         """
-        lang_map: Dict[str, Dict[str, Dict[str, str]]] = {r: {} for r in self._DIALECT_REGIONS.values()}
-        words: List[str] = []
+        Initialize the TugaPhonemizer by loading the regional lexicon and configuring the part-of-speech tagger.
 
-        with open(path, "r", encoding="utf-8") as f:
-            for line in f.read().splitlines()[1:]:  # skip header
-                try:
-                    _, word, pos, _, phonemes, _, region = line.split(",", 6)
-                    phonemes = phonemes.replace("|", "").strip()
-                    word = word.strip().lower()
-                    region = region.strip()
+        Parameters:
+            postag_engine (str): Tagging engine selection passed to TugaTagger (e.g., "auto" to let the tagger choose the best available engine).
+            postag_model (str): Model name or identifier used by the POS tagger (for engines that accept a model parameter).
+        """
+        self.postag = TugaTagger(postag_engine, postag_model)
+        # lexicon is lazy loaded on first usage, do it now so first inference is faster
+        _ = LEXICON.ipa
 
-                    if region not in lang_map:
-                        continue
+    @staticmethod
+    def get_dialect_inventory(lang: str = "pt-PT") -> DialectInventory:
+        if lang == "pt-BR":
+            return BrazilianPortuguese()
+        elif lang == "pt-AO":
+            return AngolanPortuguese()
+        elif lang == "pt-MZ":
+            return MozambicanPortuguese()
+        elif lang == "pt-TL":
+            return TimoresePortuguese()
+        return EuropeanPortuguese()
 
-                    lang_map[region].setdefault(word, {})[pos] = phonemes
-                    words.append(word)
-                except ValueError:
-                    continue
+    def phonemize_sentence(self, sentence: str, lang: str = "pt-PT",
+                           regional_dialect: Optional[RegionalTransforms] = None) -> str:
+        """
+        Phonemizes a sentence for the given Portuguese dialect.
 
-        return lang_map, sorted(set(words))
+        Parameters:
+            sentence (str): Input sentence to phonemize.
+            lang (str): ISO dialect code to target (e.g., "pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL").
 
-    def _lang_to_region(self, lang: str) -> str:
-        """Convert ISO dialect code (pt-PT, pt-BR, etc.) to dataset region code."""
-        try:
-            return self._DIALECT_REGIONS[lang]
-        except KeyError as e:
-            raise ValueError(f"Unsupported dialect: {lang}") from e
+        Returns:
+            phonemized (str): Space-separated phoneme tokens for each word; punctuation tokens are preserved unchanged.
+        """
+        tagged = self.postag.tag(sentence)
 
-    def get_phones(self, word: str, lang: str, pos: str) -> str:
-        """Get phonemes for a single word using the regional dictionary or eSpeak fallback."""
-        region = self._lang_to_region(lang)
-        word = word.lower().strip()
+        if regional_dialect:
+            # 1. apply morpheme transforms
+            morph = lambda tok, pos: regional_dialect.apply_morpheme(word=tok, postag=pos)
+            tagged = [(morph(tok, pos), pos) for tok, pos in tagged]
+            morphed_sentence = " ".join([w[0] for w in tagged])
 
-        if region in self.lang_map and word in self.lang_map[region]:
-            for fallback in [pos, "NOUN", "PRON", "ADP", "DET", "ADJ", "VERB", "ADV", "SCONJ"]:
-                phones = self.lang_map[region][word].get(fallback)
-                if phones:
-                    # print(f"DEBUG - word={word}, region={region}, pos={fallback}, phonemes={phones}")
-                    return phones
+            # 2. phonemize
+            nlp = Sentence.from_postagged(surface=morphed_sentence,
+                                          tags=tagged,
+                                          dialect=self.get_dialect_inventory(lang))
+            ipa_str = nlp.ipa
 
-        # Fallback: eSpeak phonemization
-        if word == "à":
-            return "ˌɐ" # HACK: espeak expands and reads "à grave" when spelling single letter with accent
+            # 3. apply IPA transforms
+            ipa_transform = lambda ipa, tok, pos: regional_dialect.apply_ipa(word=tok, phonemes=ipa, postag=pos)
+            morphed_ipa = [ipa_transform(ipa, word, pos) for ipa, (word, pos) in zip(ipa_str.split(), tagged)]
+            return " ".join(morphed_ipa)
 
-        espeak_lang = "pt-PT" if lang != "pt-BR" else "pt-BR"
-        # print(f"DEBUG - word={word}, espeak-lang={espeak_lang}")
-        return self._espeak.phonemize(word, espeak_lang)
-
-    def phonemize_sentence(self, sentence: str, lang: str = "pt-PT") -> str:
-        """Phonemize a single sentence in the specified dialect."""
-        sentence = sentence.lower().strip()
-        sentence_norm = normalize(sentence, "pt")
-        doc = self._nlp(sentence_norm)
-        phones = " ".join(
-            self.get_phones(tok.text, lang, tok.pos_) if tok.pos_ != "PUNCT" else tok.text
-            for tok in doc
-        )
-        return phones
+        nlp = Sentence.from_postagged(surface=sentence, tags=tagged, dialect=self.get_dialect_inventory(lang))
+        return nlp.ipa
 
 
 if __name__ == "__main__":
+    from tugaphone.regional import PortoDialect
+
     ph = TugaPhonemizer()
 
     sentences = [
@@ -120,6 +102,7 @@ if __name__ == "__main__":
 
     for s in sentences:
         print(s)
+        print(f"pt-PT-x-porto → {ph.phonemize_sentence(s, regional_dialect=PortoDialect)}")
         for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
             print(f"{code} → {ph.phonemize_sentence(s, code)}")
         print("######")
