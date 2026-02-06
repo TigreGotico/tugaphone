@@ -12,28 +12,20 @@ class NumberParser:
     type (cardinal/ordinal) with the nouns they modify.
     Example: '1' can be 'um' (masc.), 'uma' (fem.), 'primeiro' (1st masc.), or 'primeira' (1st fem.).
 
-    Limitations:
-        - after one billion results may be incorrect for pt-PT, long-scale vs short-scale is not modelled!
+    NOTE: RbnfEngine defaults to short-scale for pt-BR and long-scale for pt-PT.
           https://en.wikipedia.org/wiki/Long_and_short_scales
           https://pt.wikipedia.org/wiki/Escalas_curta_e_longa
-        NOTE: RbnfEngine defaults to pt-BR and short scale. output will be "bilhões" not "biliões"
-    """
 
-    engine = RbnfEngine.for_language("pt")
+    Limitations:
+        - Can not set number scale independently of language
+    """
+    engine_pt = RbnfEngine.for_language("pt_PT")
+    engine_br = RbnfEngine.for_language("pt")
 
     # Symbols used in PT to denote ordinals (like the English 'st', 'nd', 'rd')
     ORDINAL_MALE = "º"  # e.g., 1º (primeiro)
     ORDINAL_FEMALE = "ª"  # e.g., 1ª (primeira)
     ORDINAL_TOKENS = [ORDINAL_MALE, ORDINAL_FEMALE]
-
-    # Regional differences: numbers 16, 17, and 19 use 'e' in Brazil and 'a' in Portugal.
-    # pt-BR: dez-e-sseis | pt-PT: dez-a-sseis
-    # NOTE: RbnfEngine defaults to pt-BR
-    BR2PT = {
-        "dezesseis": "dezasseis",
-        "dezessete": "dezassete",
-        "dezenove": "dezanove"
-    }
 
     @classmethod
     def pronounce_number_word(cls, word: str,
@@ -53,10 +45,11 @@ class NumberParser:
             as_ordinal: Explicit override to treat number as an ordinal.
             is_brazilian: If True, uses Brazil's spelling (pt-BR).
         """
-        # TODO: account for short/long scale
-        scale = "short" if is_brazilian else "long"
+        # TODO: allow scale independent from language code
+        #       ie. enable pt-PT+short-scale and pt-BR+long-scale
         # TODO: if scientific notation, pronounce explicitly
         if cls.is_scientific_notation(word):
+            scale = "short" if is_brazilian else "long"
             pass
 
         # 1. Determine if the number is an ordinal (1st, 2nd) or cardinal (1, 2)
@@ -67,7 +60,7 @@ class NumberParser:
         fmt = FormatPurpose.ORDINAL if is_ord else FormatPurpose.CARDINAL
 
         # 3. Generate the base text using RBNF (Rule-Based Number Format)
-        spelled = cls.engine.format_number(word, fmt)
+        spelled = cls.engine_br.format_number(word, fmt) if is_brazilian else cls.engine_pt.format_number(word, fmt)
 
         # Select the specific ruleset based on grammar results
         if is_ord:
@@ -76,21 +69,9 @@ class NumberParser:
             key = f'spellout-cardinal-{gender}'
 
         text = spelled.text_by_ruleset[key]
-
-        # 4. Handle European Portuguese (pt-PT) variations if necessary
-        return cls.BR2PT.get(text, text) if not is_brazilian else text
+        return text
 
     # digit/string conversion
-    @classmethod
-    def pronounce_int(cls, number: int, as_ordinal=False, gender: str = "m"):
-        """Directly spells out an integer given specific parameters."""
-        gender = 'masculine' if "f" not in gender else "feminine"
-        fmt = FormatPurpose.ORDINAL if as_ordinal else FormatPurpose.CARDINAL
-        spelled = cls.engine.format_number(number, fmt)
-
-        ord_key = f'spellout-ordinal-{gender}' if as_ordinal else f'spellout-cardinal-{gender}'
-        return spelled.text_by_ruleset[ord_key]
-
     @classmethod
     def to_int(cls, word: str) -> Optional[int]:
         """Cleans a string of punctuation/symbols and converts to integer."""
@@ -185,11 +166,14 @@ class NumberParser:
         return "masculine"
 
 
-def normalize_numbers(text: str) -> str:
+def normalize_numbers(text: str, lang: str = "pt-PT") -> str:
     """
     Iterates through a sentence and replaces digits with their
     contextually correct Portuguese written form.
     """
+    if "pt-br" in lang.lower():
+        lang = "pt-BR"
+
     # Pre-process: ensure symbols like 1 º become 1º for easier parsing
     words = text.replace(" º", "º").replace(" ª", "ª").split()
     normalized_words = []
@@ -203,7 +187,8 @@ def normalize_numbers(text: str) -> str:
             prev_word = words[idx - 1] if idx - 1 >= 0 else None
             # spell out the number
             normalized_words.append(
-                NumberParser.pronounce_number_word(word, prev_word, next_word)
+                NumberParser.pronounce_number_word(word, prev_word, next_word,
+                                                   is_brazilian=lang == "pt-BR")
             )
         else:
             normalized_words.append(word)
@@ -226,5 +211,9 @@ if __name__ == "__main__":
     print(normalize_numbers("visitei 1 cidade"))  # uma (fem)
 
 
-    print(normalize_numbers("897654356789098"))
-    print(normalize_numbers("1e9"))  # uma (fem)
+    print(normalize_numbers("897654356789098", "pt-PT")) # long-scale
+    # oitocentos e noventa e sete biliões seiscentos e cinquenta e quatro mil milhões trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito
+    print(normalize_numbers("897654356789098", "pt-BR")) # short-scale
+    # oitocentos e noventa e sete trilhões seiscentos e cinquenta e quatro bilhões trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito
+
+    print(normalize_numbers("1e9"))  # TODO

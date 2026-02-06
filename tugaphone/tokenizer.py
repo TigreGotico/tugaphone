@@ -87,21 +87,22 @@ Context-sensitive rules are applied bottom-up during IPA generation.
 
 QUICK REFERENCES:
 ===========
+- http://www.portaldalinguaportuguesa.org
 - https://en.wiktionary.org/wiki/Wiktionary:International_Phonetic_Alphabet
 - https://en.wiktionary.org/wiki/Appendix:Portuguese_pronunciation
 - https://en.wiktionary.org/wiki/Appendix:Portuguese_spellings
 - https://european-portuguese.info/vowels
 - https://pt.wikipedia.org/wiki/L%C3%ADngua_portuguesa
-- https://pt.wikipedia.org/wiki/Fonologia_da_língua_portuguesa
 - https://pt.wikipedia.org/wiki/Ortografia_da_l%C3%ADngua_portuguesa
 - https://pt.wikipedia.org/wiki/Gram%C3%A1tica_da_l%C3%ADngua_portuguesa
+- https://pt.wikipedia.org/wiki/Fonologia_da_língua_portuguesa
+- https://pt.wikipedia.org/wiki/Processo_do_vocalismo_%C3%A1tono_do_portugu%C3%AAs_europeu
 - https://pt.wikipedia.org/wiki/Ditongo
 - https://pt.wikipedia.org/wiki/Tritongo
 - https://pt.wikipedia.org/wiki/Hiato_(lingu%C3%ADstica)
 - https://pt.wikipedia.org/wiki/D%C3%ADgrafo
 - https://pt.wikipedia.org/wiki/Fonema
 - https://pt.wikipedia.org/wiki/Alofonia
-- http://www.portaldalinguaportuguesa.org
 """
 
 import dataclasses
