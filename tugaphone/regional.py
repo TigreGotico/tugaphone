@@ -42,20 +42,55 @@ class DialectTransforms:
     base_region: Optional[str] = None  # for the bundled lexicon
 
     def apply_ipa(self, word: str, phonemes: str, postag: str = "NOUN") -> str:
-        """Applies all IPA transformation rules sequentially."""
+        """
+        Apply the configured IPA transformation rules to a phoneme string for a given word and part of speech.
+        
+        Parameters:
+            word (str): The orthographic word used by rule functions when contextual information is required.
+            phonemes (str): The input phoneme string to transform.
+            postag (str): The part-of-speech tag influencing rule behaviour (default: "NOUN").
+        
+        Returns:
+            str: The phoneme string after all IPA rules have been applied.
+        """
         for rule in self.ipa_rules:
             phonemes = rule(word, phonemes, postag)
         return phonemes
 
     def apply_morpheme(self, word: str, postag: str = "NOUN") -> str:
-        """Applies all morpheme transformation rules sequentially."""
+        """
+        Apply morpheme transformation rules to a word in sequence.
+        
+        Parameters:
+            word (str): Input word to transform.
+            postag (str): Part-of-speech tag used by morpheme rules to guide transformations (defaults to "NOUN").
+        
+        Returns:
+            str: Transformed word after applying all morpheme rules.
+        """
         for rule in self.morpheme_rules:
             word = rule(word, postag)
         return word
 
     @staticmethod
     def from_dict(data: Dict[str, str | List[str]]) -> 'DialectTransforms':
-        """Constructs a RegionalDialect instance from a dictionary config."""
+        """
+        Create a DialectTransforms instance from a dictionary configuration.
+        
+        Parameters:
+            data (Dict[str, str | List[str]]): Mapping that may contain:
+                - 'ipa_rules': list of IPA rule names to apply in order.
+                - 'morpheme_rules': list of morpheme rule names (currently not implemented and ignored).
+                - 'base_region': optional base lexicon identifier.
+        
+        Returns:
+            DialectTransforms: A new instance with `ipa_rules` set to the functions named in
+            `data['ipa_rules']`, `morpheme_rules` left empty (pending implementation), and
+            `base_region` set from the input (or None).
+        
+        Raises:
+            ValueError: If any name listed in 'ipa_rules' is not a recognized IPA rule.
+        """
         ipa_str_rules: List[str] = data.get('ipa_rules', [])
         morpheme_str_rules: List[str] = data.get('morpheme_rules', [])
         base_region: Optional[str] = data.get('base_region')
@@ -80,7 +115,15 @@ class DialectTransforms:
 
     @property
     def as_dict(self) -> Dict[str, str | List[str]]:
-        """Serializes the RegionalDialect instance to a dictionary."""
+        """
+        Serialize the RegionalDialect to a plain dictionary representation.
+        
+        Returns:
+            dict: A dictionary with keys:
+                - "base_region": the dialect's base region (defaults to "lbx" if not set).
+                - "morpheme_rules": list of morpheme rule names for rules that have a known string mapping.
+                - "ipa_rules": list of IPA rule names for rules that have a known string mapping.
+        """
         return {
             "base_region": self.base_region or "lbx",  # Default to Lisbon
             "morpheme_rules": [INVERSE_RULE_MAP[rule] for rule in self.morpheme_rules if rule in INVERSE_RULE_MAP],

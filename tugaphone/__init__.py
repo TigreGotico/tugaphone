@@ -31,13 +31,14 @@ class TugaPhonemizer:
                  postag_engine="auto",
                  postag_model="pt_core_news_lg"):
         """
-        Initialize the TugaPhonemizer by loading the regional lexicon and configuring the part-of-speech tagger.
-
-        Parameters:
-            dictionary_path (str): Path to a CSV lexicon file; if omitted, defaults to the bundled "regional_dict.csv" located next to this module.
-            postag_engine (str): Tagging engine selection passed to TugaTagger (e.g., "auto" to let the tagger choose the best available engine).
-            postag_model (str): Model name or identifier used by the POS tagger (for engines that accept a model parameter).
-        """
+                 Create a TugaPhonemizer by loading the regional lexicon and configuring the part-of-speech tagger.
+                 
+                 Parameters:
+                     dictionary_path (str): Path to a CSV lexicon file; if omitted, the bundled "regional_dict.csv" next to this module is used.
+                     regional_dialect (Optional[DialectTransforms]): Optional regional dialect post-processor used to apply morpheme-level and IPA transformations during phonemization.
+                     postag_engine (str): Tagger engine selection passed to TugaTagger (for example, "auto" to let the tagger choose the best available engine).
+                     postag_model (str): Model name or identifier supplied to the POS tagger when applicable.
+                 """
         self.regional_dialect = regional_dialect  # post-processor
         self.dictionary_path = dictionary_path or os.path.join(
             os.path.dirname(__file__), "regional_dict.csv"
