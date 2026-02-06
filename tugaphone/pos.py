@@ -1,4 +1,5 @@
 from typing import List, Tuple
+from tugaphone.dialects import LEXICON
 
 
 class TugaTagger:
@@ -79,7 +80,8 @@ class TugaTagger:
             "auto": self.tag_auto,
             "dummy": self.tag_dummy,
             "brill": self.tag_brill,
-            "spacy": self.tag_spacy
+            "spacy": self.tag_spacy,
+            "lexicon": self.tag_lexicon
         }
         handler = engines.get(self.engine)
         if not handler:
@@ -93,22 +95,12 @@ class TugaTagger:
         Returns:
             List[Tuple[str, str]]: A list of (word, POS-tag) tuples produced by the first successful tagger; if both spaCy and Brill raise exceptions, returns the dummy tagger's output.
         """
-        for method in [self.tag_spacy, self.tag_brill]:
+        for method in [self.tag_brill, self.tag_spacy, self.tag_lexicon]:
             try:
                 return method(sentence)
             except:
                 continue
         return self.tag_dummy(sentence)
-
-    @classmethod
-    def tag_dummy(cls, sentence: str) -> List[Tuple[str, str]]:
-        """
-        Split the sentence on whitespace and tag each token as the noun "NOUN".
-
-        Returns:
-            List[Tuple[str, str]]: A list of (word, tag) tuples where each whitespace-separated token from the input is paired with the tag "NOUN".
-        """
-        return [(word, cls._guess_pos(word)) for word in sentence.split()]
 
     def tag_brill(self, sentence: str) -> List[Tuple[str, str]]:
         """
@@ -137,6 +129,28 @@ class TugaTagger:
             self.load_spacy(strict=True)
         doc = self._spacy(sentence)
         return [(tok.text, tok.pos_) for tok in doc]
+
+    @classmethod
+    def tag_lexicon(cls, sentence: str) -> List[Tuple[str, str]]:
+        tagged = []
+        for word in sentence.lower().split():
+            if word in LEXICON.possible_postags:
+                possibilities = LEXICON.possible_postags[word]
+                # TODO: how to choose postag? use surrounding context
+                tagged.append((word, possibilities[0]))
+            else:
+                tagged.append((word, cls._guess_pos(word)))
+        return tagged
+
+    @classmethod
+    def tag_dummy(cls, sentence: str) -> List[Tuple[str, str]]:
+        """
+        Split the sentence on whitespace and tag each token as the noun "NOUN".
+
+        Returns:
+            List[Tuple[str, str]]: A list of (word, tag) tuples where each whitespace-separated token from the input is paired with the tag "NOUN".
+        """
+        return [(word, cls._guess_pos(word)) for word in sentence.split()]
 
     @staticmethod
     def _guess_pos(word: str) -> str:
