@@ -288,6 +288,11 @@ class CharToken:
         """Index of this character in parent sentence."""
         return self._idx_in_sentence
 
+    @property
+    def idx_in_syllable(self) -> int:
+        """Index of this character in parent syllable."""
+        return self.parent_syllable.find(self.surface, self.char_idx)
+
     @cached_property
     def parent_word(self) -> Optional['WordToken']:
         """The word containing this character."""
@@ -327,31 +332,58 @@ class CharToken:
     # -------------------------------
     @property
     def prefix(self) -> str:
-        return self.parent_grapheme.prefix + "".join([c.normalized for c in self._prev_chars])
+        if not self.parent_word:
+            return ""
+        return self.parent_word.normalized[:self.idx_in_word]
 
     @property
     def suffix(self) -> str:
-        return "".join([c.normalized for c in self._next_chars]) + self.parent_grapheme.suffix
-
-    @cached_property
-    def _prev_chars(self) -> List['CharToken']:
-        if self.char_idx == 0:
-            return []
-        return [w for w in self.parent_grapheme.characters if w.char_idx < self.char_idx]
-
-    @cached_property
-    def _next_chars(self) -> List['CharToken']:
-        return [w for w in self.parent_grapheme.characters if w.char_idx > self.char_idx]
+        if not self.parent_word:
+            return ""
+        return self.parent_word.normalized[self.idx_in_word:]
 
     # =========================================================================
     # CHARACTER CLASSIFICATION
     # =========================================================================
-
     @cached_property
     def is_punct(self) -> bool:
         """True if character is punctuation."""
         return self.surface in self.dialect.PUNCT_CHARS
 
+    @cached_property
+    def is_foreign(self) -> bool:
+        """
+        True if character is not in traditional Portuguese alphabet.
+
+        Foreign letters: k, w, y
+        Used in: loanwords, foreign names, scientific terms
+        """
+        return self.normalized in self.dialect.FOREIGN_CHARS
+
+    @cached_property
+    def is_silent(self) -> bool:
+        """
+        True if character has no phonetic realization.
+
+        Silent letter categories:
+        1. H: Always silent (except in digraphs ch, nh, lh)
+        2. U in QU/GU: Silent before e/i (modern orthography)
+        3. Archaic P: Silent in mpc/mpç/mpt clusters
+        4. First letter in doubled consonant digraphs
+
+        Context-dependent - uses word and positional information.
+        """
+        return is_grapheme_silent(
+            self.normalized,
+            self.prefix,
+            self.suffix,
+            self.parent_word.normalized if self.parent_word else "",
+            self.dialect
+        )
+
+    # =========================================================================
+    # VOWEL QUALITY CLASSIFICATION
+    # =========================================================================
     @cached_property
     def is_vowel(self) -> bool:
         """
@@ -371,6 +403,11 @@ class CharToken:
         )
 
     @cached_property
+    def is_consonant(self) -> bool:
+        """True if character represents a consonant."""
+        return not self.is_vowel and not self.is_punct
+
+    @cached_property
     def is_semivowel(self) -> bool:
         """
         True if character can function as semivowel (glide).
@@ -386,9 +423,15 @@ class CharToken:
         return self.normalized in self.dialect.SEMIVOWEL_CHARS
 
     @cached_property
-    def is_consonant(self) -> bool:
-        """True if character represents a consonant."""
-        return not self.is_vowel and not self.is_punct
+    def has_diacritics(self) -> bool:
+        """True if character has diacritical marks."""
+        return self.normalized in (
+                self.dialect.ACUTE_VOWEL_CHARS |
+                self.dialect.GRAVE_VOWEL_CHARS |
+                self.dialect.CIRCUM_VOWEL_CHARS |
+                self.dialect.TILDE_VOWEL_CHARS |
+                self.dialect.TREMA_VOWEL_CHARS
+        )
 
     @cached_property
     def is_nasal_vowel(self) -> bool:
@@ -416,52 +459,6 @@ class CharToken:
         return False
 
     @cached_property
-    def is_foreign(self) -> bool:
-        """
-        True if character is not in traditional Portuguese alphabet.
-
-        Foreign letters: k, w, y
-        Used in: loanwords, foreign names, scientific terms
-        """
-        return self.normalized in self.dialect.FOREIGN_CHARS
-
-    @cached_property
-    def has_diacritics(self) -> bool:
-        """True if character has diacritical marks."""
-        return self.normalized in (
-                self.dialect.ACUTE_VOWEL_CHARS |
-                self.dialect.GRAVE_VOWEL_CHARS |
-                self.dialect.CIRCUM_VOWEL_CHARS |
-                self.dialect.TILDE_VOWEL_CHARS |
-                self.dialect.TREMA_VOWEL_CHARS
-        )
-
-    @cached_property
-    def is_silent(self) -> bool:
-        """
-        True if character has no phonetic realization.
-
-        Silent letter categories:
-        1. H: Always silent (except in digraphs ch, nh, lh)
-        2. U in QU/GU: Silent before e/i (modern orthography)
-        3. Archaic P: Silent in mpc/mpç/mpt clusters
-        4. First letter in doubled consonant digraphs
-
-        Context-dependent - uses word and positional information.
-        """
-        return is_grapheme_silent(
-            self.normalized,
-            self.prefix,
-            self.suffix,
-            self.parent_word.normalized if self.parent_word else "",
-            self.dialect
-        )
-
-    # =========================================================================
-    # VOWEL QUALITY CLASSIFICATION
-    # =========================================================================
-
-    @cached_property
     def is_open_vowel(self) -> bool:
         """
         True if vowel is phonetically open (low tongue position).
@@ -484,6 +481,29 @@ class CharToken:
         Mid vowels e, o are closed when marked with circumflex: ê, ô
         """
         return self.normalized in ["i", "u", "ê", "ô"]
+
+    # =========================================================================
+    # SYLLABLE QUALITY CLASSIFICATION
+    # =========================================================================
+    @property
+    def parent_syllable(self) -> str:
+        if not self.parent_grapheme:
+            return self.surface
+        return self.parent_grapheme.parent_syllable
+
+    @property
+    def is_nucleus(self) -> bool:
+        return self.is_vowel
+
+    @property
+    def is_onset(self) -> bool:
+        return self.idx_in_syllable == 0
+
+    @property
+    def is_coda(self) -> bool:
+        if self.is_last_word_letter:
+            return True
+        return self.parent_syllable[-1] == self.surface
 
     # =========================================================================
     # POSITIONAL PROPERTIES
@@ -609,8 +629,6 @@ class CharToken:
 
             word = self.parent_word.normalized if self.parent_word else ""
 
-            # TODO: per dialect handling
-
             # Special case: Single-vowel words
             if word == "a":
                 return "ɐ"
@@ -688,18 +706,26 @@ class CharToken:
         next_char = self.next_char.normalized if self.next_char else ""
         prev_char = self.prev_char.normalized if self.prev_char else ""
 
-        # BRAZILIAN PORTUGUESE: t/d palatalization before [i]
-        if self.dialect.dialect_code.startswith("pt-BR"):
-            if s == "t" and next_char == "i":
-                return "tʃ"
-            if s == "d" and next_char == "i":
-                return "dʒ"
+        # Z word-finally → [ʃ] (European) or [s]
+        if self.is_consonant and self.is_last_word_letter and s in self.dialect.WORD_FINAL_CHAR2PHONEMES:
+            return self.dialect.WORD_FINAL_CHAR2PHONEMES[s]
 
-            # L-vocalization in coda position
-            if s == "l" and self.is_last_word_letter:
-                return "w"
-            if s == "l" and self.next_char and self.next_char.is_consonant:
-                return "w"
+        # Initial R → strong R [ʁ]
+        if self.is_consonant and self.is_first_word_letter and s in self.dialect.WORD_INITIAL_CHAR2PHONEMES:
+            return self.dialect.WORD_INITIAL_CHAR2PHONEMES[s]
+
+        # intervocalic consonant rules
+        # S between vowels → [z]
+        if self.is_intervocalic and self.is_consonant and s in self.dialect.INTERVOCALIC_CHAR2PHONEMES:
+            return self.dialect.INTERVOCALIC_CHAR2PHONEMES[s]
+
+        # coda consonant rules
+        if self.is_coda and self.is_consonant and s in self.dialect.CODA_CHAR2PHONEMES:
+            return self.dialect.CODA_CHAR2PHONEMES[s]
+
+        # onset consonant rules
+        if self.is_onset and self.is_consonant and s in self.dialect.ONSET_CHAR2PHONEMES:
+            return self.dialect.ONSET_CHAR2PHONEMES[s]
 
         # C before front vowels → [s]
         if s == "c" and next_char in self.dialect.FRONT_VOWEL_CHARS:
@@ -709,27 +735,14 @@ class CharToken:
         if s == "g" and next_char in self.dialect.FRONT_VOWEL_CHARS:
             return "ʒ"
 
-        # Initial R → strong R [ʁ]
-        if s == "r" and self.is_first_word_letter:
-            if self.dialect.dialect_code.startswith("pt-BR"):
-                return "h"  # Brazilian [h] or [x]
-            elif self.dialect.dialect_code.startswith("pt-PT"):
-                return "ʁ"  # European uvular
-            else:
-                return "r"  # African/Timorese alveolar trill
-
         # R after l, n, s → strong R
-        if s == "r" and prev_char in "lns":
+        if s == "r" and prev_char in ["l", "n", "s"]:
             if self.dialect.dialect_code.startswith("pt-BR"):
                 return "h"  # Brazilian [h] or [x]
             elif self.dialect.dialect_code.startswith("pt-PT"):
                 return "ʁ"  # European uvular
             else:
                 return "r"  # African/Timorese alveolar trill
-
-        # S between vowels → [z]
-        if s == "s" and self.is_intervocalic:
-            return "z"
 
         # S between consonant and vowel → context-dependent
         if s == "s" and self.is_between_consonant_vowel:
@@ -745,18 +758,6 @@ class CharToken:
         # X rules (complex, context-dependent)
         if s == "x":
             return self._ipa_for_x()
-
-        # Z word-finally → [ʃ] (European) or [s]
-        if s == "z" and self.is_last_word_letter:
-            if self.dialect.dialect_code.startswith("pt-BR"):
-                return "s"  # Brazilian: [s]
-            else:
-                return "ʃ"  # European/African: [ʃ]
-
-        # L word-finally (Brazilian vocalization handled above)
-        if s == "l" and self.is_last_word_letter:
-            if self.dialect.dialect_code.startswith("pt-PT"):
-                return "ɫ"  # European dark L
 
         # Default mapping
         return self.dialect.DEFAULT_CHAR2PHONEMES.get(s, s)
@@ -1035,12 +1036,7 @@ class GraphemeToken:
         """
         if not self.parent_word:
             return ""
-
-        prev_graphemes = [
-            g.normalized for g in self.parent_word.graphemes
-            if g.grapheme_idx < self.grapheme_idx
-        ]
-        return "".join(prev_graphemes)
+        return self.parent_word.normalized[:self.idx_in_word]
 
     @property
     def suffix(self) -> str:
@@ -1051,12 +1047,7 @@ class GraphemeToken:
         """
         if not self.parent_word:
             return ""
-
-        next_graphemes = [
-            g.normalized for g in self.parent_word.graphemes
-            if g.grapheme_idx > self.grapheme_idx
-        ]
-        return "".join(next_graphemes)
+        return self.parent_word.normalized[self.idx_in_word:]
 
     @cached_property
     def prev_grapheme(self) -> Optional['GraphemeToken']:
@@ -2109,6 +2100,9 @@ def demonstrate_transcription(text: str, dialect: DialectInventory = None):
     if dialect is None:
         dialect = EuropeanPortuguese()
 
+    from tugaphone.pos import TugaTagger
+    pos = TugaTagger(engine="brill")
+    #sentence = Sentence.from_postagged(text, tags=pos.tag(text), dialect=dialect)
     sentence = Sentence(text, dialect=dialect)
 
     print(f"Sentence: {sentence.surface}")
@@ -2118,6 +2112,7 @@ def demonstrate_transcription(text: str, dialect: DialectInventory = None):
 
     for word in sentence.words:
         print(f"{word.word_idx + 1}. {word.surface} [{word.ipa}]")
+        print(f"   Postag: {word.postag}")
         print(f"   Syllables: {'.'.join(word.syllables)}")
         print(f"   Stress: syllable {word.stressed_syllable_idx}")
 
@@ -2172,7 +2167,7 @@ if __name__ == "__main__":
         "O exemplo do táxi é exato.",
 
         # Nasal patterns
-        "Um homem tem compaixão.",
+        "Um homem tem compaixão."
     ]
 
     european = EuropeanPortuguese()

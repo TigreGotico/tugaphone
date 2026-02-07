@@ -352,6 +352,15 @@ class DialectInventory:
     # Many characters have context-sensitive variants applied later
     DEFAULT_CHAR2PHONEMES: Dict[str, str] = dataclasses.field(default_factory=dict)
 
+    # Single character → IPA mapping for specific syllabic positions
+    INTERVOCALIC_CHAR2PHONEMES: Dict[str, str] = dataclasses.field(default_factory=dict)
+    ONSET_CHAR2PHONEMES: Dict[str, str] = dataclasses.field(default_factory=dict)
+    CODA_CHAR2PHONEMES: Dict[str, str] = dataclasses.field(default_factory=dict)
+
+    # Single character → IPA mapping for specific word positions
+    WORD_INITIAL_CHAR2PHONEMES: Dict[str, str] = dataclasses.field(default_factory=dict)
+    WORD_FINAL_CHAR2PHONEMES: Dict[str, str] = dataclasses.field(default_factory=dict)
+
     # =========================================================================
     # IRREGULAR WORD MAPPINGS
     # =========================================================================
@@ -1168,6 +1177,30 @@ class DialectInventory:
         - h: Always silent except in digraphs (ch, nh, lh)
         - u: Silent in que/qui, gue/gui contexts (modern orthography)
         """
+        if not self.WORD_INITIAL_CHAR2PHONEMES:
+            self.WORD_INITIAL_CHAR2PHONEMES = {
+                "r": "ʁ",  # European uvular
+                #"r": "r",  # African/Timorese alveolar trill
+                #"r": "h",  # Brazilian [h] or [x]
+            }
+        if not self.WORD_FINAL_CHAR2PHONEMES:
+            self.WORD_FINAL_CHAR2PHONEMES = {
+                "z": "ʃ",
+                # "z": "s", # pt-BR
+            }
+        if not self.ONSET_CHAR2PHONEMES:
+            self.ONSET_CHAR2PHONEMES = {
+
+            }
+        if not self.CODA_CHAR2PHONEMES:
+            self.CODA_CHAR2PHONEMES = {
+               # "l": "ɫ", # pt-PT
+               # "l": "w", # pt-BR
+            }
+        if not self.INTERVOCALIC_CHAR2PHONEMES:
+            self.INTERVOCALIC_CHAR2PHONEMES = {
+                "s": "z",
+            }
         if not self.DEFAULT_CHAR2PHONEMES:
             self.DEFAULT_CHAR2PHONEMES = {
                 # VOWELS
@@ -1415,14 +1448,26 @@ class EuropeanPortuguese(DialectInventory):
        - "bem" [ˈbẽj̃]
     """
 
-    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
-        super().__init__(
-            dialect_code=dialect_code or "pt-PT",
-            FALLING_NASAL_DIPHTHONGS={
+    def __init__(self, **kwargs):
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT"
+        if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
+            kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                "s": "z",
+                "b": "β",  # <- Voiced bilabial fricative
+                "d": "ð", # <- Voiced alveolar non-sibilant fricative (not present in southern dialects)
+            }
+        if "CODA_CHAR2PHONEMES" not in kwargs:
+            kwargs["CODA_CHAR2PHONEMES"] = {
+                "l": "ɫ",
+            }
+        if "FALLING_NASAL_DIPHTHONGS" not in kwargs:
+            kwargs["FALLING_NASAL_DIPHTHONGS"] = {
                 **AO1990.FALLING_NASAL_DIPHTHONGS,
                 "ũj": "ui",  # muito (special nasalized case)
-            },
-            TRIPHTHONG2IPA={
+            }
+        if "TRIPHTHONG2IPA" not in kwargs:
+            kwargs["TRIPHTHONG2IPA"] = {
                 **AO1990.TRIPHTHONG2IPA,
                 # [j-e-j] sequence
                 "iei": "jej",  # chieira, macieira, pardieiro
@@ -1430,17 +1475,1851 @@ class EuropeanPortuguese(DialectInventory):
                 # "iei": "jɐj",  # with vowel reduction
                 # [j-a-w] sequence
                 "iau": "jaw",  # miau
-            },
-            IRREGULAR_WORDS=IRREGULAR_WORDS or LEXICON.get_ipa_map(region="lbx"), # Lisbon
-            **kwargs
-        )
+            }
+        if "IRREGULAR_WORDS" not in kwargs:
+            kwargs["IRREGULAR_WORDS"] = LEXICON.get_ipa_map(region="lbx")
+        super().__init__(**kwargs)
 
 
-class LisbonPortuguese(EuropeanPortuguese):
-    def __init__(self):
-        super().__init__(
-            dialect_code="pt-PT-x-lisbon",
-        )
+class NorthernPortuguese(EuropeanPortuguese):
+    """
+    Northern Portuguese phonological inventory (Minho, Douro Litoral).
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Northern Portuguese dialects form a dialectal continuum with Galician,
+    preserving several archaic features lost in Central-Southern varieties.
+    These dialects are spoken in the regions of Minho, Trás-os-Montes, and
+    parts of Douro Litoral, representing the most conservative varieties of
+    European Portuguese.
+
+    CHARACTERISTIC FEATURES:
+    ------------------------
+    1. BETACISM: Merger of /b/ and /v/ → [b] or [β]
+       - LINGUISTIC CONTEXT: Common in Iberian Romance; reflects historical
+         lack of /v/ phoneme in Latin
+       - "vinho" [ˈbiɲu] or [ˈβiɲu] (not [ˈviɲu])
+       - "bola" [ˈbɔlɐ] or [ˈβɔlɐ]
+       - Intervocalic position strongly favors fricative [β]
+       - Also affects <f> → [ɸ] (bilabial fricative) in some sub-dialects
+
+    2. DIPHTHONG PRESERVATION: Maintains historical diphthongs
+       a) /ej/ in <ei> stays [ej] (not monophthongized to [ɐj])
+          - "primeiro" [pɾiˈmejɾu] (Lisbon: [pɾiˈmɐjɾu])
+          - "feito" [ˈfejtu] (Lisbon: [ˈfɐjtu])
+          - INSIGHT: Reflects medieval Portuguese pronunciation
+
+       b) /ow/ in <ou> stays [ow] (not monophthongized to [o])
+          - "ouro" [ˈowɾu] (Lisbon: [ˈoɾu])
+          - "pouco" [ˈpowku] (Lisbon: [ˈpoku])
+          - HISTORICAL: This diphthong comes from Latin -AU-
+
+    3. AFFRICATE PRESERVATION: /tʃ/ maintained in <ch>
+       - "chuva" [ˈtʃuβɐ] (not [ˈʃuvɐ])
+       - "achar" [ɐˈtʃaɾ] (not [ɐˈʃaɾ])
+       - INSIGHT: Medieval Portuguese had /tʃ/ which simplified to [ʃ]
+         in most dialects but persists in the North
+
+    4. FRICATIVIZATION: Lenition of voiced stops in intervocalic position
+       - /d/ → [ð] (voiced dental fricative)
+       - /b/ → [β] (voiced bilabial fricative)
+       - "cada" [ˈkaðɐ] (not [ˈkadɐ])
+       - "saber" [sɐˈβeɾ] (not [sɐˈbeɾ])
+
+    GEOGRAPHICAL DISTRIBUTION:
+    --------------------------
+    - Spoken from the Spanish border (Galicia) south to the Douro River
+    - Strongholds: Braga, Viana do Castelo, Vila Real
+    - Forms transitional zone with Galician in the north
+    - More conservative in rural areas; urban centers show Lisbon influence
+
+    SOCIOLINGUISTIC NOTES:
+    ----------------------
+    - Stigmatized in some urban contexts (seen as "rural")
+    - Strong regional identity and pride in traditional speech
+    - Young speakers increasingly adopt Lisbon norms
+    - Galician-Portuguese cultural continuity maintained
+    """
+    def __init__(self, **kwargs):
+        # Northern European Portuguese dialects, closely related with Galician, are characterized by:
+        #     Betacism: [b] and [v] are realized as [b] or [β] (e.g.: chuva: [ˈt͡ʃu.βɐ], vela: [ˈbɛ.lɐ], [ˈβɛ.lɐ]).
+        #     Conservation the diphthong /ej/ in <ei>, instead of realizing it as /ɐj/ (e.g.: ceifar: [sej.ˈfaɾ], feito: [ˈfej.tu])
+        #     Conservation of the diphthong /ow/ in <ou>, instead of merging it with /o/ (e.g.: ouro: [ˈow.ɾu], ouvir: [ow.ˈβiɾ]).
+        #     Conservation of the affricate /t͡ʃ/ in <ch>, instead of merging it with /ʃ/ (e.g.: chuva: [ˈt͡ʃu.βɐ], chamar: [t͡ʃɐ.ˈmaɾ]).
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT-x-north"
+        if "DEFAULT_CHAR2PHONEMES" not in kwargs:
+            kwargs["DEFAULT_CHAR2PHONEMES"] ={
+                **AO1990,
+                # "f": "ɸ", # <- Voiceless bilabial fricative
+                "v": "b" # <- Betacism
+            }
+        if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
+            kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                "d": "ð",  # <- Voiced alveolar non-sibilant fricative
+                "b": "β",  # <- Voiced bilabial fricative
+                "v": "β",  # <- Betacism
+            }
+        if "DIPHTHONG2IPA" not in kwargs:
+            kwargs["DIPHTHONG2IPA"] = {
+                **AO1990.DIPHTHONG2IPA,
+                "ei": "ej",  # aj in south
+            }
+        if "IRREGULAR_WORDS" not in kwargs:
+            kwargs["IRREGULAR_WORDS"] = {
+                **LEXICON.get_ipa_map(region="lbx"),
+                "têm": "tẽjẽj"
+            }
+        super().__init__(**kwargs)
+
+
+class TransmontanoPortuguese(NorthernPortuguese):
+    """
+    Transmontano (Trás-os-Montes) Portuguese phonological inventory.
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Transmontano Portuguese, spoken in the northeastern interior region of
+    Portugal (Trás-os-Montes), represents one of the most archaic and
+    phonologically rich Portuguese dialects. It uniquely preserves a medieval
+    sibilant contrast that has been lost in virtually all other Portuguese
+    varieties worldwide.
+
+    THE SIBILANT DISTINCTION (Most Distinctive Feature):
+    -----------------------------------------------------
+    Transmontano is the ONLY Portuguese dialect that maintains the medieval
+    four-way sibilant distinction that existed in 16th-century Portuguese:
+
+    1. APICO-ALVEOLAR SIBILANTS (from medieval affricates):
+       - Voiceless [s̺] in <ss>: "passo" [ˈpas̺u] (step)
+       - Voiced [z̺] in <s>: "coser" [kuˈz̺eɾ] (to sew)
+       - Articulated with tongue tip raised (apical)
+       - Retracted, "darker" sound quality
+       - Similar to Spanish <s>
+
+    2. PREDORSO-DENTAL SIBILANTS (from medieval fricatives):
+       - Voiceless [s] in <ç>: "paço" [ˈpasu] (palace)
+       - Voiced [z] in <z>: "cozer" [kuˈzeɾ] (to cook)
+       - Articulated with tongue blade (laminal)
+       - More "fronted" sound quality
+       - Standard in rest of Portuguese-speaking world
+
+    HISTORICAL LINGUISTICS:
+    -----------------------
+    In medieval Galician-Portuguese (12th-13th centuries):
+    - <ç>, <z> were AFFRICATES: [ts], [dz]
+    - <ss>, <s> were already FRICATIVES: [s̺], [z̺]
+
+    By the 16th century:
+    - Affricates de-affricated: [ts] > [s], [dz] > [z]
+    - Creating a 4-way contrast: [s]/[z] vs. [s̺]/[z̺]
+
+    In most of Portugal (16th-17th centuries):
+    - Coastal/Southern: Merged toward [s]/[z] (predorso-dental)
+    - Interior North: Merged toward [s̺]/[z̺] (apico-alveolar)
+    - Transmontano: PRESERVED BOTH (unique!)
+    - Brazil/Africa: Inherited only [s]/[z] (no apicals)
+
+    MINIMAL PAIRS DEMONSTRATING THE CONTRAST:
+    ------------------------------------------
+    - "cozer" [kuˈzeɾ] (to cook) vs. "coser" [kuˈz̺eɾ] (to sew)
+    - "paço" [ˈpasu] (palace) vs. "passo" [ˈpas̺u] (step)
+    - These sound IDENTICAL in all other Portuguese dialects!
+
+    OTHER NORTHERN FEATURES (inherited from NorthernPortuguese):
+    -------------------------------------------------------------
+    - Betacism: /v/ → [b] or [β]
+    - Affricate preservation: <ch> → [tʃ] (not [ʃ])
+    - Diphthong preservation: <ei> → [ej], <ou> → [ow]
+    - Intervocalic fricativization: /d/ → [ð], /b/ → [β]
+
+    GEOGRAPHICAL AND SOCIOLINGUISTIC CONTEXT:
+    -----------------------------------------
+    - Covers: Bragança, Miranda do Douro, parts of Vila Real
+    - Most isolated Portuguese dialect (mountainous interior)
+    - Strong substrate from Leonese and Asturian
+    - Neighboring Mirandese (separate Romance language) influence
+    - Highly stigmatized, rapid decline among young speakers
+    - Academic/linguistic prestige as archaic treasure
+
+    ORTHOGRAPHIC NOTE:
+    ------------------
+    Standard Portuguese spelling does NOT distinguish these sounds:
+    - Writers must know etymology to spell correctly
+    - "cozer" vs. "coser" look different but sound same (elsewhere)
+    - In Transmontano, spelling actually reflects pronunciation!
+
+    REFERENCES:
+    -----------
+    The preservation of this distinction is documented in:
+    - Lindley Cintra's work on Portuguese dialectology
+    - Studies of medieval Portuguese phonology
+    - Comparative Romance linguistics (cf. Spanish apical /s/)
+    """
+    def __init__(self, **kwargs):
+        # Lack of Sesseio:
+        #   [s] and [z] are distinguished from apical alveolar fricatives, [s̺] and [z̺], respectively
+        #   (e.g.: cozer: [kuˈzeɾ] vs. coser: [kuˈz̺eɾ]; paço: [paˈsu] vs. passo: [paˈs̺u])
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT-x-transmontano"
+        if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
+            kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                "s": "ʐ",  # <- Voiced retroflex fricative
+
+                # common with NorthernPortuguese
+                "d": "ð",  # <- Voiced alveolar non-sibilant fricative
+                "b": "β",  # <- Voiced bilabial fricative
+                "v": "β",  # <- Betacism
+            }
+        if "DIGRAPH2IPA" not in kwargs:
+            kwargs["DIGRAPH2IPA"] = {
+                **AO1990,
+                "ch": "tʃ", # <- Voiceless postalveolar affricate
+                "ss": "ʂ"  # <- Voiceless retroflex fricative
+            }
+        super().__init__(**kwargs)
+
+
+class CentralPortuguese(EuropeanPortuguese):
+    """
+    Central Portuguese phonological inventory (Estremadura, Ribatejo).
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Central Portuguese represents the dialectal basis for Standard European
+    Portuguese. Centered on Lisbon and surrounding regions (Estremadura and
+    Ribatejo), this variety became prestigious through political and cultural
+    dominance of the capital. Most phonological innovations that distinguish
+    modern European Portuguese from historical forms and from Brazilian
+    Portuguese originated in or spread from this region.
+
+    CHARACTERISTIC INNOVATIONS:
+    ---------------------------
+    1. DIPHTHONG REDUCTION: /ej/ → [ɐj] (the "Lisbon change")
+       - Historical: Medieval /ej/ from Latin -ARIU, -E
+       - "primeiro" [pɾiˈmɐjɾu] (North: [pɾiˈmejɾu])
+       - "feito" [ˈfɐjtu] (North: [ˈfejtu])
+       - "leite" [ˈlɐjtɨ] (North: [ˈlejtɨ])
+       - SPREAD: This feature diffused from Lisbon throughout Central-South
+       - PRESTIGE: Became marker of educated/urban speech
+
+    2. MONOPHTHONGIZATION: /ow/ → [o]
+       - Historical: Medieval /ow/ from Latin -AU-
+       - "ouro" [ˈoɾu] (North: [ˈowɾu])
+       - "pouco" [ˈpoku] (North: [ˈpowku])
+       - "couro" [ˈkoɾu] (North: [ˈkowɾu])
+       - INSIGHT: Creates homophony with original /o/
+       - "ouro" [ˈoɾu] = "oro" (if it existed)
+
+    3. FRICATIVIZATION PATTERNS:
+       a) Intervocalic /s/ → [z] (voicing)
+          - "casa" [ˈkazɐ]
+          - "coisa" [ˈkojzɐ]
+
+       b) Intervocalic /d/ → [ð] (spirantization)
+          - "nada" [ˈnaðɐ]
+          - "cedo" [ˈseðu]
+          - NOTE: Less consistent than in Northern varieties
+
+    4. NASAL DIPHTHONG EVOLUTION (Lisbon-specific, see LisbonPortuguese):
+       - /ẽj/ → [ẽj] in most Central, but [ɐ̃j] in Lisbon proper
+       - "bem" [ˈbẽj] (general Central) vs. [ˈbɐ̃j] (Lisbon)
+
+    VOWEL REDUCTION (Standard European Feature):
+    ---------------------------------------------
+    - Full reduction in unstressed syllables (inherited from EuropeanPortuguese)
+    - /a/ → [ɐ]: "banana" [bɐˈnɐnɐ]
+    - /e/ → [ɨ]: "pede" [ˈpɛðɨ]
+    - /o/ → [u]: "bonito" [buˈnitu]
+    - This is STRONGEST in Central varieties, weaker in North/South
+
+    GEOGRAPHICAL DISTRIBUTION:
+    --------------------------
+    - Core: Greater Lisbon, Setúbal Peninsula, Ribatejo
+    - Influence zone: Extends north to Leiria, south to northern Alentejo
+    - Urban vs. Rural: Urban areas more innovative; rural pockets preserve features
+
+    SOCIOLINGUISTIC PRESTIGE:
+    -------------------------
+    - BASIS for Standard European Portuguese
+    - Used in media, education, government
+    - Lisboa accent = prestige norm (though see LisbonPortuguese for specifics)
+    - Non-Lisbon speakers often adopt these features for upward mobility
+    - Brazilian Portuguese speakers learning EP learn this variety
+
+    HISTORICAL DEVELOPMENT:
+    -----------------------
+    - Medieval base: Similar to Northern dialects (Galician-Portuguese)
+    - 15th-16th centuries: Lisbon becomes capital, court speech innovates
+    - 17th-18th centuries: Innovations spread to educated classes
+    - 19th-20th centuries: Standardization codifies Lisbon-based norms
+    - Today: Continues to innovate (e.g., new vowel qualities)
+
+    COMPARISON WITH NORTHERN DIALECTS:
+    -----------------------------------
+    Feature              | Central        | Northern
+    ---------------------|----------------|------------------
+    <ei> pronunciation   | [ɐj]           | [ej]
+    <ou> pronunciation   | [o]            | [ow]
+    Betacism            | No (/v/ ≠ /b/) | Yes (/v/ = /b/)
+    <ch> pronunciation   | [ʃ]            | [tʃ] (affricate)
+    Vowel reduction     | Heavy          | Moderate
+
+    COMPARISON WITH SOUTHERN DIALECTS:
+    -----------------------------------
+    - Southern tends to further reduce diphthongs (see SouthernPortuguese)
+    - Southern drops intervocalic /d/ more frequently
+    - Central more conservative in some respects
+    """
+    def __init__(self, **kwargs):
+        # Realization of /ej/ in <ei> as /ɐj/ (e.g.: ceifar: [sɐj.ˈfaɾ], feito: [ˈfɐj.tu])
+        # (characteristic of the Lisbon dialect that spread to the rest of the country)
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT-x-central"
+        if "DIPHTHONG2IPA" not in kwargs:
+            kwargs["DIPHTHONG2IPA"] = {
+                **AO1990.DIPHTHONG2IPA,
+                "ei": "ɐj", # ej in the north
+                "ou": "o"
+            }
+        if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
+            kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                "s": "z",
+                "d": "ð",
+            }
+        if "IRREGULAR_WORDS" not in kwargs:
+            kwargs["IRREGULAR_WORDS"] = {
+                **LEXICON.get_ipa_map(region="lbx"),
+                "têm": "tɐ̃jɐ̃j"
+            }
+        super().__init__(**kwargs)
+
+
+class LisbonPortuguese(CentralPortuguese):
+    """
+    Lisbon Portuguese phonological inventory (Lisboa/Lisbon metropolitan area).
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Lisbon Portuguese (locally "lisboeta" or "alfacinha") represents the
+    most prestigious and influential variety of European Portuguese. As the
+    accent of Portugal's capital and largest city, it serves as the de facto
+    standard for media, education, and formal contexts. However, Lisbon has
+    its own unique phonological innovations beyond general Central Portuguese.
+
+    THE "LISBON SOUND":
+    -------------------
+    Lisbon Portuguese is characterized by particularly innovative and
+    distinctive phonological changes, some of which spread to other regions,
+    while others remain markers of the capital's speech.
+
+    UNIQUE LISBON FEATURES:
+    -----------------------
+    1. NASAL DIPHTHONG LOWERING: /ẽj/ → [ɐ̃j]
+       - "bem" [ˈbɐ̃j] (elsewhere: [ˈbẽj])
+       - "também" [tɐ̃ˈbɐ̃j] (elsewhere: [tɐ̃ˈbẽj])
+       - "vem" [ˈvɐ̃j] (elsewhere: [ˈvẽj])
+       - This is THE most distinctive Lisbon feature
+       - Spread: Now common in much of Central Portugal
+       - Prestige: Seen as sophisticated urban speech
+
+    2. OPEN VOWEL BEFORE PALATALS: /e/ → [a] / _[palatal]
+       - "madeira" [mɐˈdajɾɐ] (not [mɐˈdejɾɐ])
+       - "empenho" [ɐ̃ˈpɐɲu] (not [ɐ̃ˈpeɲu])
+       - "grelha" [ˈɡɾaʎɐ] (not [ˈɡɾeʎɐ])
+       - Affects /e/ before /j/, /ɲ/, /ʎ/
+       - Very salient Lisbon marker
+       - NOT adopted widely outside Lisbon
+
+    3. FINAL /i.u/ DIPHTHONGIZATION: -io → [iw]
+       - "rio" [ˈʁiw] (elsewhere: [ˈʁiu] or [ˈʁiw])
+       - "frio" [ˈfɾiw] (elsewhere: [ˈfɾiu])
+       - "médio" [ˈmɛðiw] (elsewhere: [ˈmɛðiu])
+       - Creates new falling diphthong
+       - Variable even within Lisbon
+
+    4. /ɐj/ REALIZATION OF <ei>:
+       - Inherits Central Portuguese /ej/ → [ɐj]
+       - But in Lisbon often realized as [aj] (more open)
+       - "leite" [ˈlajtɨ] (not [ˈlɐjtɨ])
+       - "primeiro" [pɾiˈmajɾu] (not [pɾiˈmɐjɾu])
+       - Highly stigmatized as "overly Lisbon"
+
+    SHARED CENTRAL FEATURES (see CentralPortuguese):
+    -------------------------------------------------
+    - /ow/ → [o] monophthongization
+    - Heavy vowel reduction
+    - Intervocalic /s/ → [z], /d/ → [ð]
+    - No betacism (/v/ ≠ /b/)
+    - <ch> → [ʃ] (not affricate)
+
+    SOCIOLINGUISTIC DYNAMICS:
+    --------------------------
+    1. PRESTIGE PARADOX:
+       - Lisbon = standard/prestige
+       - But SOME Lisbon features stigmatized as "too Lisbon"
+       - e.g., [aj] for <ei> seen as affected/snobbish
+       - "Good Portuguese" = educated Lisbon WITHOUT the most marked features
+
+    2. INTERNAL VARIATION:
+       - Old Lisbon (Alfama, Mouraria): More conservative, working-class
+       - New Lisbon (Avenidas Novas): More innovative, middle-class
+       - Suburbs (Amadora, Sintra): Mixed, influenced by migration
+
+    3. NATIONAL INFLUENCE:
+       - Media accent = moderate Lisbon (not extreme)
+       - Politicians often moderate Lisbon features
+       - RTP (state broadcaster) uses educated Lisbon norm
+
+    4. AGE AND CLASS:
+       - Older speakers: More marked Lisbon features
+       - Younger speakers: Some features declining
+       - Upper-middle class: Most innovative
+       - Working class: May preserve older features
+
+    COMPARISON WITH OTHER EUROPEAN VARIETIES:
+    ------------------------------------------
+    Feature              | Lisbon         | Oporto (North) | Coimbra
+    ---------------------|----------------|----------------|------------------
+    <ém>, <éns>          | [ɐ̃j]          | [ẽj]           | [ẽj]
+    <ei> realization     | [aj] ~ [ɐj]    | [ej]           | [ɐj]
+    /e/ before palatals  | [a]            | [e]            | [e]
+    Vowel reduction      | Heavy          | Moderate       | Heavy
+    Prestige            | Highest        | Regional       | Academic
+
+    HISTORICAL DEVELOPMENT:
+    -----------------------
+    - 15th-16th c.: Lisbon becomes capital, court develops distinct accent
+    - 17th-18th c.: Great Earthquake (1755) reshapes city and speech
+    - 19th c.: Industrialization, population growth, new Lisbon quarters
+    - 20th c.: Standardization around Lisbon norms
+    - 21st c.: Some leveling toward pan-European standard
+
+    ORTHOGRAPHY AND PRONUNCIATION:
+    -------------------------------
+    Standard spelling does NOT reflect Lisbon-specific features:
+    - "bem" spelled same everywhere, pronounced [ˈbɐ̃j] in Lisbon
+    - Learners must acquire these rules separately
+    - No orthographic reform has addressed this
+
+    RECEPTION BY OTHER PORTUGUESE SPEAKERS:
+    ----------------------------------------
+    - Portuguese: Seen as standard/proper
+    - Brazilians: Often find it hard to understand (heavy reduction)
+    - Africans: Model for formal speech, but may sound foreign
+    - Other Portuguese regions: Mixed admiration and resentment
+    """
+    def __init__(self, **kwargs):
+        # The "standard" European Portuguese of Lisbon is a member of the Central-Southern Portuguese dialects. It is characterized by:
+        #     Monophthongization of /ow/ in <ou> to /o/ (e.g.: ouro: [ˈo.ɾu], ouvir: [o.ˈviɾ]). (conserved in Northern Portugal dialects)
+        #     Realization of /ej/ in <ei> as /ɐj/ (e.g.: ceifar: [sɐj.ˈfaɾ], feito: [ˈfɐj.tu]) (characteristic of the Lisbon dialect that spread to the rest of the country)
+        #     Realization of /ẽj/ and /ɛ̃j/ in <ém>/<éns> as /ɐ̃j/ (e.g.: bem: [ˈbɐ̃j], vens: [ˈvɐ̃jʃ]) (characteristic of the Lisbon dialect that spread to the rest of the country)
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT-x-lisbon"
+
+        # TODO: Diphthongization of final /i.u/ in <io> to /iw/ (e.g.: rio: [ˈʁiw], frio: [ˈfɾiw])
+        if "IRREGULAR_WORDS" not in kwargs:
+            kwargs["IRREGULAR_WORDS"] = {
+                **LEXICON.get_ipa_map(region="lbx"),
+                "frio": "fɾiw",
+                "rio": "ʁiw"
+            }
+
+        # TODO: Em Lisboa o ditongo [ej] pronuncia-se [αj]; aliás, na capital todos os [e] tónicos antes
+        #       de um fonema palatal passam a [α], cf. p.ex. madeira [mαđαjrα], empenho [ẽpαñu], grelha [grαλα]
+        # TODO - add self.is_prepalatal property to CharToken
+        super().__init__(**kwargs)
+
+
+class SouthernPortuguese(CentralPortuguese):
+    """
+    Southern Portuguese phonological inventory (Alentejo, Algarve).
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Southern Portuguese encompasses the dialects of Portugal's southern
+    regions: Alentejo (interior) and Algarve (southern coast). These varieties
+    share the Central Portuguese base but exhibit distinctive features,
+    particularly more extensive monophthongization and consonant deletion.
+    Southern Portuguese shows influences from historical Arabic/Mozarabic
+    substrates and prolonged isolation from the northern population centers.
+
+    CHARACTERISTIC FEATURES:
+    ------------------------
+    1. EXTENSIVE MONOPHTHONGIZATION: /ej/ → [e] (not [ɐj])
+       - Goes BEYOND Central Portuguese
+       - Central: /ej/ → [ɐj]
+       - Southern: /ej/ → [e] (complete monophthongization)
+       - "primeiro" [pɾiˈmeɾu] (Lisbon: [pɾiˈmɐjɾu], North: [pɾiˈmejɾu])
+       - "feito" [ˈfetu] (Lisbon: [ˈfɐjtu], North: [ˈfejtu])
+       - "leite" [ˈletɨ] (Lisbon: [ˈlɐjtɨ])
+       - INSIGHT: Southern completes what Central started
+       - RESULT: Creates more homophones (simplification)
+
+    2. /ow/ → [o] MONOPHTHONGIZATION:
+       - Shared with Central Portuguese
+       - "ouro" [ˈoɾu], "pouco" [ˈpoku]
+       - But Southern may have completed this earlier historically
+
+    3. REDUCED INTERVOCALIC FRICATIVIZATION:
+       - LESS /d/ → [ð] than Central/Northern
+       - Often complete deletion instead: /d/ → ∅
+       - "nada" [ˈnaɐ] (not [ˈnaðɐ])
+       - "cedo" [ˈseu] (not [ˈseðu])
+       - "comida" [kuˈmiɐ] (not [kuˈmiðɐ])
+       - Creates hiatus or vowel mergers
+
+    4. INTERVOCALIC /s/ VOICING:
+       - Shares with Central: /s/ → [z]
+       - "casa" [ˈkazɐ]
+       - But may delete in rapid speech
+
+    5. PROSODIC FEATURES:
+       - Slower, more deliberate tempo (especially Alentejo)
+       - Less vowel reduction than Lisbon (despite being Central-based)
+       - Clearer articulation of vowels
+       - "Singing" intonation (especially Alentejo)
+
+    REGIONAL SUB-VARIETIES:
+    -----------------------
+    A) ALENTEJO PORTUGUESE:
+       - Interior, rural, agricultural region
+       - Most distinctive prosody (slow, melodic)
+       - Conservative in some ways, innovative in others
+       - Strong regional identity and pride
+       - "Alentejano" often sung in fado tradition
+       - Extensive /d/ deletion
+       - Clear vowels despite reduction
+
+    B) ALGARVE PORTUGUESE (Algarvio):
+       - Southern coast, tourism-influenced
+       - More contact with Andalusian Spanish historically
+       - Some Arabic/Mozarabic substrate influence
+       - Coastal vs. interior variation
+       - Tourism bringing leveling toward standard
+       - Less distinctive than Alentejo
+
+    HISTORICAL AND SUBSTRATE INFLUENCES:
+    -------------------------------------
+    1. ARABIC/MOZARABIC (711-1249 CE):
+       - Southern Portugal under Moorish rule longest
+       - Algarve last to be reconquered (1249)
+       - Substrate influence on:
+         * Lexicon (many Arabic loanwords)
+         * Possibly prosody (rhythm, intonation)
+         * Place names (Algarve < al-Gharb "the West")
+
+    2. ISOLATION:
+       - Alentejo sparsely populated, isolated from North
+       - Developed independently from Lisbon innovations
+       - Slower to adopt standard features
+       - Preserved some archaic features
+
+    3. SPANISH CONTACT:
+       - Border region with Spain (Andalusia)
+       - Some lexical and phonological borrowing
+       - Especially in Algarve
+
+    COMPARISON WITH OTHER VARIETIES:
+    ---------------------------------
+    Feature              | Southern       | Central/Lisbon | Northern
+    ---------------------|----------------|----------------|------------------
+    <ei> pronunciation   | [e]            | [ɐj] ~ [aj]    | [ej]
+    <ou> pronunciation   | [o]            | [o]            | [ow]
+    Intervocalic /d/     | ∅ (deleted)    | [ð]            | [ð] ~ [d]
+    Vowel reduction      | Moderate       | Heavy          | Moderate
+    Tempo               | Slow           | Fast           | Moderate
+    Prosody             | Melodic        | Reduced        | Varied
+
+    SOCIOLINGUISTIC NOTES:
+    ----------------------
+    1. STIGMA AND PRIDE:
+       - Alentejano often stereotyped as "slow" (negative)
+       - But also valued as authentic, rural, traditional (positive)
+       - Associated with farming, countryside, simplicity
+       - Strong regional identity, resistance to Lisbon norms
+
+    2. MEDIA REPRESENTATION:
+       - Alentejo accent featured in folk music (modas, fado)
+       - Used in literature for regional characters
+       - Comedy sometimes exaggerates features
+       - Rarely in formal media (Lisbon dominates)
+
+    3. DEMOGRAPHIC CHANGES:
+       - Rural depopulation affecting Alentejo
+       - Young people moving to Lisbon, adopting standard
+       - Algarve tourism bringing linguistic contact
+       - Traditional features declining in urban areas
+
+    4. LINGUISTIC ATTITUDES:
+       - Northern speakers: May find Southern "lazy" (consonant deletion)
+       - Lisbon speakers: May find Southern "provincial"
+       - Southern speakers: Pride in distinctiveness vs. pressure to standardize
+       - Brazilians: Often easier to understand than Lisbon (less reduction)
+
+    PHONOLOGICAL PROCESSES:
+    -----------------------
+    1. CONSONANT DELETION CASCADE:
+       /d/ → [ð] → ∅
+       "comida" /koˈmidɐ/ → [kuˈmiðɐ] → [kuˈmiɐ]
+
+    2. DIPHTHONG REDUCTION CASCADE:
+       /ej/ → [ɐj] → [e]
+       "primeiro" /pɾiˈmejɾu/ → [pɾiˈmɐjɾu] → [pɾiˈmeɾu]
+
+    3. HIATUS CREATION:
+       Consonant deletion creates vowel sequences
+       "cidade" /siˈdadɨ/ → [siˈdaðɨ] → [siˈdaɨ]
+
+    LEXICAL NOTES:
+    --------------
+    - Many Arabic-origin words preserved (especially place names)
+    - Distinctive vocabulary for agriculture, food, local culture
+    - Some archaisms lost elsewhere
+    - Regional expressions and idioms
+
+    FUTURE OUTLOOK:
+    ---------------
+    - Leveling toward Lisbon standard in urban areas
+    - Rural features declining with depopulation
+    - Tourism in Algarve bringing change
+    - But strong regional identity may preserve some features
+    - Academic interest in documentation and preservation
+    """
+    def __init__(self, **kwargs):
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT-x-south"
+        if "DIPHTHONG2IPA" not in kwargs:
+            kwargs["DIPHTHONG2IPA"] = {
+                **AO1990.DIPHTHONG2IPA,
+                "ei": "e", # Monophthongization of /ej/ in <ei> to /e/ (e.g.: ceifar: [se.ˈfaɾ], feito: [ˈfe.tu])
+                "ou": "o"
+            }
+        if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
+            kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                "s": "z",
+                "d": "d",
+            }
+        super().__init__(**kwargs)
+
+
+class AlentejanoPortuguese(SouthernPortuguese):
+    """
+    Alentejo Portuguese phonological inventory.
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Alentejano, spoken in Portugal's vast southern interior region (Alentejo),
+    is one of the most distinctive and culturally significant Portuguese
+    dialects. Known for its remarkably slow tempo, melodic "singing" quality,
+    and extensive consonant deletion, Alentejano is instantly recognizable
+    and deeply tied to regional identity. The dialect preserves archaic
+    features while also innovating in striking ways.
+
+
+    DEFINING PROSODIC CHARACTER:
+    ----------------------------
+    The MOST SALIENT feature of Alentejano is not segmental phonology but
+    PROSODY - the rhythm, tempo, and melody of speech.
+
+    Utilização regular do gerúndio no tempo presente (à semelhança do português brasileiro)
+    Paragoge em i, nos verbos no infinitivo. Ex: fazêri (fazer)
+
+    1. EXCEPTIONALLY SLOW TEMPO:
+       - Deliberate, unhurried articulation
+       - Longest average syllable duration in Portuguese
+       - Pauses between phrases/clauses
+       - PERCEPTION: Sounds "relaxed," "lazy," or "contemplative"
+       - CULTURAL: Reflects agricultural lifestyle, hot climate
+       - STEREOTYPE: "Alentejanos speak slowly like their oxen walk"
+
+    2. MELODIC INTONATION ("Canto alentejano"):
+       - Wide pitch range, musical quality
+       - Rising-falling patterns on stressed syllables
+       - Final syllable lengthening and pitch movement
+       - Similar patterns found in traditional Alentejo singing (modas)
+       - Creates impression of "singing" rather than speaking
+       - UNIQUE: Most melodic mainland Portuguese variety
+
+    3. VOWEL LENGTHENING:
+       - Stressed vowels notably longer than other dialects
+       - Unstressed vowels less reduced than Lisbon
+       - Clearer vowel quality overall
+       - "casa" [ˈkaːzɐ] (long [aː])
+
+    SEGMENTAL PHONOLOGY:
+    --------------------
+    1. EXTENSIVE INTERVOCALIC /d/ DELETION:
+       - Most consistent /d/ deletion of any Portuguese dialect
+       - /d/ → ∅ in most intervocalic contexts
+       - "nada" [ˈnaɐ] → [ˈnɐː] (often with compensatory lengthening)
+       - "cedo" [ˈseu] → [ˈseː]
+       - "comida" [kuˈmiɐ] → [kuˈmiː]
+       - "cidade" [siˈdaɨ] → [siˈdaː]
+       - Even in careful speech: deletion very common
+       - Creates many hiatus contexts and long vowels
+
+    2. COMPLETE /ej/ MONOPHTHONGIZATION:
+       - Inherits from SouthernPortuguese: /ej/ → [e]
+       - "primeiro" [pɾiˈmeɾu]
+       - "feito" [ˈfetu]
+       - No variation - categorical rule
+
+    3. /ow/ MONOPHTHONGIZATION:
+       - Also from SouthernPortuguese: /ow/ → [o]
+       - "ouro" [ˈoɾu]
+       - "pouco" [ˈpoku]
+
+    4. SIBILANT VOICING:
+       - Intervocalic /s/ → [z]
+       - But may delete in rapid speech: "casa" [ˈkazɐ] ~ [ˈkaɐ]
+
+    5. FINAL CONSONANT WEAKENING:
+       - Less consistent than /d/ deletion
+       - Final /r/ may delete: "falar" → [fɐˈla]
+       - Final /l/ → [w]: "mal" [ˈmaw] (standard Brazilian pattern)
+
+    VOWEL SYSTEM:
+    -------------
+    - LESS reduction than Lisbon despite being Southern
+    - Stressed vowels: Clear, long, well-articulated
+    - Unstressed vowels: Reduced but not as much as Central
+    - /a/ → [ɐ] in unstressed (but longer, clearer than Lisbon)
+    - /e/ → [ɨ] in unstressed (but not as centralized)
+    - Open vowels [ɛ, ɔ] very clear in stressed position
+
+    GEOGRAPHICAL AND CULTURAL CONTEXT:
+    -----------------------------------
+    1. REGION:
+       - Covers: Évora, Beja, Portalegre districts
+       - Interior Alentejo (not coast - that's more Algarve-influenced)
+       - Vast agricultural plains ("planície")
+       - Low population density, rural character
+       - Hot, dry climate (influences slow tempo?)
+
+    2. TRADITIONAL ECONOMY:
+       - Agriculture (wheat, cork, olives, wine)
+       - Pastoralism (sheep, cattle)
+       - Rural, traditional lifestyle
+       - Seasonal rhythms, slow pace of life
+
+    3. CULTURAL ASSOCIATIONS:
+       - "Modas" (traditional Alentejo songs) - use dialect prosody
+       - "Cante alentejano" (polyphonic singing) - UNESCO heritage
+       - Rural traditions, festivals
+       - Strong regional identity and pride
+       - Resistance to outside influence (political history)
+
+    SOCIOLINGUISTIC PROFILE:
+    ------------------------
+    1. STIGMA AND PRIDE:
+       - STIGMA: Often mocked by other Portuguese
+         * "Slow" = lazy, backward, unintelligent (stereotype)
+         * Urban Portuguese find it comical
+         * Comedy shows exaggerate features
+       - PRIDE: Strong regional identity
+         * Seen as authentic, traditional, honest
+         * Connected to land and heritage
+         * Cultural prestige (music, poetry)
+         * Resistance to standardization
+
+    2. CLASS AND AGE:
+       - Working class, rural: Strong Alentejano features
+       - Middle class, urban (Évora): More standard, but retain prosody
+       - Older speakers: Most extreme features
+       - Younger speakers: Influenced by Lisbon, but prosody remains
+       - PERSISTENCE: Prosody very resistant to change
+
+    3. MEDIA REPRESENTATION:
+       - Folk music: Authentic Alentejano
+       - Comedy: Exaggerated stereotypes (often offensive)
+       - Literature: Regional novels use dialect
+       - Film: Character actors use Alentejano for rural roles
+       - News/formal: Never (Lisbon standard only)
+
+    HISTORICAL DEVELOPMENT:
+    -----------------------
+    - Roman period: Alentejo = breadbasket of Lusitania
+    - Moorish period (711-1249): Long Arabic influence
+      * Later reconquest than north
+      * Arabic substrate in lexicon, place names
+      * Possible prosodic influence?
+    - Medieval: Depopulated after reconquest, resettled from north
+    - Modern: Isolation preserved archaic features
+    - 20th c.: Political significance (leftist stronghold)
+    - Today: Depopulation, aging, but dialect persists
+
+    ARCHAIC FEATURES PRESERVED:
+    ---------------------------
+    - Some lexical items lost elsewhere
+    - Morphological forms (verb conjugations)
+    - Prosodic patterns may reflect older Portuguese
+    - Less influence from Lisbon innovations
+
+    PHONOLOGICAL PROCESSES:
+    -----------------------
+    1. /d/ DELETION CASCADE:
+       /d/ → [ð] → ∅ → compensatory vowel lengthening
+       "comida" /koˈmidɐ/ → [kuˈmiðɐ] → [kuˈmiɐ] → [kuˈmiː]
+
+    2. HIATUS RESOLUTION:
+       After /d/ deletion, hiatus often resolved by:
+       - Vowel lengthening: /i.a/ → [iː]
+       - Diphthongization: /e.u/ → [ew]
+       - Glide insertion: /a.i/ → [aj]
+
+    3. COMPENSATORY LENGTHENING:
+       Deleted consonants often leave vowel length
+       "nada" /ˈnadɐ/ → [ˈnaː] (long vowel compensates)
+
+    COMPARISON WITH ALGARVE:
+    ------------------------
+    Feature              | Alentejo       | Algarve
+    ---------------------|----------------|------------------
+    Tempo               | Very slow      | Moderate
+    Intonation          | Very melodic   | Less melodic
+    /d/ deletion        | Extensive      | Moderate
+    Tourism influence   | Minimal        | Heavy
+    Arabic substrate    | Lexical        | Lexical + some phonology
+    Regional identity   | Very strong    | Diluted by tourism
+
+    COMPARISON WITH LISBON:
+    -----------------------
+    Feature              | Alentejo       | Lisbon
+    ---------------------|----------------|------------------
+    Tempo               | Very slow      | Fast
+    Vowel reduction     | Less           | Heavy
+    /d/ deletion        | Complete (∅)   | Partial ([ð])
+    <ei> realization    | [e]            | [ɐj] ~ [aj]
+    Prestige            | Regional       | National
+    Melodic quality     | Extreme        | Reduced
+
+    LINGUISTIC CURIOSITIES:
+    -----------------------
+    1. "TEMPO ALENTEJANO":
+       - Expression: "devagar como um alentejano"
+       - "Slowly like an Alentejo person"
+       - Speed is THE defining feature
+
+    2. MUSICAL PARALLELISM:
+       - Speech prosody parallels traditional singing
+       - Modas use speech-like melodic patterns
+       - Cante alentejano uses dialect intonation
+       - Hard to separate speech from song
+
+    3. COMPENSATORY LENGTHENING:
+       - Unusually extensive in Portuguese
+       - Deleted consonants preserved as vowel length
+       - Creates quasi-phonemic length distinction
+
+    EXAMPLES WITH FULL PROSODIC TRANSCRIPTION:
+    -------------------------------------------
+    1. "Não sei nada" (I don't know anything)
+       - Standard: [nɐ̃w sɐj ˈnadɐ] (fast, clipped)
+       - Alentejano: [ˈnɐ̃ːw ˌsɐːj ˈnaːː] (slow, drawn out, melodic)
+
+    2. "Está tudo bem" (Everything is fine)
+       - Standard: [ʃˈta ˈtudu bɐ̃j] (rapid)
+       - Alentejano: [ʃˈtaː ˈtuːu ˈbẽːj] (slow, vowels lengthened)
+
+    FUTURE OUTLOOK:
+    ---------------
+    - Rural depopulation threatens dialect
+    - Young people moving to Lisbon
+    - But prosody very persistent (identity marker)
+    - Cultural prestige (music) helps preservation
+    - Tourism in some areas (Évora) bringing change
+    - Academic interest in documentation
+    - May survive in modified form in urban Évora
+
+    RESEARCH AND DOCUMENTATION:
+    ---------------------------
+    - Extensively documented in Portuguese dialectology
+    - Featured in sociolinguistic studies
+    - Recordings in music archives
+    - Literature: Regional novels by Alentejo authors
+    - Ongoing documentation projects
+    """
+
+    def __init__(self, **kwargs):
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT-x-alentejo"
+
+        if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
+            kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                "s": "z",
+                "d": "ː",
+            }
+
+        if "DIPHTHONG2IPA" not in kwargs:
+            kwargs["DIPHTHONG2IPA"] = {
+                **AO1990.DIPHTHONG2IPA,
+                # lengthen nasal diphthongs
+                "ão": "ɐ̃ːw",
+                "õe": "õːj",
+                "ãe": "ɐ̃ːj",
+                "em": "ẽːj",
+            }
+
+        # Paragoge em i, nos verbos no infinitivo. Ex: fazêri (fazer)
+        # TODO - add END_OF_WORD_CHAR2PHONEMES
+        # r -> ri
+        super().__init__(**kwargs)
+
+
+class AlgarvePortuguese(SouthernPortuguese):
+    """
+    Algarve Portuguese (Algarvio) phonological inventory.
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Algarvio, the Portuguese variety of the Algarve (Portugal's southernmost
+    region), represents a transitional dialect influenced by multiple factors:
+    prolonged Arabic rule, proximity to Andalusian Spanish, maritime trade,
+    and modern mass tourism. While sharing the Southern Portuguese base,
+    Algarvio has distinctive features and is undergoing rapid change due to
+    tourism-driven linguistic contact.
+
+    GEOGRAPHICAL AND HISTORICAL CONTEXT:
+    ------------------------------------
+    1. LOCATION:
+       - Southernmost region of Portugal
+       - Mediterranean climate, coastal orientation
+       - Border with Spain (Andalusia) to the east
+       - Atlantic coast to the south and west
+
+    2. HISTORICAL SIGNIFICANCE:
+       - "Al-Gharb" (Arabic: "the West") - origin of name "Algarve"
+       - Under Moorish rule 711-1249 (longest in Portugal)
+       - Last Portuguese territory reconquered (1249)
+       - Strategic maritime position (Age of Discovery)
+       - Fishing and agriculture (traditional economy)
+       - Tourism boom (1960s-present) - massive change
+
+    3. MODERN CHARACTER:
+       - Mass tourism destination (beaches, golf, resorts)
+       - Large expatriate community (British, German, etc.)
+       - Seasonal population influx
+       - Coastal vs. interior division
+       - Economic transformation from primary to tertiary sector
+
+    PHONOLOGICAL FEATURES:
+    ----------------------
+    1. SOUTHERN BASE (from SouthernPortuguese):
+       - /ej/ → [e] monophthongization
+         * "primeiro" [pɾiˈmeɾu]
+         * "feito" [ˈfetu]
+       - /ow/ → [o] monophthongization
+         * "ouro" [ˈoɾu]
+       - Intervocalic /d/ deletion (but less than Alentejo)
+         * "nada" [ˈnaɐ] ~ [ˈnaðɐ] (variable)
+
+    2. ARABIC/MOZARABIC SUBSTRATE:
+       - Extensive Arabic loanwords (especially place names)
+       - Possible prosodic influence (rhythm patterns)
+       - Some phonological patterns:
+         * Pharyngeal articulation in some loanwords
+         * Emphasis (velarization) in Arabic loans
+       - Examples: "Albufeira," "Alcoutim," "Alvor" (al- = Arabic article)
+
+    3. ANDALUSIAN SPANISH CONTACT:
+       - Border region (eastern Algarve near Ayamonte)
+       - Some Spanish phonological features:
+         * Seseo-like patterns (s/θ merger - but Spanish not Portuguese)
+         * Aspiration of final /s/ in some speakers
+         * Intonation patterns similar to Andalusian
+       - Lexical borrowing from Spanish
+       - Code-switching in border towns
+
+    4. PROSODIC FEATURES:
+       - Less melodic than Alentejo
+       - Moderate tempo (not as slow as Alentejo)
+       - Some "singing" quality but less extreme
+       - Coastal areas: Faster, more clipped
+       - Interior (Serra): More traditional, slower
+
+    REGIONAL VARIATION:
+    -------------------
+    1. COASTAL ALGARVE (Litoral):
+       - Tourism-influenced, more standard Portuguese
+       - Contact with foreign languages (English, German)
+       - Younger speakers: Lisbon-influenced
+       - Service industry: Need for standard Portuguese
+       - Traditional features declining rapidly
+       - "Algarve de plástico" (plastic Algarve) - criticism
+
+    2. INTERIOR ALGARVE (Barrocal & Serra):
+       - More conservative, traditional features
+       - Less tourism impact
+       - Agricultural communities
+       - Preserves archaic vocabulary and pronunciation
+       - Similar to Alentejo in some respects
+       - Depopulation threatening dialect
+
+    3. EASTERN ALGARVE (Border):
+       - Spanish influence strongest
+       - Bilingualism not uncommon
+       - Mixed phonological features
+       - Trade and family ties across border
+
+    TOURISM IMPACT (Critical Factor):
+    ----------------------------------
+    1. LINGUISTIC CONSEQUENCES:
+       - Massive exposure to foreign languages
+       - English loanwords in hospitality vocabulary
+       - Pressure toward "neutral" Portuguese (intelligibility)
+       - Young people in tourism: Standard Portuguese
+       - Code-switching: Portuguese/English/German
+       - Traditional dialect stigmatized as "rural"
+
+    2. GENERATIONAL SHIFT:
+       - Older speakers (60+): Strong Algarvio features
+       - Middle-aged (30-60): Mixed (tourism workers vs. traditional)
+       - Young speakers (<30): Mostly standard with some prosody
+       - Children in coastal areas: Lisbon-influenced
+       - Interior youth: Emigrating to coast or Lisbon
+
+    3. SOCIAL STRATIFICATION:
+       - Tourism workers: Standard Portuguese (job requirement)
+       - Traditional sectors (fishing, agriculture): Algarvio
+       - Urban middle class: Mixed, situation-dependent
+       - Expatriate communities: Portuguese as L2, no dialect acquisition
+
+    ARABIC SUBSTRATE EVIDENCE:
+    --------------------------
+    1. LEXICAL:
+       - Extensive place names: Albufeira, Aljezur, Alcantarilha
+       - Agricultural terms: "nora" (water wheel), "açude" (dam)
+       - Food/cooking: "almôndega" (meatball), "açorda" (bread soup)
+       - Architecture: "açoteia" (terrace)
+
+    2. PHONOLOGICAL (Debated):
+       - Some scholars argue for Arabic prosodic influence
+       - Possible pharyngeal quality in some sounds
+       - But evidence is limited and controversial
+       - Most Arabic features are lexical, not phonological
+
+    3. CULTURAL:
+       - Moorish architectural influence (chimneys, tiles)
+       - Agricultural techniques (irrigation)
+       - Cuisine (almonds, figs, Arab-origin dishes)
+
+    COMPARISON WITH ALENTEJO:
+    -------------------------
+    Feature              | Algarve        | Alentejo
+    ---------------------|----------------|------------------
+    Tempo               | Moderate       | Very slow
+    Tourism impact      | Extreme        | Minimal
+    /d/ deletion        | Variable       | Categorical
+    Spanish influence   | Moderate       | Minimal
+    Standardization     | Advanced       | Resistant
+    Regional identity   | Weakening      | Strong
+    Arabic substrate    | Strong lexical | Moderate lexical
+
+    COMPARISON WITH ANDALUSIAN SPANISH:
+    -----------------------------------
+    Despite proximity, Algarvio and Andalusian Spanish are clearly distinct:
+    - Different vowel systems (5 vs. 5 but realized differently)
+    - Portuguese nasal vowels (Spanish lacks)
+    - Different sibilant systems
+    - But: Some shared prosodic patterns
+    - And: Heavy lexical borrowing (both directions)
+
+    SOCIOLINGUISTIC ATTITUDES:
+    --------------------------
+    1. EXTERNAL PERCEPTIONS:
+       - Other Portuguese: "Algarvios são diferentes" (are different)
+       - Associated with tourism, beaches, foreign influence
+       - Less strong regional identity than Alentejo
+       - Sometimes seen as "sold out" to tourism
+       - But also: Beautiful region, desirable place
+
+    2. INTERNAL ATTITUDES:
+       - Older speakers: Pride in traditional culture
+       - Tourism workers: Dialect as barrier to advancement
+       - Youth: Often prefer standard Portuguese
+       - Interior: Resentment of coastal development
+       - Mixed: Economic benefits vs. cultural loss
+
+    3. LINGUISTIC INSECURITY:
+       - Tourism creates pressure for "correct" Portuguese
+       - Traditional features stigmatized in service contexts
+       - But: Some tourism markets traditional culture
+       - "Authentic Algarve" as marketing (selective)
+
+    PHONOLOGICAL PROCESSES:
+    -----------------------
+    1. VARIABLE /d/ DELETION:
+       - Less categorical than Alentejo
+       - "comida" [kuˈmiðɐ] ~ [kuˈmiɐ] (both heard)
+       - Depends on: Age, region, formality
+       - Coastal/young: Less deletion
+       - Interior/old: More deletion
+
+    2. SIBILANT PATTERNS:
+       - Generally standard Portuguese [s, z, ʃ, ʒ]
+       - But some eastern areas: Andalusian influence
+       - Final /s/ aspiration in some older speakers (Spanish-like)
+       - "as casas" [aʰ ˈkazaʰ] (rare, stigmatized)
+
+    3. VOWEL QUALITY:
+       - Less reduction than Lisbon
+       - Clearer articulation (Southern feature)
+       - But coastal areas: Moving toward Lisbon norms
+
+    LEXICAL DISTINCTIVENESS:
+    ------------------------
+    - Arabic loanwords (see above)
+    - Maritime/fishing vocabulary
+    - Traditional agriculture terms
+    - Place names highly distinctive
+    - Some archaisms preserved in interior
+
+    FUTURE OUTLOOK:
+    ---------------
+    1. TOURISM IMPACT CONTINUING:
+       - Dialect features declining in coastal areas
+       - Standardization accelerating
+       - Foreign language influence growing
+       - Traditional culture marketed selectively
+
+    2. INTERIOR VS. COAST DIVERGENCE:
+       - Coast: Rapid change toward standard
+       - Interior: Maintaining features but depopulating
+       - Growing gap between two Algarves
+
+    3. POSSIBLE OUTCOMES:
+       - Coastal: Nearly complete leveling to standard
+       - Interior: Preservation in isolated pockets
+       - Overall: Algarvio becoming residual/vestigial
+       - But: Prosodic features may persist longer
+       - Tourism marketing may preserve some features superficially
+
+    4. DOCUMENTATION URGENCY:
+       - Rapid change means urgent need for documentation
+       - Academic projects recording traditional speakers
+       - Cultural organizations preserving vocabulary
+       - But: Economic pressures work against preservation
+
+    RESEARCH AND CULTURAL PRESERVATION:
+    -----------------------------------
+    - Less documented than Alentejo (less distinctive?)
+    - But: Growing interest due to rapid change
+    - Tourism creates some interest in "authentic" culture
+    - Local museums and cultural centers
+    - Academic studies of tourism impact on language
+    - Endangered dialect - documentation needed
+
+    ALGARVIO IN TOURISM CONTEXT:
+    ----------------------------
+    - "Authentic Algarve" marketing uses some dialect features
+    - Traditional restaurants, cultural shows
+    - But: Superficial, selective use
+    - Real dialect seen as barrier, not asset
+    - Paradox: Market tradition while eliminating it
+    - English dominance in tourism areas
+    """
+
+    def __init__(self, **kwargs):
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT-x-algarve"
+        # Inherits SouthernPortuguese features
+        # Could add specific lexicon here if available
+        # if "IRREGULAR_WORDS" not in kwargs:
+        #     kwargs["IRREGULAR_WORDS"] = LEXICON.get_ipa_map(region="algarve")
+        super().__init__(**kwargs)
+
+
+class AzoreanPortuguese(EuropeanPortuguese):
+    """
+    Azorean Portuguese (Açoriano) phonological inventory.
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Açoriano, spoken in the Azores archipelago (nine volcanic islands in the
+    mid-Atlantic), represents one of the most archaic and distinctive
+    Portuguese varieties. Island isolation, diverse settlement origins, and
+    conservative tendencies have preserved medieval features lost on the
+    mainland while also fostering unique innovations. Each island has its own
+    sub-variety, creating remarkable diversity within a small population.
+
+    GEOGRAPHICAL AND SETTLEMENT CONTEXT:
+    ------------------------------------
+    1. THE AZORES ARCHIPELAGO:
+       - Nine islands, three groups (Eastern, Central, Western)
+       - 1,500 km from Lisbon, mid-Atlantic location
+       - Settled 15th century (uninhabited before Portuguese)
+       - Population ~250,000 (concentrated on São Miguel, Terceira)
+       - Strategic location (historically and militarily)
+
+    2. SETTLEMENT PATTERNS (Critical for understanding dialects):
+       - Settlers from ALL regions of Portugal
+       - Also: Flemings, Italians, Jews, Moors (forced converts)
+       - Each island settled by different mix
+       - São Miguel: Northern Portuguese + Madeiran
+       - Terceira: Central Portuguese + Flemish
+       - Flores/Corvo: Western Portuguese + Flemish
+       - Result: Each island = different dialect mix
+
+    3. ISOLATION EFFECTS:
+       - Limited mainland contact (until 20th century)
+       - Inter-island contact also limited (until recently)
+       - Preserved archaic features (15th-16th century Portuguese)
+       - Also: Innovation in isolation (unique changes)
+       - Result: Time capsule + innovation = distinctive variety
+
+    DEFINING ARCHAIC FEATURES:
+    --------------------------
+    1. DIPHTHONG PRESERVATION (Medieval Continuity):
+       - /ow/ often preserved as [ow] (not monophthongized)
+         * "ouro" [ˈowɾu] (Lisbon: [ˈoɾu])
+         * "pouco" [ˈpowku] (Lisbon: [ˈpoku])
+       - BUT: Variable by island and age
+       - São Miguel: More [ow] preservation
+       - Terceira: More [o] (Lisbon-like)
+
+    2. AFFRICATE TENDENCIES:
+       - Some islands preserve/develop affricates
+       - <ch> → [tʃ] in some contexts (not pure [ʃ])
+       - "chamar" [tʃɐˈmaɾ] ~ [ʃɐˈmaɾ] (variable)
+       - Northern Portuguese influence in settlement
+
+    3. CONSONANT PRESERVATION:
+       - Less deletion than mainland
+       - Intervocalic /d/ usually maintained
+         * "nada" [ˈnadɐ] (not [ˈnaðɐ] or [ˈnaɐ])
+       - Word-final /l/ sometimes preserved (archaic)
+         * "mal" [ˈmal] (not [ˈmaw])
+       - Conservative tendency overall
+
+    DISTINCTIVE INNOVATIONS:
+    ------------------------
+    1. SYLLABLE-FINAL /s/ PALATALIZATION (Like Brazilian):
+       - /s/ → [ʃ] in coda position (many islands)
+       - "nós" [ˈnɔʃ] (like Rio, unlike Lisbon)
+       - "três" [ˈtɾeʃ]
+       - "estar" [ʃˈtaɾ] (with /s/ reduction)
+       - INSIGHT: Independent innovation? Or archaic feature?
+       - Pattern: São Miguel strongest, Terceira less consistent
+
+    2. EXTREME VOWEL RAISING:
+       - Unstressed /e, o/ raised more than mainland
+       - /e/ → [i] in some contexts: "dizer" [diˈziɾ]
+       - /o/ → [u] consistently: "bonito" [buˈnitu]
+       - Creates potential for merger with /i, u/
+       - Variable by island and speaker
+
+    3. PROSODIC DISTINCTIVENESS:
+       - "Singing" quality (melodic, wide pitch range)
+       - Similar to Northern Portuguese in some ways
+       - But also unique island patterns
+       - Each island has characteristic intonation
+       - São Miguel: Very distinctive, easily recognized
+
+    4. NASAL VOWEL REALIZATION:
+       - Variable, some islands more nasalized
+       - May preserve older nasal patterns
+       - "não" [ˈnɐ̃w] with strong nasalization
+       - But variable by island
+
+    INTER-ISLAND VARIATION (Remarkable Diversity):
+    -----------------------------------------------
+    1. EASTERN GROUP:
+       São Miguel (largest island, ~140,000 people):
+       - Most distinctive Azorean variety
+       - Strong /s/ palatalization: [ʃ]
+       - Vowel raising extreme
+       - Very melodic prosody
+       - Recognized instantly by other Portuguese
+       - Some unique lexical items
+
+       Santa Maria (smallest, ~5,500):
+       - Similar to São Miguel but more conservative
+       - Less innovation
+       - Some archaic vocabulary
+
+    2. CENTRAL GROUP:
+       Terceira (~55,000):
+       - More Lisbon-influenced (military base, connection)
+       - Less /s/ palatalization
+       - More standard-like
+       - But still distinctively Azorean
+
+       Graciosa, São Jorge, Pico, Faial:
+       - Each with own sub-variety
+       - Generally more conservative than Terceira
+       - Pico and Faial: Whaling vocabulary (historical)
+       - Less studied than major islands
+
+    3. WESTERN GROUP:
+       Flores and Corvo (most isolated):
+       - Most archaic features
+       - Least mainland influence
+       - Smallest populations (~4,000 and ~400)
+       - Some unique phonological patterns
+       - Endangered due to depopulation
+
+    PHONOLOGICAL INVENTORY:
+    -----------------------
+    1. CONSONANTS:
+       - Generally conservative European Portuguese
+       - But: /s, z/ → [ʃ, ʒ] in many contexts (innovation)
+       - /ɾ/ (tap) and /ʁ/ (uvular/fricative) distinguished
+       - Some islands: More trilled [r] (archaic)
+       - Palatals /ʎ, ɲ/ well preserved
+
+    2. VOWELS:
+       - Oral: /i, e, ɛ, a, ɔ, o, u/ (7-vowel system stressed)
+       - Unstressed: Extreme reduction (beyond Lisbon?)
+       - Or: Less reduction (varies by island!)
+       - Nasal: /ĩ, ẽ, ɐ̃, õ, ũ/
+       - Variable realization of unstressed vowels
+
+    3. DIPHTHONGS:
+       - More than mainland in some cases
+       - /ow/ preservation creates extra diphthong
+       - Also: New diphthongs from vowel sequences
+
+    SUBSTRATE AND CONTACT INFLUENCES:
+    ----------------------------------
+    1. FLEMISH SETTLEMENT:
+       - Islands: Terceira, Flores, Corvo
+       - Possible phonological influence (debated)
+       - Lexical borrowings (limited)
+       - Place names: Flamengos (Flemish area)
+
+    2. MAINLAND DIVERSITY:
+       - Mixed settlers brought different dialects
+       - Created unique blend on each island
+       - Northern + Southern + Central features
+       - Leveled in unique ways
+
+    3. ISOLATION = PRESERVATION:
+       - Limited contact preserved 15th-16th c. features
+       - Also: Prevented Lisbon innovations from spreading
+       - Result: Different evolutionary path
+
+    SOCIOLINGUISTIC PROFILE:
+    ------------------------
+    1. IDENTITY:
+       - STRONG Azorean identity (distinct from mainland)
+       - "Açorianos" vs. "Continentais" (mainlanders)
+       - Dialect = major identity marker
+       - Pride in distinctiveness
+       - But also: Some linguistic insecurity
+
+    2. MAINLAND ATTITUDES:
+       - Often mocked by mainlanders
+       - Seen as "backward," "rural," "funny"
+       - Comedy sketches exaggerate features
+       - Stereotype: Simple island folk
+       - But: Also admired (authentic, traditional)
+
+    3. EMIGRATION IMPACT:
+       - Massive emigration (USA, Canada, Brazil)
+       - Azorean communities worldwide
+       - Dialect preserved in diaspora
+       - But: Second generation often loses it
+       - USA: "Portuguese" often = Azorean Portuguese
+
+    4. STANDARDIZATION PRESSURE:
+       - Education: Lisbon standard taught
+       - Media: Mainland Portuguese dominant
+       - Young people: Moving toward standard
+       - But: Strong resistance (identity)
+       - Features persist even in educated speakers
+
+    AZOREAN PORTUGUESE IN NORTH AMERICA:
+    -------------------------------------
+    - Large communities: Massachusetts, California, Rhode Island, Ontario
+    - Preserved archaic features from emigration era
+    - But: English influence, code-switching
+    - Second generation: Often understands but doesn't speak
+    - Third generation: Usually lost
+    - Heritage language classes: Teaching standard, not Azorean
+    - Result: Dialect dying in diaspora
+
+    COMPARISON WITH MAINLAND:
+    -------------------------
+    Feature              | Azores         | Mainland (Lisbon)
+    ---------------------|----------------|-------------------
+    /ow/ in <ou>         | [ow] ~ [o]     | [o]
+    Final /s/            | [ʃ] (variable) | [ʃ]
+    Intervocalic /d/     | [d] ~ [ð]      | [ð]
+    Vowel reduction      | Variable       | Heavy
+    Prosody             | Very melodic   | Reduced melody
+    Archaisms           | Many           | Few
+    Innovation          | Isolated       | Lisbon-driven
+
+    COMPARISON WITH MADEIRA:
+    ------------------------
+    Feature              | Azores         | Madeira
+    ---------------------|----------------|------------------
+    Settlement          | 15th c., diverse| 15th c., southern
+    /s/ palatalization  | Common         | Less common
+    Prosody             | Very melodic   | Melodic
+    Standardization     | Resistant      | More advanced
+    Tourism impact      | Growing        | Heavy
+
+    EXAMPLES BY ISLAND:
+    -------------------
+    "Os homens estão a falar" (The men are talking)
+
+    São Miguel: [uʃ ˈõmẽjʃ ʃˈtɐ̃w ɐ fɐˈlaɾ]
+    - Strong [ʃ] for /s/
+    - Extreme reduction
+    - Very melodic
+
+    Terceira: [uʃ ˈomẽjʃ ʃˈtɐ̃w ɐ fɐˈlaɾ]
+    - Less extreme
+    - More like Lisbon
+
+    Flores: [ow ˈomẽjʃ iʃˈtɐ̃w a faˈlaɾ]
+    - More conservative
+    - Less reduction
+    - Archaic features
+
+    CURRENT SITUATION AND FUTURE:
+    ------------------------------
+    1. VITALITY:
+       - Still spoken by all age groups
+       - But: Young people more standard-influenced
+       - Education and media = Lisbon norms
+       - Emigration removes speakers
+       - Tourism bringing mainland contact
+
+    2. CHANGE PATTERNS:
+       - Prosody: Most resistant (persists longest)
+       - Lexicon: Being replaced by standard
+       - Phonology: Variable, age-graded change
+       - Some features strengthening (identity marker)
+       - Others weakening (standardization)
+
+    3. DOCUMENTATION:
+       - Growing academic interest
+       - Recording projects on all islands
+       - Dialect atlases published
+       - Cultural organizations preserving
+       - But: Rapid change necessitates urgency
+
+    4. PROSPECTS:
+       - Will persist in modified form
+       - Prosody likely to remain distinctive
+       - Some phonological features maintained
+       - But: Leveling toward standard ongoing
+       - Strong identity may slow change
+       - Tourism may commodify dialect
+
+    CULTURAL SIGNIFICANCE:
+    ----------------------
+    - Music: Chamarrita (traditional song/dance) uses dialect
+    - Literature: Azorean authors write in dialect
+    - Festivals: Espírito Santo (religious tradition) - dialect context
+    - Identity: Language = culture = Azorean-ness
+    - UNESCO: Intangible cultural heritage interest
+
+    RESEARCH IMPORTANCE:
+    --------------------
+    - Window into 15th-16th century Portuguese
+    - Archaic features document language history
+    - Island isolation = natural laboratory
+    - Each island = different experiment
+    - Comparative dialectology opportunities
+    - Emigration studies (language contact)
+    """
+
+    def __init__(self, **kwargs):
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT-x-azores"
+
+        # Azorean shares European base but with distinctive features
+        if "DIPHTHONG2IPA" not in kwargs:
+            # Some islands preserve /ow/
+            kwargs["DIPHTHONG2IPA"] = {
+                **AO1990.DIPHTHONG2IPA,
+                "ou": "ow",  # Preservation (unlike Lisbon [o])
+                "ei": "ɐj",  # Like Central Portuguese
+            }
+
+        # Less intervocalic fricativization than mainland
+        if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
+            kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                "s": "z",
+                # Less /d/ fricativization than mainland
+                # "d": "ð" - more often [d] preserved
+                "d": "d"
+            }
+
+        # Could add Azorean-specific lexicon if available
+        # if "IRREGULAR_WORDS" not in kwargs:
+        #     kwargs["IRREGULAR_WORDS"] = LEXICON.get_ipa_map(region="azores")
+
+        super().__init__(**kwargs)
+
+
+class MadeiraPortuguese(EuropeanPortuguese):
+    """
+    Madeiran Portuguese (Madeirense) phonological inventory.
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Madeirense, spoken on the Madeira archipelago (Madeira and Porto Santo
+    islands), is a distinctive Atlantic Portuguese variety sharing some
+    features with Azorean but with its own unique character. Settled earlier
+    and from different regions than the Azores, Madeira developed a variety
+    influenced by southern Portuguese dialects, subsequent Azorean migration,
+    and heavy tourism. The dialect preserves some archaic features while also
+    showing extensive standardization.
+
+    GEOGRAPHICAL AND HISTORICAL CONTEXT:
+    ------------------------------------
+    1. MADEIRA ARCHIPELAGO:
+       - Madeira Island (main island, ~260,000 people)
+       - Porto Santo (smaller, ~5,000 people)
+       - Desertas and Selvagens (uninhabited)
+       - 1,000 km southwest of Lisbon
+       - Discovered/settled 1419-1420 (earlier than Azores)
+
+    2. SETTLEMENT HISTORY (Different from Azores):
+       - PRIMARY settlers: Southern Portugal (Algarve, Alentejo)
+       - Also: Northern Portuguese (Minho)
+       - Later: Azorean migrants (adding Azorean features)
+       - Some: Genoese, Flemish, enslaved Africans
+       - Result: Predominantly Southern base + mixed influences
+
+    3. ECONOMIC HISTORY:
+       - Sugar production (15th-16th c.) - wealth and contact
+       - Wine trade (Madeira wine) - international connections
+       - Emigration (Brazil, Venezuela, South Africa)
+       - Tourism boom (20th c.) - massive change
+       - Today: Tourism-dependent economy
+
+    PHONOLOGICAL FEATURES:
+    ----------------------
+    1. SOUTHERN PORTUGUESE BASE:
+       - Shares features with mainland Southern dialects
+       - /ej/ → [e] monophthongization (variable)
+         * "primeiro" [pɾiˈmeɾu] ~ [pɾiˈmɐjɾu]
+         * More [e] in traditional speech
+         * More [ɐj] in Funchal (capital, Lisbon-influenced)
+
+       - /ow/ → [o] monophthongization
+         * "ouro" [ˈoɾu]
+         * "pouco" [ˈpoku]
+         * More consistent than /ej/
+
+    2. INTERVOCALIC CONSONANTS:
+       - Variable /d/ treatment
+       - Less deletion than mainland Southern
+       - More like Central Portuguese
+       - "nada" [ˈnadɐ] ~ [ˈnaðɐ] (not usually deleted)
+       - Conservative in this respect
+
+    3. SIBILANT PATTERNS:
+       - Generally standard European [s, z, ʃ, ʒ]
+       - Less palatalization than Azores
+       - Final /s/ → [ʃ] (standard European pattern)
+       - "nós" [ˈnɔʃ]
+       - No special innovations here
+
+    4. VOWEL SYSTEM:
+       - Moderate reduction (between Southern and Lisbon)
+       - Unstressed /a/ → [ɐ]
+       - Unstressed /e/ → [ɨ] (but less extreme than Lisbon)
+       - Unstressed /o/ → [u]
+       - Stressed vowels: Clear articulation
+       - Open vowels [ɛ, ɔ] well-maintained
+
+    5. RHOTIC CONSONANTS:
+       - Generally European pattern
+       - Strong R: /ʁ/ (uvular fricative) in Funchal
+       - Rural areas: May use trill [r] (archaic)
+       - Tap [ɾ] in intervocalic position
+       - Variable by region and age
+
+    PROSODIC CHARACTERISTICS:
+    -------------------------
+    1. MELODIC QUALITY:
+       - "Singing" intonation (similar to Azorean)
+       - But: Less extreme than São Miguel (Azores)
+       - Wide pitch range
+       - Final syllable lengthening
+       - Characteristic rising-falling patterns
+
+    2. TEMPO:
+       - Moderate (not as slow as Alentejo)
+       - Faster than Azores generally
+       - Urban (Funchal): Approaching Lisbon speed
+       - Rural: More deliberate, traditional
+
+    3. RHYTHM:
+       - Tends toward stress-timing
+       - Similar to European Portuguese generally
+       - But with distinctive island melody
+
+    REGIONAL VARIATION:
+    -------------------
+    1. FUNCHAL (Capital, South Coast):
+       - Population ~110,000
+       - Most Lisbon-influenced
+       - Tourism center
+       - More standard Portuguese
+       - But: Prosody still distinctive
+       - Young speakers: Very Lisbon-like
+       - Service workers: "Neutral" Portuguese
+
+    2. NORTH COAST (Porto Moniz, São Vicente):
+       - More traditional features
+       - Less tourism exposure
+       - Agricultural communities
+       - Preserves archaic vocabulary
+       - More distinctive pronunciation
+       - But: Depopulation threatening
+
+    3. INTERIOR MOUNTAINS:
+       - Most conservative variety
+       - Isolated villages
+       - Archaic features strongest
+       - Traditional agriculture
+       - Aging population
+       - Features rapidly declining
+
+    4. PORTO SANTO (Second Island):
+       - Small population (~5,000)
+       - Own sub-variety
+       - Some unique features
+       - More isolated historically
+       - Tourism now changing (beach resort)
+       - Less documented than Madeira proper
+
+    DISTINCTIVE MADEIRAN FEATURES:
+    ------------------------------
+    1. PALATALIZATION PATTERNS:
+       - Some unique palatalization not found on mainland
+       - /l/ → [lʲ] (palatalized) in some contexts
+       - Variable and declining
+       - Mostly in older, rural speakers
+
+    2. LEXICAL DISTINCTIVENESS:
+       - Many unique words (especially agriculture, fishing)
+       - African substrate vocabulary (historical enslaved population)
+       - Some Arabic loanwords (via Southern Portuguese)
+       - Maritime vocabulary (sailing, fishing)
+       - Sugar production terms (historical)
+
+    3. SUBSTRATE INFLUENCES:
+       - African (Bantu, West African): Limited but present
+         * Some lexical items
+         * Possible prosodic influence (debated)
+       - Genoese: Very limited (mostly place names)
+       - Azorean: Later influence from migration
+
+    TOURISM IMPACT (Critical Factor):
+    ----------------------------------
+    1. MASSIVE STANDARDIZATION:
+       - Tourism industry since 1960s
+       - Even more developed than Algarve
+       - Year-round destination (mild climate)
+       - International exposure (British especially)
+       - Pressure for "correct" Portuguese
+
+    2. LINGUISTIC CONSEQUENCES:
+       - Traditional dialect declining rapidly
+       - Funchal: Nearly standard Portuguese
+       - Rural areas: Maintaining features but depopulating
+       - Young people: Mostly standard
+       - Service sector: English/Portuguese bilingualism
+
+    3. GENERATIONAL SHIFT:
+       - Elderly (70+): Strong Madeirense features
+       - Middle-aged (40-70): Mixed, situation-dependent
+       - Young (under 40): Mostly standard + prosody
+       - Children: Standard with some prosodic traces
+       - Clear age-grading toward standardization
+
+    SOCIOLINGUISTIC PROFILE:
+    ------------------------
+    1. IDENTITY:
+       - Strong Madeiran identity (vs. mainland)
+       - "Madeirenses" distinct from "Continentais"
+       - But: Less linguistically distinct than Azoreans
+       - Identity more cultural than linguistic
+       - Tourism has created cosmopolitan outlook
+
+    2. ATTITUDES:
+       - EXTERNAL (Mainland Portuguese):
+         * Less mocked than Azorean
+         * Seen as more "sophisticated" (tourism, wealth)
+         * But still recognizably "island Portuguese"
+         * Associated with tourism, beauty, wine
+
+       - INTERNAL (Madeirans):
+         * Some pride in traditional speech
+         * But: Linguistic insecurity common
+         * Standard Portuguese = prestige
+         * Traditional dialect = "backwards"
+         * Mixed feelings about change
+
+    3. STANDARDIZATION ACCEPTANCE:
+       - More acceptance than Azores
+       - Economic incentives (tourism jobs)
+       - Education system: Lisbon norms
+       - Media: Mainland Portuguese dominant
+       - Less resistance than other dialects
+
+    COMPARISON WITH AZORES:
+    -----------------------
+    Feature              | Madeira        | Azores
+    ---------------------|----------------|------------------
+    Settlement base      | Southern PT    | Mixed all regions
+    /s/ palatalization  | Standard EP    | Innovative [ʃ]
+    /ej/ realization    | [e] ~ [ɐj]     | Variable
+    Vowel reduction      | Moderate       | Variable/extreme
+    Prosody             | Melodic        | Very melodic
+    Standardization     | Advanced       | Moderate
+    Tourism impact      | Extreme        | Growing
+    Identity marker     | Weaker         | Stronger
+    Documentation       | Moderate       | Better
+
+    COMPARISON WITH MAINLAND SOUTHERN:
+    ----------------------------------
+    Feature              | Madeira        | Alentejo/Algarve
+    ---------------------|----------------|-------------------
+    Tempo               | Moderate       | Slow (Alentejo)
+    /d/ deletion        | Rare           | Common
+    Tourism influence   | Extreme        | Heavy (Algarve)
+    Isolation effects   | Historical     | Geographic
+    Archaisms           | Some           | Many (Alentejo)
+
+    EMIGRATION AND DIASPORA:
+    ------------------------
+    1. DESTINATIONS:
+       - Venezuela (historically large community)
+       - South Africa (significant population)
+       - Brazil (especially São Paulo)
+       - United Kingdom (recent, service workers)
+       - Also: Angola, Mozambique (colonial period)
+
+    2. DIASPORA VARIETIES:
+       - Venezuela: Preserved early 20th c. features
+       - South Africa: Mixed with local Portuguese
+       - Brazil: Mostly assimilated to Brazilian
+       - UK: Recent migrants, L2 English influence
+       - Generally: Second generation loses dialect
+
+    PHONOLOGICAL PROCESSES:
+    -----------------------
+    1. VARIABLE MONOPHTHONGIZATION:
+       - /ej/ → [e] in traditional speech
+       - But /ej/ → [ɐj] in standard-influenced speech
+       - Age and region dependent
+       - Ongoing change toward [ɐj]
+
+    2. SIBILANT PATTERNS:
+       - Standard European pattern maintained
+       - /s/ → [z] intervocalic voicing
+       - /s/ → [ʃ] before voiceless consonants
+       - No special innovations
+
+    3. VOWEL REDUCTION:
+       - Less than Lisbon, more than Southern mainland
+       - Intermediate pattern
+       - Unstressed vowels reduced but clear
+
+    LEXICAL CHARACTERISTICS:
+    ------------------------
+    - Sugar production vocabulary (historical)
+    - Wine-making terminology (Madeira wine)
+    - Unique agricultural terms (levadas - irrigation channels)
+    - Maritime vocabulary
+    - Some African-origin words
+    - Tourism vocabulary (modern loans)
+
+    CURRENT SITUATION:
+    ------------------
+    1. VITALITY:
+       - Declining rapidly in urban areas
+       - Maintained in rural areas (but depopulating)
+       - Prosody most resistant feature
+       - Lexicon being replaced fastest
+       - Phonology variable, age-graded
+
+    2. DOCUMENTATION:
+       - Less studied than Azorean
+       - Some academic work exists
+       - Cultural organizations preserving
+       - But: Limited compared to need
+       - Urgent documentation needed
+
+    3. FUTURE PROSPECTS:
+       - Urban: Near-complete standardization likely
+       - Rural: Possible preservation in pockets
+       - Prosody: Will remain distinctive
+       - Most phonological features: Will level
+       - Overall: Becoming vestigial
+
+    CULTURAL CONTEXT:
+    -----------------
+    - Traditional music: Uses dialect features
+    - Local festivals: Context for traditional speech
+    - Literature: Some authors write in dialect
+    - Tourism marketing: Selective use of "traditional"
+    - But: Economic pressure against maintenance
+
+    EDUCATIONAL CONTEXT:
+    --------------------
+    - Schools: Lisbon standard exclusively
+    - No dialect teaching or maintenance
+    - Standard Portuguese = academic success
+    - Traditional speech = stigmatized in school
+    - Teachers often from mainland
+    - Result: Strong pressure toward standardization
+
+    MEDIA REPRESENTATION:
+    ---------------------
+    - Local media: Mainland Portuguese
+    - Tourism materials: Standard Portuguese/English
+    - Cultural programs: Sometimes feature traditional speech
+    - National media: Rare Madeiran speakers
+    - Overall: Limited dialect visibility
+
+    SUMMARY:
+    --------
+    Madeiran Portuguese represents a once-distinctive Atlantic variety now
+    rapidly converging with mainland standard Portuguese due to tourism,
+    education, and economic integration. While prosodic features persist and
+    some elderly speakers maintain traditional phonology, the trajectory is
+    clear: standardization is advanced and accelerating. Unlike Azorean,
+    which maintains stronger resistance through identity, Madeiran is more
+    accepting of standard norms, partly due to economic incentives and less
+    distinctive features to begin with. Documentation is urgently needed
+    before traditional varieties disappear entirely.
+    """
+
+    def __init__(self, **kwargs):
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-PT-x-madeira"
+
+        # Madeira has Southern Portuguese base with some distinctive features
+        if "DIPHTHONG2IPA" not in kwargs:
+            kwargs["DIPHTHONG2IPA"] = {
+                **AO1990.DIPHTHONG2IPA,
+                "ou": "o",  # Monophthongization like Central/Southern
+                "ei": "e",  # Variable: [e] in traditional, [ɐj] in standard-influenced
+            }
+
+        if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
+            kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                "s": "z",
+                # Less /d/ deletion than Southern mainland
+                "d": "ð",  # Fricativization but not deletion
+            }
+
+        # Could add Madeiran-specific lexicon if available
+        # if "IRREGULAR_WORDS" not in kwargs:
+        #     kwargs["IRREGULAR_WORDS"] = LEXICON.get_ipa_map(region="madeira")
+
+        super().__init__(**kwargs)
 
 
 # =============================================================================
@@ -1492,14 +3371,11 @@ class BrazilianPortuguese(DialectInventory):
        - "avô" [aˈvɔ]
     """
 
-    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
-        super().__init__(
-            dialect_code=dialect_code or "pt-BR",
-            DIGRAPH2IPA = {
-                **AO1990.DIGRAPH2IPA,
-                "rr": "h"  # DIVERGENCE: Brazilian uses [h] or [x] instead of [ʁ]
-            },
-            DEFAULT_CHAR2PHONEMES = {
+    def __init__(self, **kwargs):
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-BR"
+        if "DEFAULT_CHAR2PHONEMES" not in kwargs:
+            kwargs["DEFAULT_CHAR2PHONEMES"] = {
                 **AO1990.DEFAULT_CHAR2PHONEMES,
                 # VOWELS - LESS REDUCTION IN BRAZILIAN
                 "a": "a",  # DIVERGENCE: stays [a], not [ɐ]
@@ -1508,25 +3384,436 @@ class BrazilianPortuguese(DialectInventory):
                 "o": "o",  # DIVERGENCE: stays [o], not [u]
                 # CONSONANTS
                 "r": "ɾ",  # DIVERGENCE: tap, strong R is [h]
-            },
-            IRREGULAR_WORDS=IRREGULAR_WORDS or LEXICON.get_ipa_map(region="rjx"),
-            **kwargs
-        )
+            }
+        if "CODA_CHAR2PHONEMES" not in kwargs:
+            kwargs["CODA_CHAR2PHONEMES"] = {
+                "l": "w",
+            }
+        if "DIGRAPH2IPA" not in kwargs:
+            kwargs["DIGRAPH2IPA"] = {
+                **AO1990.DIGRAPH2IPA,
+                "rr": "h",  # DIVERGENCE: Brazilian uses [h] or [x] instead of [ʁ]
+                "di": "dʒi",  # d palatalization before [i]
+                "ti": "tʃi",  # d palatalization before [i]
+            }
+        if "IRREGULAR_WORDS" not in kwargs:
+            kwargs["IRREGULAR_WORDS"] = LEXICON.get_ipa_map(region="rjx")
+        super().__init__(**kwargs)
 
 
 class RioJaneiroPortuguese(BrazilianPortuguese):
-    def __init__(self):
-        super().__init__(
-            dialect_code="pt-BR-x-rio-janeiro",
-        )
+    """
+    Rio de Janeiro Portuguese (Carioca) phonological inventory.
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Carioca Portuguese, spoken in Rio de Janeiro city and state, represents
+    one of the most distinctive and internationally recognized Brazilian
+    Portuguese varieties. Historically, Rio was Brazil's capital (1763-1960),
+    giving Carioca speech prestige and national influence. The accent is
+    characterized by unique phonological innovations, especially in sibilant
+    and rhotic articulation, and is instantly recognizable to other
+    Portuguese speakers.
+
+    THE "CARIOCA SOUND":
+    --------------------
+    Carioca is perhaps the most phonologically innovative Brazilian dialect,
+    with several features that distinguish it sharply from other varieties.
+
+    DEFINING FEATURES:
+    ------------------
+    1. PALATALIZED SIBILANTS: /s/ → [ʃ] / _# (syllable-final)
+       - MOST DISTINCTIVE Carioca feature
+       - Final /s/ becomes [ʃ] (not [s] as in São Paulo)
+       - "nós" [ˈnɔʃ] (SP: [ˈnɔs])
+       - "três" [ˈtɾeʃ] (SP: [ˈtɾes])
+       - "as casas" [aʃ ˈkazɐʃ] (SP: [as ˈkazas])
+       - Before voiceless consonants: "está" [iʃˈta]
+       - Before voiced consonants: "mesmo" [ˈmeʒmu]
+       - INSIGHT: Parallels European Portuguese, but NOT from EP influence
+
+    2. UVULAR/PHARYNGEAL RHOTIC: /ʁ/ (strong R)
+       - "carro" [ˈkaʁu] (not [ˈkaxu] as in São Paulo)
+       - "rato" [ˈʁatu]
+       - "terra" [ˈtɛʁɐ]
+       - Articulation varies:
+         * Uvular fricative [ʁ] (most common)
+         * Pharyngeal fricative [ʕ] (older speakers)
+         * Uvular trill [ʀ] (rare, archaic)
+       - PRESTIGE: Associated with educated urban Carioca speech
+       - Tap /ɾ/ remains: "caro" [ˈkaɾu] vs. "carro" [ˈkaʁu]
+
+    3. EXTREME PALATALIZATION: /t, d/ → [tʃ, dʒ] before [i]
+       - Shared with Brazilian Portuguese generally
+       - But Carioca extends to more contexts
+       - "tia" [ˈtʃiɐ]
+       - "dia" [ˈdʒiɐ]
+       - "noite" [ˈnojtʃi]
+       - Before unstressed [i] from /e/: "de" [dʒi]
+       - EXTENT: More palatalization than interior varieties
+
+    4. DIPHTHONG REDUCTION IN CASUAL SPEECH:
+       - /ej/ → [e]: "leite" [ˈletʃi]
+       - /ow/ → [o]: "ouro" [ˈoɾu]
+       - Varies by speaker and formality
+
+    5. OPEN VOWELS:
+       - Tendency toward open mid-vowels [ɛ, ɔ]
+       - "escola" [iʃˈkɔlɐ] (more open than SP)
+       - "festa" [ˈfɛʃtɐ]
+
+    6. FINAL /l/ VOCALIZATION: /l/ → [w]
+       - Shared Brazilian feature, but very consistent in Rio
+       - "Brasil" [bɾaˈziw]
+       - "mal" [ˈmaw]
+       - "azul" [aˈzuw]
+
+    PROSODIC FEATURES:
+    ------------------
+    - "Singing" intonation (melodic, varying pitch)
+    - Characteristic rhythm (stress-timed tendency)
+    - Final syllable lengthening in questions
+    - Rising intonation on statements (sounds like questions)
+    - Often described as "musical" or "lilting"
+
+    SOCIOLINGUISTIC STRATIFICATION:
+    -------------------------------
+    1. BY GEOGRAPHY:
+       - Zona Sul (South Zone): Most prestigious (Copacabana, Ipanema)
+         * Most innovative features
+         * Media/entertainment standard
+       - Zona Norte (North Zone): More conservative
+         * Less extreme sibilant palatalization
+         * More traditional features
+       - Baixada Fluminense (suburbs): Different again
+         * Mixed features from migration
+
+    2. BY CLASS:
+       - Upper/Middle class: Strong Carioca features
+         * [ʃ] for final /s/
+         * [ʁ] for strong R
+       - Working class: Variable
+         * May use [x] or [h] for R
+         * May reduce sibilant palatalization
+
+    3. BY AGE:
+       - Older speakers: [ʁ] or [ʕ] for R
+       - Younger speakers: [ʁ] or moving toward [x]/[h]
+       - Some features intensifying, others leveling
+
+    HISTORICAL DEVELOPMENT:
+    -----------------------
+    - Colonial period: Port city, African influence (enslaved population)
+    - 1763: Becomes colonial capital (was Salvador)
+    - 19th c.: Portuguese royal family arrives (1808), European influence
+    - Early 20th c.: Sibilant palatalization develops/spreads
+    - Mid 20th c.: Golden age of Carioca as prestige variety
+    - 1960: Capital moves to Brasília (Carioca prestige declines slightly)
+    - Late 20th c: Bossa nova, samba internationalize Carioca sound
+    - Today: Still highly prestigious, media dominance
+
+    CULTURAL ASSOCIATIONS:
+    ----------------------
+    - Samba, bossa nova (musical styles)
+    - Carnival (world-famous celebration)
+    - Beach culture (Copacabana, Ipanema)
+    - "Carioca lifestyle" (relaxed, fun-loving stereotype)
+    - Media/entertainment industry
+    - Telenovelas (soap operas) often use Carioca accent
+
+    COMPARISON WITH OTHER BRAZILIAN VARIETIES:
+    -------------------------------------------
+    Feature              | Rio (Carioca)  | São Paulo      | Nordeste
+    ---------------------|----------------|----------------|------------------
+    Final /s/            | [ʃ]            | [s]            | [s]
+    Strong R             | [ʁ]            | [x]/[h]        | [h]/[x]
+    /t,d/ before /i/     | [tʃ, dʒ]       | [tʃ, dʒ]       | [t, d] (variable)
+    Intonation          | Very melodic   | Flatter        | Very melodic
+    Prestige            | High           | High           | Variable
+
+    RECEPTION BY OTHER SPEAKERS:
+    ----------------------------
+    - São Paulo: Sometimes mock as affected/pretentious
+    - Nordeste: Often admire as sophisticated
+    - South: May find difficult to understand
+    - European Portuguese: Find similarities (final [ʃ]) but still distant
+    - International: Most recognizable Brazilian accent (media exposure)
+
+    MEDIA REPRESENTATION:
+    ---------------------
+    - Historically THE prestige Brazilian accent
+    - Rede Globo (major network) based in Rio
+    - Many famous singers, actors are Cariocas
+    - But São Paulo media growing (economic shift)
+    - Still dominant in entertainment, declining in business/politics
+
+    FUTURE OUTLOOK:
+    ---------------
+    - Economic shift to São Paulo affecting prestige
+    - But cultural prestige remains strong
+    - Some features spreading (sibilant palatalization)
+    - Others declining (uvular R in younger speakers)
+    - Media standard increasingly "neutral" (less marked Carioca)
+
+    PHONOLOGICAL CURIOSITIES:
+    -------------------------
+    1. "Chiado" (the hissing sound):
+       - Nickname for Carioca [ʃ] pronunciation
+       - Instantly recognizable marker
+       - Source of much regional humor/identity
+
+    2. R-LESSNESS:
+       - Infinitives often lose final -r in speech
+       - "falar" → [faˈla] (not [faˈlaʁ])
+       - "comer" → [koˈme]
+       - Very stigmatized, but common in casual speech
+
+    3. AFRICAN SUBSTRATE:
+       - Possible influence from Bantu languages on prosody
+       - Large African-descended population
+       - Some lexical items from African languages
+    """
+    def __init__(self, **kwargs):
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-BR-x-rio-janeiro"
+        super().__init__(**kwargs)
 
 
 class SaoPauloPortuguese(BrazilianPortuguese):
-    def __init__(self):
-        super().__init__(
-            dialect_code="pt-BR-x-sao-paulo",
-            IRREGULAR_WORDS=LEXICON.get_ipa_map(region="spx")
-        )
+    """
+    São Paulo Portuguese (Paulistano/Paulista) phonological inventory.
+
+    LINGUISTIC OVERVIEW:
+    --------------------
+    Paulistano (São Paulo city) and Paulista (São Paulo state) Portuguese
+    represents the accent of Brazil's economic powerhouse. While Rio de
+    Janeiro was historically the cultural/prestige center, São Paulo's
+    massive economic growth in the 20th century made Paulistano increasingly
+    influential. The accent is characterized by retroflex rhotics, alveolar
+    sibilants, and distinctive prosody, and is often considered more
+    "neutral" or "standard" than Carioca by Brazilians themselves.
+
+    DEFINING FEATURES:
+    ------------------
+    1. RETROFLEX RHOTIC (CAIPIRA INFLUENCE): /ɾ/ → [ɻ] in coda position
+       - MOST DISTINCTIVE feature of interior Paulista
+       - Syllable-final /r/ becomes retroflex approximant [ɻ]
+       - "porta" [ˈpɔɻtɐ] (Rio: [ˈpɔʁtɐ])
+       - "carta" [ˈkaɻtɐ]
+       - "mar" [ˈmaɻ]
+       - Origin: Caipira (rural) dialect influence
+       - Distribution: Strong in interior, variable in capital
+       - Stigma: Mixed - rural/caipira associations vs. regional pride
+       - Younger urban speakers: May avoid retroflex, use [ɾ] or delete
+
+    2. ALVEOLAR SIBILANTS: /s/ stays [s] (not [ʃ])
+       - MAJOR CONTRAST with Rio
+       - Final /s/ remains alveolar: "nós" [ˈnɔs] (Rio: [ˈnɔʃ])
+       - "três" [ˈtɾes] (Rio: [ˈtɾeʃ])
+       - "as casas" [as ˈkazas] (Rio: [aʃ ˈkazɐʃ])
+       - Before voiceless: "gosto" [ˈɡostu]
+       - Before voiced: "mesmo" [ˈmezmu] (may voice to [z])
+       - INSIGHT: More conservative than Rio in this respect
+
+    3. VELAR/GLOTTAL RHOTIC: Strong R = [x] or [h]
+       - "carro" [ˈkaxu] ~ [ˈkahu] (Rio: [ˈkaʁu])
+       - "rato" [ˈxatu] ~ [ˈhatu]
+       - "terra" [ˈtɛxɐ] ~ [ˈtɛhɐ]
+       - [x] (velar) more in interior/formal
+       - [h] (glottal) more in capital/casual
+       - NEVER uvular [ʁ] like Rio
+       - Tap [ɾ] maintained: "caro" [ˈkaɾu] (intervocalic)
+
+    4. PALATALIZATION: /t, d/ → [tʃ, dʒ] before [i]
+       - Standard Brazilian feature
+       - "tia" [ˈtʃiɐ]
+       - "dia" [ˈdʒiɐ]
+       - "noite" [ˈnojtʃi]
+       - Less extreme than Rio in casual speech
+
+    5. L-VOCALIZATION: /l/ → [w] in coda
+       - Standard Brazilian feature
+       - "Brasil" [bɾaˈziw]
+       - "mal" [ˈmaw]
+       - Very consistent in all contexts
+
+    6. VOWEL QUALITY:
+       - Less extreme opening than Rio
+       - Moderate [ɛ, ɔ] in stressed position
+       - "festa" [ˈfɛstɐ]
+       - "porta" [ˈpɔɻtɐ]
+
+    PROSODIC FEATURES:
+    ------------------
+    - FLATTER intonation than Rio (less melodic)
+    - Faster speech rate (especially in capital)
+    - Less final syllable lengthening
+    - More "monotone" (often described as more "neutral")
+    - Clipped, efficient delivery
+    - PERCEPTION: Sounds more businesslike, less playful than Carioca
+
+    INTERNAL VARIATION:
+    -------------------
+    1. PAULISTANO (São Paulo City):
+       - More "neutral" Brazilian Portuguese
+       - Less retroflex (stigma of caipira)
+       - Faster, urban speech patterns
+       - Influenced by massive immigration (Italian, Japanese, etc.)
+       - Young speakers: Avoid retroflex, use [ɾ] deletion
+       - "porta" [ˈpɔɾtɐ] or [ˈpɔtɐ] (not [ˈpɔɻtɐ])
+
+    2. PAULISTA (Interior):
+       - Strong retroflex /r/ (caipira influence)
+       - "porta" [ˈpɔɻtɐ]
+       - More conservative features
+       - Rural influence stronger
+       - Regional pride in distinctive speech
+
+    3. CAIPIRA SUBSTRATE:
+       - Rural dialect of São Paulo interior
+       - Source of retroflex /r/
+       - Also: rhotic deletion, vowel nasalization patterns
+       - Stigmatized but influential
+       - Many paulistano speakers have caipira-speaking relatives
+
+    IMMIGRATION INFLUENCE:
+    ----------------------
+    São Paulo received massive immigration (late 19th-mid 20th century):
+    - Italian (largest group): Possible prosodic influence
+    - Japanese (largest Japanese diaspora): Some phonological influence
+    - Spanish: Lexical and some phonological borrowing
+    - Portuguese (from Portugal): Reinforced some features
+    - Arabic, German, others: Lexical influence
+    - RESULT: São Paulo Portuguese has unique cosmopolitan character
+    - Leveling of extreme regional features
+    - Some loan phonemes (e.g., Italian /ʎ/ in loanwords)
+
+    SOCIOLINGUISTIC STRATIFICATION:
+    -------------------------------
+    1. BY CLASS:
+       - Upper/Middle class: Avoid retroflex, "neutral" Brazilian
+       - Working class: May retain retroflex, more caipira features
+       - Upward mobility: Adopt "neutral" accent
+
+    2. BY AGE:
+       - Older speakers: More retroflex, more caipira
+       - Younger speakers: Avoid retroflex, more "neutral"
+       - Generation gap in r-pronunciation
+
+    3. BY REGION (within state):
+       - Capital: More "neutral," less retroflex
+       - Interior: More retroflex, more caipira
+       - Coast (Santos area): Some carioca influence
+       - Border areas: Influence from neighboring states
+
+    ECONOMIC AND MEDIA POWER:
+    --------------------------
+    - São Paulo = Brazil's economic capital
+    - Largest city in Southern Hemisphere
+    - Financial center, business hub
+    - Growing media presence (challenging Rio)
+    - "Neutral" accent increasingly used in business, advertising
+    - Less cultural prestige than Rio, but more economic power
+
+    COMPARISON WITH RIO:
+    --------------------
+    Feature              | São Paulo      | Rio (Carioca)
+    ---------------------|----------------|------------------
+    Final /s/            | [s]            | [ʃ]
+    Coda /r/             | [ɻ] ~ [ɾ] ~ ∅  | [ʁ]
+    Strong R             | [x] ~ [h]      | [ʁ]
+    Intonation          | Flat           | Melodic
+    Speed               | Fast           | Moderate
+    Prestige type       | Economic       | Cultural
+    "Neutrality"        | More neutral   | More marked
+
+    THE "NEUTRAL" BRAZILIAN ACCENT:
+    --------------------------------
+    - Paulistano increasingly seen as "neutral" or "standard" Brazilian
+    - Features:
+      * No retroflex
+      * Alveolar sibilants (not palatal)
+      * Moderate vowel quality
+      * Flat intonation
+      * Standard palatalization
+    - Used in:
+      * National newscasts
+      * Corporate communications
+      * Dubbing/voice acting
+      * Language teaching
+    - BUT: Not truly neutral - still regionally marked
+    - Alternative "neutral": Brasília, Goiás (truly central)
+
+    ATTITUDES TOWARD PAULISTANO:
+    ----------------------------
+    - Other Brazilians:
+      * Respect economic power
+      * May mock as cold, businesslike
+      * Admire efficiency, modernity
+      * Sometimes resent São Paulo dominance
+    - Within São Paulo:
+      * Pride in cosmopolitan, modern identity
+      * Tension between urban/rural (caipira stigma)
+      * Some nostalgia for traditional paulista speech
+    - International:
+      * Often taught as "standard" Brazilian
+      * Seen as easier to understand (less marked)
+
+    HISTORICAL DEVELOPMENT:
+    -----------------------
+    - Colonial: Bandeirantes (explorers) spread paulista features inland
+    - 19th c.: Coffee boom, economic growth begins
+    - Late 19th-early 20th c.: Mass immigration shapes accent
+    - Mid 20th c.: Industrialization, urbanization
+    - Late 20th c.: Economic dominance, media growth
+    - Today: Increasingly influential as "standard"
+
+    FUTURE OUTLOOK:
+    ---------------
+    - Retroflex /r/ declining in capital, stable in interior
+    - "Neutral" Paulistano spreading as business standard
+    - Immigration influence continuing (now from Northeast)
+    - Media standard increasingly Paulistano (not Carioca)
+    - But Carioca retains cultural prestige
+    - Possible emergence of pan-Brazilian "neutral" accent
+
+    RELATIONSHIP TO CAIPIRA:
+    ------------------------
+    Caipira = traditional rural dialect of São Paulo interior
+    - Strong retroflex /r/
+    - Rhotic deletion
+    - Distinctive vowel system
+    - Archaic features
+    - Stigmatized as "hick" accent
+    - But: Source of many paulista features
+    - Complex relationship: pride + stigma
+    - Urban speakers distance themselves
+    - But many have caipira-speaking relatives
+    - Influence undeniable but often denied
+
+    PHONOLOGICAL PROCESSES:
+    -----------------------
+    1. R-DELETION in casual speech:
+       - Infinitives: "falar" → [faˈla]
+       - Coda position: "porta" → [ˈpɔtɐ]
+       - Stigmatized but common
+
+    2. Vowel reduction in rapid speech:
+       - "porque" [ˈpuɾki] → [pɾki]
+       - "para" [ˈpaɾɐ] → [pɾa]
+
+    3. Palatalization variability:
+       - Formal: Less palatalization
+       - Casual: More palatalization
+       - "de" [di] vs. [dʒi]
+    """
+    def __init__(self, **kwargs):
+        if "dialect_code" not in kwargs:
+            kwargs["dialect_code"] = "pt-BR-x-sao-paulo"
+
+        if "IRREGULAR_WORDS" not in kwargs:
+            kwargs["IRREGULAR_WORDS"] = LEXICON.get_ipa_map(region="spx")
+        super().__init__(**kwargs)
 
 
 # =============================================================================
