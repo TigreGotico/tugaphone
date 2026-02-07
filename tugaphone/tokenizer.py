@@ -50,6 +50,106 @@ Sentence → Words → Graphemes → Characters
 All indices are computed top-down during initialization to avoid circular dependencies.
 Context-sensitive rules are applied bottom-up during IPA generation.
 
+PHONOLOGICAL FEATURE FRAMEWORK:
+===============================
+This module provides comprehensive phonological and phonetic feature extraction
+at all levels of analysis. These features are critical for:
+
+1. MACHINE LEARNING: Feature vectors for TTS, ASR, and NLP models
+2. LINGUISTIC ANALYSIS: Studying phonological patterns and distributions
+3. IPA GENERATION: Context-sensitive rule application
+4. DEBUGGING: Understanding transcription decisions
+
+CHARACTER-LEVEL FEATURES:
+------------------------
+Articulatory Features (Consonants):
+- manner_of_articulation: How airflow is restricted (plosive, fricative, nasal, etc.)
+- place_of_articulation: Where in vocal tract (bilabial, alveolar, velar, etc.)
+- voicing: Vocal cord vibration (voiced/voiceless)
+- Derived: is_sonorant, is_obstruent, is_liquid, is_fricative, is_plosive,
+           is_nasal_consonant, is_sibilant, is_rhotic
+
+IPA Relevance: These features determine base consonant symbols and context rules.
+Example: 'c' before 'e' → [s] because 'e' is front vowel (palatalization trigger)
+
+Vowel Quality Features:
+- vowel_height: Tongue position vertically (high, mid-high, mid-low, low)
+- vowel_backness: Tongue position horizontally (front, central, back)
+- vowel_roundedness: Lip position (rounded, unrounded)
+- Derived: is_front_vowel, is_back_vowel, is_rounded_vowel
+
+IPA Relevance: Determines vowel symbol selection and stress-based quality changes.
+Example: Stressed 'e' → [ɛ], Unstressed 'e' → [ɨ] (EP) or [e] (BR)
+
+Positional Features:
+- is_onset, is_nucleus, is_coda: Syllable position
+- is_intervocalic: Between two vowels (triggers voicing)
+- is_first_word_letter, is_last_word_letter
+
+IPA Relevance: Position determines allophonic variants.
+Example: 's' intervocalic → [z] (casa [ˈkazɐ])
+
+GRAPHEME-LEVEL FEATURES:
+-----------------------
+Structural Classification:
+- is_digraph, is_trigraph: Multi-letter units (ch, nh, que)
+- is_diphthong, is_triphthong: Vowel sequences (ai, miau)
+- is_nasal: Nasalization marker
+- is_palatal: Palatal articulation (nh, lh)
+
+IPA Relevance: Multi-letter graphemes map to single phonemes or special sequences.
+Example: 'nh' → [ɲ] (single palatal nasal phoneme)
+
+Diphthong Classification:
+- is_falling_diphthong: V-G sequence (pai [paj])
+- is_rising_diphthong: G-V sequence (piano [pjɐnu])
+- is_nasal_diphthong: Nasalized (mãe [mɐ̃j̃])
+
+IPA Relevance: Direction and nasalization affect transcription.
+
+Phonotactic Features:
+- syllable_position: onset, nucleus, or coda
+- has_complex_onset: Part of consonant cluster
+- requires_liaison: May link to following word
+
+IPA Relevance: Syllable position affects phoneme realization.
+Example: /l/ in coda → [w] in Brazilian Portuguese (Brasil → [bɾaˈziw])
+
+WORD-LEVEL FEATURES:
+-------------------
+Stress Patterns:
+- stress_pattern: oxytone, paroxytone, proparoxytone
+- stressed_syllable_idx: Which syllable carries stress
+
+IPA Relevance: Determines placement of stress marker (ˈ) in IPA.
+Example: café (oxytone) → [kaˈfɛ], casa (paroxytone) → [ˈkazɐ]
+
+Syllable Structure:
+- syllable_structure_pattern: CV pattern (CV.CVC.CV)
+- phoneme_count: Total phonemes
+
+IPA Relevance: Shows phonotactic constraints and complexity.
+
+Phonological Inventory:
+- has_diphthongs, has_nasal_sounds, has_palatal_sounds
+- vowel_sequence, consonant_sequence
+
+IPA Relevance: Identifies key phonological features requiring special handling.
+
+Irregularity:
+- is_irregular: Requires dictionary lookup
+- is_homograph: POS-dependent pronunciation
+
+IPA Relevance: Irregular words bypass rule-based transcription.
+Example: "muito" [ˈmũjtu] (irregular nasal diphthong)
+
+SENTENCE-LEVEL FEATURES:
+-----------------------
+Currently focused on word-level analysis. Future extensions:
+- Liaison patterns across word boundaries
+- Phrasal stress and intonation contours
+- Resyllabification in connected speech
+
 QUICK REFERENCES:
 ===========
 - http://www.portaldalinguaportuguesa.org
@@ -327,6 +427,18 @@ class CharToken:
             return None
         return self.parent_grapheme.characters[self.char_idx + 1]
 
+    @cached_property
+    def prev_grapheme(self) -> Optional['GraphemeToken']:
+        if not self.parent_grapheme:
+            return None
+        return self.parent_grapheme.prev_grapheme
+
+    @cached_property
+    def next_grapheme(self) -> Optional['GraphemeToken']:
+        if not self.parent_grapheme:
+            return None
+        return self.parent_grapheme.next_grapheme
+
     # -------------------------------
     # Look-behind/ahead
     # -------------------------------
@@ -482,6 +594,19 @@ class CharToken:
         """
         return self.normalized in ["i", "u", "ê", "ô"]
 
+    @property
+    def is_prepalatal_vowel(self) -> bool:
+        if not self.is_vowel:
+            return False
+        # inside a individual grapheme
+        if self.next_char and self.next_char == "j":
+            return True
+        # inter-grapheme
+        if self.next_grapheme:
+            if self.next_grapheme.normalized in ["ch", "lh"] or self.next_grapheme.normalized[0] == "j":
+                return True
+        return False
+
     # =========================================================================
     # SYLLABLE QUALITY CLASSIFICATION
     # =========================================================================
@@ -555,6 +680,442 @@ class CharToken:
         prev_is_vowel = self.prev_char.is_vowel if self.prev_char else False
         next_is_cons = self.next_char.is_consonant if self.next_char else False
         return prev_is_vowel and next_is_cons
+
+    # =========================================================================
+    # PHONOLOGICAL FEATURES (Articulatory & Acoustic)
+    # =========================================================================
+
+    @cached_property
+    def manner_of_articulation(self) -> Optional[str]:
+        """
+        Manner of articulation for consonants.
+
+        Categories: plosive, fricative, affricate, nasal, lateral, tap, trill, approximant
+
+        IPA Relevance: Determines basic consonant type, essential for choosing
+        correct IPA symbol (e.g., 'p' → [p] plosive vs 'f' → [f] fricative)
+
+        Returns:
+            Manner category or None for vowels/punctuation
+        """
+        if not self.is_consonant:
+            return None
+
+        char = self.normalized
+
+        # Plosives (stops): complete closure then release
+        if char in 'pbptdtkgqc':
+            return 'plosive'
+
+        # Fricatives: continuous turbulent airflow
+        if char in 'fvszxjç':
+            return 'fricative'
+
+        # Nasals: oral closure with nasal airflow
+        if char in 'mn':
+            return 'nasal'
+
+        # Laterals: central closure, lateral airflow
+        if char == 'l':
+            return 'lateral'
+
+        # Taps/flaps: brief contact
+        # Trills: multiple vibrations
+        if char == 'r':
+            # Context-dependent: can be tap [ɾ] or trill [r] or fricative [ʁ]
+            return 'rhotic'  # General category
+
+        return None
+
+    @cached_property
+    def place_of_articulation(self) -> Optional[str]:
+        """
+        Place of articulation for consonants.
+
+        Categories: bilabial, labiodental, dental, alveolar, postalveolar,
+                   palatal, velar, uvular, glottal
+
+        IPA Relevance: Determines where in vocal tract sound is produced,
+        critical for consonant identity (e.g., [p] bilabial vs [t] alveolar)
+
+        Returns:
+            Place category or None for vowels/punctuation
+        """
+        if not self.is_consonant:
+            return None
+
+        char = self.normalized
+
+        # Bilabial: both lips
+        if char in 'pbm':
+            return 'bilabial'
+
+        # Labiodental: lower lip + upper teeth
+        if char in 'fv':
+            return 'labiodental'
+
+        # Dental/alveolar: tongue tip at/near teeth
+        if char in 'tdnszl':
+            return 'alveolar'
+
+        # Postalveolar: tongue behind alveolar ridge
+        if char in 'xj':
+            return 'postalveolar'
+
+        # Palatal: tongue body at hard palate
+        # In Portuguese, 'nh' [ɲ], 'lh' [ʎ]
+
+        # Velar: tongue back at soft palate
+        if char in 'kgq':
+            return 'velar'
+
+        # Uvular/alveolar for R (dialect-dependent)
+        if char == 'r':
+            return 'alveolar_or_uvular'
+
+        if char == 'ç':
+            return 'alveolar'  # cedilla → [s]
+
+        return None
+
+    @cached_property
+    def voicing(self) -> Optional[str]:
+        """
+        Voicing status for consonants.
+
+        Categories: voiced, voiceless
+
+        IPA Relevance: Distinguishes consonant pairs like [p]/[b], [t]/[d], [s]/[z].
+        Critical for Portuguese intervocalic voicing (casa → [ˈkazɐ])
+
+        Returns:
+            'voiced', 'voiceless', or None for vowels
+        """
+        if not self.is_consonant:
+            return 'voiced' if self.is_vowel else None
+
+        char = self.normalized
+
+        # Voiceless consonants
+        if char in 'ptkcfsx':
+            return 'voiceless'
+
+        # Voiced consonants
+        if char in 'bdgvzjlmnr':
+            return 'voiced'
+
+        # Context-dependent
+        if char == 's':
+            # Intervocalic S → [z] (voiced)
+            if self.is_intervocalic:
+                return 'voiced'
+            return 'voiceless'
+
+        if char == 'ç':
+            return 'voiceless'  # Always [s]
+
+        return None
+
+    @cached_property
+    def vowel_height(self) -> Optional[str]:
+        """
+        Tongue height for vowels.
+
+        Categories: high, mid-high, mid, mid-low, low
+
+        IPA Relevance: Primary dimension for vowel quality.
+        - High: [i u] ('i', 'u')
+        - Mid-high: [e o] ('ê', 'ô')
+        - Mid-low: [ɛ ɔ] ('é', 'ó')
+        - Low: [a ɐ] ('a', unstressed)
+
+        Returns:
+            Height category or None for consonants
+        """
+        if not self.is_vowel:
+            return None
+
+        char = self.normalized
+
+        # High vowels
+        if char in 'iuíú':
+            return 'high'
+
+        # Mid-high (close-mid)
+        if char in 'eêoô':
+            return 'mid-high'
+
+        # Mid-low (open-mid)
+        if char in 'éó':
+            return 'mid-low'
+
+        # Low
+        if char in 'aáàâ':
+            return 'low'
+
+        # Reduced vowels (context-dependent)
+        if char == 'e' and not self.has_primary_stress:
+            return 'high'  # [ɨ] or [e]
+
+        if char == 'o' and not self.has_primary_stress:
+            return 'high'  # [u]
+
+        return None
+
+    @cached_property
+    def vowel_backness(self) -> Optional[str]:
+        """
+        Tongue position (front-back) for vowels.
+
+        Categories: front, central, back
+
+        IPA Relevance: Secondary dimension for vowel quality.
+        - Front: [i e ɛ] ('i', 'e', 'é')
+        - Central: [ɐ ɨ] (unstressed 'a', 'e')
+        - Back: [u o ɔ] ('u', 'o', 'ó')
+
+        Returns:
+            Backness category or None for consonants
+        """
+        if not self.is_vowel:
+            return None
+
+        char = self.normalized
+
+        # Front vowels
+        if char in 'ieéêí':
+            return 'front'
+
+        # Central vowels (reduced)
+        if char in 'aá' and not self.has_primary_stress:
+            return 'central'  # [ɐ]
+
+        if char == 'e' and not self.has_primary_stress:
+            return 'central'  # [ɨ] in EP
+
+        # Back vowels
+        if char in 'uoóôú':
+            return 'back'
+
+        # Stressed 'a' is central-low
+        if char in 'aáàâ':
+            return 'central'
+
+        return None
+
+    @cached_property
+    def vowel_roundedness(self) -> Optional[str]:
+        """
+        Lip rounding for vowels.
+
+        Categories: rounded, unrounded
+
+        IPA Relevance: Distinguishes vowel quality.
+        - Rounded: [u o ɔ] ('u', 'o', 'ó')
+        - Unrounded: [i e ɛ a] ('i', 'e', 'é', 'a')
+
+        Returns:
+            Roundedness or None for consonants
+        """
+        if not self.is_vowel:
+            return None
+
+        char = self.normalized
+
+        # Rounded vowels
+        if char in 'uoóôú':
+            return 'rounded'
+
+        # Unrounded vowels
+        if char in 'ieéêíaáàâ':
+            return 'unrounded'
+
+        return None
+
+    @cached_property
+    def is_sonorant(self) -> bool:
+        """
+        True if sound is a sonorant (resonant).
+
+        Sonorants: vowels, nasals, liquids (l, r), glides
+        Non-sonorants (obstruents): plosives, fricatives, affricates
+
+        IPA Relevance: Sonorants can form syllable nuclei and affect
+        surrounding sound quality through resonance.
+
+        Returns:
+            True for vowels, nasals, liquids; False for obstruents
+        """
+        if self.is_vowel:
+            return True
+
+        if self.is_consonant:
+            char = self.normalized
+            # Nasals, liquids, approximants
+            if char in 'mnlr':
+                return True
+
+        return False
+
+    @cached_property
+    def is_obstruent(self) -> bool:
+        """
+        True if sound is an obstruent (non-resonant consonant).
+
+        Obstruents: plosives, fricatives, affricates
+
+        IPA Relevance: Obstruents undergo voicing assimilation and
+        cannot serve as syllable nuclei.
+
+        Returns:
+            True for plosives, fricatives, affricates
+        """
+        if not self.is_consonant:
+            return False
+
+        char = self.normalized
+        # Plosives, fricatives, affricates
+        return char in 'pbptdtkgfvszxjcçq'
+
+    @cached_property
+    def is_front_vowel(self) -> bool:
+        """
+        True if vowel is articulated in front of mouth.
+
+        Front vowels: [i e ɛ]
+
+        IPA Relevance: Affects palatalization and preceding consonant quality.
+        E.g., 'c' before front vowels → [s] (centro → [ˈsẽtɾu])
+
+        Returns:
+            True for i, e, é, ê, í
+        """
+        if not self.is_vowel:
+            return False
+        return self.normalized in 'ieéêí'
+
+    @cached_property
+    def is_back_vowel(self) -> bool:
+        """
+        True if vowel is articulated in back of mouth.
+
+        Back vowels: [u o ɔ]
+
+        IPA Relevance: Affects labialization and rounding.
+
+        Returns:
+            True for u, o, ó, ô, ú
+        """
+        if not self.is_vowel:
+            return False
+        return self.normalized in 'uoóôú'
+
+    @cached_property
+    def is_rounded_vowel(self) -> bool:
+        """
+        True if vowel requires lip rounding.
+
+        IPA Relevance: Determines lip position during articulation.
+
+        Returns:
+            True for u, o, ó, ô, ú
+        """
+        return self.vowel_roundedness == 'rounded'
+
+    @cached_property
+    def is_liquid(self) -> bool:
+        """
+        True if consonant is a liquid (l, r).
+
+        Liquids: laterals and rhotics
+
+        IPA Relevance: Liquids can form complex onsets (pr, tr, cl, br)
+        and affect vowel quality in syllable codas.
+
+        Returns:
+            True for 'l' and 'r'
+        """
+        return self.is_consonant and self.normalized in 'lr'
+
+    @cached_property
+    def is_fricative(self) -> bool:
+        """
+        True if consonant is a fricative.
+
+        Fricatives: continuous turbulent airflow
+
+        IPA Relevance: Fricatives have characteristic acoustic signatures
+        and different phonotactic constraints than stops.
+
+        Returns:
+            True for f, v, s, z, x, j, ç
+        """
+        return self.manner_of_articulation == 'fricative'
+
+    @cached_property
+    def is_plosive(self) -> bool:
+        """
+        True if consonant is a plosive (stop).
+
+        Plosives: complete oral closure followed by release
+
+        IPA Relevance: Plosives create silence+burst pattern,
+        different from fricative continuous noise.
+
+        Returns:
+            True for p, b, t, d, k, g, c, q
+        """
+        return self.manner_of_articulation == 'plosive'
+
+    @cached_property
+    def is_nasal_consonant(self) -> bool:
+        """
+        True if consonant is nasal.
+
+        Nasal consonants: m, n, (nh → [ɲ])
+
+        IPA Relevance: Nasals trigger vowel nasalization in Portuguese
+        and have distinct acoustic properties.
+
+        Returns:
+            True for 'm', 'n'
+        """
+        return self.is_consonant and self.normalized in 'mn'
+
+    @cached_property
+    def is_sibilant(self) -> bool:
+        """
+        True if consonant is a sibilant fricative.
+
+        Sibilants: high-frequency fricatives (s, z, ʃ, ʒ)
+
+        IPA Relevance: Sibilants have characteristic high-frequency noise
+        and undergo special voicing rules in Portuguese.
+
+        Returns:
+            True for s, z, x, j, ç
+        """
+        if not self.is_consonant:
+            return False
+        return self.normalized in 'szxjç'
+
+    @cached_property
+    def is_rhotic(self) -> bool:
+        """
+        True if consonant is rhotic (r-sound).
+
+        Rhotics: various r-sounds (tap, trill, fricative)
+
+        IPA Relevance: Portuguese has multiple r allophones:
+        - [ɾ] tap (intervocalic)
+        - [r] trill (initial, after l/n/s)
+        - [ʁ] uvular fricative (EP)
+        - [h] glottal fricative (BR)
+
+        Returns:
+            True for 'r'
+        """
+        return self.is_consonant and self.normalized == 'r'
 
     # =========================================================================
     # STRESS PROPERTIES
@@ -870,22 +1431,56 @@ class CharToken:
             Dictionary mapping feature names to values
         """
         return {
+            # Basic identification
             "text": self.normalized,
             "ipa": self.ipa,
+
+            # Positional features
             "is_first_letter": self.is_first_word_letter,
             "is_last_letter": self.is_last_word_letter,
+            "is_onset": self.is_onset,
+            "is_nucleus": self.is_nucleus,
+            "is_coda": self.is_coda,
+
+            # Basic classification
             "is_punct": self.is_punct,
             "is_vowel": self.is_vowel,
+            "is_consonant": self.is_consonant,
+            "is_foreign": self.is_foreign,
+            "is_silent": self.is_silent,
+
+            # Vowel features
             "is_semivowel": self.is_semivowel,
             "is_nasal_vowel": self.is_nasal_vowel,
             "is_open_vowel": self.is_open_vowel,
             "is_closed_vowel": self.is_closed_vowel,
-            "is_consonant": self.is_consonant,
-            "is_foreign": self.is_foreign,
-            "is_silent": self.is_silent,
+            "is_front_vowel": self.is_front_vowel,
+            "is_back_vowel": self.is_back_vowel,
+            "is_rounded_vowel": self.is_rounded_vowel,
+            "vowel_height": self.vowel_height,
+            "vowel_backness": self.vowel_backness,
+            "vowel_roundedness": self.vowel_roundedness,
+
+            # Consonant features
+            "manner_of_articulation": self.manner_of_articulation,
+            "place_of_articulation": self.place_of_articulation,
+            "voicing": self.voicing,
+            "is_sonorant": self.is_sonorant,
+            "is_obstruent": self.is_obstruent,
+            "is_liquid": self.is_liquid,
+            "is_fricative": self.is_fricative,
+            "is_plosive": self.is_plosive,
+            "is_nasal_consonant": self.is_nasal_consonant,
+            "is_sibilant": self.is_sibilant,
+            "is_rhotic": self.is_rhotic,
+
+            # Contextual features
             "is_intervocalic": self.is_intervocalic,
             "is_between_consonant_vowel": self.is_between_consonant_vowel,
             "is_between_vowel_consonant": self.is_between_vowel_consonant,
+            "is_prepalatal_vowel": self.is_prepalatal_vowel,
+
+            # Diacritic and stress
             "has_diacritics": self.has_diacritics,
             "has_primary_stress": self.has_primary_stress,
             "has_secondary_stress": self.has_secondary_stress,
@@ -1338,6 +1933,194 @@ class GraphemeToken:
         return self.normalized in self.dialect.HETEROSYLLABIC_CLUSTERS
 
     # =========================================================================
+    # PHONOLOGICAL & PHONETIC PROPERTIES
+    # =========================================================================
+
+    @cached_property
+    def is_vowel_grapheme(self) -> bool:
+        """
+        True if grapheme consists only of vowel letters.
+
+        IPA Relevance: Vowel graphemes form syllable nuclei and require
+        different transcription rules than consonants.
+
+        Returns:
+            True if all characters are vowels
+        """
+        return all(c.is_vowel for c in self.characters)
+
+    @cached_property
+    def is_consonant_grapheme(self) -> bool:
+        """
+        True if grapheme consists only of consonant letters.
+
+        IPA Relevance: Consonant graphemes include digraphs like 'ch', 'nh', 'lh'
+        that map to single phonemes despite multiple letters.
+
+        Returns:
+            True if all characters are consonants
+        """
+        return all(c.is_consonant for c in self.characters)
+
+    @cached_property
+    def syllable_position(self) -> str:
+        """
+        Position within syllable: onset, nucleus, or coda.
+
+        IPA Relevance: Phoneme realization varies by syllable position.
+        E.g., /l/ → [w] in syllable coda in Brazilian Portuguese
+
+        Returns:
+            'onset', 'nucleus', or 'coda'
+        """
+        if self.is_vowel_grapheme or self.is_diphthong:
+            return 'nucleus'
+
+        # Check if before nucleus
+        if self.parent_syllable:
+            # Find first vowel in syllable
+            for char in self.parent_syllable:
+                if char in 'aeiouáéíóúâêôãõ':
+                    if self.normalized == char or self.normalized[0] == char:
+                        return 'nucleus'
+                    # This grapheme comes before first vowel
+                    if self.idx_in_word < self.parent_word.normalized.index(char):
+                        return 'onset'
+                    else:
+                        return 'coda'
+
+        return 'onset'  # Default
+
+    @cached_property
+    def phonological_weight(self) -> int:
+        """
+        Number of phonemes (mora count for syllable weight).
+
+        IPA Relevance: Syllable weight affects stress patterns and rhythm.
+        - Light syllable: 1 mora (CV)
+        - Heavy syllable: 2+ morae (CVC, CVV)
+
+        Returns:
+            Estimated phoneme count
+        """
+        if not self.ipa:
+            return 0
+
+        # Diphthongs count as 2 morae
+        if self.is_diphthong:
+            return 2
+
+        # Each IPA symbol roughly = 1 phoneme
+        # Filter out diacritics and stress markers
+        # 'ˈ' (primary stress), 'ˌ' (secondary stress), 'ː' (length)
+        ipa_clean = self.ipa.replace('ˈ', '').replace('ˌ', '').replace('ː', '')
+        # Combining diacritics (nasalization, etc.)
+        ipa_clean = ipa_clean.replace('̃', '')
+
+        return len(ipa_clean)
+
+    @cached_property
+    def has_complex_onset(self) -> bool:
+        """
+        True if grapheme is part of complex onset cluster.
+
+        Complex onsets in Portuguese: pr, tr, br, gr, cr, etc.
+
+        IPA Relevance: Complex onsets require precise timing and coordination
+        of articulatory gestures.
+
+        Returns:
+            True if in consonant cluster before nucleus
+        """
+        if not self.is_consonant_grapheme:
+            return False
+
+        # Check if next grapheme is also consonant before nucleus
+        if self.next_grapheme and self.next_grapheme.is_consonant_grapheme:
+            if self.syllable_position == 'onset':
+                return True
+
+        # Check if previous grapheme is consonant in same syllable
+        if self.prev_grapheme and self.prev_grapheme.is_consonant_grapheme:
+            if self.prev_grapheme.syllable_idx == self.syllable_idx:
+                if self.syllable_position == 'onset':
+                    return True
+
+        return False
+
+    @cached_property
+    def is_palatal(self) -> bool:
+        """
+        True if grapheme represents palatal consonant.
+
+        Palatal consonants: nh [ɲ], lh [ʎ], (nhi, lhi)
+
+        IPA Relevance: Palatals have distinctive tongue body position
+        at hard palate, affecting adjacent vowels.
+
+        Returns:
+            True for palatal digraphs
+        """
+        s = self.normalized
+        return s in ['nh', 'lh'] or (s in ['nhi', 'lhi'])
+
+    @cached_property
+    def triggers_palatalization(self) -> bool:
+        """
+        True if grapheme triggers palatalization of adjacent consonants.
+
+        Front vowels (i, e) can palatalize preceding consonants.
+
+        IPA Relevance: Palatalization changes consonant quality.
+        E.g., 't' + 'i' → [tʃi] in some Brazilian dialects
+
+        Returns:
+            True if triggers palatalization
+        """
+        if not self.is_vowel_grapheme:
+            return False
+
+        # Front high vowels trigger palatalization
+        return self.first_char.is_front_vowel and self.first_char.vowel_height == 'high'
+
+    @cached_property
+    def is_onset_cluster(self) -> bool:
+        """
+        True if grapheme is part of onset consonant cluster.
+
+        IPA Relevance: Onset clusters follow specific phonotactic rules
+        in Portuguese (only specific C1+C2 combinations allowed).
+
+        Returns:
+            True if in onset cluster
+        """
+        return self.syllable_position == 'onset' and self.has_complex_onset
+
+    @cached_property
+    def requires_liaison(self) -> bool:
+        """
+        True if grapheme may undergo liaison with following word.
+
+        Liaison: linking final consonant to following initial vowel
+        across word boundaries.
+
+        IPA Relevance: Changes syllable structure and affects rhythm.
+        E.g., "os amigos" → [u.zɐ.ˈmi.gus]
+
+        Returns:
+            True if word-final and potentially liaised
+        """
+        if not self.next_grapheme:  # Word-final
+            if self.is_consonant_grapheme:
+                # Check if next word starts with vowel
+                parent = self.parent_word
+                if parent and parent.next_word:
+                    next_word_first = parent.next_word.graphemes[0] if parent.next_word.graphemes else None
+                    if next_word_first and next_word_first.is_vowel_grapheme:
+                        return True
+        return False
+
+    # =========================================================================
     # STRESS PROPERTIES
     # =========================================================================
 
@@ -1455,24 +2238,51 @@ class GraphemeToken:
             Dictionary with grapheme features and nested character features
         """
         feats = {
+            # Basic properties
             "n_chars": self.n_chars,
             "text": self.normalized,
             "ipa": self.ipa,
+
+            # Syllable context
             "parent_syllable": self.parent_syllable,
             "prev_syllable": self.prev_syllable,
             "next_syllable": self.next_syllable,
+            "syllable_position": self.syllable_position,
+
+            # Historical/orthographic
             "is_archaism": self.is_archaism,
+
+            # Nasalization
             "is_nasal": self.is_nasal,
+
+            # Multi-character units
             "is_digraph": self.is_digraph,
             "is_trigraph": self.is_trigraph,
             "is_foreign_digraph": self.is_foreign_digraph,
             "is_consonant_hiatus": self.is_consonant_hiatus,
+
+            # Diphthongs
             "is_diphthong": self.is_diphthong,
             "is_triphthong": self.is_triphthong,
             "is_falling_diphthong": self.is_falling_diphthong,
             "is_rising_diphthong": self.is_rising_diphthong,
             "is_nasal_diphthong": self.is_nasal_diphthong,
             "is_oral_diphthong": self.is_oral_diphthong,
+            "is_vocalic_hiatus": self.is_vocalic_hiatus,
+
+            # Phonological class
+            "is_vowel_grapheme": self.is_vowel_grapheme,
+            "is_consonant_grapheme": self.is_consonant_grapheme,
+
+            # Phonetic properties
+            "phonological_weight": self.phonological_weight,
+            "has_complex_onset": self.has_complex_onset,
+            "is_palatal": self.is_palatal,
+            "triggers_palatalization": self.triggers_palatalization,
+            "is_onset_cluster": self.is_onset_cluster,
+            "requires_liaison": self.requires_liaison,
+
+            # Stress
             "has_primary_stress": self.has_primary_stress,
             "has_secondary_stress": self.has_secondary_stress,
         }
@@ -1772,6 +2582,194 @@ class WordToken:
         return self.parent_sentence.words[self.word_idx + 1]
 
     # =========================================================================
+    # WORD-LEVEL PHONOLOGICAL PROPERTIES
+    # =========================================================================
+
+    @cached_property
+    def stress_pattern(self) -> str:
+        """
+        Stress pattern classification: oxytone, paroxytone, or proparoxytone.
+
+        IPA Relevance: Stress pattern determines which syllable receives prominence.
+        Essential for correct IPA stress marking (ˈ placement).
+
+        Categories:
+        - Proparoxytone: stress on antepenult (3rd from end) - médico [ˈmɛdiku]
+        - Paroxytone: stress on penult (2nd from end) - casa [ˈkazɐ]
+        - Oxytone: stress on final - café [kɐˈfɛ]
+        - Monosyllable: single syllable - pé [ˈpɛ]
+
+        Returns:
+            'monosyllable', 'oxytone', 'paroxytone', or 'proparoxytone'
+        """
+        n_syl = self.n_syllables
+        stressed_idx = self.stressed_syllable_idx
+
+        if n_syl == 1:
+            return 'monosyllable'
+        elif stressed_idx == n_syl - 1:
+            return 'oxytone'
+        elif stressed_idx == n_syl - 2:
+            return 'paroxytone'
+        elif stressed_idx == n_syl - 3:
+            return 'proparoxytone'
+        else:
+            return 'irregular'  # Stress on 4th from end or earlier (very rare)
+
+    @cached_property
+    def has_diphthongs(self) -> bool:
+        """
+        True if word contains any diphthongs.
+
+        IPA Relevance: Diphthongs are transcribed as two-vowel sequences
+        within a single syllable nucleus.
+
+        Returns:
+            True if any grapheme is a diphthong
+        """
+        return any(g.is_diphthong for g in self.graphemes)
+
+    @cached_property
+    def has_nasal_sounds(self) -> bool:
+        """
+        True if word contains nasal vowels or nasal consonants.
+
+        IPA Relevance: Nasalization (◌̃) is marked in IPA with combining diacritic
+        or by using nasal vowel symbols.
+
+        Returns:
+            True if any grapheme is nasal
+        """
+        return any(g.is_nasal for g in self.graphemes)
+
+    @cached_property
+    def syllable_structure_pattern(self) -> str:
+        """
+        Syllable structure pattern using C (consonant) and V (vowel).
+
+        IPA Relevance: Syllable structure determines phonotactic constraints
+        and affects rhythm and prosody.
+
+        Examples:
+        - "ca.sa" → CV.CV
+        - "trans.por.te" → CCVC.CVC.CV
+        - "a.mi.go" → V.CV.CV
+
+        Returns:
+            Dot-separated syllable structure pattern
+        """
+        patterns = []
+        for syl in self.syllables:
+            pattern = ""
+            for char in syl:
+                if char in 'aeiouáéíóúâêôãõ':
+                    pattern += "V"
+                elif char.isalpha():
+                    pattern += "C"
+            patterns.append(pattern)
+        return ".".join(patterns)
+
+    @cached_property
+    def is_homograph(self) -> bool:
+        """
+        True if word has multiple pronunciations based on POS.
+
+        Homographs in Portuguese require POS tagging for disambiguation.
+
+        IPA Relevance: Different POS → different stress/pronunciation
+        Examples:
+        - "gosto" (noun) [ˈgoʃtu] vs (verb) [ˈɡɔstu]
+
+        Returns:
+            True if in homograph dictionary
+        """
+        return self.normalized in self.dialect.HOMOGRAPHS
+
+    @cached_property
+    def phoneme_count(self) -> int:
+        """
+        Approximate number of phonemes in word.
+
+        IPA Relevance: Phoneme count affects speech duration and complexity.
+
+        Returns:
+            Estimated phoneme count
+        """
+        # Sum phonological weight of all graphemes
+        return sum(g.phonological_weight for g in self.graphemes)
+
+    @cached_property
+    def has_consonant_clusters(self) -> bool:
+        """
+        True if word contains consonant clusters.
+
+        IPA Relevance: Consonant clusters require precise articulatory timing.
+
+        Returns:
+            True if any complex onsets or codas
+        """
+        return any(g.has_complex_onset for g in self.graphemes)
+
+    @cached_property
+    def has_palatal_sounds(self) -> bool:
+        """
+        True if word contains palatal consonants.
+
+        Palatal sounds: nh [ɲ], lh [ʎ]
+
+        IPA Relevance: Palatals are transcribed with special symbols.
+
+        Returns:
+            True if any palatal graphemes
+        """
+        return any(g.is_palatal for g in self.graphemes)
+
+    @cached_property
+    def vowel_sequence(self) -> str:
+        """
+        Sequence of vowels in word (for vowel harmony analysis).
+
+        IPA Relevance: Vowel sequences show patterns of raising/lowering.
+
+        Returns:
+            Concatenated vowel characters
+        """
+        vowels = []
+        for g in self.graphemes:
+            if g.is_vowel_grapheme or g.is_diphthong:
+                vowels.append(g.normalized)
+        return ".".join(vowels)
+
+    @cached_property
+    def consonant_sequence(self) -> str:
+        """
+        Sequence of consonants in word.
+
+        IPA Relevance: Shows phonotactic patterns and cluster types.
+
+        Returns:
+            Concatenated consonant graphemes
+        """
+        consonants = []
+        for g in self.graphemes:
+            if g.is_consonant_grapheme or g.is_digraph:
+                consonants.append(g.normalized)
+        return ".".join(consonants)
+
+    @cached_property
+    def is_irregular(self) -> bool:
+        """
+        True if word has irregular/exceptional pronunciation.
+
+        IPA Relevance: Irregular words require dictionary lookup
+        rather than rule-based transcription.
+
+        Returns:
+            True if in irregular words dictionary
+        """
+        return self.normalized in self.dialect.IRREGULAR_WORDS
+
+    # =========================================================================
     # STRESS PROPERTIES
     # =========================================================================
 
@@ -1854,10 +2852,39 @@ class WordToken:
             Dictionary with word features and nested grapheme features
         """
         feats = {
+            # Basic properties
+            "surface": self.surface,
+            "normalized": self.normalized,
+            "ipa": self.ipa,
             "n_syllables": self.n_syllables,
             "idx_in_sentence": self.idx_in_sentence,
-            "stressed_syllable_idx": self.stressed_syllable_idx,
+
+            # POS tagging
             "pos": self.postag,
+
+            # Stress
+            "stressed_syllable_idx": self.stressed_syllable_idx,
+            "stress_pattern": self.stress_pattern,
+
+            # Syllable structure
+            "syllables": ".".join(self.syllables),
+            "syllable_structure_pattern": self.syllable_structure_pattern,
+
+            # Phonological content
+            "has_diphthongs": self.has_diphthongs,
+            "has_nasal_sounds": self.has_nasal_sounds,
+            "has_consonant_clusters": self.has_consonant_clusters,
+            "has_palatal_sounds": self.has_palatal_sounds,
+
+            # Phoneme inventory
+            "phoneme_count": self.phoneme_count,
+            "vowel_sequence": self.vowel_sequence,
+            "consonant_sequence": self.consonant_sequence,
+
+            # Irregularity
+            "is_irregular": self.is_irregular,
+            "is_homograph": self.is_homograph,
+            "is_archaic": self.is_archaic,
         }
 
         for grapheme in self.graphemes:
