@@ -2583,7 +2583,7 @@ class WordToken:
         if self.word_idx == 0:
             return 0
         prev = self.previous_words
-        whitespace_len = len(prev) - 1
+        whitespace_len = len(prev)
         prev_len = sum(len(w.surface) for w in prev)
         return prev_len + whitespace_len
 

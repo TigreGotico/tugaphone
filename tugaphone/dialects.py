@@ -1455,12 +1455,14 @@ class EuropeanPortuguese(DialectInventory):
             kwargs["dialect_code"] = "pt-PT"
         if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
             kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                **AO1990.INTERVOCALIC_CHAR2PHONEMES,
                 "s": "z",
                 "b": "β",  # <- Voiced bilabial fricative
                 "d": "ð", # <- Voiced alveolar non-sibilant fricative (not present in southern dialects)
             }
         if "CODA_CHAR2PHONEMES" not in kwargs:
             kwargs["CODA_CHAR2PHONEMES"] = {
+                **AO1990.CODA_CHAR2PHONEMES,
                 "l": "ɫ",
             }
         if "FALLING_NASAL_DIPHTHONGS" not in kwargs:
@@ -1558,6 +1560,7 @@ class NorthernPortuguese(EuropeanPortuguese):
             }
         if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
             kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                **AO1990.INTERVOCALIC_CHAR2PHONEMES,
                 "d": "ð",  # <- Voiced alveolar non-sibilant fricative
                 "b": "β",  # <- Voiced bilabial fricative
                 "v": "β",  # <- Betacism
@@ -1668,6 +1671,7 @@ class TransmontanoPortuguese(NorthernPortuguese):
             kwargs["dialect_code"] = "pt-PT-x-transmontano"
         if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
             kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                **AO1990.INTERVOCALIC_CHAR2PHONEMES,
                 "s": "ʐ",  # <- Voiced retroflex fricative
 
                 # common with NorthernPortuguese
@@ -1788,6 +1792,7 @@ class CentralPortuguese(EuropeanPortuguese):
             }
         if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
             kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                **AO1990.INTERVOCALIC_CHAR2PHONEMES,
                 "s": "z",
                 "d": "ð",
             }
@@ -2105,6 +2110,7 @@ class SouthernPortuguese(CentralPortuguese):
             }
         if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
             kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                **AO1990.INTERVOCALIC_CHAR2PHONEMES,
                 "s": "z",
                 "d": "d",
             }
@@ -2355,6 +2361,7 @@ class AlentejanoPortuguese(SouthernPortuguese):
 
         if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
             kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                **AO1990.INTERVOCALIC_CHAR2PHONEMES,
                 "s": "z",
                 "d": "ː",
             }
@@ -2952,6 +2959,7 @@ class AzoreanPortuguese(EuropeanPortuguese):
         # Less intervocalic fricativization than mainland
         if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
             kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                **AO1990.INTERVOCALIC_CHAR2PHONEMES,
                 "s": "z",
                 # Less /d/ fricativization than mainland
                 # "d": "ð" - more often [d] preserved
@@ -3318,6 +3326,7 @@ class MadeiraPortuguese(EuropeanPortuguese):
 
         if "INTERVOCALIC_CHAR2PHONEMES" not in kwargs:
             kwargs["INTERVOCALIC_CHAR2PHONEMES"] = {
+                **AO1990.INTERVOCALIC_CHAR2PHONEMES,
                 "s": "z",
                 # Less /d/ deletion than Southern mainland
                 "d": "ð",  # Fricativization but not deletion
@@ -3396,6 +3405,11 @@ class BrazilianPortuguese(DialectInventory):
         if "CODA_CHAR2PHONEMES" not in kwargs:
             kwargs["CODA_CHAR2PHONEMES"] = {
                 "l": "w",
+            }
+        if "WORD_FINAL_CHAR2PHONEMES" not in kwargs:
+            kwargs["WORD_FINAL_CHAR2PHONEMES"] = {
+                "z": "s",
+                "l": "w", # already covered by CODA_CHAR2PHONEMES
             }
         if "DIGRAPH2IPA" not in kwargs:
             kwargs["DIGRAPH2IPA"] = {
