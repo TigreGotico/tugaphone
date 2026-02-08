@@ -334,10 +334,6 @@ class CharToken:
     char_idx: int = 0  # parent_grapheme.characters[idx] == self
     parent_grapheme: Optional["GraphemeToken"] = None
 
-    # Precomputed indices (set during initialization)
-    _idx_in_word: int = -1
-    _idx_in_sentence: int = -1
-
     def __post_init__(self):
         """
         Validate and precompute indices.
@@ -349,14 +345,11 @@ class CharToken:
         if len(self.surface) != 1:
             raise ValueError(f"CharToken must contain exactly one character, got: {self.surface}")
 
-        self._idx_in_word = self.parent_grapheme.idx_in_word + self.char_idx
-        self._idx_in_sentence = self.parent_grapheme.idx_in_sentence + self.char_idx
-
     # =========================================================================
     # BASIC PROPERTIES
     # =========================================================================
 
-    @property
+    @cached_property
     def dialect(self):
         return self.parent_grapheme.dialect
 
@@ -378,20 +371,26 @@ class CharToken:
     # INDICES AND CONTEXT
     # =========================================================================
 
-    @property
-    def idx_in_word(self) -> int:
-        """Index of this character in parent word."""
-        return self._idx_in_word
-
-    @property
-    def idx_in_sentence(self) -> int:
-        """Index of this character in parent sentence."""
-        return self._idx_in_sentence
-
-    @property
+    @cached_property
     def idx_in_syllable(self) -> int:
         """Index of this character in parent syllable."""
-        return self.parent_syllable.find(self.surface, self.char_idx)
+        if not self.parent_grapheme:
+            return -1
+        return self.parent_grapheme.idx_in_syllable + self.char_idx
+
+    @cached_property
+    def idx_in_word(self) -> int:
+        """Index of this character in parent word."""
+        if not self.parent_grapheme:
+            return -1
+        return self.parent_grapheme.idx_in_word + self.char_idx
+
+    @cached_property
+    def idx_in_sentence(self) -> int:
+        """Index of this character in parent sentence."""
+        if not self.parent_grapheme:
+            return -1
+        return self.parent_grapheme.idx_in_sentence + self.char_idx
 
     @cached_property
     def parent_word(self) -> Optional['WordToken']:
@@ -409,21 +408,25 @@ class CharToken:
 
     @cached_property
     def prev_char(self) -> Optional['CharToken']:
-        """Previous character in the grapheme, or None if first."""
+        """Previous character in the word, or None if first."""
         if not self.parent_grapheme:
             return None
         if self.char_idx == 0:
-            # TODO: go to prev grapheme
+            # go to prev grapheme
+            if self.prev_grapheme:
+                return self.prev_grapheme.last_char
             return None
         return self.parent_grapheme.characters[self.char_idx - 1]
 
     @cached_property
     def next_char(self) -> Optional['CharToken']:
-        """Next character in the grapheme, or None if last."""
-        if self.char_idx == -1 or not self.parent_grapheme:
+        """Next character in the word, or None if last."""
+        if not self.parent_grapheme:
             return None
         if self.char_idx >= len(self.parent_grapheme.characters) - 1:
-            # TODO: go to next grapheme
+            # go to next grapheme
+            if self.next_grapheme:
+                return self.next_grapheme.first_char
             return None
         return self.parent_grapheme.characters[self.char_idx + 1]
 
@@ -442,17 +445,17 @@ class CharToken:
     # -------------------------------
     # Look-behind/ahead
     # -------------------------------
-    @property
+    @cached_property
     def prefix(self) -> str:
         if not self.parent_word:
             return ""
         return self.parent_word.normalized[:self.idx_in_word]
 
-    @property
+    @cached_property
     def suffix(self) -> str:
         if not self.parent_word:
             return ""
-        return self.parent_word.normalized[self.idx_in_word:]
+        return self.parent_word.normalized[self.idx_in_word + 1:]
 
     # =========================================================================
     # CHARACTER CLASSIFICATION
@@ -532,6 +535,10 @@ class CharToken:
         - In diphthong: semivowel
         - As syllable nucleus: vowel
         """
+        if self.is_nucleus:
+            return False
+        if self.dialect.dialect_code.startswith("pt-BR") and self.normalized == "l":
+            return self.parent_grapheme.normalized in self.dialect.PTBR_DIPHTHONGS.values()
         return self.normalized in self.dialect.SEMIVOWEL_CHARS
 
     @cached_property
@@ -594,7 +601,7 @@ class CharToken:
         """
         return self.normalized in ["i", "u", "ê", "ô"]
 
-    @property
+    @cached_property
     def is_prepalatal_vowel(self) -> bool:
         if not self.is_vowel:
             return False
@@ -610,21 +617,26 @@ class CharToken:
     # =========================================================================
     # SYLLABLE QUALITY CLASSIFICATION
     # =========================================================================
-    @property
+    @cached_property
     def parent_syllable(self) -> str:
         if not self.parent_grapheme:
             return self.surface
         return self.parent_grapheme.parent_syllable
 
-    @property
+    @cached_property
     def is_nucleus(self) -> bool:
-        return self.is_vowel
+        if not self.is_vowel:
+            return False
+        if not self.has_diacritics and self.parent_grapheme and self.parent_grapheme.is_diphthong:
+            is_semi = self.normalized in self.dialect.SEMIVOWEL_CHARS
+            return not is_semi
+        return True
 
-    @property
+    @cached_property
     def is_onset(self) -> bool:
         return self.idx_in_syllable == 0
 
-    @property
+    @cached_property
     def is_coda(self) -> bool:
         if self.is_vowel:
             return False
@@ -1186,8 +1198,17 @@ class CharToken:
         """
         s = self.normalized
 
-        # Explicit diacritical marking
+        if s in self.dialect.SEMIVOWEL_CHARS and self.is_semivowel:
+            if s == "i":
+                return "j"
+            elif s == "u":
+                return "w"
+            else:
+                pass # ????
+
         if s in self.dialect.DEFAULT_CHAR2PHONEMES:
+
+            # Explicit diacritical marking
             base_ipa = self.dialect.DEFAULT_CHAR2PHONEMES[s]
 
             word = self.parent_word.normalized if self.parent_word else ""
@@ -1269,27 +1290,6 @@ class CharToken:
         next_char = self.next_char.normalized if self.next_char else ""
         prev_char = self.prev_char.normalized if self.prev_char else ""
 
-        # Z word-finally → [ʃ] (European) or [s]
-        if self.is_consonant and self.is_last_word_letter and s in self.dialect.WORD_FINAL_CHAR2PHONEMES:
-            return self.dialect.WORD_FINAL_CHAR2PHONEMES[s]
-
-        # Initial R → strong R [ʁ]
-        if self.is_consonant and self.is_first_word_letter and s in self.dialect.WORD_INITIAL_CHAR2PHONEMES:
-            return self.dialect.WORD_INITIAL_CHAR2PHONEMES[s]
-
-        # intervocalic consonant rules
-        # S between vowels → [z]
-        if self.is_intervocalic and self.is_consonant and s in self.dialect.INTERVOCALIC_CHAR2PHONEMES:
-            return self.dialect.INTERVOCALIC_CHAR2PHONEMES[s]
-
-        # coda consonant rules
-        if self.is_coda and self.is_consonant and s in self.dialect.CODA_CHAR2PHONEMES:
-            return self.dialect.CODA_CHAR2PHONEMES[s]
-
-        # onset consonant rules
-        if self.is_onset and self.is_consonant and s in self.dialect.ONSET_CHAR2PHONEMES:
-            return self.dialect.ONSET_CHAR2PHONEMES[s]
-
         # C before front vowels → [s]
         if s == "c" and next_char in self.dialect.FRONT_VOWEL_CHARS:
             return "s"
@@ -1321,6 +1321,27 @@ class CharToken:
         # X rules (complex, context-dependent)
         if s == "x":
             return self._ipa_for_x()
+
+        # Z word-finally → [ʃ] (European) or [s]
+        if self.is_consonant and self.is_last_word_letter and s in self.dialect.WORD_FINAL_CHAR2PHONEMES:
+            return self.dialect.WORD_FINAL_CHAR2PHONEMES[s]
+
+        # Initial R → strong R [ʁ]
+        if self.is_consonant and self.is_first_word_letter and s in self.dialect.WORD_INITIAL_CHAR2PHONEMES:
+            return self.dialect.WORD_INITIAL_CHAR2PHONEMES[s]
+
+        # intervocalic consonant rules
+        # S between vowels → [z]
+        if self.is_intervocalic and self.is_consonant and s in self.dialect.INTERVOCALIC_CHAR2PHONEMES:
+            return self.dialect.INTERVOCALIC_CHAR2PHONEMES[s]
+
+        # coda consonant rules
+        if self.is_coda and self.is_consonant and s in self.dialect.CODA_CHAR2PHONEMES:
+            return self.dialect.CODA_CHAR2PHONEMES[s]
+
+        # onset consonant rules
+        if self.is_onset and self.is_consonant and s in self.dialect.ONSET_CHAR2PHONEMES:
+            return self.dialect.ONSET_CHAR2PHONEMES[s]
 
         # Default mapping
         return self.dialect.DEFAULT_CHAR2PHONEMES.get(s, s)
@@ -1419,7 +1440,7 @@ class CharToken:
     # FEATURE EXTRACTION
     # =========================================================================
 
-    @property
+    @cached_property
     def features(self) -> Dict[str, any]:
         """
         Extract all linguistic features as a dictionary.
@@ -1542,10 +1563,6 @@ class GraphemeToken:
     characters: List[CharToken] = dataclasses.field(default_factory=list)
     parent_word: Optional["WordToken"] = None
 
-    # Precomputed indices
-    _idx_in_word: int = -1
-    _idx_in_sentence: int = -1
-
     def __post_init__(self):
         """
         Initialize character tokens and compute indices.
@@ -1566,7 +1583,7 @@ class GraphemeToken:
     # =========================================================================
     # BASIC PROPERTIES
     # =========================================================================
-    @property
+    @cached_property
     def dialect(self):
         return self.parent_word.dialect
 
@@ -1575,17 +1592,17 @@ class GraphemeToken:
         """Lowercase form of grapheme."""
         return self.surface.lower()
 
-    @property
+    @cached_property
     def n_chars(self) -> int:
         """Number of characters in this grapheme."""
         return len(self.characters)
 
-    @property
+    @cached_property
     def first_char(self) -> CharToken:
         """First character of grapheme."""
         return self.characters[0]
 
-    @property
+    @cached_property
     def last_char(self) -> CharToken:
         """Last character of grapheme."""
         return self.characters[-1]
@@ -1593,16 +1610,41 @@ class GraphemeToken:
     # =========================================================================
     # INDICES AND CONTEXT
     # =========================================================================
+    @cached_property
+    def idx_in_syllable(self) -> int:
+        """Index of this grapheme in parent syllable."""
+        if not self.parent_syllable:
+            return -1
+        if self.syllable_idx == 0:
+            return self.idx_in_word
+        prevs = [g for g in self.previous_graphemes if g.syllable_idx == self.syllable_idx]
+        if prevs:
+            return sum(len(g.surface) for g in prevs)
+        return 0
 
-    @property
+    @cached_property
     def idx_in_word(self) -> int:
-        """Character index of first char in parent word."""
-        return self._idx_in_word
+        """Index of this grapheme in parent word."""
+        if not self.parent_word:
+            return -1
+        prev = self.previous_graphemes
+        prev_len = sum(len(w.surface) for w in prev)
+        return prev_len
 
-    @property
+    @cached_property
     def idx_in_sentence(self) -> int:
-        """Character index of first char in parent sentence."""
-        return self._idx_in_sentence
+        """Index of this grapheme in parent sentence."""
+        if not self.parent_word:
+            return -1
+        return self.parent_word.idx_in_sentence + self.idx_in_word
+
+    @cached_property
+    def previous_graphemes(self) -> List['GraphemeToken']:
+        return [w for w in self.parent_word.graphemes if w.grapheme_idx < self.grapheme_idx]
+
+    @cached_property
+    def previous_syllables(self) -> List[str]:
+        return [w for idx, w in enumerate(self.parent_word.syllables) if idx < self.syllable_idx]
 
     @cached_property
     def parent_sentence(self) -> Optional['Sentence']:
@@ -1623,7 +1665,7 @@ class GraphemeToken:
     # ------------------------------------------------------------------
     # Prefix/suffix context
     # ------------------------------------------------------------------
-    @property
+    @cached_property
     def prefix(self) -> str:
         """
         All text before this grapheme in the word.
@@ -1635,7 +1677,7 @@ class GraphemeToken:
             return ""
         return self.parent_word.normalized[:self.idx_in_word]
 
-    @property
+    @cached_property
     def suffix(self) -> str:
         """
         All text after this grapheme in the word.
@@ -1644,7 +1686,7 @@ class GraphemeToken:
         """
         if not self.parent_word:
             return ""
-        return self.parent_word.normalized[self.idx_in_word:]
+        return self.parent_word.normalized[self.idx_in_word + 1:]
 
     @cached_property
     def prev_grapheme(self) -> Optional['GraphemeToken']:
@@ -1760,7 +1802,7 @@ class GraphemeToken:
     # ------------------------------------------------------------------
     # Diphthong classification
     # ------------------------------------------------------------------
-    @property
+    @cached_property
     def is_vocalic_hiatus(self) -> bool:
         # Hiato é quando duas vogais estão juntas porém em sílabas vizinhas.
         # O hiato diferencia-se de um ditongo e de um tritongo pelo fato de ser constituído por duas sílabas e,
@@ -1789,6 +1831,8 @@ class GraphemeToken:
         # Portanto, "qu" é um dígrafo e "ue" não é um ditongo.
         if s == "ue" and self.parent_word.normalized == "quem":
             return False
+        if self.dialect.dialect_code.startswith("pt-BR") and s in self.dialect.PTBR_DIPHTHONGS:
+            return True
         return s in self.dialect.DIPHTHONG2IPA
 
     @cached_property
@@ -2231,7 +2275,7 @@ class GraphemeToken:
     # FEATURE EXTRACTION
     # =========================================================================
 
-    @property
+    @cached_property
     def features(self) -> Dict[str, any]:
         """
         Extract all linguistic features as a dictionary.
@@ -2356,9 +2400,6 @@ class WordToken:
     parent_sentence: Optional["Sentence"] = None
     dialect: DialectInventory = dataclasses.field(default_factory=EuropeanPortuguese)
 
-    # Precomputed index
-    _idx_in_sentence: int = -1
-
     def __post_init__(self):
         """
         Initialize syllables and graphemes with proper indexing.
@@ -2378,9 +2419,6 @@ class WordToken:
         # Step 2: Grapheme tokenization with syllable alignment
         if not self.graphemes:
             self.graphemes = self._tokenize_graphemes()
-
-        # Step 3: Compute all indices top-down
-        self._compute_indices()
 
         if not self.dialect and self.parent_sentence:
             self.dialect = self.parent_sentence.dialect
@@ -2512,30 +2550,6 @@ class WordToken:
 
         return char_to_syl
 
-    def _compute_indices(self):
-        """
-        Compute all character and grapheme indices top-down.
-
-        This is called after grapheme tokenization to set:
-        - Grapheme indices in word
-        - Character indices in word
-        - Character indices in sentence
-
-        Top-down computation avoids circular dependencies.
-        """
-        char_idx_in_word = 0
-
-        for grapheme in self.graphemes:
-            # Set grapheme's index in word
-            grapheme._idx_in_word = char_idx_in_word
-            grapheme._idx_in_sentence = self._idx_in_sentence + char_idx_in_word
-
-            # Set character indices
-            for char in grapheme.characters:
-                char._idx_in_word = char_idx_in_word
-                char._idx_in_sentence = self._idx_in_sentence + char_idx_in_word
-                char_idx_in_word += 1
-
     # =========================================================================
     # BASIC PROPERTIES
     # =========================================================================
@@ -2549,15 +2563,10 @@ class WordToken:
         """Syllables after consonant doubling normalization."""
         return self._normalize_syllables()
 
-    @property
+    @cached_property
     def n_syllables(self) -> int:
         """Number of syllables in word."""
         return len(self.syllables)
-
-    @property
-    def idx_in_sentence(self) -> int:
-        """Character index of first letter in sentence."""
-        return self._idx_in_sentence
 
     @cached_property
     def is_archaic(self) -> bool:
@@ -2566,6 +2575,25 @@ class WordToken:
     # =========================================================================
     # LINKED PROPERTIES
     # =========================================================================
+    @cached_property
+    def idx_in_sentence(self) -> int:
+        """Index of this character in parent sentence."""
+        if not self.parent_sentence:
+            return -1
+        if self.word_idx == 0:
+            return 0
+        prev = self.previous_words
+        whitespace_len = len(prev) - 1
+        prev_len = sum(len(w.surface) for w in prev)
+        return prev_len + whitespace_len
+
+    @cached_property
+    def all_chars(self) -> List[CharToken]:
+        return [c for g in self.graphemes for c in g.characters]
+
+    @cached_property
+    def previous_words(self) -> List['WordToken']:
+        return [w for w in self.parent_sentence.words if w.word_idx < self.word_idx]
 
     @cached_property
     def prev_word(self) -> Optional['WordToken']:
@@ -2845,7 +2873,7 @@ class WordToken:
     # FEATURE EXTRACTION
     # =========================================================================
 
-    @property
+    @cached_property
     def features(self) -> Dict[str, any]:
         """
         Extract all linguistic features.
@@ -3024,7 +3052,7 @@ class Sentence:
         text = self.surface.lower().strip(string.punctuation + string.whitespace)
         return normalize_numbers(text)
 
-    @property
+    @cached_property
     def n_words(self) -> int:
         """Number of words in sentence."""
         return len(self.words)
@@ -3061,7 +3089,7 @@ class Sentence:
     # FEATURE EXTRACTION
     # =========================================================================
 
-    @property
+    @cached_property
     def features(self) -> Dict[str, any]:
         """
         Extract all linguistic features.

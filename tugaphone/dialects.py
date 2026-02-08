@@ -886,7 +886,7 @@ class DialectInventory:
                 "neo",  # neo-ortodoxo
                 "pré",  # pré-escolar
                 "pró",  # pró-ativo
-                "re",  # re-eleger (when doubled)
+               # "re",  # re-eleger (when doubled)
                 "sub",  # sub-humano
                 "super",  # super-homem
                 "supra",  # supra-ocular
@@ -995,6 +995,8 @@ class DialectInventory:
                 **{v: k for k, v in self.RISING_ORAL_DIPHTHONGS.items()},
                 **{v: k for k, v in self.FALLING_NASAL_DIPHTHONGS.items()},
             }
+            if self.dialect_code.startswith("pt-BR"):
+                self.DIPHTHONG2IPA.update({v: k for k, v in self.PTBR_DIPHTHONGS.items()})
 
     def _initialize_triphthongs(self):
         """
@@ -1567,8 +1569,10 @@ class NorthernPortuguese(EuropeanPortuguese):
             }
         if "IRREGULAR_WORDS" not in kwargs:
             kwargs["IRREGULAR_WORDS"] = {
-                **LEXICON.get_ipa_map(region="lbx"),
-                "têm": "tẽjẽj"
+                "têm": "tẽjẽj",
+                "rei": "ʀˈej",
+                "frio": "fɾi·u",
+                "rio": "ʁi·u",
             }
         super().__init__(**kwargs)
 
@@ -1789,8 +1793,10 @@ class CentralPortuguese(EuropeanPortuguese):
             }
         if "IRREGULAR_WORDS" not in kwargs:
             kwargs["IRREGULAR_WORDS"] = {
-                **LEXICON.get_ipa_map(region="lbx"),
-                "têm": "tɐ̃jɐ̃j"
+                "têm": "tɐ̃jɐ̃j",
+                "rei": "ʀˈɐj",
+                "frio": "fɾi·u",
+                "rio": "ʁi·u",
             }
         super().__init__(**kwargs)
 
@@ -1922,7 +1928,9 @@ class LisbonPortuguese(CentralPortuguese):
             kwargs["IRREGULAR_WORDS"] = {
                 **LEXICON.get_ipa_map(region="lbx"),
                 "frio": "fɾiw",
-                "rio": "ʁiw"
+                "rio": "ʁiw",
+                "têm": "tɐ̃jɐ̃j",
+                "rei": "ʀˈɐj"
             }
 
         # TODO: Em Lisboa o ditongo [ej] pronuncia-se [αj]; aliás, na capital todos os [e] tónicos antes
@@ -3392,7 +3400,7 @@ class BrazilianPortuguese(DialectInventory):
         if "DIGRAPH2IPA" not in kwargs:
             kwargs["DIGRAPH2IPA"] = {
                 **AO1990.DIGRAPH2IPA,
-                "rr": "h",  # DIVERGENCE: Brazilian uses [h] or [x] instead of [ʁ]
+                "rr": "h",  # DIVERGENCE: Brazilian uses [h] or [x] instead of [ʁ] - override per subdialect
                 "di": "dʒi",  # d palatalization before [i]
                 "ti": "tʃi",  # d palatalization before [i]
             }
@@ -3576,6 +3584,14 @@ class RioJaneiroPortuguese(BrazilianPortuguese):
     def __init__(self, **kwargs):
         if "dialect_code" not in kwargs:
             kwargs["dialect_code"] = "pt-BR-x-rio-janeiro"
+
+        if "DIGRAPH2IPA" not in kwargs:
+            kwargs["DIGRAPH2IPA"] = {
+                **AO1990.DIGRAPH2IPA,
+                "rr": "h",  # DIVERGENCE: Brazilian uses [h] or [x] instead of [ʁ]
+                "di": "dʒi",  # d palatalization before [i]
+                "ti": "tʃi",  # d palatalization before [i]
+            }
         super().__init__(**kwargs)
 
 
@@ -3813,6 +3829,14 @@ class SaoPauloPortuguese(BrazilianPortuguese):
 
         if "IRREGULAR_WORDS" not in kwargs:
             kwargs["IRREGULAR_WORDS"] = LEXICON.get_ipa_map(region="spx")
+
+        if "DIGRAPH2IPA" not in kwargs:
+            kwargs["DIGRAPH2IPA"] = {
+                **AO1990.DIGRAPH2IPA,
+                "rr": "x",  # DIVERGENCE: Brazilian uses [h] or [x] instead of [ʁ]
+                "di": "dʒi",  # d palatalization before [i]
+                "ti": "tʃi",  # d palatalization before [i]
+            }
         super().__init__(**kwargs)
 
 
