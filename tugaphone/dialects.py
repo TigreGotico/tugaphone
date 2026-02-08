@@ -1550,7 +1550,7 @@ class NorthernPortuguese(EuropeanPortuguese):
             kwargs["dialect_code"] = "pt-PT-x-north"
         if "DEFAULT_CHAR2PHONEMES" not in kwargs:
             kwargs["DEFAULT_CHAR2PHONEMES"] ={
-                **AO1990,
+                **AO1990.DEFAULT_CHAR2PHONEMES,
                 # "f": "ɸ", # <- Voiceless bilabial fricative
                 "v": "b" # <- Betacism
             }
@@ -1673,7 +1673,7 @@ class TransmontanoPortuguese(NorthernPortuguese):
             }
         if "DIGRAPH2IPA" not in kwargs:
             kwargs["DIGRAPH2IPA"] = {
-                **AO1990,
+                **AO1990.DIGRAPH2IPA,
                 "ch": "tʃ", # <- Voiceless postalveolar affricate
                 "ss": "ʂ"  # <- Voiceless retroflex fricative
             }

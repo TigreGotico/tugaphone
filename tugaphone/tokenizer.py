@@ -626,6 +626,8 @@ class CharToken:
 
     @property
     def is_coda(self) -> bool:
+        if self.is_vowel:
+            return False
         if self.is_last_word_letter:
             return True
         return self.parent_syllable[-1] == self.surface
@@ -704,7 +706,7 @@ class CharToken:
         char = self.normalized
 
         # Plosives (stops): complete closure then release
-        if char in 'pbptdtkgqc':
+        if char in 'pbdtkgqc':
             return 'plosive'
 
         # Fricatives: continuous turbulent airflow
@@ -796,6 +798,13 @@ class CharToken:
 
         char = self.normalized
 
+        # Context-dependent special case
+        if char == 's':
+            # Intervocalic S → [z] (voiced)
+            if self.is_intervocalic:
+                return 'voiced'
+            return 'voiceless'
+
         # Voiceless consonants
         if char in 'ptkcfsx':
             return 'voiceless'
@@ -803,13 +812,6 @@ class CharToken:
         # Voiced consonants
         if char in 'bdgvzjlmnr':
             return 'voiced'
-
-        # Context-dependent
-        if char == 's':
-            # Intervocalic S → [z] (voiced)
-            if self.is_intervocalic:
-                return 'voiced'
-            return 'voiceless'
 
         if char == 'ç':
             return 'voiceless'  # Always [s]
@@ -837,6 +839,13 @@ class CharToken:
 
         char = self.normalized
 
+        # Reduced vowels (context-dependent)
+        if char == 'e' and not self.has_primary_stress:
+            return 'high'  # [ɨ] or [e]
+
+        if char == 'o' and not self.has_primary_stress:
+            return 'high'  # [u]
+
         # High vowels
         if char in 'iuíú':
             return 'high'
@@ -852,13 +861,6 @@ class CharToken:
         # Low
         if char in 'aáàâ':
             return 'low'
-
-        # Reduced vowels (context-dependent)
-        if char == 'e' and not self.has_primary_stress:
-            return 'high'  # [ɨ] or [e]
-
-        if char == 'o' and not self.has_primary_stress:
-            return 'high'  # [u]
 
         return None
 
@@ -882,16 +884,16 @@ class CharToken:
 
         char = self.normalized
 
-        # Front vowels
-        if char in 'ieéêí':
-            return 'front'
-
         # Central vowels (reduced)
-        if char in 'aá' and not self.has_primary_stress:
+        if char in 'a' and not self.has_primary_stress:
             return 'central'  # [ɐ]
 
         if char == 'e' and not self.has_primary_stress:
             return 'central'  # [ɨ] in EP
+
+        # Front vowels
+        if char in 'ieéêí':
+            return 'front'
 
         # Back vowels
         if char in 'uoóôú':
@@ -975,7 +977,7 @@ class CharToken:
 
         char = self.normalized
         # Plosives, fricatives, affricates
-        return char in 'pbptdtkgfvszxjcçq'
+        return char in 'pbdtkgfvszxjcçq'
 
     @cached_property
     def is_front_vowel(self) -> bool:
