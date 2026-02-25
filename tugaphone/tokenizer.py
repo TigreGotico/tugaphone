@@ -76,7 +76,7 @@ from functools import cached_property
 from typing import List, Optional, Dict, Tuple
 
 from tugaphone.number_utils import normalize_numbers
-from tugaphone.syl import syllabify
+from silabificador import syllabify
 from tugaphone.dialects import (DialectInventory, EuropeanPortuguese, BrazilianPortuguese,
                                 AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
 

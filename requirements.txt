@@ -1,2 +1,4 @@
-brill-postagger
 unicode-rbnf
+silabificador
+tugatagger[brill]
+tugalex
