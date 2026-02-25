@@ -1,4 +1,4 @@
 unicode-rbnf
 silabificador
 tugatagger[brill]
-tugalexicon
+tugalex
