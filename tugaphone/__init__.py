@@ -3,8 +3,8 @@ from typing import Optional
 from tugaphone.dialects import (DialectInventory, LEXICON,
                                 EuropeanPortuguese, BrazilianPortuguese,
                                 AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
-from tugaphone.lexicon import TugaLexicon
-from tugaphone.pos import TugaTagger
+from tugalex import TugaLexicon
+from tugatagger import TugaTagger
 from tugaphone.regional import RegionalTransforms
 from tugaphone.tokenizer import Sentence, DialectInventory
 

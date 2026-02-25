@@ -37,6 +37,14 @@ pip install tugaphone
 
 ## 🧰 Usage
 
+### Companion libraries
+
+The follow libraries are dependencies of tugaphone and might be useful on their own
+
+- [Tugalex](https://github.com/TigreGotico/tugalex) - Lexicon of words and exceptions
+- [TugaTagger](https://github.com/TigreGotico/tugatagger) - portuguese text postagger
+- [silabificador](https://github.com/TigreGotico/silabificador) - portuguese text syllabification
+
 ### Basic Phonemization
 
 ```python
@@ -98,24 +106,6 @@ print(normalize_numbers("1ª vez"))                # primeira vez
 # Large numbers with scale differences
 print(normalize_numbers("897654356789098", "pt-PT"))  # long-scale (biliões)
 print(normalize_numbers("897654356789098", "pt-BR"))  # short-scale (trilhões)
-```
-
-### Syllabification
-
-```python
-from tugaphone.syl import syllabify
-
-words = ["casa", "Brasil", "extraordinário", "português"]
-
-for word in words:
-    syllables = syllabify(word)
-    print(f"{word} → {'.'.join(syllables)}")
-
-# Output:
-# casa → ca.sa
-# Brasil → bra.sil
-# extraordinário → ex.tra.or.di.ná.rio
-# português → por.tu.guês
 ```
 
 ### Advanced: Tokenization and Features
