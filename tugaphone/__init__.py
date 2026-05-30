@@ -1,5 +1,6 @@
 from typing import Optional
 
+from tugaphone.version import __version__
 from tugaphone.dialects import (DialectInventory, LEXICON,
                                 EuropeanPortuguese, BrazilianPortuguese,
                                 AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
