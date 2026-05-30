@@ -62,10 +62,10 @@ def retain_ou_diphthong(word: str, phonemes: str, postag: str = "NOUN") -> str:
         /o/ → [ow] / (derived from <ou>). eg. "ouro" instead of "ôro"
 
     This restores or preserves the diphthong produced by the grapheme sequence "ou" (typically /ou/ or /ow/) when it has been reduced to /o/ by upstream processing. Special behaviours:
-    - If the word starts with "ou" and phonemes start with "ˈo", the leading tonic /ˈo/ is changed to /ˈow/.
     - If the orthography contains "ô", the phonemes are left unchanged.
+    - If the word starts with "ou" and phonemes start with "ˈo", the leading tonic /ˈo/ is changed to /ˈow/.
     - If "ou" occurs elsewhere in the word, tonic occurrences of `ˈo` are promoted to `ˈow`.
-    - The word "boa" is returned as the fixed mapping "bˈowɐ".
+    - Words without an <ou> grapheme are returned unchanged.
 
     Returns:
         str: The phoneme string with `/ow/` diphthong restored where applicable.
@@ -74,14 +74,12 @@ def retain_ou_diphthong(word: str, phonemes: str, postag: str = "NOUN") -> str:
     # this restores "proper portuguese phonetics"
     # rather than adding a transform for minho accent,
     # it's undoing one from lisbon accent that affects the base G2P
-    if word.startswith('ou') and phonemes.startswith("ˈo"):
-        return "ˈow" + phonemes[2:]
     if "ô" in word:
         return phonemes
+    if word.startswith('ou') and phonemes.startswith("ˈo"):
+        return "ˈow" + phonemes[len("ˈo"):]
     if "ou" in word:
         return re.sub(r'(\w)ˈo(?!w)', r'\1ˈow', phonemes)
-    if word == "boa":
-        return "bˈowɐ"
     return phonemes
 
 
@@ -155,18 +153,22 @@ def palatal_affrication_ch(word: str, phonemes: str, postag: str = "NOUN") -> st
         Minho, however, realizes the digraph <ch> as the voiceless postalveolar affricate /tʃ/ (as in chamber),
         a feature sometimes compared to Spanish pronunciation.
 
-    If the orthographic `word` contains the digraph "ch", replaces occurrences of the fricative ʃ in `phonemes` with the affricate tʃ; otherwise returns `phonemes` unchanged.
+    Only the /ʃ/ realizations that derive from the <ch> digraph are affricated:
+    at most one /ʃ/ per <ch> occurrence, replaced left to right. Any other /ʃ/
+    in the word (e.g. a syllable-final /s/ realized as [ʃ] in EP, as in
+    "chaves" [ˈʃavɨʃ] → [ˈtʃavɨʃ], not [ˈtʃavɨtʃ]) is left untouched.
 
     Parameters:
         word (str): Original orthographic word used to detect the digraph "ch".
         phonemes (str): IPA phoneme string to be transformed.
 
     Returns:
-        str: The potentially transformed phoneme string where ʃ is replaced by tʃ when `word` contains "ch".
+        str: The phoneme string with <ch>-derived /ʃ/ affricated to /tʃ/.
     """
-    if "ch" in word:
-        # Replace any /ʃ/ in the phonemes with /tʃ/ if <ch> is in the word
-        return phonemes.replace('ʃ', 'tʃ')
+    n_ch = word.lower().count("ch")
+    if n_ch:
+        # affricate only as many /ʃ/ as there are <ch> digraphs, left to right
+        return phonemes.replace("ʃ", "tʃ", n_ch)
     return phonemes
 
 
@@ -203,10 +205,11 @@ def epenthetic_j_before_palatal(word: str, phonemes: str, postag: str = "NOUN") 
             V → Vj / __ [ʎ, ɲ, ʃ, tʃ]
     """
     # Insert [j] after a vowel if immediately followed by a palatal consonant.
-    #   - (ˈ[aɐeɛ]) captures a preceding tonic vowel ("a" or "e")
+    #   - (ˈ?[aɐeɛ]) captures a preceding vowel ("a"/"e" quality), stressed or not
+    #     (the leading tonic mark ˈ is optional, so unstressed vowels also fire)
     #   - (?=[ʎɲʃ]) is a lookahead that checks if the next char is palatal /ʎ/, /ɲ/, or /ʃ/
     #   - (?!j) avoids double 'j' insertions if already present
-    return re.sub(r'(ˈ[aɐeɛ])(?=[ʎɲʃ])(?!j)', r'\1j', phonemes)
+    return re.sub(r'(ˈ?[aɐeɛ])(?=[ʎɲʃ])(?!j)', r'\1j', phonemes)
 
 
 def nasal_diphthongization_e(word: str, phonemes: str, postag: str = "NOUN") -> str:
