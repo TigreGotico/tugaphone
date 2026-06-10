@@ -107,7 +107,7 @@ def conservative_o_nasal_retention(word: str, phonemes: str, postag: str = "NOUN
     """
     Preferentially realize final -ão as /õ/ to conservatively retain the older nasal vowel.
 
-    If the input word ends with "ão" and the phoneme string uses the merged nasal diphthong forms (`ˈɐ̃w` or `ˈɐ̃ʊ̃`), returns a phoneme string where that ending is replaced by `ˈõ`. Otherwise returns the original phoneme string unchanged.
+    If the input word ends with "ão" and the phoneme string uses the merged nasal diphthong forms (`ˈɐ̃w` or `ˈɐ̃ʊ̃`), returns a phoneme string where that ending is replaced by `ˈõ`. Otherwise returns the original phoneme string unchanged.
 
     Conservative Retention of /õ/ :
         Minho retains the older pronunciation of /õ/
@@ -115,12 +115,12 @@ def conservative_o_nasal_retention(word: str, phonemes: str, postag: str = "NOUN
         Examples include pão and irmão
 
     Returns:
-        The possibly modified phoneme string with final -ão realized as `ˈõ` when applicable.
+        The possibly modified phoneme string with final -ão realized as `ˈõ` when applicable.
     """
     if word.endswith("ão") and phonemes.endswith("ˈɐ̃w"):
-        return phonemes[:-4] + "ˈõ"
+        return phonemes[:-4] + "ˈõ"
     if word.endswith("ão") and phonemes.endswith("ˈɐ̃ʊ̃"):  # common espeak mistake
-        return phonemes[:-5] + "ˈõ"
+        return phonemes[:-5] + "ˈõ"
     return phonemes
 
 
