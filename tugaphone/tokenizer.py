@@ -690,16 +690,39 @@ class CharToken:
 
             # Override with stress-based quality for ambiguous vowels
             if s == "a":
-                return "a" if self.has_primary_stress or self.has_secondary_stress else "ɐ"
+                dc = self.dialect.dialect_code
+                if dc.startswith("pt-TL"):
+                    # Timorese: Tetum-influenced schwa system; unstressed /a/ → [ə]
+                    return "a" if self.has_primary_stress or self.has_secondary_stress else "ə"
+                elif dc.startswith("pt-AO") or dc.startswith("pt-BR"):
+                    # Angolan/Brazilian: less reduction; unstressed /a/ stays [a]
+                    return "a"
+                else:
+                    # European/Mozambican: standard reduction; unstressed /a/ → [ɐ]
+                    return "a" if self.has_primary_stress or self.has_secondary_stress else "ɐ"
             elif s == "e":
                 # Prevocalic unstressed 'e' may glide → handled at consonant boundary
                 if self.has_primary_stress:
                     # Stressed plain 'e': default closed-mid [e]; only é gives [ɛ]
                     return "e"
-                return "ɨ" if self.dialect.dialect_code.startswith("pt-PT") else "e"
+                dc = self.dialect.dialect_code
+                if dc.startswith("pt-PT"):
+                    return "ɨ"
+                if dc.startswith("pt-BR") and self.is_last_word_letter:
+                    # Brazilian final unstressed 'e' raises to [ɪ]: "abacate" [abakatʃɪ]
+                    return "ɪ"
+                return "e"
             elif s == "o":
                 # Stressed plain 'o': default closed-mid [o]; only ó gives [ɔ]
-                return "o" if self.has_primary_stress or self.has_secondary_stress else "u"
+                dc = self.dialect.dialect_code
+                if dc.startswith("pt-PT") or dc.startswith("pt-MZ"):
+                    # European/Mozambican: strong reduction; unstressed /o/ → [u]
+                    return "o" if self.has_primary_stress or self.has_secondary_stress else "u"
+                if dc.startswith("pt-BR") and self.is_last_word_letter and not (self.has_primary_stress or self.has_secondary_stress):
+                    # Brazilian final unstressed 'o' raises to [ʊ]: "abadejo" [abadeʒʊ]
+                    return "ʊ"
+                # Angolan/Timorese/other BR positions: less reduction; stays [o]
+                return "o"
 
             # Prevocalic unstressed 'i' → palatal glide [j]
             if s == "i" and not self.has_primary_stress and not self.has_secondary_stress:
@@ -732,11 +755,18 @@ class CharToken:
         next_letter = self._next_letter
         prev_letter = self._prev_letter
 
-        # BRAZILIAN PORTUGUESE: t/d palatalization before [i]
+        # BRAZILIAN PORTUGUESE: t/d palatalization before [i] and before final unstressed [e]→[ɪ]
+        # "tia" [ˈtʃia], "dia" [ˈdʒia], "abacate" [abaˈkatʃɪ], "abade" [abaˈdʒɪ]
         if self.dialect.dialect_code.startswith("pt-BR"):
             if s == "t" and next_letter == "i":
                 return "tʃ"
             if s == "d" and next_letter == "i":
+                return "dʒ"
+            # Palatalization before final unstressed 'e' (raised to [ɪ] in Brazilian)
+            # suffix == 'e' means the only remaining letters in the word are this 'e'
+            if s == "t" and next_letter == "e" and self.suffix == "e":
+                return "tʃ"
+            if s == "d" and next_letter == "e" and self.suffix == "e":
                 return "dʒ"
 
             # L-vocalization in coda position
@@ -756,19 +786,20 @@ class CharToken:
         # R realisation: positional distribution
         # word-initial r or rr (handled as digraph) → strong [ʁ/h/r]
         # r after l, n, s (including across morpheme boundaries) → strong
-        # elsewhere (intervocalic, word-final) → tap [ɾ]
+        # elsewhere (intervocalic, coda, word-final) → tap [ɾ]
         if s == "r":
+            dc = self.dialect.dialect_code
             if self.is_first_word_letter:
-                if self.dialect.dialect_code.startswith("pt-BR"):
+                if dc.startswith("pt-BR"):
                     return "h"
-                elif self.dialect.dialect_code.startswith("pt-PT"):
+                elif dc.startswith("pt-PT"):
                     return "ʁ"
                 else:
                     return "r"
             if prev_letter and prev_letter in "lns":
-                if self.dialect.dialect_code.startswith("pt-BR"):
+                if dc.startswith("pt-BR"):
                     return "h"
-                elif self.dialect.dialect_code.startswith("pt-PT"):
+                elif dc.startswith("pt-PT"):
                     return "ʁ"
                 else:
                     return "r"
