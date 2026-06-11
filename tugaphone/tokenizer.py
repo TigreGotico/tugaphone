@@ -72,11 +72,11 @@ QUICK REFERENCES:
 
 import dataclasses
 import string
-from functools import cached_property
+from functools import cached_property, lru_cache
 from typing import List, Optional, Dict, Tuple
 
 from tugaphone.number_utils import normalize_numbers
-from tugaphone.syl import syllabify
+from silabificador import syllabify
 from tugaphone.dialects import (DialectInventory, EuropeanPortuguese, BrazilianPortuguese,
                                 AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
 
@@ -85,15 +85,24 @@ from tugaphone.dialects import (DialectInventory, EuropeanPortuguese, BrazilianP
 # Helper Functions
 # =============================================================================
 
+@lru_cache(maxsize=None)
+def _spec_stress_rules(dialect_code: str):
+    """The declarative stress rules of the orthography2ipa spec, if any."""
+    try:
+        from orthography2ipa import get as _get_spec
+        return _get_spec(dialect_code).stress
+    except Exception:
+        return None
+
+
 def detect_stress_position(word: str, syllables: List[str], dialect: DialectInventory) -> int:
     """
     Determine which syllable carries primary stress.
 
-    ALGORITHM:
-    ----------
-    1. Check for explicit accent marks → stress that syllable
-    2. Check word-final pattern against OXYTONE_ENDINGS
-    3. Default to penultimate (paroxytone rule)
+    Delegates to the declarative ``StressRules`` of the dialect's
+    orthography2ipa spec (written accents → oxytone endings → penult
+    default). When the spec carries no stress block, the dialect's own
+    PRIMARY_STRESS_MARKERS / OXYTONE_ENDINGS apply.
 
     Args:
         word: Normalized word string
@@ -118,6 +127,11 @@ def detect_stress_position(word: str, syllables: List[str], dialect: DialectInve
     # Monosyllables are inherently stressed
     if n_syllables == 1:
         return 0
+
+    rules = _spec_stress_rules(dialect.dialect_code)
+    if rules is not None:
+        from orthography2ipa.stress import detect_stress
+        return detect_stress(word, rules, syllables=syllables)
 
     # Check for explicit accent marks (primary stress markers)
     for idx, syllable in enumerate(syllables):
