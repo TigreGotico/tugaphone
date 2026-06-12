@@ -20,8 +20,8 @@ from tugaphone.tokenizer import Sentence
 from tugaphone.dialects import EuropeanPortuguese
 
 s = Sentence("O cão comeu o pão.", dialect=EuropeanPortuguese())
-print(s.ipa)        # 'ˈu kˈɐ̃w ˈkɔ·mew ˈu pˈɐ̃w'
-print(s.n_words)    # 4
+print(s.ipa)        # 'ˈu kˈɐ̃w ku·ˈmew ˈu pˈɐ̃w'
+print(s.n_words)    # 5
 print(repr(s))      # Sentence('O cão comeu o pão.' → [...])
 ```
 
@@ -44,7 +44,7 @@ for word in s.words:
 ```
 o    o        stress@ 0 → ˈu
 cão  cão      stress@ 0 → kˈɐ̃w
-comeu co.meu  stress@ 0 → ˈkɔ·mew
+comeu co.meu  stress@ 1 → ku·ˈmew
 ```
 
 `syllables` comes from the `silabificador` library; `stressed_syllable_idx` is
@@ -87,7 +87,7 @@ into a single namespaced dict suitable for a feature vector:
 
 ```python
 feats = s.features
-# {'n_words': 4, 'n_whitespaces': 3,
+# {'n_words': 5, 'n_whitespaces': 4,
 #  'word_0_n_syllables': 1, 'word_0_stressed_syllable_idx': 0, 'word_0_pos': ...}
 ```
 

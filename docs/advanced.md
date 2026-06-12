@@ -51,13 +51,18 @@ for name, accent in [("porto", PortoDialect), ("minho", MinhoDialect),
 
 | Preset | Signature features |
 |--------|--------------------|
-| `CoimbraDialect` | Diphthong retention only (neutral baseline). |
+| `NorthernDialect` | `<ou>/<ei>` retention + betacism /v/→[b] (core northern). |
+| `CoimbraDialect` | Diphthong retention only (neutral baseline, no betacism). |
+| `PortoDialect` | Rising `o` diphthong (stressed /o/→[uo]) + northern core. |
 | `MinhoDialect` | Vowel-centralization resistance, open vowels, alveolar rhotic. |
-| `BragaDialect` | Palatal epenthesis (`abelha` → `abeilha`) on top of northern rules. |
-| `FamalicaoDialect` | Conservative `o`-nasal retention (`Famalicão` → `Famalicoum`). |
+| `BragaDialect` | Palatal epenthesis (`abelha` → `abeilha`) on top of Minho rules. |
+| `FamalicaoDialect` | Conservative `o`-nasal retention + Minho rules. |
+| `FafeDialect` | Nasal diphthongization of `e` (`gente` → `geinte`) + Minho rules. |
 | `TrasMontanoDialect` | `ch` affrication, s-voicing, final nasal denasalization. |
-| `PortoDialect` | Rising `o` diphthong (`Porto` → `Puorto`). |
-| `FafeDialect` | Nasal diphthongization of `e` (`gente` → `geinte`). |
+| `AlentejoDialect` | Intervocalic /d/ deletion, `meu`→[me], `ei`→[e]. |
+| `AlgarveDialect` | `meu`→[me], coda-sibilant voicing sandhi. |
+| `MadeiraDialect` | l-palatalisation, nasal diphthong → Ṽ+[n]. |
+| `AzoresDialect` | Stressed /u/→[y], l-palatalisation, `oi`→[o]. |
 
 These are explicitly experimental — real variation is messier than any rule set.
 
@@ -100,16 +105,20 @@ shape of the following noun (`-a`, `-dade`, `-agem` endings lean feminine). Pass
 
 ## Integration with sibling libraries
 
-`tugaphone` composes three TigreGotico Portuguese NLP libraries; each is usable
-on its own:
+`tugaphone` composes the TigreGotico Portuguese NLP stack; each library is
+usable on its own:
 
 - [`tugalex`](https://github.com/TigreGotico/tugalex) — the phonetic lexicon
-  (`LEXICON` in `tugaphone.dialects`). `LEXICON.get_ipa_map(region=...)` returns
-  the per-region exception table.
+  (`LEXICON` in `tugaphone.dialects`).
 - [`tugatagger`](https://github.com/TigreGotico/tugatagger) — the POS tagger
   behind `postag_engine`.
 - [`silabificador`](https://github.com/TigreGotico/silabificador) — the
-  syllabifier behind `WordToken.syllables`.
+  syllabifier behind `WordToken.syllables`, registered as an `orthography2ipa`
+  syllabifier plugin.
+- [`bifonia`](https://github.com/TigreGotico/bifonia) — meaning-based
+  heterophone disambiguation; called via `add_extra_diacritics` before G2P.
+- [`orthography2ipa`](https://github.com/TigreGotico/orthography2ipa) — the
+  `G2PPlugin` base interface and declarative stress rules tugaphone exposes.
 
 A TTS front-end typically wires `tugaphone` as the G2P stage: normalize text,
 phonemize per target dialect, hand the IPA string to the acoustic model.
@@ -117,5 +126,8 @@ phonemize per target dialect, hand the IPA string to the acoustic model.
 ## Where next
 
 - [api.md](api.md) — full signatures
+- [dialects.md](dialects.md) — the five inventories and sub-regional accent presets
+- [homographs.md](homographs.md) — meaning-based and POS-based disambiguation
+- [numbers.md](numbers.md) — number normalization and gender agreement
 - [tokenizer.md](tokenizer.md) — inspect syllables, stress and graphemes directly
 - [quickstart.md](quickstart.md) — the basics

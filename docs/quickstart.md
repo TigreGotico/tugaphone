@@ -5,9 +5,9 @@ Give it a sentence and a Lusophone dialect code, get back a phoneme string with
 stress markers and syllable boundaries.
 
 ```
-Choveu muito ontem à noite.
-pt-PT → ˈʃɔ·vew mˈũj·tu õ·ˈtẽ ˈa nˈoj·tɨ
-pt-BR → ˈʃɔ·vew mwˈĩ·tʊ õ·ˈtẽ ˈa nˈoj·tʃɪ
+Choveu muito ontem.
+pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈ···
+pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ ˈ···
 ```
 
 ## 1. Install
@@ -34,8 +34,8 @@ not just the spelling:
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # ˈu gˈa·tu ˈdɔʁ·mɨ
-print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # ˈu gˈa·tʊ ˈdɔh·me
+print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # ˈu gˈa·tu ˈdoɾ·mɨ ˈ···
+print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # ˈu gˈa·tʊ ˈdoɾ·mɪ ˈ···
 ```
 
 The return value is a space-separated phoneme string: one token per word, with
@@ -98,8 +98,27 @@ print(ph.phonemize_sentence("O Porto é uma cidade bonita.", regional_dialect=Po
 These are based on documented phonological features and should be treated as
 approximate. See [advanced.md](advanced.md#regional-accents) for the full list.
 
+## 6. orthography2ipa plugin
+
+`TugaphoneG2PPlugin` implements the `orthography2ipa` `G2PPlugin` interface —
+useful when a framework already loads phonemizers through that registry:
+
+```python
+from tugaphone.plugin import TugaphoneG2PPlugin
+
+p = TugaphoneG2PPlugin(lang="pt-PT")
+print(p.transcribe("o gato dorme"))   # ˈu gˈa·tu ˈdoɾ·mɨ
+```
+
+`SilabificadorSyllabifier` is registered at the `orthography2ipa.syllabify`
+entry point so stress detection in orthography2ipa uses silabificador for
+Portuguese automatically.
+
 ## Where next
 
 - [api.md](api.md) — every public class, function and keyword argument with real signatures
+- [dialects.md](dialects.md) — the five inventories and sub-regional accent presets
+- [homographs.md](homographs.md) — meaning-based and POS-based disambiguation
+- [numbers.md](numbers.md) — number normalization and gender agreement
 - [advanced.md](advanced.md) — regional accents, POS engines, number normalization, the token tree
 - [tokenizer.md](tokenizer.md) — the `Sentence → Word → Grapheme → Character` model and its features
