@@ -31,6 +31,7 @@ dependencies = [
     "silabificador",
     "tugatagger[brill]",
     "tugalex",
+    "bifonia",
     "orthography2ipa>=0.3.0a1",
 ]
 
