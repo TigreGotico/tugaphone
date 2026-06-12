@@ -123,7 +123,7 @@ import dataclasses
 import string
 from typing import List, Dict, Set
 
-from tugaphone.lexicon import TugaLexicon
+from tugalex import TugaLexicon
 
 # singleton - load .csv into memory only once
 LEXICON = TugaLexicon()

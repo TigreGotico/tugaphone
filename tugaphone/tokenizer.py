@@ -72,11 +72,11 @@ QUICK REFERENCES:
 
 import dataclasses
 import string
-from functools import cached_property
+from functools import cached_property, lru_cache
 from typing import List, Optional, Dict, Tuple
 
 from tugaphone.number_utils import normalize_numbers
-from tugaphone.syl import syllabify
+from silabificador import syllabify
 from tugaphone.dialects import (DialectInventory, EuropeanPortuguese, BrazilianPortuguese,
                                 AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
 
@@ -85,15 +85,24 @@ from tugaphone.dialects import (DialectInventory, EuropeanPortuguese, BrazilianP
 # Helper Functions
 # =============================================================================
 
+@lru_cache(maxsize=None)
+def _spec_stress_rules(dialect_code: str):
+    """The declarative stress rules of the orthography2ipa spec, if any."""
+    try:
+        from orthography2ipa import get as _get_spec
+        return _get_spec(dialect_code).stress
+    except Exception:
+        return None
+
+
 def detect_stress_position(word: str, syllables: List[str], dialect: DialectInventory) -> int:
     """
     Determine which syllable carries primary stress.
 
-    ALGORITHM:
-    ----------
-    1. Check for explicit accent marks → stress that syllable
-    2. Check word-final pattern against OXYTONE_ENDINGS
-    3. Default to penultimate (paroxytone rule)
+    Delegates to the declarative ``StressRules`` of the dialect's
+    orthography2ipa spec (written accents → oxytone endings → penult
+    default). When the spec carries no stress block, the dialect's own
+    PRIMARY_STRESS_MARKERS / OXYTONE_ENDINGS apply.
 
     Args:
         word: Normalized word string
@@ -118,6 +127,11 @@ def detect_stress_position(word: str, syllables: List[str], dialect: DialectInve
     # Monosyllables are inherently stressed
     if n_syllables == 1:
         return 0
+
+    rules = _spec_stress_rules(dialect.dialect_code)
+    if rules is not None:
+        from orthography2ipa.stress import detect_stress
+        return detect_stress(word, rules, syllables=syllables)
 
     # Check for explicit accent marks (primary stress markers)
     for idx, syllable in enumerate(syllables):
@@ -502,39 +516,59 @@ class CharToken:
         return self.idx_in_word == len(self.parent_word.normalized) - 1
 
     @cached_property
+    def _prev_letter(self) -> str:
+        """Nearest non-empty letter before this character in the word (across grapheme boundaries)."""
+        if self.prev_char:
+            return self.prev_char.normalized
+        # Walk across grapheme boundary via the prefix string accumulated by CharToken.prefix
+        p = self.prefix
+        return p[-1] if p else ""
+
+    @cached_property
+    def _next_letter(self) -> str:
+        """Nearest non-empty letter after this character in the word (across grapheme boundaries)."""
+        if self.next_char:
+            return self.next_char.normalized
+        s = self.suffix
+        return s[0] if s else ""
+
+    @cached_property
     def is_intervocalic(self) -> bool:
         """
         True if character is between two vowels (V-C-V context).
 
-        Relevant for:
-        - S voicing: casa [ˈkazɐ] (s → [z] between vowels)
-        - R strengthening: caro vs carro
+        Uses word-level prefix/suffix to correctly span grapheme boundaries.
         """
-        prev_is_vowel = self.prev_char.is_vowel if self.prev_char else False
-        next_is_vowel = self.next_char.is_vowel if self.next_char else False
-        return prev_is_vowel and next_is_vowel
+        d = self.dialect
+        all_vowels = (d.VOWEL_CHARS | d.ACUTE_VOWEL_CHARS | d.GRAVE_VOWEL_CHARS |
+                      d.CIRCUM_VOWEL_CHARS | d.TILDE_VOWEL_CHARS | d.NORMALIZED_VOWELS.keys())
+        return self._prev_letter in all_vowels and self._next_letter in all_vowels
 
     @cached_property
     def is_between_consonant_vowel(self) -> bool:
         """
         True if pattern is C-S-V.
 
-        Relevant for S voicing rules.
+        Uses word-level prefix/suffix to correctly span grapheme boundaries.
         """
-        prev_is_cons = self.prev_char.is_consonant if self.prev_char else False
-        next_is_vowel = self.next_char.is_vowel if self.next_char else False
-        return prev_is_cons and next_is_vowel
+        d = self.dialect
+        all_vowels = (d.VOWEL_CHARS | d.ACUTE_VOWEL_CHARS | d.GRAVE_VOWEL_CHARS |
+                      d.CIRCUM_VOWEL_CHARS | d.TILDE_VOWEL_CHARS | d.NORMALIZED_VOWELS.keys())
+        consonants = set("bcdfghjklmnpqrstvwxyz") - all_vowels
+        return self._prev_letter in consonants and self._next_letter in all_vowels
 
     @cached_property
     def is_between_vowel_consonant(self) -> bool:
         """
         True if pattern is V-S-C.
 
-        Relevant for syllable-final consonant rules.
+        Uses word-level prefix/suffix to correctly span grapheme boundaries.
         """
-        prev_is_vowel = self.prev_char.is_vowel if self.prev_char else False
-        next_is_cons = self.next_char.is_consonant if self.next_char else False
-        return prev_is_vowel and next_is_cons
+        d = self.dialect
+        all_vowels = (d.VOWEL_CHARS | d.ACUTE_VOWEL_CHARS | d.GRAVE_VOWEL_CHARS |
+                      d.CIRCUM_VOWEL_CHARS | d.TILDE_VOWEL_CHARS | d.NORMALIZED_VOWELS.keys())
+        consonants = set("bcdfghjklmnpqrstvwxyz") - all_vowels
+        return self._prev_letter in all_vowels and self._next_letter in consonants
 
     # =========================================================================
     # STRESS PROPERTIES
@@ -658,11 +692,20 @@ class CharToken:
             if s == "a":
                 return "a" if self.has_primary_stress or self.has_secondary_stress else "ɐ"
             elif s == "e":
+                # Prevocalic unstressed 'e' may glide → handled at consonant boundary
                 if self.has_primary_stress:
-                    return "ɛ"
+                    # Stressed plain 'e': default closed-mid [e]; only é gives [ɛ]
+                    return "e"
                 return "ɨ" if self.dialect.dialect_code.startswith("pt-PT") else "e"
             elif s == "o":
-                return "ɔ" if self.has_primary_stress or self.has_secondary_stress else "u"
+                # Stressed plain 'o': default closed-mid [o]; only ó gives [ɔ]
+                return "o" if self.has_primary_stress or self.has_secondary_stress else "u"
+
+            # Prevocalic unstressed 'i' → palatal glide [j]
+            if s == "i" and not self.has_primary_stress and not self.has_secondary_stress:
+                next_l = self._next_letter
+                if next_l in self.dialect.VOWEL_CHARS | self.dialect.ACUTE_VOWEL_CHARS | self.dialect.CIRCUM_VOWEL_CHARS | self.dialect.TILDE_VOWEL_CHARS:
+                    return "j"
 
             return base_ipa
 
@@ -685,14 +728,15 @@ class CharToken:
             IPA string for this consonant
         """
         s = self.normalized
-        next_char = self.next_char.normalized if self.next_char else ""
-        prev_char = self.prev_char.normalized if self.prev_char else ""
+        # Use word-level neighbours (cross-grapheme boundary)
+        next_letter = self._next_letter
+        prev_letter = self._prev_letter
 
         # BRAZILIAN PORTUGUESE: t/d palatalization before [i]
         if self.dialect.dialect_code.startswith("pt-BR"):
-            if s == "t" and next_char == "i":
+            if s == "t" and next_letter == "i":
                 return "tʃ"
-            if s == "d" and next_char == "i":
+            if s == "d" and next_letter == "i":
                 return "dʒ"
 
             # L-vocalization in coda position
@@ -702,32 +746,36 @@ class CharToken:
                 return "w"
 
         # C before front vowels → [s]
-        if s == "c" and next_char in self.dialect.FRONT_VOWEL_CHARS:
+        if s == "c" and next_letter in self.dialect.FRONT_VOWEL_CHARS:
             return "s"
 
         # G before front vowels → [ʒ]
-        if s == "g" and next_char in self.dialect.FRONT_VOWEL_CHARS:
+        if s == "g" and next_letter in self.dialect.FRONT_VOWEL_CHARS:
             return "ʒ"
 
-        # Initial R → strong R [ʁ]
-        if s == "r" and self.is_first_word_letter:
-            if self.dialect.dialect_code.startswith("pt-BR"):
-                return "h"  # Brazilian [h] or [x]
-            elif self.dialect.dialect_code.startswith("pt-PT"):
-                return "ʁ"  # European uvular
-            else:
-                return "r"  # African/Timorese alveolar trill
+        # R realisation: positional distribution
+        # word-initial r or rr (handled as digraph) → strong [ʁ/h/r]
+        # r after l, n, s (including across morpheme boundaries) → strong
+        # elsewhere (intervocalic, word-final) → tap [ɾ]
+        if s == "r":
+            if self.is_first_word_letter:
+                if self.dialect.dialect_code.startswith("pt-BR"):
+                    return "h"
+                elif self.dialect.dialect_code.startswith("pt-PT"):
+                    return "ʁ"
+                else:
+                    return "r"
+            if prev_letter and prev_letter in "lns":
+                if self.dialect.dialect_code.startswith("pt-BR"):
+                    return "h"
+                elif self.dialect.dialect_code.startswith("pt-PT"):
+                    return "ʁ"
+                else:
+                    return "r"
+            # All other positions: tap [ɾ] (intervocalic, coda, word-final)
+            return "ɾ"
 
-        # R after l, n, s → strong R
-        if s == "r" and prev_char in "lns":
-            if self.dialect.dialect_code.startswith("pt-BR"):
-                return "h"  # Brazilian [h] or [x]
-            elif self.dialect.dialect_code.startswith("pt-PT"):
-                return "ʁ"  # European uvular
-            else:
-                return "r"  # African/Timorese alveolar trill
-
-        # S between vowels → [z]
+        # S between vowels → [z] (intervocalic voicing)
         if s == "s" and self.is_intervocalic:
             return "z"
 
@@ -736,11 +784,19 @@ class CharToken:
             # Special case: trans- prefix
             word = self.parent_word.normalized if self.parent_word else ""
             if word.startswith(("trans", "trâns")) and self.idx_in_word == 4:
-                # Check if followed by vowel (voice) or consonant (voiceless)
-                if self.next_char and self.next_char.is_vowel:
-                    # Exception: transação [tɾɐ̃zɐˈsɐ̃w]
+                if next_letter in self.dialect.VOWEL_CHARS | self.dialect.ACUTE_VOWEL_CHARS:
                     return "z"
             return "s"
+
+        # S in coda position → [ʃ] in European Portuguese
+        # Coda: word-final, or before a voiceless consonant
+        if s == "s":
+            voiceless = set("ptkfsx")
+            if self.dialect.dialect_code.startswith("pt-PT"):
+                if self.is_last_word_letter:
+                    return "ʃ"
+                if next_letter in voiceless:
+                    return "ʃ"
 
         # X rules (complex, context-dependent)
         if s == "x":
