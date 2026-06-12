@@ -26,8 +26,6 @@ from silabificador import syllabify as _syllabify
 
 from tugaphone.registry import list_dialects
 
-_LANGS = list_dialects()
-
 
 class TugaphoneG2PPlugin(G2PPlugin):
     """Dialect-aware Portuguese G2P via the tugaphone pipeline.
@@ -42,7 +40,7 @@ class TugaphoneG2PPlugin(G2PPlugin):
 
     @property
     def language_codes(self) -> List[str]:
-        return list(_LANGS)
+        return list_dialects()
 
     def _engine(self):
         if self._phonemizer is None:
@@ -66,7 +64,7 @@ class SilabificadorSyllabifier(SyllabifierPlugin):
 
     @property
     def language_codes(self) -> List[str]:
-        codes = list(_LANGS)
+        codes = list_dialects()
         codes.extend(["pt-CV", "pt-GW", "pt-MO", "pt-ST", "pt-GQ"])
         return codes
 

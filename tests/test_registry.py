@@ -30,6 +30,9 @@ class TestNormalization:
     def test_bare(self):
         assert normalize_dialect_code("PT") == "pt"
 
+    def test_private_use_subtags_stay_lowercase(self):
+        assert normalize_dialect_code("pt-BR-X-SP") == "pt-BR-x-sp"
+
 
 class TestResolution:
     @pytest.mark.parametrize("code,inventory", [

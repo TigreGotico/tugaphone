@@ -107,11 +107,16 @@ def normalize_dialect_code(lang: str) -> str:
     """
     segments = (lang or "").strip().split("-")
     normalized = []
+    in_private_use = False
     for i, seg in enumerate(segments):
-        if i > 0 and len(seg) == 2 and seg.lower() != "x":
+        low = seg.lower()
+        if low == "x":
+            in_private_use = True
+            normalized.append(low)
+        elif i > 0 and len(seg) == 2 and not in_private_use:
             normalized.append(seg.upper())
         else:
-            normalized.append(seg.lower())
+            normalized.append(low)
     return "-".join(normalized)
 
 
