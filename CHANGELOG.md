@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0a2](https://github.com/TigreGotico/tugaphone/tree/0.5.0a2) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a1...0.5.0a2)
+
+**Merged pull requests:**
+
+- docs: refresh README, docs, examples and tests [\#35](https://github.com/TigreGotico/tugaphone/pull/35) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.5.0a1](https://github.com/TigreGotico/tugaphone/tree/0.5.0a1) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.4.0a2...0.5.0a1)
