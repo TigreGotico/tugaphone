@@ -30,6 +30,11 @@ RULE_MAP: Dict[str, IPATransform] = {
     "epenthetic_j_before_palatal": epenthetic_j_before_palatal,
     "nasal_diphthongization_e": nasal_diphthongization_e,
     "rising_diphthong_o": rising_diphthong_o,
+    "nasal_glide_palatalization": nasal_glide_palatalization,
+    "nasal_vowel_raising": nasal_vowel_raising,
+    "final_nasal_denasalization": final_nasal_denasalization,
+    "initial_z_devoicing": initial_z_devoicing,
+    "intervocalic_s_voicing": intervocalic_s_voicing,
 }
 # Inverse map for serialization (function object -> string name)
 INVERSE_RULE_MAP: Dict[IPATransform, str] = {v: k for k, v in RULE_MAP.items()}
@@ -114,20 +119,41 @@ class RegionalTransforms:
             morpheme_rules=morpheme_rules
         )
 
+    @staticmethod
+    def _rule_name(rule: "IPATransform | MorphemeTransform") -> str:
+        """Resolve a configured rule function to its registered string name.
+
+        Raises:
+            ValueError: if the rule is not present in ``INVERSE_RULE_MAP``.
+                Serialization must be lossless, so an unmapped rule is an error
+                rather than a silently dropped entry.
+        """
+        try:
+            return INVERSE_RULE_MAP[rule]
+        except KeyError:
+            name = getattr(rule, "__name__", repr(rule))
+            raise ValueError(
+                f"Cannot serialize rule {name!r}: it is not registered in "
+                f"RULE_MAP, so as_dict/from_dict would not round-trip."
+            )
+
     @property
     def as_dict(self) -> Dict[str, str | List[str]]:
         """
-        Serialize the RegionalDialect to a plain dictionary representation.
+        Serialize the RegionalTransforms to a plain dictionary representation.
+
+        Every configured rule is emitted; an unmapped rule raises rather than
+        being silently dropped, so the result round-trips losslessly through
+        :meth:`from_dict`.
 
         Returns:
             dict: A dictionary with keys:
-                - "base_region": the dialect's base region (defaults to "lbx" if not set).
-                - "morpheme_rules": list of morpheme rule names for rules that have a known string mapping.
-                - "ipa_rules": list of IPA rule names for rules that have a known string mapping.
+                - "morpheme_rules": list of morpheme rule names.
+                - "ipa_rules": list of IPA rule names.
         """
         return {
-            "morpheme_rules": [INVERSE_RULE_MAP[rule] for rule in self.morpheme_rules if rule in INVERSE_RULE_MAP],
-            "ipa_rules": [INVERSE_RULE_MAP[rule] for rule in self.ipa_rules if rule in INVERSE_RULE_MAP]
+            "morpheme_rules": [self._rule_name(rule) for rule in self.morpheme_rules],
+            "ipa_rules": [self._rule_name(rule) for rule in self.ipa_rules]
         }
 
 
