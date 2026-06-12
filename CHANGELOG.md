@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1a1](https://github.com/TigreGotico/tugaphone/tree/0.3.1a1) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.3.0a1...0.3.1a1)
+
+**Merged pull requests:**
+
+- fix: positional r/s realisation, prevocalic glides and coda palatalization in the rule cascade [\#26](https://github.com/TigreGotico/tugaphone/pull/26) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.3.0a1](https://github.com/TigreGotico/tugaphone/tree/0.3.0a1) (2026-06-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.2a2...0.3.0a1)
