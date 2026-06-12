@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0a1](https://github.com/TigreGotico/tugaphone/tree/0.4.0a1) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.3.1a1...0.4.0a1)
+
+**Merged pull requests:**
+
+- feat: dialect-quality pass across the lusophone inventories [\#27](https://github.com/TigreGotico/tugaphone/pull/27) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.3.1a1](https://github.com/TigreGotico/tugaphone/tree/0.3.1a1) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.3.0a1...0.3.1a1)
