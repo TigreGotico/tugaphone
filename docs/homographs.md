@@ -56,7 +56,7 @@ directly.
 | olho | ˈoʎu | ˈɔʎu | noun "eye" vs verb "I watch" |
 | peso | ˈpezu | ˈpɛzu | noun "weight" vs verb "I weigh" |
 | porto | ˈpoɾtu | ˈpɔɾtu | noun "port" vs verb "I carry" |
-| sede | ˈsɛdɨ | ˈsedɨ | headquarters (NOUN key) vs thirst (VERB key) — two noun senses sharing the noun/verb slots |
+| sede | ˈsɛdɨ | ˈsedɨ | headquarters (NOUN) vs thirst (VERB slot) |
 | colher | kuˈʎɛɾ | kuˈʎeɾ | noun "spoon" vs verb "to pick" |
 
 The full table is defined in `DialectInventory.HOMOGRAPHS` in
