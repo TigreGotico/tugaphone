@@ -19,8 +19,6 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 # pt-TL → ʃo·ˈvew mˈuj·tʊ ˈõ·tẽ ˈ···
 ```
 
-Any unrecognised tag falls back to European Portuguese.
-
 ### pt-PT — European Portuguese
 
 `EuropeanPortuguese`. The Lisbon standard is the base inventory:
@@ -56,16 +54,55 @@ Any unrecognised tag falls back to European Portuguese.
 `TimoresePortuguese`. Second language for most speakers; influenced by Tetum
 and other Austronesian languages. Conservative consonantism, /u/ not fronted.
 
+## Dialect codes
+
+Every supported dialect — the five majors, the city-level inventories and the
+regional accent presets below — resolves from a single registry by BCP-47
+code. Regional accents use private-use subtags (`pt-PT-x-porto`), the
+convention shared across the phonetics stack:
+
+```python
+from tugaphone import list_dialects, resolve_dialect
+
+print(list_dialects())
+# ['pt-AO', 'pt-BR', 'pt-BR-x-rio-janeiro', 'pt-BR-x-sao-paulo', 'pt-MZ',
+#  'pt-PT', 'pt-PT-x-alentejo', 'pt-PT-x-algarve', 'pt-PT-x-azores',
+#  'pt-PT-x-braga', 'pt-PT-x-coimbra', 'pt-PT-x-fafe', 'pt-PT-x-famalicao',
+#  'pt-PT-x-lisbon', 'pt-PT-x-madeira', 'pt-PT-x-minho', 'pt-PT-x-north',
+#  'pt-PT-x-porto', 'pt-PT-x-transmontano', 'pt-TL']
+
+entry = resolve_dialect("pt-PT-x-porto")
+print(entry.region)   # Porto / Douro Litoral
+```
+
+Resolution is case-insensitive and accepts common aliases (`pt`,
+`pt-PT-x-lisboa`, `pt-PT-x-acores`, `pt-PT-x-tras-os-montes`,
+`pt-PT-x-central`, `pt-BR-x-rio`, `pt-PT-x-norte`). An unknown private-use
+subtag falls back to its parent (`pt-PT-x-anything` → `pt-PT`); any other
+unrecognised tag falls back to European Portuguese.
+
+### City inventories
+
+Three city-level `DialectInventory` subclasses carry their own lexicon
+region maps: `pt-PT-x-lisbon` (`LisbonPortuguese`), `pt-BR-x-rio-janeiro`
+(`RioJaneiroPortuguese`) and `pt-BR-x-sao-paulo` (`SaoPauloPortuguese`).
+
+```python
+print(ph.phonemize_sentence("noite", "pt-BR"))             # nˈoj·tʃɪ
+print(ph.phonemize_sentence("noite", "pt-BR-x-sao-paulo")) # nˈoj·tʃi
+```
+
 ---
 
 ## Sub-regional accent presets
 
-On top of any dialect code, you can layer a `RegionalTransforms` preset via
-the `regional_dialect` argument. Every preset is a composition of grounded
-phonological rules cited to published sources (Cintra 1971; ALEPG 2006).
+Each preset is a composition of grounded phonological rules cited to
+published sources (Cintra 1971; ALEPG 2006). Reach one through its dialect
+code, or layer any preset explicitly via the `regional_dialect` argument —
+the explicit argument wins over whatever the code resolves to:
 
 ```python
-from tugaphone.regional import PortoDialect, AzoresDialect
+from tugaphone.regional import AzoresDialect
 
 ph = TugaPhonemizer()
 s = "O vinho é muito bom."
@@ -73,7 +110,7 @@ s = "O vinho é muito bom."
 print(ph.phonemize_sentence(s, "pt-PT"))
 # pt-PT standard: ˈu vˈi·ɲu ˈɛ mˈũj·tu bˈõ ˈ···
 
-print(ph.phonemize_sentence(s, "pt-PT", regional_dialect=PortoDialect))
+print(ph.phonemize_sentence(s, "pt-PT-x-porto"))
 # Porto: ˈu bˈi·ɲu ˈɛ mˈũj·tu bˈuõ ˈ···  (betacism + rising diphthong)
 
 print(ph.phonemize_sentence(s, "pt-PT", regional_dialect=AzoresDialect))
@@ -84,20 +121,20 @@ print(ph.phonemize_sentence(s, "pt-PT", regional_dialect=AzoresDialect))
 
 All presets are importable from `tugaphone.regional`.
 
-| Preset | Region | Signature rules |
-|--------|--------|-----------------|
-| `NorthernDialect` | Northern Portugal (generic) | `<ou>/<ei>` retention, betacism /v/→[b] |
-| `CoimbraDialect` | Coimbra / Centro-Litoral | `<ou>/<ei>` retention, no betacism |
-| `PortoDialect` | Porto / Douro Litoral | Stressed /o/→[uo] rising diphthong + northern core |
-| `MinhoDialect` | Minho (conservative rural) | Vowel-centralisation resistance, open /a/, alveolar [r] |
-| `BragaDialect` | Braga | Palatal epenthesis (`abelha`→`abeilha`) + Minho |
-| `FamalicaoDialect` | Vila Nova de Famalicão | Conservative `-ão`→[õ] retention + Minho |
-| `FafeDialect` | Fafe / inner Minho | Nasal /ẽ/→[eĩ] diphthongisation + Minho |
-| `TrasMontanoDialect` | Trás-os-Montes | `<ch>` affrication, s-voicing, nasal denasalisation |
-| `AlentejoDialect` | Alentejo | Intervocalic /d/ deletion, `meu`→[me], `ei`→[e] |
-| `AlgarveDialect` | Algarve | `meu`→[me], coda-sibilant voicing sandhi |
-| `MadeiraDialect` | Madeira | l-palatalisation, nasal diphthong → Ṽ+[n] |
-| `AzoresDialect` | Açores (São Miguel) | Stressed /u/→[y], l-palatalisation, `oi`→[o] |
+| Code | Preset | Region | Signature rules |
+|------|--------|--------|-----------------|
+| `pt-PT-x-north` | `NorthernDialect` | Northern Portugal (generic) | `<ou>/<ei>` retention, betacism /v/→[b] |
+| `pt-PT-x-coimbra` | `CoimbraDialect` | Coimbra / Centro-Litoral | `<ou>/<ei>` retention, no betacism |
+| `pt-PT-x-porto` | `PortoDialect` | Porto / Douro Litoral | Stressed /o/→[uo] rising diphthong + northern core |
+| `pt-PT-x-minho` | `MinhoDialect` | Minho (conservative rural) | Vowel-centralisation resistance, open /a/, alveolar [r] |
+| `pt-PT-x-braga` | `BragaDialect` | Braga | Palatal epenthesis (`abelha`→`abeilha`) + Minho |
+| `pt-PT-x-famalicao` | `FamalicaoDialect` | Vila Nova de Famalicão | Conservative `-ão`→[õ] retention + Minho |
+| `pt-PT-x-fafe` | `FafeDialect` | Fafe / inner Minho | Nasal /ẽ/→[eĩ] diphthongisation + Minho |
+| `pt-PT-x-transmontano` | `TrasMontanoDialect` | Trás-os-Montes | `<ch>` affrication, s-voicing, nasal denasalisation |
+| `pt-PT-x-alentejo` | `AlentejoDialect` | Alentejo | Intervocalic /d/ deletion, `meu`→[me], `ei`→[e] |
+| `pt-PT-x-algarve` | `AlgarveDialect` | Algarve | `meu`→[me], coda-sibilant voicing sandhi |
+| `pt-PT-x-madeira` | `MadeiraDialect` | Madeira | l-palatalisation, nasal diphthong → Ṽ+[n] |
+| `pt-PT-x-azores` | `AzoresDialect` | Açores (São Miguel) | Stressed /u/→[y], l-palatalisation, `oi`→[o] |
 
 ### Building a custom accent
 

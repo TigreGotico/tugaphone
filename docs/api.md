@@ -31,11 +31,15 @@ Transcribes `sentence` to IPA for the target dialect. Returns a space-separated
 phoneme string — one token per word, with `ˈ` for primary stress and `·` for
 syllable boundaries; punctuation tokens are preserved.
 
-`lang` is one of `pt-PT`, `pt-BR`, `pt-AO`, `pt-MZ`, `pt-TL`; any other value
-falls back to European Portuguese.
+`lang` is any code from `list_dialects()` — the five majors (`pt-PT`, `pt-BR`,
+`pt-AO`, `pt-MZ`, `pt-TL`), the city inventories (`pt-BR-x-sao-paulo`, …) and
+the regional accent presets (`pt-PT-x-porto`, …). Resolution is
+case-insensitive with alias support; unknown codes fall back to European
+Portuguese. See [dialects.md](dialects.md#dialect-codes).
 
 When `regional_dialect` is given, the word is first run through the preset's
-morpheme rules, transcribed, then run through its IPA rules. See
+morpheme rules, transcribed, then run through its IPA rules; an explicit
+preset overrides whatever `lang` resolves to. See
 [`RegionalTransforms`](#tugaphoneregionalregionaltransforms).
 
 ```python
@@ -49,9 +53,31 @@ ph.phonemize_sentence("O gato dorme.", "pt-BR")   # 'ˈu gˈa·tʊ ˈdoɾ·mɪ �
 TugaPhonemizer.get_dialect_inventory(lang: str = "pt-PT") -> DialectInventory
 ```
 
-Maps a dialect code to its `DialectInventory` instance (`EuropeanPortuguese`,
-`BrazilianPortuguese`, `AngolanPortuguese`, `MozambicanPortuguese`,
-`TimoresePortuguese`).
+Maps a dialect code to a fresh `DialectInventory` instance through the
+dialect registry (`EuropeanPortuguese`, `BrazilianPortuguese`,
+`AngolanPortuguese`, `MozambicanPortuguese`, `TimoresePortuguese`, plus the
+city inventories `LisbonPortuguese`, `RioJaneiroPortuguese`,
+`SaoPauloPortuguese`).
+
+## `tugaphone.registry`
+
+The dialect registry behind code resolution. The first three are re-exported
+from the package root.
+
+| Symbol | Role |
+|--------|------|
+| `resolve_dialect(lang)` | Resolve any BCP-47 code (case-insensitive, alias-aware) to its `DialectEntry`; unknown codes fall back to the parent tag, then `pt-PT`. |
+| `list_dialects()` | Sorted list of all canonical dialect codes. |
+| `DialectEntry` | Frozen record: `code`, `inventory` (class), `transforms` (preset or `None`), `region`, `aliases`. |
+| `get_regional_transforms(lang)` | The `RegionalTransforms` preset for a code, or `None`. |
+| `normalize_dialect_code(lang)` | BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). |
+
+```python
+from tugaphone import resolve_dialect, list_dialects
+
+resolve_dialect("pt-PT-x-porto").region   # 'Porto / Douro Litoral'
+len(list_dialects())                      # 20
+```
 
 ## `tugaphone.number_utils`
 
@@ -125,9 +151,12 @@ clone = RegionalTransforms.from_dict(cfg)
 
 ### Preset accents
 
-Importable from `tugaphone.regional`: `CoimbraDialect`, `MinhoDialect`,
-`BragaDialect`, `FamalicaoDialect`, `TrasMontanoDialect`, `PortoDialect`,
-`FafeDialect`. Each is a ready-built `RegionalTransforms`. Pass any of them to
+Importable from `tugaphone.regional`: `NorthernDialect`, `CoimbraDialect`,
+`MinhoDialect`, `BragaDialect`, `FamalicaoDialect`, `TrasMontanoDialect`,
+`PortoDialect`, `FafeDialect`, `AlentejoDialect`, `AlgarveDialect`,
+`MadeiraDialect`, `AzoresDialect`. Each is a ready-built `RegionalTransforms`,
+reachable by its dialect code (see the
+[preset table](dialects.md#preset-table)) or passed explicitly to
 `phonemize_sentence(..., regional_dialect=...)`.
 
 Only the IPA rules listed in `RULE_MAP` round-trip through `as_dict`/`from_dict`;
@@ -139,6 +168,7 @@ accents built from other rule functions serialize a subset.
 |--------|------|
 | `DialectInventory` | Base class: phoneme maps, character sets, stress/punctuation tokens. `dialect_code` attribute carries the tag. |
 | `EuropeanPortuguese`, `BrazilianPortuguese`, `AngolanPortuguese`, `MozambicanPortuguese`, `TimoresePortuguese` | The five dialect inventories. |
+| `LisbonPortuguese`, `RioJaneiroPortuguese`, `SaoPauloPortuguese` | City-level inventories backed by their own lexicon region maps. |
 | `LEXICON` | Module-level `TugaLexicon()` instance; lazy-loaded on first use and warmed by `TugaPhonemizer.__init__`. |
 
 You rarely instantiate these directly — `TugaPhonemizer` does it for you — but
@@ -172,7 +202,7 @@ Implements `orthography2ipa.g2p_plugin.G2PPlugin`. The underlying
 
 | Member | Description |
 |--------|-------------|
-| `language_codes` | `["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]` |
+| `language_codes` | `list_dialects()` — every registered code, majors and regional accents alike. |
 | `transcribe(text)` | Phonemize a full sentence. |
 | `transcribe_word(word, context=None)` | Phonemize a single word; `context.lang` overrides `self.lang`. |
 
