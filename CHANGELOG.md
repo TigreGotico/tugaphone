@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.1a1](https://github.com/TigreGotico/tugaphone/tree/0.5.1a1) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a2...0.5.1a1)
+
+**Merged pull requests:**
+
+- fix: restore final vowel in gosto VERB homograph IPA [\#38](https://github.com/TigreGotico/tugaphone/pull/38) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.5.0a2](https://github.com/TigreGotico/tugaphone/tree/0.5.0a2) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a1...0.5.0a2)
