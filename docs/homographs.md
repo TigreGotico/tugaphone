@@ -4,7 +4,7 @@ Portuguese has two overlapping classes of heterophonic homographs (same spelling
 different pronunciation):
 
 1. **Meaning-based** — the vowel quality shifts depending on which sense is active.
-   Example: *sede* as thirst /ˈsɛdɨ/ vs as headquarters /ˈsedɨ/.
+   Example: *sede* as thirst /ˈsedɨ/ vs as headquarters /ˈsɛdɨ/.
 2. **POS-based** — the vowel quality shifts between noun and verb conjugation.
    Example: *gosto* noun /ˈgoʃtu/ vs verb /ˈgɔʃtu/.
 
@@ -26,13 +26,13 @@ from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
 
-# sede thirst (open /ɛ/)
+# sede thirst (closed /e/)
 print(ph.phonemize_sentence("Tenho muita sede."))
 # ˈte·ɲu ˈmũj·tɐ ˈse·dɨ ˈ···
 
-# sede headquarters (closed /e/)
-print(ph.phonemize_sentence("A empresa tem sede em Lisboa."))
-# ˈɐ ẽ·pɾˈe·zɐ ˈtẽ ˈse·dɨ ˈẽ liʒ·bˈo·ɐ ˈ···
+# sede headquarters (open /ɛ/)
+print(ph.phonemize_sentence("A sede da empresa fica em Lisboa."))
+# ˈɐ ˈsɛ·dɨ ˈdɐ ẽ·pɾˈe·zɐ ˈfi·kɐ ˈẽ liʒ·bˈo·ɐ ˈ···
 ```
 
 If bifonia is not importable, the pipeline continues without it and falls back
@@ -56,7 +56,7 @@ directly.
 | olho | ˈoʎu | ˈɔʎu | noun "eye" vs verb "I watch" |
 | peso | ˈpezu | ˈpɛzu | noun "weight" vs verb "I weigh" |
 | porto | ˈpoɾtu | ˈpɔɾtu | noun "port" vs verb "I carry" |
-| sede | ˈsedɨ | ˈsɛdɨ | noun "headquarters" vs noun "thirst" |
+| sede | ˈsɛdɨ | ˈsedɨ | headquarters (NOUN key) vs thirst (VERB key) — two noun senses sharing the noun/verb slots |
 | colher | kuˈʎɛɾ | kuˈʎeɾ | noun "spoon" vs verb "to pick" |
 
 The full table is defined in `DialectInventory.HOMOGRAPHS` in
