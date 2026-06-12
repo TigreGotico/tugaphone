@@ -1,0 +1,74 @@
+"""tugaphone on the orthography2ipa base interfaces.
+
+tugaphone *consumes* orthography2ipa — its Portuguese spec data, the
+declarative stress rules and the shared
+:class:`~orthography2ipa.g2p_plugin.G2PPlugin`/``WordContext`` types —
+and owns the Portuguese pipeline (lexicon, POS tagging, gender-aware
+numbers, regional accent transforms). Use the engine directly:
+
+    >>> from tugaphone.plugin import TugaphoneG2PPlugin
+    >>> TugaphoneG2PPlugin().transcribe("o gato dorme")
+
+Two classes live here:
+
+- :class:`TugaphoneG2PPlugin` — the full phonemizer behind the shared
+  engine interface.
+- :class:`SilabificadorSyllabifier` — a component plugin registered in
+  the ``orthography2ipa.syllabify`` entry-point group, so
+  orthography2ipa's own stress detection syllabifies Portuguese with
+  ``silabificador`` instead of its naive vowel-group splitter.
+"""
+from typing import List, Optional
+
+from orthography2ipa.g2p_plugin import G2PPlugin, WordContext
+from orthography2ipa.syllabifier_plugin import SyllabifierPlugin
+from silabificador import syllabify as _syllabify
+
+_LANGS = ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]
+
+
+class TugaphoneG2PPlugin(G2PPlugin):
+    """Dialect-aware Portuguese G2P via the tugaphone pipeline.
+
+    The underlying :class:`tugaphone.TugaPhonemizer` (POS tagger +
+    lexicon) loads lazily on first transcription.
+    """
+
+    def __init__(self, lang: str = "pt-PT") -> None:
+        self.lang = lang
+        self._phonemizer = None
+
+    @property
+    def language_codes(self) -> List[str]:
+        return list(_LANGS)
+
+    def _engine(self):
+        if self._phonemizer is None:
+            from tugaphone import TugaPhonemizer
+            self._phonemizer = TugaPhonemizer()
+        return self._phonemizer
+
+    def transcribe(self, text: str) -> str:
+        return self._engine().phonemize_sentence(text, lang=self.lang)
+
+    def transcribe_word(
+        self, word: str, context: Optional[WordContext] = None
+    ) -> str:
+        lang = (context.lang if context is not None and context.lang
+                else self.lang)
+        if lang not in _LANGS:
+            lang = self.lang
+        return self._engine().phonemize_sentence(word, lang=lang)
+
+
+class SilabificadorSyllabifier(SyllabifierPlugin):
+    """Portuguese syllabifier for orthography2ipa's stress detection."""
+
+    @property
+    def language_codes(self) -> List[str]:
+        codes = list(_LANGS)
+        codes.extend(["pt-CV", "pt-GW", "pt-MO", "pt-ST", "pt-GQ"])
+        return codes
+
+    def syllabify(self, word: str, lang: Optional[str] = None) -> List[str]:
+        return list(_syllabify(word))
