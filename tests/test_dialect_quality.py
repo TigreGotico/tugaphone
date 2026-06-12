@@ -28,7 +28,7 @@ from tugaphone.ipa_transforms import (
     retain_ei_diphthong,
     nasal_vowel_raising,
     open_vowel_preference,
-    labial_fricative_stop_merger,
+    betacism,
     rhotic_realization,
     palatal_affrication_ch,
     initial_z_devoicing,
