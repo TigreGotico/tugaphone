@@ -32,6 +32,7 @@ dependencies = [
     "silabificador",
     "tugatagger[brill]",
     "tugalex",
+    "bifonia",
 ]
 
 [project.optional-dependencies]
