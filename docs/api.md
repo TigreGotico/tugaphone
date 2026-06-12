@@ -176,9 +176,10 @@ the public surface is:
 | Symbol | Role |
 |--------|------|
 | `Sentence(surface, words=[], dialect=EuropeanPortuguese())` | Top-level container; `.ipa`, `.words`, `.n_words`, `.features`. |
-| `WordToken` | `.surface`, `.syllables`, `.graphemes`, `.stressed_syllable_idx`, `.ipa`, `.features`. |
-| `GraphemeToken` | `.surface`, `.ipa`, `.is_diphthong`, `.is_nasal`, `.is_digraph`, `.features`, and more predicates. |
-| `CharToken` | character-level predicates (`.is_vowel`, `.is_consonant`, `.ipa`, ...). |
+| `Sentence.from_postagged(surface, tags, dialect=None)` | Build from `(token, pos)` pairs (the path `TugaPhonemizer` uses). |
+| `WordToken` | `.surface`, `.syllables`, `.graphemes`, `.stressed_syllable_idx`, `.ipa`, `.features`; phonological summaries `.stress_pattern`, `.syllable_structure_pattern`, `.phoneme_count`, `.vowel_sequence`, `.consonant_sequence`, `.has_diphthongs`, `.has_nasal_sounds`, `.has_palatal_sounds`, `.has_consonant_clusters`, `.is_homograph`, `.is_irregular`. |
+| `GraphemeToken` | `.surface`, `.ipa`, `.is_diphthong`, `.is_nasal`, `.is_digraph`, `.features`; syllable features `.syllable_position`, `.phonological_weight`, `.has_complex_onset`, `.is_palatal`, `.triggers_palatalization`, `.is_vowel_grapheme`/`.is_consonant_grapheme`. |
+| `CharToken` | character-level predicates (`.is_vowel`, `.is_consonant`, `.ipa`, ...); articulatory features `.manner_of_articulation`, `.place_of_articulation`, `.voicing`, `.vowel_height`/`.vowel_backness`/`.vowel_roundedness`, syllable role `.is_nucleus`/`.is_onset`/`.is_coda`. See [tokenizer.md](tokenizer.md#phonological-features). |
 
 ## `tugaphone.plugin`
 
