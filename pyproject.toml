@@ -16,7 +16,6 @@ keywords = ["portuguese", "phonemizer", "g2p", "ipa", "phonetics", "tts", "nlp"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Natural Language :: Portuguese",
     "Natural Language :: Portuguese (Brazilian)",
     "Programming Language :: Python :: 3",
@@ -33,7 +32,11 @@ dependencies = [
     "tugatagger[brill]",
     "tugalex",
     "bifonia",
+    "orthography2ipa>=0.3.0a1",
 ]
+
+[project.entry-points."orthography2ipa.syllabify"]
+portuguese = "tugaphone.plugin:SilabificadorSyllabifier"
 
 [project.optional-dependencies]
 test = [

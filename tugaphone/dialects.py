@@ -1562,8 +1562,8 @@ class AngolanPortuguese(DialectInventory):
        - Prosodic patterns influenced by L1 Bantu speakers
     """
 
-    def __init__(self):
-        super().__init__(dialect_code="pt-AO",
+    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
+        super().__init__(dialect_code=dialect_code or "pt-AO",
                          DIGRAPH2IPA={
                              **AO1990.DIGRAPH2IPA,
                              "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
@@ -1571,11 +1571,13 @@ class AngolanPortuguese(DialectInventory):
                          # Moderate vowel reduction (between European and Brazilian)
                          DEFAULT_CHAR2PHONEMES={
                              **AO1990.DEFAULT_CHAR2PHONEMES,
+                             "a": "a",  # DIVERGENCE: Less reduction than European [ɐ]
                              "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
-                             "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
+                             "r": "ɾ",  # DIVERGENCE: Strong R is [r] (positional), tap [ɾ] elsewhere
                          },
-                         IRREGULAR_WORDS=LEXICON.get_ipa_map(region="lda") # Luanda
+                         IRREGULAR_WORDS=IRREGULAR_WORDS if IRREGULAR_WORDS is not None else LEXICON.get_ipa_map(region="lda"),  # Luanda
+                         **kwargs
          )
 
 
@@ -1610,20 +1612,22 @@ class MozambicanPortuguese(DialectInventory):
        - May have different rhythm patterns
     """
 
-    def __init__(self):
-        super().__init__(dialect_code="pt-MZ",
+    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
+        super().__init__(dialect_code=dialect_code or "pt-MZ",
                          DIGRAPH2IPA={
                              **AO1990.DIGRAPH2IPA,
-                             "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
+                             "rr": "r",  # DIVERGENCE: Alveolar trill [r] common in Mozambique
                          },
                          # Moderate vowel reduction (between European and Brazilian)
                          DEFAULT_CHAR2PHONEMES={
                              **AO1990.DEFAULT_CHAR2PHONEMES,
+                             # 'a' inherits European ɐ reduction (MZ gold uses ɐ frequently)
                              "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
-                             "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
+                             "r": "ɾ",  # Strong R is [r] (positional), tap [ɾ] elsewhere
                          },
-                         IRREGULAR_WORDS=LEXICON.get_ipa_map(region="mpx") # Maputo
+                         IRREGULAR_WORDS=IRREGULAR_WORDS if IRREGULAR_WORDS is not None else LEXICON.get_ipa_map(region="mpx"),  # Maputo
+                         **kwargs
          )
 
 
@@ -1662,20 +1666,21 @@ class TimoresePortuguese(DialectInventory):
        - Less dialectal innovation
     """
 
-    def __init__(self):
-        super().__init__(dialect_code="pt-TL",
+    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
+        super().__init__(dialect_code=dialect_code or "pt-TL",
                          DIGRAPH2IPA={
                              **AO1990.DIGRAPH2IPA,
-                             "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
+                             "rr": "r",  # DIVERGENCE: Alveolar trill [r] for strong R
                          },
-                         # Moderate vowel reduction (between European and Brazilian)
+                         # Less vowel reduction: Tetum/Austronesian substrate, simpler vowel system
                          DEFAULT_CHAR2PHONEMES={
                              **AO1990.DEFAULT_CHAR2PHONEMES,
-                             "a": "a",  # DIVERGENCE: Less reduction
+                             "a": "ə",  # DIVERGENCE: Tetum-influenced schwa; unstressed /a/ → [ə]
                              "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
-                             "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
+                             "r": "ɾ",  # DIVERGENCE: Strong R is [r] (positional), tap [ɾ] elsewhere
                          },
-                         IRREGULAR_WORDS=LEXICON.get_ipa_map(region="dli") # Dili
+                         IRREGULAR_WORDS=IRREGULAR_WORDS if IRREGULAR_WORDS is not None else LEXICON.get_ipa_map(region="dli"),  # Dili
+                         **kwargs
          )
 
