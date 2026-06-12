@@ -428,7 +428,7 @@ class DialectInventory:
             "coro": {"NOUN": "ˈkoɾu", "VERB": "ˈkɔɾu"}, # coro («conjunto de cantores») – coro (verbo corar);
             "corte": {"NOUN": "ˈkoɾtɨ", "VERB": "ˈkɔɾtɨ"}, # corte («morada do rei») – corte («ato de cortar»; verbo cortar);
             "gozo": {"NOUN": "ˈgozu", "VERB": "ˈgɔzu"}, # gozo («prazer»; «troça») – gozo (verbo gozar);
-            "gosto": {"NOUN": "ˈgoʃtu", "VERB": "ˈgɔʃt"}, #   gosto (substantivo) - gosto (1.ª pess.sing. pres. ind. - verbo gostar)
+            "gosto": {"NOUN": "ˈgoʃtu", "VERB": "ˈgɔʃtu"}, #   gosto (substantivo) - gosto (1.ª pess.sing. pres. ind. - verbo gostar)
             "jogo": {"NOUN": "ˈʒoɡu", "VERB": "ˈʒɔɡu"}, # jogo («divertimento») – jogo (verbo jogar);
             "molho": {"NOUN": "ˈmoʎu", "VERB": "ˈmɔʎu"}, # molho («líquido, caldo») – molho («feixe»; verbo molhar);
             "olho": {"NOUN": "ˈoʎu", "VERB": "ˈɔʎu"}, # olho («órgão da visão») – olho (verbo olhar);
