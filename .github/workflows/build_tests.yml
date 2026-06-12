@@ -1,0 +1,20 @@
+name: Run UnitTests
+
+on:
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - 'tests/**'
+      - 'tugaphone/**'
+      - '.github/workflows/build_tests.yml'
+  workflow_dispatch:
+
+jobs:
+  build_tests:
+    uses: OpenVoiceOS/gh-automations/.github/workflows/build-tests.yml@dev
+    with:
+      branch: dev
+      test_repo: false
+      test_location: "tests"
+      timeout: 15

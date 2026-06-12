@@ -1,12 +1,22 @@
 from typing import Optional
 
+from tugaphone.version import __version__
 from tugaphone.dialects import (DialectInventory, LEXICON,
                                 EuropeanPortuguese, BrazilianPortuguese,
                                 AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
-from tugaphone.lexicon import TugaLexicon
-from tugaphone.pos import TugaTagger
+from tugalex import TugaLexicon
+from tugatagger import TugaTagger
 from tugaphone.regional import RegionalTransforms
 from tugaphone.tokenizer import Sentence, DialectInventory
+
+try:
+    # Disambiguates heterophonic homographs (sede = thirst vs seat, forma = mould
+    # vs shape, …) by meaning and marks the result with the open/closed-vowel
+    # diacritic the phonemizer reads directly. Optional: phonemization still runs
+    # without it, falling back to the part-of-speech homograph table.
+    from bifonia import add_extra_diacritics as _bifonia_diacritics
+except ImportError:
+    _bifonia_diacritics = None
 
 
 class TugaPhonemizer:
@@ -59,6 +69,11 @@ class TugaPhonemizer:
         Returns:
             phonemized (str): Space-separated phoneme tokens for each word; punctuation tokens are preserved unchanged.
         """
+        if _bifonia_diacritics is not None and lang.startswith("pt"):
+            # Resolve heterophone meaning first; the inserted diacritics drive the
+            # correct vowel quality in the grapheme rules below.
+            sentence = _bifonia_diacritics(sentence)
+
         tagged = self.postag.tag(sentence)
 
         if regional_dialect:
