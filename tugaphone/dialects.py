@@ -279,6 +279,33 @@ class DialectInventory:
     ALL_VOWEL_CHARS: Set[str] = dataclasses.field(default_factory=set)
 
     # =========================================================================
+    # PHONOLOGICAL CLASS TABLES
+    # =========================================================================
+    # Articulatory classification used by the tokenizer's feature API.
+    # Consonant tables are keyed by ORTHOGRAPHIC letter and classify the
+    # typical realization of that letter's default phoneme
+    # (DEFAULT_CHAR2PHONEMES); context-dependent letters (c, g, s, x) carry
+    # their default reading — see each consumer property for the caveat.
+    # Vowel tables are keyed by IPA PHONE, so reduction-aware classification
+    # (unstressed e → [ɨ] = high central) comes out right per dialect.
+
+    # letter → manner: plosive, fricative, nasal, lateral, rhotic
+    MANNER_OF_ARTICULATION: Dict[str, str] = dataclasses.field(default_factory=dict)
+    # letter → place: bilabial, labiodental, alveolar, postalveolar, velar
+    PLACE_OF_ARTICULATION: Dict[str, str] = dataclasses.field(default_factory=dict)
+    VOICED_CONSONANT_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    VOICELESS_CONSONANT_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    SIBILANT_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    LIQUID_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    NASAL_CONSONANT_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    RHOTIC_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    # phone → height: high, mid-high, mid-low, low
+    VOWEL_HEIGHT: Dict[str, str] = dataclasses.field(default_factory=dict)
+    # phone → backness: front, central, back
+    VOWEL_BACKNESS: Dict[str, str] = dataclasses.field(default_factory=dict)
+    ROUNDED_VOWEL_PHONES: Set[str] = dataclasses.field(default_factory=set)
+
+    # =========================================================================
     # DIPHTHONG INVENTORIES
     # =========================================================================
     # Diphthongs are single-syllable vowel sequences
@@ -409,6 +436,7 @@ class DialectInventory:
         - Override flexibility for subclasses
         """
         self._initialize_char_lists()
+        self._initialize_phonological_classes()
         self._initialize_normalized_vowels()
         self._initialize_punctuation()
         self._initialize_consonant_digraphs()
@@ -491,6 +519,65 @@ class DialectInventory:
             self.OPEN_VOWELS = set("a")
         if not self.SEMI_OPEN_VOWELS:
             self.SEMI_OPEN_VOWELS = set("ɛɐɔ")
+
+    def _initialize_phonological_classes(self):
+        """Populate the articulatory classification tables.
+
+        Consonant tables classify each orthographic letter by the typical
+        realization of its default phoneme; letters whose value is
+        context-dependent (c → [k]/[s], g → [ɡ]/[ʒ], s → [s]/[z]/[ʃ],
+        x → [ʃ]/[ks]/[z]) carry the default reading. 'r' is filed under the
+        'rhotic' cover manner with alveolar place (the default tap [ɾ]);
+        dialects with a different default rhotic may override.
+
+        Vowel tables are keyed by IPA phone and derived from the openness
+        sets above, so subclass overrides of those sets propagate.
+        """
+        if not self.MANNER_OF_ARTICULATION:
+            self.MANNER_OF_ARTICULATION = {
+                **{c: "plosive" for c in "pbtdkgqc"},
+                **{c: "fricative" for c in "fvszxjç"},
+                **{c: "nasal" for c in "mn"},
+                "l": "lateral",
+                "r": "rhotic",
+            }
+        if not self.PLACE_OF_ARTICULATION:
+            self.PLACE_OF_ARTICULATION = {
+                **{c: "bilabial" for c in "pbm"},
+                **{c: "labiodental" for c in "fv"},
+                **{c: "alveolar" for c in "tdnszlçr"},
+                **{c: "postalveolar" for c in "xj"},
+                **{c: "velar" for c in "kgqc"},
+            }
+        if not self.VOICED_CONSONANT_CHARS:
+            self.VOICED_CONSONANT_CHARS = set("bdgvzjlmnr")
+        if not self.VOICELESS_CONSONANT_CHARS:
+            self.VOICELESS_CONSONANT_CHARS = set("ptkcfsxqç")
+        if not self.SIBILANT_CHARS:
+            self.SIBILANT_CHARS = set("szxjç")
+        if not self.LIQUID_CHARS:
+            self.LIQUID_CHARS = set("lr")
+        if not self.NASAL_CONSONANT_CHARS:
+            self.NASAL_CONSONANT_CHARS = set("mn")
+        if not self.RHOTIC_CHARS:
+            self.RHOTIC_CHARS = set("r")
+        if not self.VOWEL_HEIGHT:
+            self.VOWEL_HEIGHT = {
+                **{p: "high" for p in self.CLOSED_VOWELS},
+                **{p: "mid-high" for p in self.SEMI_CLOSED_VOWELS},
+                **{p: "mid-low" for p in self.SEMI_OPEN_VOWELS},
+                **{p: "low" for p in self.OPEN_VOWELS},
+                "y": "high",      # Azorean fronted /u/
+                "ə": "mid-low",   # Timorese reduction schwa
+            }
+        if not self.VOWEL_BACKNESS:
+            self.VOWEL_BACKNESS = {
+                **{p: "front" for p in "ieɛy"},
+                **{p: "central" for p in "ɨəɐa"},
+                **{p: "back" for p in "uoɔ"},
+            }
+        if not self.ROUNDED_VOWEL_PHONES:
+            self.ROUNDED_VOWEL_PHONES = set("uoɔy")
 
     def _initialize_normalized_vowels(self):
         """
