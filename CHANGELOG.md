@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.1a2](https://github.com/TigreGotico/tugaphone/tree/0.5.1a2) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a1...0.5.1a2)
+
+**Merged pull requests:**
+
+- docs: correct sede vowel mapping and POS-table row in homographs page [\#37](https://github.com/TigreGotico/tugaphone/pull/37) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.5.1a1](https://github.com/TigreGotico/tugaphone/tree/0.5.1a1) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a2...0.5.1a1)
