@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.1a3](https://github.com/TigreGotico/tugaphone/tree/0.5.1a3) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a2...0.5.1a3)
+
+**Merged pull requests:**
+
+- docs: tighten sede row wording in homographs table [\#40](https://github.com/TigreGotico/tugaphone/pull/40) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.5.1a2](https://github.com/TigreGotico/tugaphone/tree/0.5.1a2) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a1...0.5.1a2)
