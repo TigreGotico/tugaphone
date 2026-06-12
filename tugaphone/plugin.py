@@ -24,7 +24,9 @@ from orthography2ipa.g2p_plugin import G2PPlugin, WordContext
 from orthography2ipa.syllabifier_plugin import SyllabifierPlugin
 from silabificador import syllabify as _syllabify
 
-_LANGS = ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]
+from tugaphone.registry import list_dialects
+
+_LANGS = list_dialects()
 
 
 class TugaphoneG2PPlugin(G2PPlugin):
@@ -56,8 +58,6 @@ class TugaphoneG2PPlugin(G2PPlugin):
     ) -> str:
         lang = (context.lang if context is not None and context.lang
                 else self.lang)
-        if lang not in _LANGS:
-            lang = self.lang
         return self._engine().phonemize_sentence(word, lang=lang)
 
 
