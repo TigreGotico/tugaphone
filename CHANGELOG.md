@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0a1](https://github.com/TigreGotico/tugaphone/tree/0.5.0a1) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.4.0a2...0.5.0a1)
+
+**Merged pull requests:**
+
+- feat: disambiguate heterophonic homographs with bifonia [\#33](https://github.com/TigreGotico/tugaphone/pull/33) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.4.0a2](https://github.com/TigreGotico/tugaphone/tree/0.4.0a2) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.4.0a1...0.4.0a2)
