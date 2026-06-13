@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.0a1](https://github.com/TigreGotico/tugaphone/tree/0.6.0a1) (2026-06-13)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a3...0.6.0a1)
+
+**Merged pull requests:**
+
+- feat: resolve every dialect, city inventory and regional preset from BCP-47 codes [\#43](https://github.com/TigreGotico/tugaphone/pull/43) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.5.1a3](https://github.com/TigreGotico/tugaphone/tree/0.5.1a3) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a2...0.5.1a3)
