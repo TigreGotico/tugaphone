@@ -20,7 +20,7 @@ def _run(script: Path) -> subprocess.CompletedProcess:
 
 
 def test_all_examples_exist():
-    assert len(EXAMPLES) >= 9, f"Expected at least 9 examples, found {len(EXAMPLES)}"
+    assert len(EXAMPLES) >= 10, f"Expected at least 10 examples, found {len(EXAMPLES)}"
 
 
 def test_01_basic():
@@ -65,4 +65,9 @@ def test_08_rules_only():
 
 def test_09_plugin():
     r = _run(EXAMPLES_DIR / "09_plugin.py")
+    assert r.returncode == 0, r.stderr
+
+
+def test_10_dialect_registry():
+    r = _run(EXAMPLES_DIR / "10_dialect_registry.py")
     assert r.returncode == 0, r.stderr

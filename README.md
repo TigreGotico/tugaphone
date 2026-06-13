@@ -79,24 +79,27 @@ print(ph.phonemize_sentence("Tenho bom gosto."))      # noun → ˈgoʃ·tu
 ### Sub-regional accents
 
 `RegionalTransforms` presets layer phonological rules on top of any dialect.
-Rules are grounded in published phonology (Cintra 1971; ALEPG):
+Rules are grounded in published phonology (Cintra 1971; ALEPG). Every preset
+is reachable by its BCP-47 private-use code:
 
 ```python
-from tugaphone.regional import PortoDialect, AzoresDialect
-
 # Porto: stressed /o/ → [uo] (rising diphthong)
-print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT", regional_dialect=PortoDialect))
+print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
 # ˈu bˈi·ɲu ˈɛ mˈũj·tu bˈuõ ˈ···
 
 # Açores: stressed /u/ → [y], l-palatalisation
-print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT", regional_dialect=AzoresDialect))
+print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-azores"))
 # ˈy vˈi·ɲu ˈɛ mˈỹj·tu bˈõ ˈ···
+
+from tugaphone import list_dialects
+print(list_dialects())   # all 20 registered codes
 ```
 
 Available presets: `NorthernDialect`, `PortoDialect`, `MinhoDialect`,
 `BragaDialect`, `FamalicaoDialect`, `FafeDialect`, `TrasMontanoDialect`,
 `CoimbraDialect`, `AlentejoDialect`, `AlgarveDialect`, `MadeiraDialect`,
-`AzoresDialect`.
+`AzoresDialect` — importable from `tugaphone.regional` and passable as
+`regional_dialect=`, which overrides the code-derived preset.
 
 ### Number normalization
 
