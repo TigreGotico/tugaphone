@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.1a1](https://github.com/TigreGotico/tugaphone/tree/0.6.1a1) (2026-06-20)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.0a1...0.6.1a1)
+
+**Merged pull requests:**
+
+- fix: build\_tests caller passes inputs the reusable workflow no longer defines [\#45](https://github.com/TigreGotico/tugaphone/pull/45) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.6.0a1](https://github.com/TigreGotico/tugaphone/tree/0.6.0a1) (2026-06-13)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a3...0.6.0a1)
