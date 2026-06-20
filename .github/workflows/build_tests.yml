@@ -14,7 +14,6 @@ jobs:
   build_tests:
     uses: OpenVoiceOS/gh-automations/.github/workflows/build-tests.yml@dev
     with:
-      branch: dev
-      test_repo: false
-      test_location: "tests"
-      timeout: 15
+      python_versions: '["3.10", "3.11", "3.12", "3.13", "3.14"]'
+      install_extras: 'test'
+      test_path: 'tests'
