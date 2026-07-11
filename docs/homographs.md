@@ -14,9 +14,9 @@ tugaphone handles both in a single pipeline.
 
 ## Meaning-based: bifonia
 
-When [bifonia](https://github.com/TigreGotico/bifonia) is installed (it is a
-required dependency), `TugaPhonemizer.phonemize_sentence` calls
-`bifonia.add_extra_diacritics` on the input text before tagging. bifonia
+[bifonia](https://github.com/TigreGotico/bifonia) is a required dependency, so
+`TugaPhonemizer.phonemize_sentence` always calls
+`bifonia.add_extra_diacritics` on Portuguese input before tagging. bifonia
 performs context-sensitive sense disambiguation and inserts the open/closed
 vowel diacritic directly into the orthography, so the grapheme rules that
 follow produce the correct vowel quality without any special casing.
@@ -35,8 +35,9 @@ print(ph.phonemize_sentence("A sede da empresa fica em Lisboa."))
 # ˈɐ ˈsɛ·dɨ ˈdɐ ẽ·pɾˈe·zɐ ˈfi·kɐ ˈẽ liʒ·bˈo·ɐ ˈ···
 ```
 
-If bifonia is not importable, the pipeline continues without it and falls back
-to the POS-based table.
+The POS-based table below handles the remaining homographs whose readings
+differ in part of speech; bifonia adds the same-part-of-speech pairs (the
+`sede` thirst/seat case) that a POS tagger cannot split.
 
 ---
 

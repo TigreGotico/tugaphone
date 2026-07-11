@@ -5,14 +5,9 @@ the open/closed-vowel diacritic the phonemizer reads, so the same spelling maps 
 the correct vowel from context — something a part-of-speech table cannot do when
 both readings share a part of speech (sede thirst/seat are both nouns).
 """
-import importlib.util
-
 import pytest
 
 from tugaphone import TugaPhonemizer
-
-_HAS_BIFONIA = importlib.util.find_spec("bifonia") is not None
-pytestmark = pytest.mark.skipif(not _HAS_BIFONIA, reason="bifonia not installed")
 
 
 @pytest.fixture(scope="module")
@@ -44,3 +39,17 @@ def test_para_preposition_vs_verb(ph):
     assert "pɐɾɐ" in prep         # reduced a — preposition
     assert "pɐɾɐ" not in verb     # not the reduced preposition form
     assert "pa" in verb           # stressed a — verb (stops)
+
+
+def test_acordo_noun_is_closed_verb_is_open(ph):
+    noun = _clean(ph.phonemize_sentence("O acordo de paz foi assinado."))
+    verb = _clean(ph.phonemize_sentence("Eu acordo cedo todos os dias."))
+    assert "koɾ" in noun         # closed o — agreement (noun)
+    assert "kɔɾ" in verb         # open ɔ — I wake (verb)
+
+
+def test_gosto_noun_is_closed_verb_is_open(ph):
+    verb = _clean(ph.phonemize_sentence("Gosto muito de ti."))
+    noun = _clean(ph.phonemize_sentence("O gosto é amargo."))
+    assert "ɡɔʃ" in verb         # open ɔ — I like (verb)
+    assert "ɡoʃ" in noun         # closed o — taste (noun)
