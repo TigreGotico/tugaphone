@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tugaphone"
+dynamic = ["version"]
+description = "Dialect-aware Portuguese (Lusophone) text-to-IPA phonemizer"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.9"
+authors = [
+    {name = "JarbasAi", email = "jarbasai@mailfence.com"},
+]
+keywords = ["portuguese", "phonemizer", "g2p", "ipa", "phonetics", "tts", "nlp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: Portuguese",
+    "Natural Language :: Portuguese (Brazilian)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+    "unicode-rbnf",
+    "silabificador",
+    "tugatagger[brill]",
+    "tugalex",
+    "bifonia",
+    "orthography2ipa>=1.70.2a1",
+]
+
+[project.entry-points."orthography2ipa.syllabify"]
+portuguese = "tugaphone.plugin:SilabificadorSyllabifier"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+]
+
+[project.urls]
+Homepage = "https://github.com/TigreGotico/tugaphone"
+Repository = "https://github.com/TigreGotico/tugaphone"
+
+[tool.setuptools]
+packages = ["tugaphone"]
+
+[tool.setuptools.dynamic]
+version = {attr = "tugaphone.version.__version__"}
