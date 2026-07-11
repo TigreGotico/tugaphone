@@ -12,14 +12,11 @@ from tugaphone.registry import (DialectEntry, resolve_dialect, list_dialects,
 from tugaphone.registry import get_dialect_inventory as _registry_inventory
 from tugaphone.tokenizer import Sentence, DialectInventory
 
-try:
-    # Disambiguates heterophonic homographs (sede = thirst vs seat, forma = mould
-    # vs shape, …) by meaning and marks the result with the open/closed-vowel
-    # diacritic the phonemizer reads directly. Optional: phonemization still runs
-    # without it, falling back to the part-of-speech homograph table.
-    from bifonia import add_extra_diacritics as _bifonia_diacritics
-except ImportError:
-    _bifonia_diacritics = None
+# Disambiguates heterophonic homographs (sede = thirst vs seat, forma = mould
+# vs shape, …) by meaning and marks the result with the open/closed-vowel
+# diacritic the grapheme rules read directly — resolving same-part-of-speech
+# pairs the tagger cannot split.
+from bifonia import add_extra_diacritics as _bifonia_diacritics
 
 
 class TugaPhonemizer:
@@ -70,7 +67,7 @@ class TugaPhonemizer:
         Returns:
             phonemized (str): Space-separated phoneme tokens for each word; punctuation tokens are preserved unchanged.
         """
-        if _bifonia_diacritics is not None and lang.startswith("pt"):
+        if lang.startswith("pt"):
             # Resolve heterophone meaning first; the inserted diacritics drive the
             # correct vowel quality in the grapheme rules below.
             sentence = _bifonia_diacritics(sentence)
