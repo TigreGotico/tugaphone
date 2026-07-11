@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.2a1](https://github.com/TigreGotico/tugaphone/tree/0.6.2a1) (2026-07-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a4...0.6.2a1)
+
+**Merged pull requests:**
+
+- fix: correct accent-transform primitives to cited forms \(keep framework\) [\#59](https://github.com/TigreGotico/tugaphone/pull/59) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.6.1a4](https://github.com/TigreGotico/tugaphone/tree/0.6.1a4) (2026-07-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a3...0.6.1a4)
