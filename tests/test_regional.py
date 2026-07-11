@@ -59,9 +59,9 @@ class TestFromDict:
 
 class TestApplyIpa:
     def test_porto_applies_rules_in_order(self):
-        # rising_diphthong_o turns tonic ˈo into ˈuo
+        # rising_diphthong_o turns tonic close ˈo into ˈwo (Cintra 1971:684)
         out = PortoDialect.apply_ipa("porto", "pˈoɾtu")
-        assert "ˈuo" in out
+        assert "ˈwo" in out
 
     @pytest.mark.parametrize("preset", ALL_PRESETS)
     def test_all_preset_rules_are_registered(self, preset):

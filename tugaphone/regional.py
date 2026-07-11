@@ -29,6 +29,7 @@ from tugaphone.ipa_transforms import (
     nasal_diphthongization_e,
     final_nasal_denasalization,
     rising_diphthong_o,
+    rising_diphthong_e,
     initial_z_devoicing,
     intervocalic_s_voicing,
     intervocalic_d_deletion,
@@ -96,19 +97,20 @@ _IPA_REGISTRY: Tuple[GroundedRule, ...] = (
     _ipa(palatal_affrication_ch, "<ch> /ʃ/→[tʃ]", "Transmontano / Alto-Minhoto", "Cintra 1971; wp4 N3; wp5 TM2"),
     _ipa(rhotic_realization, "onset /ʁ/→[r]", "Rural/conservative north + interior", "Cintra 1971; DIALECT_PATTERNS"),
     _ipa(epenthetic_j_before_palatal, "V→Vj / __[ʎɲʃ]", "Minho / northwest", "Cintra 1971; DIALECT_PATTERNS"),
-    _ipa(rising_diphthong_o, "stressed /o/→[uo]", "Porto / Douro Litoral", "Cintra 1971; wp5 PT2; wp4 §3.3"),
-    _ipa(intervocalic_s_voicing, "/s/→[z] / V_V, V_#", "Transmontano", "Cintra 1971; DIALECT_PATTERNS"),
-    _ipa(initial_z_devoicing, "#/z/→[s]", "Transmontano", "Cintra 1971; DIALECT_PATTERNS"),
+    _ipa(rising_diphthong_o, "stressed close /o/→[wo]", "Porto / Baixo-Minho / Douro-Litoral", "Cintra 1971:684; wp5 PT2"),
+    _ipa(rising_diphthong_e, "stressed close /e/→[je]", "Porto / Baixo-Minho / Douro-Litoral", "Cintra 1971:684"),
+    _ipa(intervocalic_s_voicing, "apico-alveolar ⟨s,ss⟩ [s̺]/[z̺] (PLACE)", "Transmontano / Alto-Minhoto", "Cintra 1971:93; Álvarez Pérez 2014"),
+    _ipa(initial_z_devoicing, "#/z/→[s] (GALICIAN trait 6)", "Galician / contact fringe", "Cintra 1971:451-457"),
     _ipa(final_nasal_denasalization, "-agem /ʒẽ/→[ʒe]", "Transmontano", "Cintra 1971; DIALECT_PATTERNS"),
     _ipa(nasal_diphthongization_e, "/ẽ/→[eĩ] / _C", "Fafe / inner Minho", "DIALECT_PATTERNS"),
     _ipa(nasal_glide_palatalization, "Ṽj̃→Ṽɲ / _#", "Braga / northwest", "DIALECT_PATTERNS"),
     _ipa(intervocalic_d_deletion, "intervocalic /d ð/→∅", "Alentejo, Algarve, Beira-Baixa", "Cintra 1971; DIALECT_PATTERNS"),
     _ipa(simplify_nasal_diphthong_em, "-em [ɐ̃j̃]→[ẽ]", "Alentejo / central-south", "Cintra 1971; DIALECT_PATTERNS"),
     _ipa(simplify_meu_class, "meu [ew]→[e]", "Alentejo, Algarve", "Cintra 1971; DIALECT_PATTERNS"),
-    _ipa(sibilant_voicing_sandhi, "final [ʃ]→[ʒ] / _V", "South / insular sandhi", "Cintra 1971; DIALECT_PATTERNS"),
-    _ipa(lateral_palatalization, "/l/→[ʎ] / i_", "Madeira, Açores", "ALEPG (Saramago 2006); DIALECT_PATTERNS"),
-    _ipa(nasal_diphthong_to_nasal_plus_n, "Ṽj̃ʃ→Ṽns / _#", "Madeira, Açores", "ALEPG; DIALECT_PATTERNS"),
-    _ipa(fronted_stressed_u, "stressed /u/→[y]", "Açores (São Miguel)", "ALEPG; DIALECT_PATTERNS; wp5 BB1"),
+    _ipa(sibilant_voicing_sandhi, "coda [ʃ]→[ʒ] / _ #V (external sandhi)", "South / insular sandhi", "Mateus & d'Andrade 2000; PWL"),
+    _ipa(lateral_palatalization, "/l/→[ʎ] / i_V", "Madeira, Açores", "Segura 2013; o2i MAD_L_PALATALISATION"),
+    _ipa(nasal_diphthong_to_nasal_plus_n, "Ṽj̃ʃ→Ṽns / _#", "Madeira, Açores", "ALEPG; o2i madeira/acores"),
+    _ipa(fronted_stressed_u, "stressed /u/→[y] (not /_coda liq/sib)", "Açores (São Miguel), Alto-Alentejo, Beira-Baixa", "Cintra 1971:726; o2i ACO_U_*; wp5 BB1"),
     _ipa(monophthongize_oi, "[oj]→[o]", "Açores", "DIALECT_PATTERNS"),
 )
 
@@ -271,13 +273,18 @@ Source: Cintra (1971), the betacism and diphthong-retention isoglosses.
 PortoDialect = RegionalTransforms(
     ipa_rules=[
         rising_diphthong_o,
+        rising_diphthong_e,
         *_NORTHERN_CORE,
     ]
 )
-"""Porto / Douro Litoral: northern core + rising diphthong stressed /o/→[uo].
+"""Porto / Baixo-Minho / Douro-Litoral: northern core + tonic-close-vowel
+diphthongisation ([e]→[je], [o]→[wo]).
 
-Features: rising_diphthong_o, retain_ou_diphthong, retain_ei_diphthong, betacism.
-Source: Cintra (1971); whitepaper5 PT2 (Porto e/o diphthongisation).
+Features: rising_diphthong_o, rising_diphthong_e, retain_ou_diphthong,
+retain_ei_diphthong, betacism.
+Cintra's (1971:684) single defining Porto marker is the diphthongisation of
+BOTH close tonic vowels ("[e] em [je], [o] em [wo]"), so both halves compose.
+Source: Cintra (1971:684); whitepaper5 PT2.
 """
 
 # Maximal Minhoto reading: the northern core plus the conservative/rural
@@ -339,18 +346,22 @@ Source: DIALECT_PATTERNS field notes ("a geinte só sabe verdadeirameinte…").
 TrasMontanoDialect = RegionalTransforms(
     ipa_rules=[
         palatal_affrication_ch,
-        initial_z_devoicing,
         intervocalic_s_voicing,
         final_nasal_denasalization,
         conservative_o_nasal_retention,
         *MinhoDialect.ipa_rules,
     ]
 )
-"""Transmontano (northeast): <ch> affrication + sibilant reorganisation + Minho.
+"""Transmontano (northeast): <ch> affricate [tʃ] + apico-alveolar four-sibilant
+system + Minho.
 
-Features: palatal_affrication_ch, initial_z_devoicing, intervocalic_s_voicing,
+Features: palatal_affrication_ch, intervocalic_s_voicing (apico-alveolar PLACE),
 final_nasal_denasalization, conservative_o_nasal_retention + Minho set.
-Source: Cintra (1971); whitepaper4 §3.2; DIALECT_PATTERNS.
+``initial_z_devoicing`` is deliberately NOT composed here: word-initial /z/→[s]
+is Cintra's GALICIAN trait 6 (1971:451-457), and conservative Transmontano
+instead KEEPS the voiced apico-alveolar [z̺]. Cintra's apico-alveolar sibilant
+(trait 2) is his single most diagnostic North/South isogloss.
+Source: Cintra (1971:93, trait 2; 429-431, trait 3); Álvarez Pérez (2014).
 """
 
 CoimbraDialect = RegionalTransforms(
@@ -370,14 +381,18 @@ AlentejoDialect = RegionalTransforms(
         simplify_meu_class,
         simplify_nasal_diphthong_em,
         monophthongize_ei,
+        fronted_stressed_u,
         sibilant_voicing_sandhi,
     ]
 )
-"""Alentejo: intervocalic /d/ deletion, meu→[me], -em→[ẽ], ei→[e].
+"""Alentejo: intervocalic /d/ deletion, meu→[me], -em→[ẽ], ei→[e], u→[y].
 
 Features: intervocalic_d_deletion, simplify_meu_class,
-simplify_nasal_diphthong_em, monophthongize_ei, sibilant_voicing_sandhi.
-Source: Cintra (1971); DIALECT_PATTERNS.
+simplify_nasal_diphthong_em, monophthongize_ei, fronted_stressed_u,
+sibilant_voicing_sandhi.
+Cintra (1971:726) delimits Alto-Alentejo by exactly the tonic u→[y] isogloss
+(shared with Beira-Baixa), so the fronting (coda-blocked) is composed here.
+Source: Cintra (1971:726); DIALECT_PATTERNS.
 """
 
 AlgarveDialect = RegionalTransforms(

@@ -27,8 +27,16 @@ def spell_v_as_b(word: str, postag: str = "NOUN") -> str:
     produce [b] directly, which composes correctly with downstream rules that
     reference /b/.
 
-    Distribution: all northern varieties + Galician (Cintra 1971; whitepaper4
-    rule N1). Case is preserved for the leading character.
+    Distribution: all northern varieties + Galician (Cintra 1971:87; whitepaper4
+    rule N1). Case is preserved for the leading character. ``postag`` is
+    accepted for signature uniformity but unused (this is not POS-conditioned).
+
+    CAVEAT: routing through the G2P as ⟨b⟩ forces the STOP outcome [b] in every
+    position, losing the intervocalic spirant realisation [β] that the merged
+    labial has (Cintra 1971:87 "b ou β"; see :func:`ipa_transforms.betacism`,
+    which keeps [β] intervocalically). Acceptable only as a coarse input hack;
+    prefer the post-G2P ``betacism`` transform where the [b]~[β] allophony
+    matters.
     """
     out = re.sub(r"v", "b", word)
     out = re.sub(r"V", "B", out)
@@ -43,8 +51,17 @@ def archaic_ch_to_x(word: str, postag: str = "NOUN") -> str:
     phonemizer's /ʃ/ path so the post-G2P affrication rule can target it
     consistently regardless of lexicon idiosyncrasies.
 
-    Distribution: Transmontano / Alto-Minhoto, archaic (Cintra 1971;
-    whitepaper4 §3). Case-insensitive on the digraph.
+    Distribution: Transmontano / Alto-Minhoto, archaic (Cintra 1971, trait 3;
+    whitepaper4 §3). Case-insensitive on the digraph. ``postag`` unused.
+
+    DO NOT COMPOSE with :func:`ipa_transforms.palatal_affrication_ch`. That
+    post-G2P rule counts ``word.lower().count("ch")`` to decide how many /ʃ/ to
+    affricate; after this respelling the word contains no ⟨ch⟩, so the count is
+    0 and no affrication fires — the two rules cancel. The phenomenon (⟨ch⟩ kept
+    as a distinct historical affricate /tʃ/, Cintra trait 3) is correct, but the
+    correct mechanism is ``palatal_affrication_ch`` ALONE, applied to the
+    original spelling. This respelling merges ⟨ch⟩ into the ⟨x⟩=/ʃ/ path and is
+    retained only for callers that deliberately want the merged /ʃ/ outcome.
     """
     out = re.sub(r"ch", "x", word)
     out = re.sub(r"Ch", "X", out)

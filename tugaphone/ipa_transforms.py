@@ -23,6 +23,13 @@ de-biasing approach of Cintra's conservative-standard reference point.
 
 Transforms operate on grapheme clusters, not Python characters, so combining
 diacritics (nasal tilde U+0303, tie bars) stay attached to their base symbol.
+
+Note on ``postag``: every transform accepts ``postag`` for a uniform callable
+signature, but NO transform body reads it — none of these accent primitives is
+POS-conditioned. Genuine EP stress/vowel-quality homographs (e.g. *acordo*
+NOUN [ɐˈkoɾdu] / VERB [ɐˈkɔɾdu]) are handled by the separate ``dialects.py``
+IRREGULAR table (the base-G2P homograph layer), not here. ``postag`` is kept
+only so callers can pass it through uniformly.
 """
 
 import re
@@ -57,6 +64,8 @@ _ORAL_VOWELS = "aeiouɐɛɔɨyæøœɘ"
 _NASAL_VOWELS = "ãẽĩõũ"  # NFC-composed nasal vowels
 _VOWELS = _ORAL_VOWELS + _NASAL_VOWELS + "ɐ̃ɛ̃ɔ̃"
 _CONSONANTS = "pbtdkɡgfvszʃʒmnɲɫlrʁɾβð"
+# Orthographic (grapheme) vowels, for rules that condition on spelling.
+_ORTHO_VOWELS = "aeiouáéíóúàâêôãõ"
 
 
 # ---------------------------------------------------------------------------
@@ -122,22 +131,32 @@ def monophthongize_ei(word: str, phonemes: str, postag: str = "NOUN") -> str:
 # ---------------------------------------------------------------------------
 
 def betacism(word: str, phonemes: str, postag: str = "NOUN") -> str:
-    """Merge /v/ into the labial stop /b/ (betacism).
+    """Merge /v/ into the single labial phoneme /b/ (betacism).
 
     Phenomenon: in the northern third of Portugal the /v/–/b/ contrast is lost;
-    both are realised as the bilabial stop [b] (*vaca* [ˈbakɐ], *vinho* [ˈbiɲu],
-    *neve* [ˈnɛbɨ]). Any spirantised allophone [β] from the base G2P is folded
-    into [b] as well, so the rule is categorical and position-independent.
+    both fall together in one labial phoneme. Cintra (BF 22:87) is explicit that
+    the merged phoneme "é realizado ora como oclusiva, ora como fricativa (ou
+    espirante): b ou β" — i.e. it surfaces as the stop [b] in strong position
+    (word-initial, post-consonant: *vaca* [ˈbakɐ], *vinho* [ˈbiɲu]) and as the
+    spirant [β] intervocalically (*neve* [ˈnɛβɨ], *uva* [ˈuβɐ]), exactly the
+    positional [b]~[β] allophony EP already applies to underlying /b/. The
+    merger is categorical; the *realisation* is positionally conditioned, so an
+    existing intervocalic spirant [β] is kept, not folded to a stop.
 
     Distribution: all northern varieties — Minhoto, Transmontano, Duriense,
-    Beirão — plus Galician (Cintra 1971, the single most-cited northern
-    isogloss; whitepaper4 rule N1, whitepaper5 rule N1/DB4).
+    Beirão — plus Galician (Cintra 1971:87, the single most-cited northern
+    isogloss; whitepaper4 rule N1, whitepaper5 rule N1/DB4). o2i models the same
+    two realisations (allophones ``v: [b, β]`` in the porto/trásosmontes specs).
 
-    This realisation as a stop [b] follows Cintra and the project gold
-    transcriptions; an earlier draft modelling it as the approximant [β]
-    conflicts with both and is dropped.
+    ``postag`` is accepted for a uniform transform signature but unused here;
+    betacism is not POS-conditioned (homograph handling lives in the separate
+    ``dialects.py`` IRREGULAR table).
+
+    Source: Cintra (1971), *Boletim de Filologia* 22:87 ("b ou β").
     """
-    return phonemes.replace("v", "b").replace("β", "b")
+    # /v/ between vowels merges to the spirant realisation [β]; elsewhere to [b].
+    phonemes = re.sub(rf"(?<=[{_VOWELS}])v(?=[{_VOWELS}])", "β", phonemes)
+    return phonemes.replace("v", "b")
 
 
 # ---------------------------------------------------------------------------
@@ -155,7 +174,11 @@ def reduce_vowel_centralization(word: str, phonemes: str, postag: str = "NOUN") 
     to the Portuguese north by analogy with Galician less-reduction). The gold
     northern transcriptions keep [ɨ] in most tokens, so this rule is excluded
     from the categorical northern preset and offered only for the maximal
-    Minhoto reading.
+    Minhoto reading. ``postag`` unused (see module note).
+
+    PARTIALLY-VERIFIED — the direction (less northern atonic reduction) is
+    Cintra's trait 7, but the exact [ɨ]→[e] target mapping is not pinned to a
+    source. Use with caution.
     """
     return re.sub(
         rf"(?<=[{_CONSONANTS}])ɨ(?=[{_CONSONANTS}])", "e", phonemes
@@ -168,9 +191,12 @@ def open_vowel_preference(word: str, phonemes: str, postag: str = "NOUN") -> str
     Phenomenon: northern speakers favour a more open [a] for /ɐ/ in final,
     unstressed syllables before /m, n, ɲ, l/.
 
-    Distribution: northern, variable (Cintra 1971; DIALECT_PATTERNS "more open
-    vowels"). Conditioned narrowly to avoid over-application; the broad
-    de-centralisation of stressed /a/ is left to the base inventory.
+    Distribution: northern, variable (DIALECT_PATTERNS "more open vowels").
+    Conditioned narrowly to avoid over-application. ``postag`` unused.
+
+    UNVERIFIED — the general "more open a" direction is Cintra's trait 7, but
+    that concerns the TONIC /a/; the specific conditioning here (final-atonic
+    /ɐ/ before a nasal/lateral) is not attested in a source. Use with caution.
     """
     return re.sub(r"ɐ(?=[mnɲl]\b)", "a", phonemes)
 
@@ -182,9 +208,14 @@ def conservative_o_nasal_retention(word: str, phonemes: str, postag: str = "NOUN
     the standard has merged it into the nasal diphthong [ɐ̃w̃] (*pão* [põ],
     *irmão* [iɾˈmõ]).
 
-    Distribution: Trás-os-Montes / Alto-Minho (Cintra 1971; whitepaper5 rule
-    TM3). The matched ending is sliced by grapheme cluster, so the combining
-    nasal tilde never desynchronises from its base vowel.
+    Distribution: Trás-os-Montes / Alto-Minho (whitepaper5 rule TM3). The
+    matched ending is sliced by grapheme cluster, so the combining nasal tilde
+    never desynchronises from its base vowel. ``postag`` unused.
+
+    PARTIALLY-VERIFIED — the archaic interior -ão→[õ] outcome is real
+    dialectology (Trás-os-Montes/Alto-Minho), but no explicit Cintra page was
+    located for the [õ] realisation; corroborate against Segura (2013)/ALEPG
+    before trusting. Plausible.
     """
     if not word.endswith("ão"):
         return phonemes
@@ -209,8 +240,11 @@ def nasal_vowel_raising(word: str, phonemes: str, postag: str = "NOUN") -> str:
     Phenomenon: northern nasal vowels are slightly raised/fronted relative to
     the standard; /ɐ̃/ tends toward [ã] (*mãe* [mˈãj̃]).
 
-    Distribution: northern (Cintra 1971; DIALECT_PATTERNS). Operates on the
-    grapheme cluster ``ɐ̃`` so the tilde is preserved.
+    Distribution: northern (DIALECT_PATTERNS). Operates on the grapheme cluster
+    ``ɐ̃`` so the tilde is preserved. ``postag`` unused (see module note).
+
+    UNVERIFIED — not corroborated by an academic source; rests only on the
+    repo's own DIALECT_PATTERNS field notes. Use with caution.
     """
     return phonemes.replace("ɐ̃", "ã")
 
@@ -260,24 +294,54 @@ def epenthetic_j_before_palatal(word: str, phonemes: str, postag: str = "NOUN") 
     palatal /ʎ, ɲ, ʃ/: *velho* [ˈvɛjʎu], *abelha* [aˈbejʎɐ], *bolacha*
     [buˈlajʃɐ], *banha* [ˈbajɲɐ].
 
-    Distribution: Minho and adjacent northwest (Cintra 1971; DIALECT_PATTERNS).
-    Fires on stressed and unstressed [a ɐ e ɛ]; ``(?!j)`` prevents a double
-    glide. Rule: V → Vj / __[ʎ ɲ ʃ].
+    Distribution: Minho and adjacent northwest (DIALECT_PATTERNS). Fires on
+    stressed and unstressed [a ɐ e ɛ]; ``(?!j)`` prevents a double glide. Rule:
+    V → Vj / __[ʎ ɲ ʃ]. ``postag`` unused (see module note).
+
+    UNVERIFIED — the yod before a palatal ([ɐj]ʎ, *telha*) also occurs in
+    STANDARD EP (Mateus & d'Andrade 2000), so the Minho-only attribution is
+    doubtful and no source pins it as a distinctive Minho feature. Use with
+    caution.
     """
     return re.sub(r"(ˈ?[aɐeɛ])(?=[ʎɲʃ])(?!j)", r"\1j", phonemes)
 
 
 def rising_diphthong_o(word: str, phonemes: str, postag: str = "NOUN") -> str:
-    """Diphthongise stressed /o/ to the rising diphthong [wo].
+    """Diphthongise stressed close /o/ to the rising diphthong [wo].
 
-    Phenomenon: the Porto / Baixo-Minhoto area diphthongises stressed mid
-    vowels (*Porto* [ˈpwoɾtu], *bolo* [ˈbwolu]); the transcription [uo] is used
-    here for the rising on-glide.
+    Phenomenon: the Porto / Baixo-Minho / Douro-Litoral area diphthongises the
+    tonic close mid vowels. Cintra (1971:684) names it "a ditongação, tão
+    caracterizadora, das vogais tónicas fechadas [e] em [je], [o] em [wo] (por
+    vezes [wɔ])" — the single defining Porto marker. The back-vowel half is
+    *Porto* [ˈpwoɾtu], *bolo* [ˈbwolu], *avô* [ɐˈbwo]. The on-glide is [w], so
+    the diphthong is [wo] (matching o2i ``PT_PORTO_DIPHTHONGISE_O``); the front
+    counterpart /e/→[je] is :func:`rising_diphthong_e`.
 
-    Distribution: Porto variety / Douro Litoral, shared with an Astur-Leonese
-    archaic stratum (Cintra 1971; whitepaper5 rule PT2, whitepaper4 §3.3).
+    Distribution: Porto variety / Baixo-Minho / Douro-Litoral (Cintra 1971:684;
+    whitepaper5 rule PT2, whitepaper4 §3.3). ``postag`` unused (see module note).
+
+    Source: Cintra (1971:684), *Boletim de Filologia* 22 ("[o] em [wo]").
     """
-    return re.sub(r"ˈo(?![wj])", "ˈuo", phonemes)
+    return re.sub(r"ˈo(?![wj])", "ˈwo", phonemes)
+
+
+def rising_diphthong_e(word: str, phonemes: str, postag: str = "NOUN") -> str:
+    """Diphthongise stressed close /e/ to the rising diphthong [je].
+
+    Phenomenon: the front-vowel half of the defining Porto tonic-vowel
+    diphthongisation — Cintra's "[e] em [je]" (*mês* [ˈmjeʃ], *ele* [ˈjelɨ],
+    *pêlo* [ˈpjelu]). Companion to :func:`rising_diphthong_o` ("[o] em [wo]");
+    the two together are Cintra's "ditongação, tão caracterizadora, das vogais
+    tónicas fechadas". Fires on the close [e] the base G2P yields; genuinely
+    open tonic [ɛ] (*pé*, *café*) does not diphthongise, matching o2i
+    ``PT_PORTO_DIPHTHONGISE_E``.
+
+    Distribution: Porto variety / Baixo-Minho / Douro-Litoral (Cintra 1971:684).
+    ``postag`` unused (see module note).
+
+    Source: Cintra (1971:684), *Boletim de Filologia* 22 ("[e] em [je]").
+    """
+    return re.sub(r"ˈe(?![wji])", "ˈje", phonemes)
 
 
 # ---------------------------------------------------------------------------
@@ -285,26 +349,64 @@ def rising_diphthong_o(word: str, phonemes: str, postag: str = "NOUN") -> str:
 # ---------------------------------------------------------------------------
 
 def intervocalic_s_voicing(word: str, phonemes: str, postag: str = "NOUN") -> str:
-    """Voice /s/ to [z] between vowels and word-finally after a vowel.
+    """Mark the northeast four-sibilant contrast: apico-alveolar ⟨s,ss⟩.
 
-    Phenomenon: a lenition pattern in Transmontano voicing intervocalic and
-    final post-vocalic /s/ (*moço* [ˈmozu]).
+    Re-scoped correction. Cintra's trait 2 (his single most diagnostic
+    North/South isogloss, 1971:93) is NOT a voicing of /s/ — it is a PLACE
+    contrast: Transmontano/Alto-Minhoto keep a medieval four-sibilant system in
+    which the graphemes ⟨s⟩ (initial, final) and ⟨ss⟩ (interior) realise the
+    apico-alveolar [s̺] (with its voiced intervocalic-⟨s⟩ counterpart [z̺]),
+    contrasting with the laminal (predorsodental) [s] of ⟨c,ç⟩ and [z] of ⟨z⟩.
+    The minimal pairs stay distinct: *passo* [ˈpas̺u] vs *paço* [ˈpasu], *coser*
+    [kuˈz̺eɾ] vs *cozer* [kuˈzeɾ]. The earlier rule voiced ⟨ç⟩ (*moço*→[ˈmozu]),
+    which no source describes — ⟨ç⟩ is laminal /s/ and is now left untouched.
 
-    Distribution: Transmontano and adjacent northeast (Cintra 1971;
-    DIALECT_PATTERNS).
+    Only orthographically unambiguous positions are marked (a phoneme-level,
+    orthography-blind engine cannot fully reconstruct the source grapheme; the
+    complete four-sibilant model is the o2i pt-PT-x-trasosmontes spec). ⟨s⟩/⟨ss⟩
+    apical realisations are surface-equivalent to the retroflex-like [ʂ ʐ] Cintra
+    calls "s beirão / reverso"; the [s̺ z̺] symbols follow o2i.
+
+    Distribution: Transmontano and Alto-Minhoto (Cintra 1971:93 note 29;
+    Álvarez Pérez 2014:37 §4). ``postag`` unused (see module note).
+
+    Source: Cintra (1971:93) — "um sistema de quatro sibilantes… [s̺] e [z̺]
+    ápico-alveolares (grafemas s e ss)… opondo-se a… [s] e [z] predorsodentais
+    (grafemas c e,i, ç e z)".
     """
-    phonemes = re.sub(rf"(?<=[{_VOWELS}])s(?=[{_VOWELS}])", "z", phonemes)
-    phonemes = re.sub(rf"(?<=[{_VOWELS}])s(?=$)", "z", phonemes)
+    low = word.lower()
+    # word-initial ⟨s⟩ + vowel → apico-alveolar [s̺]
+    if re.match(rf"s[{_ORTHO_VOWELS}]", low):
+        phonemes = re.sub(r"^(ˈ?)s", r"\1s̺", phonemes)
+    # interior ⟨ss⟩ → apico-alveolar [s̺]; unambiguous only without a laminal
+    # ⟨ç/ce/ci⟩ in the same token that would also yield an intervocalic [s].
+    if "ss" in low and "ç" not in low and not re.search(r"c[eiéí]", low):
+        phonemes = re.sub(rf"(?<=[{_VOWELS}])s(?=[{_VOWELS}])", "s̺", phonemes)
+    # intervocalic single ⟨s⟩ (base G2P voices it to [z]) → apico-alveolar [z̺];
+    # unambiguous only when no ⟨z⟩ grapheme could account for the [z].
+    if re.search(rf"[{_ORTHO_VOWELS}]s[{_ORTHO_VOWELS}]", low) and "ss" not in low and "z" not in low:
+        phonemes = re.sub(rf"(?<=[{_VOWELS}])z(?=[{_VOWELS}])", "z̺", phonemes)
     return phonemes
 
 
 def initial_z_devoicing(word: str, phonemes: str, postag: str = "NOUN") -> str:
-    """Devoice word-initial /z/ to [s] before a vowel.
+    """Devoice word-initial /z/ to [s] before a vowel — a GALICIAN trait.
 
-    Phenomenon: part of the Transmontano four-sibilant reorganisation; initial
-    /z/ may surface as [s] (*zero* [ˈseɾu]).
+    Re-attributed correction. This is Cintra's trait 6, the *Galician* loss of
+    the voiced/voiceless sibilant opposition through devoicing ("de /z/ a /s/",
+    1971:451–457), NOT a Portuguese Transmontano feature. Conservative NE
+    Portuguese (Transmontano/Alto-Minhoto) does the OPPOSITE: it keeps the
+    voiced apico-alveolar [z̺] (see :func:`intervocalic_s_voicing` and the o2i
+    pt-PT-x-trasosmontes spec). This primitive is therefore removed from the
+    Transmontano preset and is offered only as a Galician-contact reading.
 
-    Distribution: Transmontano (Cintra 1971; DIALECT_PATTERNS).
+    Phenomenon (Galician): word-initial /z/ surfaces as [s] (*zero* [ˈseɾu]).
+
+    Distribution: Galician and the Galician-Portuguese contact fringe (Cintra
+    1971:451–457, trait 6). Do NOT compose into a Transmontano accent.
+    ``postag`` unused (see module note).
+
+    Source: Cintra (1971:451–457), *Boletim de Filologia* 22, trait 6.
     """
     return re.sub(rf"^z(?=[{_VOWELS}])", "s", phonemes)
 
@@ -315,8 +417,11 @@ def final_nasal_denasalization(word: str, phonemes: str, postag: str = "NOUN") -
     Phenomenon: Transmontano tends to denasalise unstressed final nasal vowels
     after /ʒ/ (*viagem* [viˈaʒe], *paragem* [pɐˈɾaʒe]).
 
-    Distribution: Transmontano (Cintra 1971; DIALECT_PATTERNS). Matched by
-    grapheme cluster so the nasal tilde is consumed with its base vowel.
+    Distribution: Transmontano (DIALECT_PATTERNS). Matched by grapheme cluster
+    so the nasal tilde is consumed with its base vowel. ``postag`` unused.
+
+    UNVERIFIED — not corroborated by an academic source; rests only on the
+    repo's own DIALECT_PATTERNS field notes. Use with caution.
     """
     phonemes = re.sub(r"ʒẽ$", "ʒe", phonemes)
     phonemes = re.sub(r"ʒɐ̃$", "ʒɐ", phonemes)
@@ -333,7 +438,10 @@ def nasal_diphthongization_e(word: str, phonemes: str, postag: str = "NOUN") -> 
     Distribution: Fafe / inner Minho (DIALECT_PATTERNS; the user's field notes).
     The negative lookahead keeps /ẽ/ before a vowel intact. The nasal /ẽ/ is
     matched whether the G2P emits it NFC-composed (U+1EBD) or NFD-decomposed
-    (e + combining tilde U+0303); output uses the NFC form.
+    (e + combining tilde U+0303); output uses the NFC form. ``postag`` unused.
+
+    UNVERIFIED — a single Fafe field note ("a geinte"); no academic source
+    locates this realisation. Use with caution.
     """
     e_nasal = r"(?:ẽ|ẽ)"
     follow = r"(?![aeiouɐɛɔɲʎ]|ẽ|ẽ|̃)"
@@ -349,7 +457,11 @@ def nasal_glide_palatalization(word: str, phonemes: str, postag: str = "NOUN") -
 
     Distribution: Braga area / northwest (DIALECT_PATTERNS). Rule:
     Ṽj̃ → Ṽɲ / _#. Operates on grapheme clusters so the nasalised glide is
-    matched as a unit.
+    matched as a unit. ``postag`` unused (see module note).
+
+    UNVERIFIED — northern reinforcement of final -em is reported
+    impressionistically (Braga field note) but not pinned to an academic
+    source. Use with caution.
     """
     nasal_vowels = "ãẽĩõũ" + "ɐ̃ɛ̃ɔ̃"
     phonemes = re.sub(rf"([{nasal_vowels}])[jw]̃$", r"\1ɲ", phonemes)
@@ -409,19 +521,26 @@ def simplify_meu_class(word: str, phonemes: str, postag: str = "NOUN") -> str:
 
 
 def sibilant_voicing_sandhi(word: str, phonemes: str, postag: str = "NOUN") -> str:
-    """Voice a word-final /s/-derived [ʃ] before a following vowel to [ʒ].
+    """Voice a coda [ʃ] to [ʒ] across a word boundary before a vowel-initial word.
 
-    Phenomenon: across a word boundary, the coda sibilant voices before a
-    vowel-initial word (*mas a* [maʒ ɐ], *muitos amigos* [ˈmũj̃tuʒ ɐˈmiɡuʒ]).
-    Applied within a token to its final [ʃ] when the orthography ends in <s>.
+    Corrected mechanism. This is genuinely EXTERNAL sandhi — the coda sibilant
+    voices only before a following vowel-initial word (*mas a* [maʒ ɐ], *muitos
+    amigos* [ˈmũj̃tuʒ ɐˈmiɡuʃ], PWL "tá-**j** a ver", "muito**j** amigos"). The
+    earlier rule applied it word-INTERNALLY to any token whose spelling ends in
+    ⟨s⟩, wrongly yielding [meʒ] for *meus* said in isolation. It is now gated on
+    a real cross-word seam: it fires only when ``word``/``phonemes`` hold a
+    multi-word span and the [ʃ] is immediately followed by a space and a
+    vowel-initial word. A single token in isolation is left unchanged (the true
+    seam handling belongs to the o2i sentence-level ``sandhi_rules``).
 
-    Distribution: general EP sandhi, marked here for the southern/insular
-    presets where the gold transcribes it word-internally on plurals (Cintra
-    1971; DIALECT_PATTERNS).
+    Distribution: general EP external sandhi, strongest in the south/insular
+    presets (Algarve/São Miguel; Cintra 1971; DIALECT_PATTERNS). ``postag``
+    unused (see module note).
+
+    Source: EP external voicing sandhi (Mateus & d'Andrade 2000); native PWL
+    transcripts (pwl-8-accents.md).
     """
-    if word.lower().rstrip(".").endswith("s"):
-        return re.sub(r"ʃ$", "ʒ", phonemes)
-    return phonemes
+    return re.sub(rf"ʃ(?=\s+ˈ?[{_VOWELS}])", "ʒ", phonemes)
 
 
 # ---------------------------------------------------------------------------
@@ -434,11 +553,16 @@ def lateral_palatalization(word: str, phonemes: str, postag: str = "NOUN") -> st
     Phenomenon: Madeira and the Azores palatalise /l/ adjacent to a high front
     vowel in specific items (*quilo* → [ˈkiʎu], *mochila* → [muˈʃiʎɐ]).
 
-    Distribution: Madeira and Azores (ALEPG / Segura & Saramago; DIALECT_PATTERNS).
-    Conditioned on a preceding [i] to model the lexically restricted set the
-    field notes describe.
+    Distribution: Madeira and Azores (Segura 2013; ALEPG; DIALECT_PATTERNS).
+    Conditioned on a preceding [i] AND a FOLLOWING vowel — matching o2i
+    ``MAD_L_PALATALISATION``, which requires an onset /l/ (a following vowel).
+    The earlier ``$`` (word-final) branch is dropped: it wrongly palatalised a
+    coda /l/ (*mil*→[miʎ]); a coda /l/ is realised dark [ɫ] and is never
+    palatalised. ``postag`` unused (see module note).
+
+    Source: Segura (2013); o2i MAD_L_PALATALISATION.
     """
-    return re.sub(r"(?<=i)l(?=u|ɐ|ɨ|$)", "ʎ", phonemes)
+    return re.sub(rf"(?<=i)l(?=[{_VOWELS}])", "ʎ", phonemes)
 
 
 def nasal_diphthong_to_nasal_plus_n(word: str, phonemes: str, postag: str = "NOUN") -> str:
@@ -463,10 +587,19 @@ def fronted_stressed_u(word: str, phonemes: str, postag: str = "NOUN") -> str:
     French-*tu*-like (*tu* [ty], *número* [ˈnymɨɾu]).
 
     Distribution: Açores, São Miguel (ALEPG / Segura & Saramago;
-    DIALECT_PATTERNS). Also documented for Beira-Baixa/Alto-Alentejo
-    (whitepaper5 rule BB1).
+    DIALECT_PATTERNS); also Alto-Alentejo and Beira-Baixa, which Cintra
+    (1971:726) delimits by exactly this u→[y] isogloss ("palatalização… da
+    vogal tónica u"), and whitepaper5 rule BB1.
+
+    The fronting is blocked before a tautosyllabic coda liquid or sibilant
+    (*azul* [ɐˈzuɫ], *Furnas* [ˈfuɾnɐʃ]), where São Miguel keeps [u] — matching
+    o2i ``ACO_U_KEEP_BEFORE_CODA`` (followed by ``ɫ l ɾ ʁ ʃ ʒ``). ``postag``
+    unused (see module note).
+
+    Source: Cintra (1971:726); o2i ACO_U_KEEP_BEFORE_CODA + ACO_STRESSED_U_FRONTING
+    (Rogers 1948).
     """
-    return phonemes.replace("ˈu", "ˈy")
+    return re.sub(r"ˈu(?![ɫlɾʁʃʒ])", "ˈy", phonemes)
 
 
 def monophthongize_oi(word: str, phonemes: str, postag: str = "NOUN") -> str:

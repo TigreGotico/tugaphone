@@ -105,9 +105,10 @@ class TestRegionalPresetsSignatureFeatures:
         assert "tʃ" in out, f"Expected tʃ in {out!r}"
 
     def test_porto_rising_diphthong_o(self, pho):
-        """Porto: tonic [ˈo] → [ˈuo] rising diphthong — 'porto' [pˈuoɾtu]."""
+        """Porto: tonic close [ˈo] → [ˈwo] rising diphthong — 'porto' [pˈwoɾtu]
+        (Cintra 1971:684 "[o] em [wo]"; o2i PT_PORTO_DIPHTHONGISE_O)."""
         out = PortoDialect.apply_ipa("porto", "pˈoɾtu")
-        assert "uo" in out, f"Expected 'uo' in {out!r}"
+        assert "wo" in out, f"Expected 'wo' in {out!r}"
 
     def test_fafe_nasal_diphthongization_e(self, pho):
         """Fafe: /ẽ/ before consonant → [eĩ] — 'gente' [ˈʒẽtɨ] → [ˈʒeĩtɨ]."""

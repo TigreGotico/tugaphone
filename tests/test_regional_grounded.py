@@ -113,9 +113,16 @@ class TestIpaRulePhenomena:
         assert "j" not in out
         assert "mˈe" in out
 
-    def test_betacism_merges_v_and_beta(self):
+    def test_betacism_merges_v_to_stop_in_strong_position(self):
+        # word-initial /v/ merges to the stop [b] (Cintra 1971:87 "b ou β")
         assert betacism("vaca", "ˈvakɐ") == "ˈbakɐ"
-        assert betacism("neve", "ˈnɛβɨ") == "ˈnɛbɨ"
+
+    def test_betacism_keeps_intervocalic_spirant(self):
+        # Cintra 1971:87: the merged labial is "ora oclusiva, ora fricativa
+        # (b ou β)"; intervocalic /v/ merges to the spirant [β], not the stop,
+        # and an existing intervocalic [β] is kept (not folded to [b]).
+        assert betacism("neve", "ˈnɛvɨ") == "ˈnɛβɨ"
+        assert betacism("neve", "ˈnɛβɨ") == "ˈnɛβɨ"
 
     def test_reduce_vowel_centralization(self):
         # ɨ only between consonants on both sides
@@ -152,13 +159,32 @@ class TestIpaRulePhenomena:
         assert "j" in epenthetic_j_before_palatal("velho", "ˈvɛʎu")
 
     def test_rising_diphthong_o(self):
-        assert "ˈuo" in rising_diphthong_o("porto", "pˈoɾtu")
+        # Cintra 1971:684 "[o] em [wo]"; on-glide is [w] (o2i PT_PORTO_DIPHTHONGISE_O)
+        assert "ˈwo" in rising_diphthong_o("porto", "pˈoɾtu")
 
-    def test_intervocalic_s_voicing(self):
-        assert intervocalic_s_voicing("moço", "ˈmosu") == "ˈmozu"
+    def test_rising_diphthong_e(self):
+        # Cintra 1971:684 "[e] em [je]" — companion front-vowel diphthongisation
+        from tugaphone.ipa_transforms import rising_diphthong_e
+        assert "ˈje" in rising_diphthong_e("mês", "mˈeʃ")
+
+    def test_intervocalic_s_voicing_leaves_laminal_c_cedilha(self):
+        # Cintra trait 2 is a PLACE contrast, not voicing; ⟨ç⟩ is laminal /s/
+        # and is NOT voiced (moço stays [ˈmosu], not the old wrong [ˈmozu]).
+        assert intervocalic_s_voicing("moço", "ˈmosu") == "ˈmosu"
+
+    def test_intervocalic_s_voicing_apicalises_orthographic_s(self):
+        # ⟨ss⟩ → apico-alveolar [s̺]; intervocalic single ⟨s⟩ → voiced [z̺]
+        # (Cintra 1971:93: passo [ˈpas̺u], casa [ˈkaz̺ɐ]).
+        assert intervocalic_s_voicing("passo", "ˈpasu") == "ˈpas̺u"
+        assert intervocalic_s_voicing("casa", "ˈkazɐ") == "ˈkaz̺ɐ"
+
+    def test_intervocalic_s_voicing_leaves_laminal_z(self):
+        # ⟨z⟩ is laminal [z] and stays distinct (cozer [kuˈzeɾ], not apicalised)
+        assert intervocalic_s_voicing("cozer", "kuˈzeɾ") == "kuˈzeɾ"
 
     def test_initial_z_devoicing(self):
-        # word-initial /z/ before a vowel devoices to [s]
+        # word-initial /z/ before a vowel devoices to [s] — the GALICIAN trait 6
+        # (Cintra 1971:451-457), retained as a Galician-contact reading only
         assert initial_z_devoicing("zero", "zɛɾu").startswith("s")
 
     def test_final_nasal_denasalization(self):
@@ -185,20 +211,35 @@ class TestIpaRulePhenomena:
         # only words ending in <eu>/<eus> are touched
         assert simplify_meu_class("europa", "ewˈɾɔpɐ") == "ewˈɾɔpɐ"
 
-    def test_sibilant_voicing_sandhi(self):
-        assert sibilant_voicing_sandhi("amigos", "ɐˈmiɡuʃ") == "ɐˈmiɡuʒ"
+    def test_sibilant_voicing_sandhi_across_word_boundary(self):
+        # true EXTERNAL sandhi: coda [ʃ] voices before a following vowel-initial
+        # word (PWL "muitoj amigos"); the seam must be present in the span.
+        assert sibilant_voicing_sandhi("mas amigos", "maʃ ɐˈmiɡuʃ") == "maʒ ɐˈmiɡuʃ"
 
-    def test_sibilant_voicing_sandhi_requires_final_s_spelling(self):
-        assert sibilant_voicing_sandhi("paz", "ˈpaʃ") == "ˈpaʃ"
+    def test_sibilant_voicing_sandhi_isolated_token_unchanged(self):
+        # a single token in isolation is NOT voiced word-internally: the old
+        # rule wrongly yielded [ɐˈmiɡuʒ] / [meʒ] for words said alone.
+        assert sibilant_voicing_sandhi("amigos", "ɐˈmiɡuʃ") == "ɐˈmiɡuʃ"
+        assert sibilant_voicing_sandhi("meus", "meʃ") == "meʃ"
 
     def test_lateral_palatalization(self):
         assert lateral_palatalization("quilo", "ˈkilu") == "ˈkiʎu"
+
+    def test_lateral_palatalization_skips_coda_l(self):
+        # dropped the word-final branch: a coda /l/ (dark [ɫ]) is never
+        # palatalised; requires a FOLLOWING vowel (o2i MAD_L_PALATALISATION).
+        assert lateral_palatalization("mil", "ˈmiɫ") == "ˈmiɫ"
 
     def test_nasal_diphthong_to_nasal_plus_n(self):
         assert nasal_diphthong_to_nasal_plus_n("cães", "kɐ̃j̃ʃ") == "kɐ̃ns"
 
     def test_fronted_stressed_u(self):
         assert fronted_stressed_u("tu", "tˈu") == "tˈy"
+
+    def test_fronted_stressed_u_blocked_before_coda_liquid(self):
+        # fronting is blocked before a tautosyllabic coda liquid/sibilant
+        # (o2i ACO_U_KEEP_BEFORE_CODA): azul stays [ɐˈzuɫ], not [ɐˈzyɫ].
+        assert fronted_stressed_u("azul", "ɐˈzuɫ") == "ɐˈzuɫ"
 
     def test_monophthongize_oi(self):
         assert monophthongize_oi("boi", "boj") == "bo"
@@ -292,7 +333,7 @@ class TestPresetSignatureFeatures:
         assert "v" not in NorthernDialect.apply_ipa("vaca", "ˈvakɐ")
 
     def test_porto_rising_o(self):
-        assert "uo" in PortoDialect.apply_ipa("porto", "pˈoɾtu")
+        assert "wo" in PortoDialect.apply_ipa("porto", "pˈoɾtu")
 
     def test_minho_centralization_resisted(self):
         assert MinhoDialect.apply_ipa("bete", "bɨtɨ").startswith("be")
