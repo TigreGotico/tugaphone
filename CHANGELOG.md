@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.1a4](https://github.com/TigreGotico/tugaphone/tree/0.6.1a4) (2026-07-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a3...0.6.1a4)
+
+**Merged pull requests:**
+
+- refactor: consume o2i 1.70 Portuguese phonology; scope sentence-seam adoption [\#57](https://github.com/TigreGotico/tugaphone/pull/57) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.6.1a3](https://github.com/TigreGotico/tugaphone/tree/0.6.1a3) (2026-07-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a2...0.6.1a3)
