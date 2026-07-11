@@ -1,24 +1,33 @@
 from typing import Optional
 
+from tugaphone.version import __version__
 from tugaphone.dialects import (DialectInventory, LEXICON,
                                 EuropeanPortuguese, BrazilianPortuguese,
                                 AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
-from tugaphone.lexicon import TugaLexicon
-from tugaphone.pos import TugaTagger
+from tugalex import TugaLexicon
+from tugatagger import TugaTagger
 from tugaphone.regional import RegionalTransforms
+from tugaphone.registry import (DialectEntry, resolve_dialect, list_dialects,
+                                get_regional_transforms)
+from tugaphone.registry import get_dialect_inventory as _registry_inventory
 from tugaphone.tokenizer import Sentence, DialectInventory
+
+# Disambiguates heterophonic homographs (sede = thirst vs seat, forma = mould
+# vs shape, …) by meaning and marks the result with the open/closed-vowel
+# diacritic the grapheme rules read directly — resolving same-part-of-speech
+# pairs the tagger cannot split.
+from bifonia import add_extra_diacritics as _bifonia_diacritics
 
 
 class TugaPhonemizer:
     """
     TugaPhonemizer applies dialect-aware Portuguese phonemization.
 
-    Supports:
-        - pt-PT (Portugal)
-        - pt-BR (Brazil)
-        - pt-AO (Angola)
-        - pt-MZ (Mozambique)
-        - pt-TL (Timor-Leste)
+    Supports the five major Lusophone dialects (pt-PT, pt-BR, pt-AO, pt-MZ,
+    pt-TL), city-level inventories (pt-PT-x-lisbon, pt-BR-x-rio-janeiro,
+    pt-BR-x-sao-paulo) and the regional accent presets reachable through
+    BCP-47 private-use codes (pt-PT-x-porto, pt-PT-x-alentejo, …); the full
+    list comes from :func:`tugaphone.list_dialects`.
     """
 
     def __init__(self,
@@ -37,15 +46,8 @@ class TugaPhonemizer:
 
     @staticmethod
     def get_dialect_inventory(lang: str = "pt-PT") -> DialectInventory:
-        if lang == "pt-BR":
-            return BrazilianPortuguese()
-        elif lang == "pt-AO":
-            return AngolanPortuguese()
-        elif lang == "pt-MZ":
-            return MozambicanPortuguese()
-        elif lang == "pt-TL":
-            return TimoresePortuguese()
-        return EuropeanPortuguese()
+        """Return the :class:`DialectInventory` registered for ``lang``."""
+        return _registry_inventory(lang)
 
     def phonemize_sentence(self, sentence: str, lang: str = "pt-PT",
                            regional_dialect: Optional[RegionalTransforms] = None) -> str:
@@ -54,13 +56,25 @@ class TugaPhonemizer:
 
         Parameters:
             sentence (str): Input sentence to phonemize.
-            lang (str): ISO dialect code to target (e.g., "pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL").
+            lang (str): BCP-47 dialect code to target. Major dialects
+                ("pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"), city
+                inventories ("pt-BR-x-sao-paulo", …) and regional accent
+                presets ("pt-PT-x-porto", …) all resolve through the
+                dialect registry; see :func:`tugaphone.list_dialects`.
+            regional_dialect (RegionalTransforms): Explicit regional accent
+                preset; overrides whatever preset ``lang`` resolves to.
 
         Returns:
             phonemized (str): Space-separated phoneme tokens for each word; punctuation tokens are preserved unchanged.
         """
+        if lang.startswith("pt"):
+            # Resolve heterophone meaning first; the inserted diacritics drive the
+            # correct vowel quality in the grapheme rules below.
+            sentence = _bifonia_diacritics(sentence)
+
         tagged = self.postag.tag(sentence)
 
+        regional_dialect = regional_dialect or get_regional_transforms(lang)
         if regional_dialect:
             # 1. apply morpheme transforms
             morph = lambda tok, pos: regional_dialect.apply_morpheme(word=tok, postag=pos)
@@ -83,8 +97,6 @@ class TugaPhonemizer:
 
 
 if __name__ == "__main__":
-    from tugaphone.regional import PortoDialect
-
     ph = TugaPhonemizer()
 
     sentences = [
@@ -102,7 +114,6 @@ if __name__ == "__main__":
 
     for s in sentences:
         print(s)
-        print(f"pt-PT-x-porto → {ph.phonemize_sentence(s, regional_dialect=PortoDialect)}")
-        for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
+        for code in ["pt-PT", "pt-PT-x-porto", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
             print(f"{code} → {ph.phonemize_sentence(s, code)}")
         print("######")
