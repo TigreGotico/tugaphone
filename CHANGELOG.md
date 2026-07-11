@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.1a2](https://github.com/TigreGotico/tugaphone/tree/0.6.1a2) (2026-07-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a1...0.6.1a2)
+
+**Merged pull requests:**
+
+- refactor: build grapheme tokenization on the orthography2ipa shared trie [\#53](https://github.com/TigreGotico/tugaphone/pull/53) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.6.1a1](https://github.com/TigreGotico/tugaphone/tree/0.6.1a1) (2026-06-20)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.0a1...0.6.1a1)
