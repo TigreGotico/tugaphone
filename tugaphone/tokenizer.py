@@ -408,15 +408,12 @@ class CharToken:
         With diacritics: á, à, â, ã, é, ê, í, ó, ô, õ, ú
         Archaic: è, ì, ò, ù, ẽ, ĩ, ũ, ä, ë, ï, ö, ü, ÿ
 
-        Base classification is delegated to the shared
+        Classification is fully delegated to the shared
         :func:`orthography2ipa.vowels.is_orthographic_vowel` (the single
-        owner of vowel-letter membership), with the dialect's precomposed
-        nasal-vowel set kept as a fallback: the shared set recognises ã/õ
-        but not the archaic ẽ/ĩ/ũ (orthography2ipa gap, see
-        ``docs/tokenizer.md``).
+        owner of vowel-letter membership), including the archaic ẽ/ĩ/ũ.
         """
         s = self.normalized
-        return is_orthographic_vowel(s) or s in self.dialect.TILDE_VOWEL_CHARS
+        return is_orthographic_vowel(s)
 
     @cached_property
     def is_semivowel(self) -> bool:

@@ -28,10 +28,9 @@ library so tugaphone rides its substrate instead of forking it:
   vowel-letter membership — rather than maintaining tugaphone's own vowel and
   front-vowel character sets.
 
-**Known substrate gap:** `orthography2ipa.vowels.is_orthographic_vowel`
-recognises the precomposed nasal vowels `ã`/`õ` but not the archaic `ẽ`/`ĩ`/`ũ`,
-so `CharToken.is_vowel` keeps the dialect's precomposed nasal set as a fallback
-for archaic input until the shared set covers them.
+`orthography2ipa.vowels.is_orthographic_vowel` recognises the full precomposed
+nasal-vowel set, including the archaic `ẽ`/`ĩ`/`ũ`, so `CharToken.is_vowel`
+delegates to it with no local fallback.
 
 ## Building a Sentence
 
