@@ -1932,6 +1932,22 @@ class WordToken:
         if self.normalized in self.dialect.IRREGULAR_WORDS:
             return self.dialect.IRREGULAR_WORDS[self.normalized]
 
+        # B6 stage-2: route the out-of-lexicon base through the shared
+        # orthography2ipa lattice (the beam) instead of the private grapheme
+        # cascade below, when the dialect opts in. The adapter returns the
+        # canonical tugaphone layout so the regional accent primitives compose
+        # unchanged; a None result (lattice covers no grapheme) falls through
+        # to the cascade fallback.
+        if getattr(self.dialect, "USE_O2I_LATTICE_BASE", False):
+            from tugaphone.lattice_adapter import lattice_base_ipa
+            lattice_ipa = lattice_base_ipa(
+                self.normalized, self.dialect.dialect_code,
+                stress_token=self.dialect.PRIMARY_STRESS_TOKEN,
+                hiatus_token=self.dialect.HIATUS_TOKEN,
+            )
+            if lattice_ipa:
+                return lattice_ipa
+
         # Generate grapheme IPAs grouped by syllable
         syllable_ipas = [[] for _ in self.syllables]
 
