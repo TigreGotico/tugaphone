@@ -75,10 +75,43 @@ import string
 from functools import cached_property, lru_cache
 from typing import List, Optional, Dict, Tuple
 
+from orthography2ipa.phonetok import PhonetokTokenizer, TokenKind
+from orthography2ipa.types import LanguageSpec
+from orthography2ipa.vowels import is_front_vowel, is_orthographic_vowel
+
 from tugaphone.number_utils import normalize_numbers
 from silabificador import syllabify
 from tugaphone.dialects import (DialectInventory, EuropeanPortuguese, BrazilianPortuguese,
                                 AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
+
+
+@lru_cache(maxsize=None)
+def _phonetok(dialect_code: str, inventory: Tuple[str, ...]) -> PhonetokTokenizer:
+    """Shared orthography2ipa grapheme tokenizer for a dialect inventory.
+
+    The maximal-munch grapheme segmentation is delegated to
+    :class:`orthography2ipa.phonetok.PhonetokTokenizer`'s trie rather than
+    re-rolled here. The tokenizer is driven purely by the dialect's own
+    ``GRAPHEME_INVENTORY`` (the Portuguese grapheme data stays in
+    :mod:`tugaphone.dialects`); only the language-agnostic segmentation
+    algorithm is shared. IPA values are irrelevant to segmentation, so each
+    grapheme maps to itself in the throw-away spec.
+    """
+    spec = LanguageSpec(
+        code=dialect_code, name="pt", family="portuguese", script="Latn",
+        graphemes={g: [g] for g in inventory}, allophones={},
+    )
+    return PhonetokTokenizer(spec)
+
+
+# Token kinds the grapheme tokenizer emits that correspond to a written
+# unit tugaphone must keep as a grapheme. GRAPHEME covers inventory hits;
+# UNKNOWN/DIGIT/PUNCTUATION cover the single-character fallback the
+# hand-rolled scanner used for anything outside the inventory.
+_GRAPHEME_TOKEN_KINDS = frozenset((
+    TokenKind.GRAPHEME, TokenKind.UNKNOWN, TokenKind.DIGIT,
+    TokenKind.PUNCTUATION,
+))
 
 
 # =============================================================================
@@ -374,15 +407,16 @@ class CharToken:
         Portuguese vowels: a, e, i, o, u
         With diacritics: á, à, â, ã, é, ê, í, ó, ô, õ, ú
         Archaic: è, ì, ò, ù, ẽ, ĩ, ũ, ä, ë, ï, ö, ü, ÿ
+
+        Base classification is delegated to the shared
+        :func:`orthography2ipa.vowels.is_orthographic_vowel` (the single
+        owner of vowel-letter membership), with the dialect's precomposed
+        nasal-vowel set kept as a fallback: the shared set recognises ã/õ
+        but not the archaic ẽ/ĩ/ũ (orthography2ipa gap, see
+        ``docs/tokenizer.md``).
         """
-        return self.normalized in (
-                self.dialect.VOWEL_CHARS |
-                self.dialect.ACUTE_VOWEL_CHARS |
-                self.dialect.GRAVE_VOWEL_CHARS |
-                self.dialect.CIRCUM_VOWEL_CHARS |
-                self.dialect.TILDE_VOWEL_CHARS |
-                self.dialect.TREMA_VOWEL_CHARS
-        )
+        s = self.normalized
+        return is_orthographic_vowel(s) or s in self.dialect.TILDE_VOWEL_CHARS
 
     @cached_property
     def is_semivowel(self) -> bool:
@@ -776,11 +810,11 @@ class CharToken:
                 return "w"
 
         # C before front vowels → [s]
-        if s == "c" and next_letter in self.dialect.FRONT_VOWEL_CHARS:
+        if s == "c" and is_front_vowel(next_letter):
             return "s"
 
         # G before front vowels → [ʒ]
-        if s == "g" and next_letter in self.dialect.FRONT_VOWEL_CHARS:
+        if s == "g" and is_front_vowel(next_letter):
             return "ʒ"
 
         # R realisation: positional distribution
@@ -1700,43 +1734,30 @@ class WordToken:
         # Normalize syllables for consonant doubling
         normalized_syllables = self._normalize_syllables()
 
+        # Maximal-munch grapheme segmentation is delegated to the shared
+        # orthography2ipa trie tokenizer, driven by this dialect's own
+        # GRAPHEME_INVENTORY. Segmenting each (already syllabified) syllable
+        # independently preserves the grapheme→syllable alignment the rest
+        # of the pipeline relies on. Non-inventory characters surface as
+        # UNKNOWN tokens, matching the old single-character fallback.
+        tokenizer = _phonetok(
+            self.dialect.dialect_code,
+            tuple(self.dialect.GRAPHEME_INVENTORY),
+        )
+
         graphemes = []
-        # char_to_syllable = self._build_char_to_syllable_map(normalized_syllables)
-
-        # Process each syllable
         for syl_idx, syllable in enumerate(normalized_syllables):
-            syl_pos = 0
-
-            while syl_pos < len(syllable):
-                # Try longest match first (greedy)
-                matched = False
-
-                for grapheme in self.dialect.GRAPHEME_INVENTORY:
-                    if syllable[syl_pos:].startswith(grapheme):
-                        # Found match
-                        graphemes.append(
-                            GraphemeToken(
-                                surface=syllable[syl_pos:syl_pos + len(grapheme)],
-                                grapheme_idx=len(graphemes),
-                                syllable_idx=syl_idx,
-                                parent_word=self
-                            )
-                        )
-                        syl_pos += len(grapheme)
-                        matched = True
-                        break
-
-                if not matched:
-                    # Single character fallback
-                    graphemes.append(
-                        GraphemeToken(
-                            surface=syllable[syl_pos],
-                            grapheme_idx=len(graphemes),
-                            syllable_idx=syl_idx,
-                            parent_word=self
-                        )
+            for token in tokenizer.tokenize(syllable):
+                if token.kind not in _GRAPHEME_TOKEN_KINDS:
+                    continue
+                graphemes.append(
+                    GraphemeToken(
+                        surface=token.grapheme,
+                        grapheme_idx=len(graphemes),
+                        syllable_idx=syl_idx,
+                        parent_word=self
                     )
-                    syl_pos += 1
+                )
 
         return graphemes
 

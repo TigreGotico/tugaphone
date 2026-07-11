@@ -11,6 +11,28 @@ Each level carries phonological features and its own IPA. This is the layer to
 reach for when you want syllables, stress positions, diphthong detection, or a
 feature dict for machine learning — not just the final phoneme string.
 
+## Built on the orthography2ipa shared substrate
+
+The token tree is not a self-contained tokenizer. Two responsibilities are
+delegated to the shared [`orthography2ipa`](https://github.com/TigreGotico/orthography2ipa)
+library so tugaphone rides its substrate instead of forking it:
+
+- **Grapheme segmentation.** Splitting a syllable into graphemes (digraphs like
+  `ch`/`nh`, diphthongs like `ão`/`ei`, trigraphs like `que`) is done by
+  `orthography2ipa.phonetok.PhonetokTokenizer`'s maximal-munch trie, driven by
+  the dialect's own `GRAPHEME_INVENTORY`. tugaphone supplies the Portuguese
+  grapheme data; the segmentation algorithm is shared.
+- **Vowel classification.** `CharToken.is_vowel` and the c/g front-vowel
+  softening rules delegate to `orthography2ipa.vowels`
+  (`is_orthographic_vowel`, `is_front_vowel`) — the single owner of
+  vowel-letter membership — rather than maintaining tugaphone's own vowel and
+  front-vowel character sets.
+
+**Known substrate gap:** `orthography2ipa.vowels.is_orthographic_vowel`
+recognises the precomposed nasal vowels `ã`/`õ` but not the archaic `ẽ`/`ĩ`/`ũ`,
+so `CharToken.is_vowel` keeps the dialect's precomposed nasal set as a fallback
+for archaic input until the shared set covers them.
+
 ## Building a Sentence
 
 The simplest path constructs a `Sentence` with a dialect inventory:
