@@ -32,7 +32,7 @@ dependencies = [
     "tugatagger[brill]",
     "tugalex",
     "bifonia",
-    "orthography2ipa>=1.64.0a1",
+    "orthography2ipa>=1.70.2a1",
 ]
 
 [project.entry-points."orthography2ipa.syllabify"]

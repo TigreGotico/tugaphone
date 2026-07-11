@@ -137,6 +137,36 @@ p = TugaphoneG2PPlugin(lang="pt-BR")
 print(p.transcribe("o gato dorme"))   # ˈu gˈa·tʊ ˈdoɾ·mɪ
 ```
 
+### IPA is built word-by-word (no cross-word sandhi)
+
+tugaphone builds a sentence's IPA from a **character-level cascade**: each
+`CharToken.ipa` composes into a `GraphemeToken`, graphemes into a
+`WordToken.ipa`, and `Sentence.ipa` is those word IPAs joined with spaces —
+each word transcribed **independently**. tugaphone does *not* route generation
+through `orthography2ipa`'s pronunciation lattice (`G2P.ipa_lattice`) or its
+`G2P.transcribe`; it consumes only o2i's shared *primitives* (the
+`PhonetokTokenizer` grapheme trie, `vowels` classification, `StressRules`, and
+`LanguageSpec` loading) and applies its own dialect grapheme rules.
+
+A consequence is that genuinely cross-word phonology is not modelled on the
+generation path. Standard European Portuguese **external `/s`-sandhi** — a
+word-final coda `/s/` (isolated `[ʃ]`) voicing before a vowel-initial next word
+(*os amigos* → `[ˈuz ɐˈmiɡuʃ]`, Mateus & d'Andrade 2000) — is **not** applied
+in the base `pt-PT` output (`os` stays `[ˈuʃ]`). The southern/insular presets'
+`sibilant_voicing_sandhi` is a per-token approximation: it voices a token's own
+final `[ʃ]`→`[ʒ]` when the word ends in `<s>`, with no visibility of the
+following word.
+
+`orthography2ipa` (≥1.70) now carries this cross-word phonology natively — a
+declarative `sandhi_rules` set on the `pt-PT` spec (`PT_FINAL_S_PREVOCALIC_VOICE`
+→ `[z]`; `pt-PT-x-algarve`/`acores` → `[ʒ]`) run through its `SandhiEngine`, and
+a `SentenceRescorer` / `SentenceLattice` **sentence-context seam** for
+boundary-aware rewrites. tugaphone cannot consume either today because neither
+its per-word IPA nor its lattice flows through o2i's `G2P`. Adopting the seam is
+a scoped follow-up (a "B6 stage-2" refactor) that routes sentence-level
+generation through o2i so cross-word sandhi is modelled once, upstream, instead
+of re-approximated per token. See `docs/advanced.md`.
+
 ---
 
 ## Sibling libraries
