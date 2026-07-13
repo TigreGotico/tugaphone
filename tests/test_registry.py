@@ -130,6 +130,13 @@ def pho():
 
 
 class TestPhonemizerIntegration:
+    # Pinned outputs below track the canonical-register regional lexicon
+    # bundled with tugalex >= 2.0 (one pronunciation per word, the
+    # fewest-narrow-marks register pick, rebuilt from
+    # portuguese-unified-pronunciation-lexicon).  Notable lexicon-sourced
+    # forms: "ontem" carries each region's nasal-diphthong ending
+    # (e.g. EP [ˈõtɐ̃j]) instead of the rules-derived [ˈõtẽ], and the
+    # Lisbon register elides the final reduced vowel of "noite" ([nojt]).
     SENTENCE = "Choveu muito ontem à noite."
 
     def test_preset_code_equals_manual_kwarg(self, pho):
@@ -137,7 +144,7 @@ class TestPhonemizerIntegration:
         via_kwarg = pho.phonemize_sentence(self.SENTENCE, "pt-PT",
                                            regional_dialect=PortoDialect)
         assert via_code == via_kwarg
-        assert via_code == "ʃu·ˈbew mˈũj·tu ˈõ·tẽ ˈa nˈoj·tɨ"
+        assert via_code == "ʃu·ˈbew mˈũj·tu ˈwõ·tɐ̃j ˈa nˈojt"
 
     def test_explicit_kwarg_overrides_code(self, pho):
         override = pho.phonemize_sentence(self.SENTENCE, "pt-PT-x-porto",
@@ -147,14 +154,15 @@ class TestPhonemizerIntegration:
 
     def test_city_inventory_differs_from_major(self, pho):
         assert pho.phonemize_sentence("noite", "pt-BR") == "nˈoj·tʃɪ"
-        assert pho.phonemize_sentence("noite", "pt-BR-x-sao-paulo") == "nˈoj·tʃi"
+        # spx lexicon entry: canonical register without the [tʃ] affrication mark
+        assert pho.phonemize_sentence("noite", "pt-BR-x-sao-paulo") == "nˈoj·ti"
 
     @pytest.mark.parametrize("code,expected", [
-        ("pt-PT", "ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈa nˈoj·tɨ"),
-        ("pt-BR", "ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ ˈa nˈoj·tʃɪ"),
-        ("pt-AO", "ʃo·ˈvew mˈũjn·tʊ ˈõ·tẽ ˈa nˈoj·tɨ"),
-        ("pt-MZ", "ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈa nˈɔj·tɨ"),
-        ("pt-TL", "ʃo·ˈvew mˈuj·tʊ ˈõ·tẽ ˈa nˈojtʰ"),
+        ("pt-PT", "ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j ˈa nˈojt"),
+        ("pt-BR", "ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj ˈa nˈoj·tʃɪ"),
+        ("pt-AO", "ʃo·ˈvew mˈũjn·tʊ ˈõn·tẽj ˈa nˈoj·tɨ"),
+        ("pt-MZ", "ʃu·ˈvew mˈũj·tu ˈõ·tẽj ˈa nˈɔj·tɨ"),
+        ("pt-TL", "ʃo·ˈvew mˈuj·tʊ ˈõn·tɐ̃j ˈa nˈojtʰ"),
     ])
     def test_major_dialect_output_unchanged(self, pho, code, expected):
         assert pho.phonemize_sentence(self.SENTENCE, code) == expected

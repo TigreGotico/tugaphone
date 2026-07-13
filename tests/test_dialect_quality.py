@@ -195,9 +195,14 @@ class TestTimoresePhonology:
         assert "ə" in out, f"Expected ə in TL 'aba': {out!r}"
 
     def test_unstressed_e_not_centralized(self, pho):
-        """TL: unstressed /e/ stays [e], not [ɨ]."""
-        out = phonemize(pho, "pedir", TimoresePortuguese())
-        assert "ɨ" not in out, f"Unexpected ɨ in TL 'pedir': {out!r}"
+        """TL: unstressed /e/ stays [e], not [ɨ].
+
+        Pins the PHONOLOGY rule, so it uses a rules-path word absent
+        from the tugalex dli lexicon ("pedir" is now a dli lexicon
+        entry whose canonical register centralizes).
+        """
+        out = phonemize(pho, "peneirinha", TimoresePortuguese())
+        assert "ɨ" not in out, f"Unexpected ɨ in TL 'peneirinha': {out!r}"
 
     def test_no_uvular_r(self, pho):
         """TL: no uvular [ʁ]; word-initial R → alveolar [r]."""
