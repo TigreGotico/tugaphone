@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.1a1](https://github.com/TigreGotico/tugaphone/tree/0.8.1a1) (2026-07-13)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.0a1...0.8.1a1)
+
+**Merged pull requests:**
+
+- fix\(lexicon\): adopt tugalex 2.0 canonical-register data [\#71](https://github.com/TigreGotico/tugaphone/pull/71) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.8.0a1](https://github.com/TigreGotico/tugaphone/tree/0.8.0a1) (2026-07-13)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.7.0a2...0.8.0a1)
