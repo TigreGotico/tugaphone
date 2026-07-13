@@ -137,7 +137,7 @@ class TestPhonemizerIntegration:
         via_kwarg = pho.phonemize_sentence(self.SENTENCE, "pt-PT",
                                            regional_dialect=PortoDialect)
         assert via_code == via_kwarg
-        assert via_code == "ʃu·ˈbew mˈũj·tu ˈõ·tẽ ˈa nˈoj·tɨ ˈ···"
+        assert via_code == "ʃu·ˈbew mˈũj·tu ˈõ·tẽ ˈa nˈoj·tɨ"
 
     def test_explicit_kwarg_overrides_code(self, pho):
         override = pho.phonemize_sentence(self.SENTENCE, "pt-PT-x-porto",
@@ -150,11 +150,11 @@ class TestPhonemizerIntegration:
         assert pho.phonemize_sentence("noite", "pt-BR-x-sao-paulo") == "nˈoj·tʃi"
 
     @pytest.mark.parametrize("code,expected", [
-        ("pt-PT", "ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈa nˈoj·tɨ ˈ···"),
-        ("pt-BR", "ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ ˈa nˈoj·tʃɪ ˈ···"),
-        ("pt-AO", "ʃo·ˈvew mˈũjn·tʊ ˈõ·tẽ ˈa nˈoj·tɨ ˈ···"),
-        ("pt-MZ", "ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈa nˈɔj·tɨ ˈ···"),
-        ("pt-TL", "ʃo·ˈvew mˈuj·tʊ ˈõ·tẽ ˈa nˈojtʰ ˈ···"),
+        ("pt-PT", "ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈa nˈoj·tɨ"),
+        ("pt-BR", "ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ ˈa nˈoj·tʃɪ"),
+        ("pt-AO", "ʃo·ˈvew mˈũjn·tʊ ˈõ·tẽ ˈa nˈoj·tɨ"),
+        ("pt-MZ", "ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈa nˈɔj·tɨ"),
+        ("pt-TL", "ʃo·ˈvew mˈuj·tʊ ˈõ·tẽ ˈa nˈojtʰ"),
     ])
     def test_major_dialect_output_unchanged(self, pho, code, expected):
         assert pho.phonemize_sentence(self.SENTENCE, code) == expected

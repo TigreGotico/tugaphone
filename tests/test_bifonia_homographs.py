@@ -33,14 +33,6 @@ def test_forma_mould_is_closed_shape_is_open(ph):
     assert "fɔ" in shape         # open ɔ — shape
 
 
-def test_para_preposition_vs_verb(ph):
-    prep = _clean(ph.phonemize_sentence("Vou para casa."))
-    verb = _clean(ph.phonemize_sentence("O autocarro para no hospital."))
-    assert "pɐɾɐ" in prep         # reduced a — preposition
-    assert "pɐɾɐ" not in verb     # not the reduced preposition form
-    assert "pa" in verb           # stressed a — verb (stops)
-
-
 def test_acordo_noun_is_closed_verb_is_open(ph):
     noun = _clean(ph.phonemize_sentence("O acordo de paz foi assinado."))
     verb = _clean(ph.phonemize_sentence("Eu acordo cedo todos os dias."))

@@ -6,8 +6,8 @@ stress markers and syllable boundaries.
 
 ```
 Choveu muito ontem.
-pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈ···
-pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ ˈ···
+pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tẽ
+pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ
 ```
 
 ## 1. Install
@@ -17,25 +17,25 @@ pip install tugaphone            # from PyPI
 pip install -e .                 # from a source checkout
 ```
 
-Runtime dependencies (`unicode-rbnf`, `silabificador`, `tugatagger[brill]`,
-`tugalex`) install automatically. The phonetic lexicon ships through
+Runtime dependencies (`unicode-rbnf`, `silabificador`, `tugalex`,
+`bifonia`, `orthography2ipa`) install automatically. The phonetic lexicon ships through
 [`tugalex`](https://github.com/TigreGotico/tugalex), which wraps the HuggingFace
 dataset `TigreGotico/portuguese_phonetic_lexicon`. It is lazy-loaded on first use
 and warmed during `TugaPhonemizer()` construction.
 
 ## 2. The one thing to understand
 
-`TugaPhonemizer` is the entry point. You construct it once (it loads the lexicon
-and the POS tagger), then call `phonemize_sentence(text, lang)` as many times as
-you like. The `lang` argument is an IETF dialect tag and it changes the phonology,
-not just the spelling:
+`TugaPhonemizer` is the entry point. You construct it once (it loads the
+lexicon), then call `phonemize_sentence(text, lang)` as many times as you like.
+The `lang` argument is an IETF dialect tag and it changes the phonology, not just
+the spelling:
 
 ```python
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # ˈu gˈa·tu ˈdoɾ·mɨ ˈ···
-print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # ˈu gˈa·tʊ ˈdoɾ·mɪ ˈ···
+print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # ˈu gˈa·tu ˈdoɾ·mɨ
+print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # ˈu gˈa·tʊ ˈdoɾ·mɪ
 ```
 
 The return value is a space-separated phoneme string: one token per word, with
@@ -118,7 +118,7 @@ Portuguese automatically.
 
 - [api.md](api.md) — every public class, function and keyword argument with real signatures
 - [dialects.md](dialects.md) — the five inventories and sub-regional accent presets
-- [homographs.md](homographs.md) — meaning-based and POS-based disambiguation
+- [homographs.md](homographs.md) — meaning-based disambiguation
 - [numbers.md](numbers.md) — number normalization and gender agreement
-- [advanced.md](advanced.md) — regional accents, POS engines, number normalization, the token tree
+- [advanced.md](advanced.md) — regional accents, number normalization, the token tree
 - [tokenizer.md](tokenizer.md) — the `Sentence → Word → Grapheme → Character` model and its features

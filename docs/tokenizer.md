@@ -46,10 +46,6 @@ print(s.n_words)    # 5
 print(repr(s))      # Sentence('O cão comeu o pão.' → [...])
 ```
 
-`TugaPhonemizer` itself uses `Sentence.from_postagged(surface, tags, dialect)`,
-where `tags` is a list of `(token, pos)` pairs. Use that form when you already
-have POS tags and want them respected during transcription.
-
 ## Word level
 
 Each `WordToken` exposes its syllable structure, stress and per-word IPA:
@@ -109,7 +105,7 @@ into a single namespaced dict suitable for a feature vector:
 ```python
 feats = s.features
 # {'n_words': 5, 'n_whitespaces': 4,
-#  'word_0_n_syllables': 1, 'word_0_stressed_syllable_idx': 0, 'word_0_pos': ...}
+#  'word_0_n_syllables': 1, 'word_0_stressed_syllable_idx': 0, ...}
 ```
 
 Long sentences produce large dictionaries — for ML pipelines, project the keys
@@ -118,5 +114,5 @@ you need rather than materializing the whole thing per sample.
 ## Where next
 
 - [api.md](api.md) — the class table and signatures
-- [advanced.md](advanced.md) — accents, POS engines, numbers
+- [advanced.md](advanced.md) — accents, numbers
 - [quickstart.md](quickstart.md) — the basics

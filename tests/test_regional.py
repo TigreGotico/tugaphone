@@ -37,7 +37,7 @@ class TestAsDict:
         assert clone.morpheme_rules == preset.morpheme_rules
 
     def test_unmapped_rule_raises_instead_of_dropping(self):
-        def bogus_rule(word, phonemes, postag="NOUN"):
+        def bogus_rule(word, phonemes):
             return phonemes
 
         rt = RegionalTransforms(ipa_rules=[rising_diphthong_o, bogus_rule])

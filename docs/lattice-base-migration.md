@@ -2,25 +2,23 @@
 
 tugaphone builds a word's IPA in layers:
 
-1. **homograph table** (`DialectInventory.HOMOGRAPHS`) — POS-disambiguated forms;
-2. **lexicon** (`DialectInventory.IRREGULAR_WORDS`, the region lexicon from
+1. **lexicon** (`DialectInventory.IRREGULAR_WORDS`, the region lexicon from
    `tugalex`) — the authoritative pronunciation for every covered word;
-3. **base G2P** — used only for words the lexicon does not cover (OOV);
-4. **regional accent primitives** (`tugaphone.ipa_transforms`) — composed on
+2. **base G2P** — used only for words the lexicon does not cover (OOV);
+3. **regional accent primitives** (`tugaphone.ipa_transforms`) — composed on
    top of whatever base is produced (`TugaPhonemizer.phonemize_sentence`).
 
-B6 stage-2 replaces layer 3's private grapheme→phoneme **character cascade**
+B6 stage-2 replaces layer 2's private grapheme→phoneme **character cascade**
 with the shared orthography2ipa pronunciation **lattice**
 (`orthography2ipa.g2p.G2P.ipa_lattice` — the object the beam reads), so the
 research-backed o2i Portuguese phonology becomes tugaphone's base for OOV words.
-Layers 1, 2 and 4 are unchanged.
+Layers 1 and 3 are unchanged.
 
 ## What comes from where
 
 | Concern | Owner after B6 stage-2 |
 | --- | --- |
 | Word pronunciations (in-lexicon) | tugaphone `IRREGULAR_WORDS` (tugalex) |
-| POS homographs | tugaphone `HOMOGRAPHS` |
 | **Base IPA for OOV words** | **o2i lattice** (when the dialect opts in) |
 | Verbalization / numbers | tugaphone `number_utils` |
 | Regional accent composition | tugaphone `ipa_transforms` / `regional` |

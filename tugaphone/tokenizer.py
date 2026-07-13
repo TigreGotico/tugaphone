@@ -1667,7 +1667,6 @@ class WordToken:
     word_idx: int  # parent_sentence.words[idx] == self
     graphemes: List[GraphemeToken] = dataclasses.field(default_factory=list)
     syllables: List[str] = dataclasses.field(default_factory=list)
-    postag: Optional[str] = None
     parent_sentence: Optional["Sentence"] = None
     dialect: DialectInventory = dataclasses.field(default_factory=EuropeanPortuguese)
 
@@ -1927,8 +1926,6 @@ class WordToken:
             Full IPA transcription with stress and syllable marks
         """
         # Check irregular words first
-        if self.postag and self.normalized in self.dialect.HOMOGRAPHS and self.postag in self.dialect.HOMOGRAPHS[self.normalized]:
-            return self.dialect.HOMOGRAPHS[self.normalized][self.postag]
         if self.normalized in self.dialect.IRREGULAR_WORDS:
             return self.dialect.IRREGULAR_WORDS[self.normalized]
 
@@ -1987,7 +1984,6 @@ class WordToken:
             "n_syllables": self.n_syllables,
             "idx_in_sentence": self.idx_in_sentence,
             "stressed_syllable_idx": self.stressed_syllable_idx,
-            "pos": self.postag,
         }
 
         for grapheme in self.graphemes:
@@ -2044,33 +2040,6 @@ class Sentence:
     surface: str
     words: List[WordToken] = dataclasses.field(default_factory=list)
     dialect: DialectInventory = dataclasses.field(default_factory=EuropeanPortuguese)
-
-    @staticmethod
-    def from_postagged(surface: str, tags: List[Tuple[str, str]],
-                       dialect: Optional[DialectInventory] = None) -> "Sentence":
-        words: List[WordToken] = []
-
-        # Compute word positions in sentence
-        char_position = 0
-        for idx, (word_surface, pos) in enumerate(tags):
-            # Find word in original sentence
-            word_start = surface.find(word_surface, char_position)
-
-            # Create word token
-            word_token = WordToken(
-                surface=word_surface,
-                word_idx=idx,
-                postag=pos,
-                dialect=dialect
-            )
-            word_token._idx_in_sentence = word_start
-
-            words.append(word_token)
-
-            # Update position (word length + space)
-            char_position = word_start + len(word_surface) + 1
-
-        return Sentence(surface, words=words, dialect=dialect)
 
     def __post_init__(self):
         """

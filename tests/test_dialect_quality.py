@@ -64,8 +64,7 @@ def rules_only(pho, word, dialect_cls):
     """Phonemize using G2P cascade only (no lexicon lookup)."""
     from tugaphone.tokenizer import Sentence
     d = dialect_cls(IRREGULAR_WORDS={"\x00": ""})
-    tagged = pho.postag.tag(word)
-    s = Sentence.from_postagged(surface=word, tags=tagged, dialect=d)
+    s = Sentence(word, dialect=d)
     return strip_markers(s.ipa)
 
 

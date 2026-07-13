@@ -176,7 +176,7 @@ print(s.ipa)   # ˈɡa·tu ˈdoɾ·mɨ
 
 ## Where next
 
-- [homographs.md](homographs.md) — meaning-based and POS-based disambiguation
+- [homographs.md](homographs.md) — meaning-based disambiguation
 - [numbers.md](numbers.md) — number normalization
 - [api.md](api.md) — full class reference
 - [advanced.md](advanced.md) — serialization and integration
