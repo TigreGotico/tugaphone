@@ -190,6 +190,8 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 - [docs/api.md](docs/api.md) — full class and function reference
 - [docs/tokenizer.md](docs/tokenizer.md) — the Sentence → Word → Grapheme → Character model
 - [docs/advanced.md](docs/advanced.md) — accents, serialization, integration
+- [docs/benchmarking.md](docs/benchmarking.md) — the gold benchmark: rules-only PER per dialect, offline in CI
+- [docs/scoreboard.md](docs/scoreboard.md) — current accuracy per dialect
 
 ---
 
