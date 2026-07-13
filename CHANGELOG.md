@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.0a1](https://github.com/TigreGotico/tugaphone/tree/0.8.0a1) (2026-07-13)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.7.0a2...0.8.0a1)
+
+**Merged pull requests:**
+
+- feat\(bench\): in-repo gold benchmark harness — rules-only PER per dialect, offline in CI [\#67](https://github.com/TigreGotico/tugaphone/pull/67) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.7.0a2](https://github.com/TigreGotico/tugaphone/tree/0.7.0a2) (2026-07-13)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.7.0a1...0.7.0a2)
