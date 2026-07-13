@@ -1,7 +1,7 @@
 """Regression tests for the IPA post-processing transforms.
 
-Each transform has the signature ``(word: str, phonemes: str, postag: str) -> str``
-and returns a transformed IPA string. The cases below pin the correctness bugs
+Each transform has the signature ``(word: str, phonemes: str) -> str`` and
+returns a transformed IPA string. The cases below pin the correctness bugs
 #9, #10, #11 and #12 from the project TODO.
 """
 from tugaphone.ipa_transforms import (

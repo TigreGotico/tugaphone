@@ -1,4 +1,4 @@
-"""Example — homograph disambiguation (meaning-based and POS-based).
+"""Example — homograph disambiguation (meaning-based).
 
 Run::
 
@@ -10,30 +10,17 @@ from tugaphone import TugaPhonemizer
 def main() -> None:
     ph = TugaPhonemizer()
 
-    # Meaning-based homographs (bifonia resolves sense before G2P)
     meaning_pairs = [
         ("sede (thirst)", "Tenho muita sede."),
         ("sede (HQ)",     "A empresa tem sede em Lisboa."),
+        ("forma (mould)", "Untou a forma com manteiga."),
+        ("forma (shape)", "Resolveu o problema desta forma."),
+        ("gosto (verb)",  "Eu gosto de música."),
+        ("gosto (noun)",  "Tenho bom gosto."),
     ]
 
     print("=== Meaning-based homographs ===")
     for label, sentence in meaning_pairs:
-        print(f"  {label:20s} → {ph.phonemize_sentence(sentence)}")
-
-    print()
-
-    # POS-based homographs (open /ɔ/ for verb, closed /o/ for noun)
-    pos_pairs = [
-        ("gosto (verb)",  "Eu gosto de música."),
-        ("gosto (noun)",  "Tenho bom gosto."),
-        ("choro (verb)",  "Eu choro de alegria."),
-        ("choro (noun)",  "O choro é livre."),
-        ("porto (verb)",  "Eu porto a mochila."),
-        ("porto (noun)",  "O porto é belo."),
-    ]
-
-    print("=== POS-based homographs ===")
-    for label, sentence in pos_pairs:
         print(f"  {label:20s} → {ph.phonemize_sentence(sentence)}")
 
 

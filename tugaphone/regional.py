@@ -48,7 +48,7 @@ from tugaphone.morpheme_transforms import (
 )
 
 # typing helpers
-IPATransform = Callable[[str, str, str], str]
+IPATransform = Callable[[str, str], str]
 
 
 # ---------------------------------------------------------------------------
@@ -151,16 +151,16 @@ class RegionalTransforms:
     morpheme_rules: List["MorphemeTransform"] = field(default_factory=list)
     ipa_rules: List[IPATransform] = field(default_factory=list)
 
-    def apply_ipa(self, word: str, phonemes: str, postag: str = "NOUN") -> str:
+    def apply_ipa(self, word: str, phonemes: str) -> str:
         """Apply the configured IPA rules to ``phonemes`` in order."""
         for rule in self.ipa_rules:
-            phonemes = rule(word, phonemes, postag)
+            phonemes = rule(word, phonemes)
         return phonemes
 
-    def apply_morpheme(self, word: str, postag: str = "NOUN") -> str:
+    def apply_morpheme(self, word: str) -> str:
         """Apply the configured morpheme rules to ``word`` in order."""
         for rule in self.morpheme_rules:
-            word = rule(word, postag)
+            word = rule(word)
         return word
 
     @staticmethod

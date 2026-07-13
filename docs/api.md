@@ -8,16 +8,10 @@ source.
 The phonemizer entry class.
 
 ```python
-TugaPhonemizer(postag_engine="auto", postag_model="pt_core_news_lg")
+TugaPhonemizer()
 ```
 
-| Argument | Meaning |
-|----------|---------|
-| `postag_engine` | POS tagging backend passed to `TugaTagger`: `"auto"`, `"spacy"`, `"brill"`, `"lexicon"`, `"dummy"`. |
-| `postag_model` | Model identifier for engines that take one (e.g. the spaCy model name). |
-
-Construction builds the `TugaTagger` and warms the lexicon so the first
-transcription is fast.
+Construction warms the lexicon so the first transcription is fast.
 
 ### `phonemize_sentence`
 
@@ -29,7 +23,7 @@ phonemize_sentence(sentence: str,
 
 Transcribes `sentence` to IPA for the target dialect. Returns a space-separated
 phoneme string — one token per word, with `ˈ` for primary stress and `·` for
-syllable boundaries; punctuation tokens are preserved.
+syllable boundaries.
 
 `lang` is any code from `list_dialects()` — the five majors (`pt-PT`, `pt-BR`,
 `pt-AO`, `pt-MZ`, `pt-TL`), the city inventories (`pt-BR-x-sao-paulo`, …) and
@@ -44,7 +38,7 @@ preset overrides whatever `lang` resolves to. See
 
 ```python
 ph = TugaPhonemizer()
-ph.phonemize_sentence("O gato dorme.", "pt-BR")   # 'ˈu gˈa·tʊ ˈdoɾ·mɪ ˈ···'
+ph.phonemize_sentence("O gato dorme.", "pt-BR")   # 'ˈu gˈa·tʊ ˈdoɾ·mɪ'
 ```
 
 ### `get_dialect_inventory` (staticmethod)
@@ -136,8 +130,8 @@ class RegionalTransforms:
 
 | Member | Behaviour |
 |--------|-----------|
-| `apply_morpheme(word, postag="NOUN")` | Runs every morpheme rule in order, returns the rewritten word. |
-| `apply_ipa(word, phonemes, postag="NOUN")` | Runs every IPA rule in order, returns the rewritten phoneme string. |
+| `apply_morpheme(word)` | Runs every morpheme rule in order, returns the rewritten word. |
+| `apply_ipa(word, phonemes)` | Runs every IPA rule in order, returns the rewritten phoneme string. |
 | `as_dict` (property) | Serializes the rule lists to rule-name strings. |
 | `from_dict(data)` (staticmethod) | Rebuilds an instance from `{"ipa_rules": [...], "morpheme_rules": [...]}`; raises `ValueError` on an unknown IPA rule name. |
 
@@ -182,7 +176,6 @@ the public surface is:
 | Symbol | Role |
 |--------|------|
 | `Sentence(surface, words=[], dialect=EuropeanPortuguese())` | Top-level container; `.ipa`, `.words`, `.n_words`, `.features`. |
-| `Sentence.from_postagged(surface, tags, dialect=None)` | Build from `(token, pos)` pairs (the path `TugaPhonemizer` uses). |
 | `WordToken` | `.surface`, `.syllables`, `.graphemes`, `.stressed_syllable_idx`, `.ipa`, `.features`. |
 | `GraphemeToken` | `.surface`, `.ipa`, `.is_diphthong`, `.is_nasal`, `.is_digraph`, `.features`, and more predicates. |
 | `CharToken` | character-level predicates (`.is_vowel`, `.is_consonant`, `.ipa`, ...). |
@@ -231,7 +224,7 @@ s.syllabify("fonologia")   # ['fo', 'no', 'lo', 'gi', 'a']
 
 - [quickstart.md](quickstart.md) — install and first call
 - [dialects.md](dialects.md) — the five inventories and sub-regional accent presets
-- [homographs.md](homographs.md) — meaning-based and POS-based disambiguation
+- [homographs.md](homographs.md) — meaning-based disambiguation
 - [numbers.md](numbers.md) — number normalization and gender agreement
-- [advanced.md](advanced.md) — recipes for accents, POS engines, numbers
+- [advanced.md](advanced.md) — recipes for accents and numbers
 - [tokenizer.md](tokenizer.md) — the token tree and feature extraction

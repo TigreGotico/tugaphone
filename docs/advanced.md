@@ -3,33 +3,6 @@
 Once the basic `phonemize_sentence` loop is clear, these are the knobs worth
 knowing.
 
-## POS engines and homographs
-
-Portuguese homographs change pronunciation by part of speech. `tugaphone` tags
-the sentence first and feeds the tags into transcription, so the engine you pick
-affects accuracy:
-
-```python
-from tugaphone import TugaPhonemizer
-
-ph = TugaPhonemizer(postag_engine="spacy")    # most accurate, needs pt_core_news_lg
-ph.phonemize_sentence("Vou para casa.")        # 'para' as preposition
-ph.phonemize_sentence("Ele para o carro.")     # 'para' as verb
-```
-
-Engine options, from heaviest to lightest:
-
-| Engine | Needs | Notes |
-|--------|-------|-------|
-| `spacy` | `spacy` + `pt_core_news_lg` | Most accurate. |
-| `brill` | `brill-postaggers` | Lighter, faster; installed via `tugatagger[brill]`. |
-| `lexicon` | nothing extra | Built-in lookup, limited coverage. |
-| `dummy` | nothing | Rule-based fallback, no dependencies. |
-| `auto` | — | Falls through whatever is installed. Default. |
-
-If you only need deterministic output with no optional dependencies, construct
-with `postag_engine="dummy"`.
-
 ## Regional accents
 
 On top of the five dialect codes, `tugaphone.regional` ships sub-regional accent
@@ -110,8 +83,6 @@ usable on its own:
 
 - [`tugalex`](https://github.com/TigreGotico/tugalex) — the phonetic lexicon
   (`LEXICON` in `tugaphone.dialects`).
-- [`tugatagger`](https://github.com/TigreGotico/tugatagger) — the POS tagger
-  behind `postag_engine`.
 - [`silabificador`](https://github.com/TigreGotico/silabificador) — the
   syllabifier behind `WordToken.syllables`, registered as an `orthography2ipa`
   syllabifier plugin.
@@ -187,7 +158,7 @@ concrete path:
 
 - [api.md](api.md) — full signatures
 - [dialects.md](dialects.md) — the five inventories and sub-regional accent presets
-- [homographs.md](homographs.md) — meaning-based and POS-based disambiguation
+- [homographs.md](homographs.md) — meaning-based disambiguation
 - [numbers.md](numbers.md) — number normalization and gender agreement
 - [tokenizer.md](tokenizer.md) — inspect syllables, stress and graphemes directly
 - [quickstart.md](quickstart.md) — the basics

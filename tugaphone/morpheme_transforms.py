@@ -1,8 +1,8 @@
 """Pre-G2P morpheme transforms: dialectal/archaic respellings fed to G2P.
 
-Each function has the signature ``(word: str, postag: str) -> str`` and returns
-a possibly respelled surface form. These rules model dialect features that are
-cleanest to express orthographically — the respelled form is then handed to the
+Each function has the signature ``(word: str) -> str`` and returns a possibly
+respelled surface form. These rules model dialect features that are cleanest to
+express orthographically — the respelled form is then handed to the
 grapheme-to-phoneme cascade, which produces the dialectal phonemes for free.
 
 This is the text-level ("forced mispronunciation") strategy: a feature that
@@ -16,10 +16,10 @@ Sources follow the precedence order documented in
 import re
 from typing import Callable
 
-MorphemeTransform = Callable[[str, str], str]
+MorphemeTransform = Callable[[str], str]
 
 
-def spell_v_as_b(word: str, postag: str = "NOUN") -> str:
+def spell_v_as_b(word: str) -> str:
     """Respell <v> as <b> so G2P yields the betacism stop [b].
 
     Phenomenon: northern betacism merges /v/ into [b]. Applying it at the
@@ -28,8 +28,7 @@ def spell_v_as_b(word: str, postag: str = "NOUN") -> str:
     reference /b/.
 
     Distribution: all northern varieties + Galician (Cintra 1971:87; whitepaper4
-    rule N1). Case is preserved for the leading character. ``postag`` is
-    accepted for signature uniformity but unused (this is not POS-conditioned).
+    rule N1). Case is preserved for the leading character.
 
     CAVEAT: routing through the G2P as ⟨b⟩ forces the STOP outcome [b] in every
     position, losing the intervocalic spirant realisation [β] that the merged
@@ -43,7 +42,7 @@ def spell_v_as_b(word: str, postag: str = "NOUN") -> str:
     return out
 
 
-def archaic_ch_to_x(word: str, postag: str = "NOUN") -> str:
+def archaic_ch_to_x(word: str) -> str:
     """Respell <ch> as <x> to feed the apico-palatal source of <ch>.
 
     Phenomenon: in conservative Transmontano the digraph <ch> kept a distinct
@@ -52,7 +51,7 @@ def archaic_ch_to_x(word: str, postag: str = "NOUN") -> str:
     consistently regardless of lexicon idiosyncrasies.
 
     Distribution: Transmontano / Alto-Minhoto, archaic (Cintra 1971, trait 3;
-    whitepaper4 §3). Case-insensitive on the digraph. ``postag`` unused.
+    whitepaper4 §3). Case-insensitive on the digraph.
 
     DO NOT COMPOSE with :func:`ipa_transforms.palatal_affrication_ch`. That
     post-G2P rule counts ``word.lower().count("ch")`` to decide how many /ʃ/ to

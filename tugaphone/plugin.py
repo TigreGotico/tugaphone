@@ -3,8 +3,8 @@
 tugaphone *consumes* orthography2ipa — its Portuguese spec data, the
 declarative stress rules and the shared
 :class:`~orthography2ipa.g2p_plugin.G2PPlugin`/``WordContext`` types —
-and owns the Portuguese pipeline (lexicon, POS tagging, gender-aware
-numbers, regional accent transforms). Use the engine directly:
+and owns the Portuguese pipeline (lexicon, gender-aware numbers, regional
+accent transforms). Use the engine directly:
 
     >>> from tugaphone.plugin import TugaphoneG2PPlugin
     >>> TugaphoneG2PPlugin().transcribe("o gato dorme")
@@ -30,8 +30,8 @@ from tugaphone.registry import list_dialects
 class TugaphoneG2PPlugin(G2PPlugin):
     """Dialect-aware Portuguese G2P via the tugaphone pipeline.
 
-    The underlying :class:`tugaphone.TugaPhonemizer` (POS tagger +
-    lexicon) loads lazily on first transcription.
+    The underlying :class:`tugaphone.TugaPhonemizer` (lexicon + bifonia
+    homograph resolution) loads lazily on first transcription.
     """
 
     def __init__(self, lang: str = "pt-PT") -> None:

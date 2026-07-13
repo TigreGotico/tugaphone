@@ -1,18 +1,17 @@
 # tugaphone — dialect-aware Portuguese phonemizer
 
 **tugaphone** converts Portuguese text to IPA across all five Lusophone dialect groups.
-It combines a curated phonetic lexicon, part-of-speech tagging for homograph
-disambiguation, meaning-based heterophone resolution via
-[bifonia](https://github.com/TigreGotico/bifonia), and a scientifically-grounded
-regional-accent layer.
+It combines a curated phonetic lexicon, meaning-based heterophone resolution
+via [bifonia](https://github.com/TigreGotico/bifonia), and a scientifically-
+grounded regional-accent layer.
 
 ```
 O gato dorme.
-pt-PT → ˈu gˈa·tu ˈdoɾ·mɨ ˈ···
-pt-BR → ˈu gˈa·tʊ ˈdoɾ·mɪ ˈ···
-pt-AO → ˈu gˈa·tʊ ˈdoɾ·me ˈ···
-pt-MZ → ˈu gˈa·tu ˈdoɾ·me ˈ···
-pt-TL → ˈu gˈa·tʊ ˈdoɾ·me ˈ···
+pt-PT → ˈu gˈa·tu ˈdoɾ·mɨ
+pt-BR → ˈu gˈa·tʊ ˈdoɾ·mɪ
+pt-AO → ˈu gˈa·tʊ ˈdoɾ·me
+pt-MZ → ˈu gˈa·tu ˈdoɾ·me
+pt-TL → ˈu gˈa·tʊ ˈdoɾ·me
 ```
 
 ---
@@ -35,10 +34,10 @@ print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))
 # ˈu gˈa·tu ˈdoɾ·mɨ ˈ···
 ```
 
-`TugaPhonemizer()` loads the lexicon and POS tagger once; then call
-`phonemize_sentence(text, lang)` as many times as you like. Output is a
-space-separated phoneme string — one token per word — with `ˈ` marking primary
-stress and `·` marking syllable boundaries.
+`TugaPhonemizer()` loads the lexicon once; then call `phonemize_sentence(text,
+lang)` as many times as you like. Output is a space-separated phoneme string —
+one token per word — with `ˈ` marking primary stress and `·` marking syllable
+boundaries.
 
 ---
 
@@ -57,19 +56,19 @@ stress and `·` marking syllable boundaries.
 ```python
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
     print(code, "→", ph.phonemize_sentence("Choveu muito ontem.", code))
-# pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈ···
-# pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ ˈ···
-# pt-AO → ʃo·ˈvew mˈũjn·tʊ ˈõ·tẽ ˈ···
-# pt-MZ → ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈ···
-# pt-TL → ʃo·ˈvew mˈuj·tʊ ˈõ·tẽ ˈ···
+# pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tẽ
+# pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ
+# pt-AO → ʃo·ˈvew mˈũjn·tʊ ˈõ·tẽ
+# pt-MZ → ʃu·ˈvew mˈũj·tu ˈõ·tẽ
+# pt-TL → ʃo·ˈvew mˈuj·tʊ ˈõ·tẽ
 ```
 
 ### Homograph disambiguation
 
-Heterophonic homographs are resolved at two levels:
-
-1. **Meaning-based** (via bifonia): *sede* thirst vs HQ, *forma* mould vs shape.
-2. **POS-based**: *gosto* noun /ˈgoʃtu/ vs verb /ˈgɔʃtu/, *para* preposition vs verb.
+Heterophonic homographs are resolved by meaning via **bifonia**: *sede* thirst
+vs HQ, *forma* mould vs shape, *gosto* noun vs verb. bifonia inserts
+open/closed-vowel diacritics that the grapheme rules read directly, so the same
+spelling can map to different pronunciations depending on sentence context.
 
 ```python
 print(ph.phonemize_sentence("Eu gosto de música."))   # verb → ˈgɔʃ·tu
@@ -176,7 +175,6 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 | Library | Role |
 |---------|------|
 | [tugalex](https://github.com/TigreGotico/tugalex) | Phonetic lexicon |
-| [tugatagger](https://github.com/TigreGotico/tugatagger) | POS tagger |
 | [silabificador](https://github.com/TigreGotico/silabificador) | Syllabifier |
 | [bifonia](https://github.com/TigreGotico/bifonia) | Heterophone sense disambiguation |
 | [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) | G2P plugin base + stress rules |
@@ -187,7 +185,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 
 - [docs/quickstart.md](docs/quickstart.md) — install, first call, dialect overview
 - [docs/dialects.md](docs/dialects.md) — five inventories and sub-regional accent presets
-- [docs/homographs.md](docs/homographs.md) — meaning-based and POS-based disambiguation
+- [docs/homographs.md](docs/homographs.md) — meaning-based disambiguation
 - [docs/numbers.md](docs/numbers.md) — number normalization and gender agreement
 - [docs/api.md](docs/api.md) — full class and function reference
 - [docs/tokenizer.md](docs/tokenizer.md) — the Sentence → Word → Grapheme → Character model

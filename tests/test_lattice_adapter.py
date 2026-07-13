@@ -167,16 +167,18 @@ class TestCascadeVsLatticeCharacterization:
     CASES = [
         ("chegou", EuropeanPortuguese, "pt-PT", "ʃɨ·ˈɡow", "ʃɨ·ˈɡo", "cascade",
          "o2i over-monophthongises <ou>; [ow] is correct (M&d'A 2000)"),
-        ("campo", EuropeanPortuguese, "pt-PT", "ˈkɐ̃·pu", "ˈkam·pu", "cascade",
-         "o2i does not model coda nasalization; [ɐ̃] is correct"),
-        ("sim", EuropeanPortuguese, "pt-PT", "ˈsĩ", "ˈsim", "cascade",
-         "o2i does not model coda nasalization; [ĩ] is correct"),
+        ("campo", EuropeanPortuguese, "pt-PT", "ˈkɐ̃·pu", "ˈkɐ̃·pu", "lattice",
+         "o2i models coda nasalization natively since 1.70; agrees with cascade"),
+        ("sim", EuropeanPortuguese, "pt-PT", "ˈsĩ", "ˈsĩ", "lattice",
+         "o2i models coda nasalization natively since 1.70; agrees with cascade"),
         ("trasgo", EuropeanPortuguese, "pt-PT", "ˈtɾas·ɡu", "ˈtɾaʃ·ɡu", "lattice",
          "o2i models EP coda /s/ → [ʃ]; the more correct EP form"),
         ("casa", BrazilianPortuguese, "pt-BR", "ˈka·za", "ˈka·zɐ", "cascade",
          "o2i over-reduces pt-BR final unstressed /a/; [a] is correct"),
-        ("rampa", BrazilianPortuguese, "pt-BR", "ˈhɐ̃·pa", "ˈʁam·pɐ", "cascade",
-         "o2i: no coda nasalization + wrong final /a/; both cascade features correct"),
+        ("rampa", BrazilianPortuguese, "pt-BR", "ˈhɐ̃·pa", "ˈʁɐ̃·pɐ", "cascade",
+         "o2i nasalizes natively now; remaining divergences are the final "
+         "unstressed /a/ (cascade [a] is correct for pt-BR) and the onset "
+         "rhotic realisation ([h] vs [ʁ], both attested)"),
         ("casa", AngolanPortuguese, "pt-AO", "ˈka·za", "ˈka·za", "lattice",
          "o2i agrees with the cascade for pt-AO (no reduction)"),
     ]
@@ -185,18 +187,23 @@ class TestCascadeVsLatticeCharacterization:
         "word,dialect_cls,code,cascade_ipa,lattice_ipa,better,note", CASES)
     def test_divergence_locked(self, word, dialect_cls, code,
                                cascade_ipa, lattice_ipa, better, note):
-        assert _cascade(word, dialect_cls) == cascade_ipa, note
-        assert lattice_base_ipa(word, code) == lattice_ipa, note
+        # the cascade emits precomposed nasal vowels (ĩ), the o2i lattice
+        # decomposed (i + combining tilde) — the same phonology; compare
+        # under one Unicode normal form
+        nfc = unicodedata.normalize
+        assert nfc("NFC", _cascade(word, dialect_cls)) == nfc("NFC", cascade_ipa), note
+        assert nfc("NFC", lattice_base_ipa(word, code)) == nfc("NFC", lattice_ipa), note
         # sanity: the adjudication label is one of the two bases
         assert better in ("cascade", "lattice")
         if better == "lattice":
             # where o2i is adopted-or-equal, it must not be empty
             assert lattice_ipa
 
-    def test_nasalization_gap_is_systematic(self):
-        """The blocking o2i gap: pt coda nasalization is entirely absent."""
+    def test_nasalization_is_native(self):
+        """The formerly blocking o2i gap is CLOSED: pt coda nasalization is
+        modelled natively (o2i >= 1.70). Guard against regressing back."""
         for w in ("campo", "santo", "tempo", "mundo", "sim"):
-            assert COMBINING_TILDE not in lattice_base_ipa(w, "pt-PT"), (
-                f"{w}: o2i unexpectedly produced a nasal vowel — "
-                "revisit the flip plan"
+            assert COMBINING_TILDE in lattice_base_ipa(w, "pt-PT"), (
+                f"{w}: o2i lost coda nasalization — regression in the "
+                "lattice base"
             )
