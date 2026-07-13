@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.0a2](https://github.com/TigreGotico/tugaphone/tree/0.7.0a2) (2026-07-13)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.7.0a1...0.7.0a2)
+
+**Merged pull requests:**
+
+- refactor: drop POS tagging; bifonia handles homograph disambiguation [\#65](https://github.com/TigreGotico/tugaphone/pull/65) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.7.0a1](https://github.com/TigreGotico/tugaphone/tree/0.7.0a1) (2026-07-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.2a2...0.7.0a1)
