@@ -2307,8 +2307,14 @@ class WordToken:
 
     @cached_property
     def is_homograph(self) -> bool:
-        """True if the word has POS-dependent pronunciations (gosto, sede, …)."""
-        return self.normalized in self.dialect.HOMOGRAPHS
+        """True if the word is a heterophonic homograph (gosto, sede, …).
+
+        Homograph knowledge lives in **bifonia**, which owns the disambiguation
+        (tugaphone dropped its own POS tagging and delegates to it). Asking the
+        dialect would ask the wrong library.
+        """
+        from bifonia import HOMOGRAPHS
+        return self.normalized in HOMOGRAPHS
 
     @cached_property
     def is_irregular(self) -> bool:
@@ -2413,7 +2419,6 @@ class WordToken:
             "is_homograph": self.is_homograph,
             "is_irregular": self.is_irregular,
             "is_archaic": self.is_archaic,
-            "pos": self.postag,
         }
 
         for grapheme in self.graphemes:
