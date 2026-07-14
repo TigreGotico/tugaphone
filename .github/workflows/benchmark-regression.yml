@@ -1,0 +1,23 @@
+name: Benchmark Regression
+
+on:
+  pull_request:
+    branches: [dev]
+  workflow_dispatch:
+
+jobs:
+  benchmark-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install
+        run: |
+          pip install uv
+          UV_PRERELEASE=allow uv pip install --system -e .
+      - name: Rules-only PER vs committed baseline
+        # Offline by construction: scores the committed gold fixtures
+        # (tests/data/gold/) against benchmarks/results.json.
+        run: python scripts/check_benchmark_regression.py

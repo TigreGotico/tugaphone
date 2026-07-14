@@ -72,28 +72,70 @@ QUICK REFERENCES:
 
 import dataclasses
 import string
-from functools import cached_property
+from functools import cached_property, lru_cache
 from typing import List, Optional, Dict, Tuple
 
+from orthography2ipa.phonetok import PhonetokTokenizer, TokenKind
+from orthography2ipa.types import LanguageSpec
+from orthography2ipa.vowels import is_front_vowel, is_orthographic_vowel
+
 from tugaphone.number_utils import normalize_numbers
-from tugaphone.syl import syllabify
+from silabificador import syllabify
 from tugaphone.dialects import (DialectInventory, EuropeanPortuguese, BrazilianPortuguese,
                                 AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
+
+
+@lru_cache(maxsize=None)
+def _phonetok(dialect_code: str, inventory: Tuple[str, ...]) -> PhonetokTokenizer:
+    """Shared orthography2ipa grapheme tokenizer for a dialect inventory.
+
+    The maximal-munch grapheme segmentation is delegated to
+    :class:`orthography2ipa.phonetok.PhonetokTokenizer`'s trie rather than
+    re-rolled here. The tokenizer is driven purely by the dialect's own
+    ``GRAPHEME_INVENTORY`` (the Portuguese grapheme data stays in
+    :mod:`tugaphone.dialects`); only the language-agnostic segmentation
+    algorithm is shared. IPA values are irrelevant to segmentation, so each
+    grapheme maps to itself in the throw-away spec.
+    """
+    spec = LanguageSpec(
+        code=dialect_code, name="pt", family="portuguese", script="Latn",
+        graphemes={g: [g] for g in inventory}, allophones={},
+    )
+    return PhonetokTokenizer(spec)
+
+
+# Token kinds the grapheme tokenizer emits that correspond to a written
+# unit tugaphone must keep as a grapheme. GRAPHEME covers inventory hits;
+# UNKNOWN/DIGIT/PUNCTUATION cover the single-character fallback the
+# hand-rolled scanner used for anything outside the inventory.
+_GRAPHEME_TOKEN_KINDS = frozenset((
+    TokenKind.GRAPHEME, TokenKind.UNKNOWN, TokenKind.DIGIT,
+    TokenKind.PUNCTUATION,
+))
 
 
 # =============================================================================
 # Helper Functions
 # =============================================================================
 
+@lru_cache(maxsize=None)
+def _spec_stress_rules(dialect_code: str):
+    """The declarative stress rules of the orthography2ipa spec, if any."""
+    try:
+        from orthography2ipa import get as _get_spec
+        return _get_spec(dialect_code).stress
+    except Exception:
+        return None
+
+
 def detect_stress_position(word: str, syllables: List[str], dialect: DialectInventory) -> int:
     """
     Determine which syllable carries primary stress.
 
-    ALGORITHM:
-    ----------
-    1. Check for explicit accent marks → stress that syllable
-    2. Check word-final pattern against OXYTONE_ENDINGS
-    3. Default to penultimate (paroxytone rule)
+    Delegates to the declarative ``StressRules`` of the dialect's
+    orthography2ipa spec (written accents → oxytone endings → penult
+    default). When the spec carries no stress block, the dialect's own
+    PRIMARY_STRESS_MARKERS / OXYTONE_ENDINGS apply.
 
     Args:
         word: Normalized word string
@@ -118,6 +160,11 @@ def detect_stress_position(word: str, syllables: List[str], dialect: DialectInve
     # Monosyllables are inherently stressed
     if n_syllables == 1:
         return 0
+
+    rules = _spec_stress_rules(dialect.dialect_code)
+    if rules is not None:
+        from orthography2ipa.stress import detect_stress
+        return detect_stress(word, rules, syllables=syllables)
 
     # Check for explicit accent marks (primary stress markers)
     for idx, syllable in enumerate(syllables):
@@ -360,15 +407,13 @@ class CharToken:
         Portuguese vowels: a, e, i, o, u
         With diacritics: á, à, â, ã, é, ê, í, ó, ô, õ, ú
         Archaic: è, ì, ò, ù, ẽ, ĩ, ũ, ä, ë, ï, ö, ü, ÿ
+
+        Classification is fully delegated to the shared
+        :func:`orthography2ipa.vowels.is_orthographic_vowel` (the single
+        owner of vowel-letter membership), including the archaic ẽ/ĩ/ũ.
         """
-        return self.normalized in (
-                self.dialect.VOWEL_CHARS |
-                self.dialect.ACUTE_VOWEL_CHARS |
-                self.dialect.GRAVE_VOWEL_CHARS |
-                self.dialect.CIRCUM_VOWEL_CHARS |
-                self.dialect.TILDE_VOWEL_CHARS |
-                self.dialect.TREMA_VOWEL_CHARS
-        )
+        s = self.normalized
+        return is_orthographic_vowel(s)
 
     @cached_property
     def is_semivowel(self) -> bool:
@@ -502,39 +547,59 @@ class CharToken:
         return self.idx_in_word == len(self.parent_word.normalized) - 1
 
     @cached_property
+    def _prev_letter(self) -> str:
+        """Nearest non-empty letter before this character in the word (across grapheme boundaries)."""
+        if self.prev_char:
+            return self.prev_char.normalized
+        # Walk across grapheme boundary via the prefix string accumulated by CharToken.prefix
+        p = self.prefix
+        return p[-1] if p else ""
+
+    @cached_property
+    def _next_letter(self) -> str:
+        """Nearest non-empty letter after this character in the word (across grapheme boundaries)."""
+        if self.next_char:
+            return self.next_char.normalized
+        s = self.suffix
+        return s[0] if s else ""
+
+    @cached_property
     def is_intervocalic(self) -> bool:
         """
         True if character is between two vowels (V-C-V context).
 
-        Relevant for:
-        - S voicing: casa [ˈkazɐ] (s → [z] between vowels)
-        - R strengthening: caro vs carro
+        Uses word-level prefix/suffix to correctly span grapheme boundaries.
         """
-        prev_is_vowel = self.prev_char.is_vowel if self.prev_char else False
-        next_is_vowel = self.next_char.is_vowel if self.next_char else False
-        return prev_is_vowel and next_is_vowel
+        d = self.dialect
+        all_vowels = (d.VOWEL_CHARS | d.ACUTE_VOWEL_CHARS | d.GRAVE_VOWEL_CHARS |
+                      d.CIRCUM_VOWEL_CHARS | d.TILDE_VOWEL_CHARS | d.NORMALIZED_VOWELS.keys())
+        return self._prev_letter in all_vowels and self._next_letter in all_vowels
 
     @cached_property
     def is_between_consonant_vowel(self) -> bool:
         """
         True if pattern is C-S-V.
 
-        Relevant for S voicing rules.
+        Uses word-level prefix/suffix to correctly span grapheme boundaries.
         """
-        prev_is_cons = self.prev_char.is_consonant if self.prev_char else False
-        next_is_vowel = self.next_char.is_vowel if self.next_char else False
-        return prev_is_cons and next_is_vowel
+        d = self.dialect
+        all_vowels = (d.VOWEL_CHARS | d.ACUTE_VOWEL_CHARS | d.GRAVE_VOWEL_CHARS |
+                      d.CIRCUM_VOWEL_CHARS | d.TILDE_VOWEL_CHARS | d.NORMALIZED_VOWELS.keys())
+        consonants = set("bcdfghjklmnpqrstvwxyz") - all_vowels
+        return self._prev_letter in consonants and self._next_letter in all_vowels
 
     @cached_property
     def is_between_vowel_consonant(self) -> bool:
         """
         True if pattern is V-S-C.
 
-        Relevant for syllable-final consonant rules.
+        Uses word-level prefix/suffix to correctly span grapheme boundaries.
         """
-        prev_is_vowel = self.prev_char.is_vowel if self.prev_char else False
-        next_is_cons = self.next_char.is_consonant if self.next_char else False
-        return prev_is_vowel and next_is_cons
+        d = self.dialect
+        all_vowels = (d.VOWEL_CHARS | d.ACUTE_VOWEL_CHARS | d.GRAVE_VOWEL_CHARS |
+                      d.CIRCUM_VOWEL_CHARS | d.TILDE_VOWEL_CHARS | d.NORMALIZED_VOWELS.keys())
+        consonants = set("bcdfghjklmnpqrstvwxyz") - all_vowels
+        return self._prev_letter in all_vowels and self._next_letter in consonants
 
     # =========================================================================
     # STRESS PROPERTIES
@@ -656,13 +721,45 @@ class CharToken:
 
             # Override with stress-based quality for ambiguous vowels
             if s == "a":
-                return "a" if self.has_primary_stress or self.has_secondary_stress else "ɐ"
+                dc = self.dialect.dialect_code
+                if dc.startswith("pt-TL"):
+                    # Timorese: Tetum-influenced schwa system; unstressed /a/ → [ə]
+                    return "a" if self.has_primary_stress or self.has_secondary_stress else "ə"
+                elif dc.startswith("pt-AO") or dc.startswith("pt-BR"):
+                    # Angolan/Brazilian: less reduction; unstressed /a/ stays [a]
+                    return "a"
+                else:
+                    # European/Mozambican: standard reduction; unstressed /a/ → [ɐ]
+                    return "a" if self.has_primary_stress or self.has_secondary_stress else "ɐ"
             elif s == "e":
+                # Prevocalic unstressed 'e' may glide → handled at consonant boundary
                 if self.has_primary_stress:
-                    return "ɛ"
-                return "ɨ" if self.dialect.dialect_code.startswith("pt-PT") else "e"
+                    # Stressed plain 'e': default closed-mid [e]; only é gives [ɛ]
+                    return "e"
+                dc = self.dialect.dialect_code
+                if dc.startswith("pt-PT"):
+                    return "ɨ"
+                if dc.startswith("pt-BR") and self.is_last_word_letter:
+                    # Brazilian final unstressed 'e' raises to [ɪ]: "abacate" [abakatʃɪ]
+                    return "ɪ"
+                return "e"
             elif s == "o":
-                return "ɔ" if self.has_primary_stress or self.has_secondary_stress else "u"
+                # Stressed plain 'o': default closed-mid [o]; only ó gives [ɔ]
+                dc = self.dialect.dialect_code
+                if dc.startswith("pt-PT") or dc.startswith("pt-MZ"):
+                    # European/Mozambican: strong reduction; unstressed /o/ → [u]
+                    return "o" if self.has_primary_stress or self.has_secondary_stress else "u"
+                if dc.startswith("pt-BR") and self.is_last_word_letter and not (self.has_primary_stress or self.has_secondary_stress):
+                    # Brazilian final unstressed 'o' raises to [ʊ]: "abadejo" [abadeʒʊ]
+                    return "ʊ"
+                # Angolan/Timorese/other BR positions: less reduction; stays [o]
+                return "o"
+
+            # Prevocalic unstressed 'i' → palatal glide [j]
+            if s == "i" and not self.has_primary_stress and not self.has_secondary_stress:
+                next_l = self._next_letter
+                if next_l in self.dialect.VOWEL_CHARS | self.dialect.ACUTE_VOWEL_CHARS | self.dialect.CIRCUM_VOWEL_CHARS | self.dialect.TILDE_VOWEL_CHARS:
+                    return "j"
 
             return base_ipa
 
@@ -685,14 +782,22 @@ class CharToken:
             IPA string for this consonant
         """
         s = self.normalized
-        next_char = self.next_char.normalized if self.next_char else ""
-        prev_char = self.prev_char.normalized if self.prev_char else ""
+        # Use word-level neighbours (cross-grapheme boundary)
+        next_letter = self._next_letter
+        prev_letter = self._prev_letter
 
-        # BRAZILIAN PORTUGUESE: t/d palatalization before [i]
+        # BRAZILIAN PORTUGUESE: t/d palatalization before [i] and before final unstressed [e]→[ɪ]
+        # "tia" [ˈtʃia], "dia" [ˈdʒia], "abacate" [abaˈkatʃɪ], "abade" [abaˈdʒɪ]
         if self.dialect.dialect_code.startswith("pt-BR"):
-            if s == "t" and next_char == "i":
+            if s == "t" and next_letter == "i":
                 return "tʃ"
-            if s == "d" and next_char == "i":
+            if s == "d" and next_letter == "i":
+                return "dʒ"
+            # Palatalization before final unstressed 'e' (raised to [ɪ] in Brazilian)
+            # suffix == 'e' means the only remaining letters in the word are this 'e'
+            if s == "t" and next_letter == "e" and self.suffix == "e":
+                return "tʃ"
+            if s == "d" and next_letter == "e" and self.suffix == "e":
                 return "dʒ"
 
             # L-vocalization in coda position
@@ -702,32 +807,37 @@ class CharToken:
                 return "w"
 
         # C before front vowels → [s]
-        if s == "c" and next_char in self.dialect.FRONT_VOWEL_CHARS:
+        if s == "c" and is_front_vowel(next_letter):
             return "s"
 
         # G before front vowels → [ʒ]
-        if s == "g" and next_char in self.dialect.FRONT_VOWEL_CHARS:
+        if s == "g" and is_front_vowel(next_letter):
             return "ʒ"
 
-        # Initial R → strong R [ʁ]
-        if s == "r" and self.is_first_word_letter:
-            if self.dialect.dialect_code.startswith("pt-BR"):
-                return "h"  # Brazilian [h] or [x]
-            elif self.dialect.dialect_code.startswith("pt-PT"):
-                return "ʁ"  # European uvular
-            else:
-                return "r"  # African/Timorese alveolar trill
+        # R realisation: positional distribution
+        # word-initial r or rr (handled as digraph) → strong [ʁ/h/r]
+        # r after l, n, s (including across morpheme boundaries) → strong
+        # elsewhere (intervocalic, coda, word-final) → tap [ɾ]
+        if s == "r":
+            dc = self.dialect.dialect_code
+            if self.is_first_word_letter:
+                if dc.startswith("pt-BR"):
+                    return "h"
+                elif dc.startswith("pt-PT"):
+                    return "ʁ"
+                else:
+                    return "r"
+            if prev_letter and prev_letter in "lns":
+                if dc.startswith("pt-BR"):
+                    return "h"
+                elif dc.startswith("pt-PT"):
+                    return "ʁ"
+                else:
+                    return "r"
+            # All other positions: tap [ɾ] (intervocalic, coda, word-final)
+            return "ɾ"
 
-        # R after l, n, s → strong R
-        if s == "r" and prev_char in "lns":
-            if self.dialect.dialect_code.startswith("pt-BR"):
-                return "h"  # Brazilian [h] or [x]
-            elif self.dialect.dialect_code.startswith("pt-PT"):
-                return "ʁ"  # European uvular
-            else:
-                return "r"  # African/Timorese alveolar trill
-
-        # S between vowels → [z]
+        # S between vowels → [z] (intervocalic voicing)
         if s == "s" and self.is_intervocalic:
             return "z"
 
@@ -736,11 +846,19 @@ class CharToken:
             # Special case: trans- prefix
             word = self.parent_word.normalized if self.parent_word else ""
             if word.startswith(("trans", "trâns")) and self.idx_in_word == 4:
-                # Check if followed by vowel (voice) or consonant (voiceless)
-                if self.next_char and self.next_char.is_vowel:
-                    # Exception: transação [tɾɐ̃zɐˈsɐ̃w]
+                if next_letter in self.dialect.VOWEL_CHARS | self.dialect.ACUTE_VOWEL_CHARS:
                     return "z"
             return "s"
+
+        # S in coda position → [ʃ] in European Portuguese
+        # Coda: word-final, or before a voiceless consonant
+        if s == "s":
+            voiceless = set("ptkfsx")
+            if self.dialect.dialect_code.startswith("pt-PT"):
+                if self.is_last_word_letter:
+                    return "ʃ"
+                if next_letter in voiceless:
+                    return "ʃ"
 
         # X rules (complex, context-dependent)
         if s == "x":
@@ -1549,7 +1667,6 @@ class WordToken:
     word_idx: int  # parent_sentence.words[idx] == self
     graphemes: List[GraphemeToken] = dataclasses.field(default_factory=list)
     syllables: List[str] = dataclasses.field(default_factory=list)
-    postag: Optional[str] = None
     parent_sentence: Optional["Sentence"] = None
     dialect: DialectInventory = dataclasses.field(default_factory=EuropeanPortuguese)
 
@@ -1613,43 +1730,30 @@ class WordToken:
         # Normalize syllables for consonant doubling
         normalized_syllables = self._normalize_syllables()
 
+        # Maximal-munch grapheme segmentation is delegated to the shared
+        # orthography2ipa trie tokenizer, driven by this dialect's own
+        # GRAPHEME_INVENTORY. Segmenting each (already syllabified) syllable
+        # independently preserves the grapheme→syllable alignment the rest
+        # of the pipeline relies on. Non-inventory characters surface as
+        # UNKNOWN tokens, matching the old single-character fallback.
+        tokenizer = _phonetok(
+            self.dialect.dialect_code,
+            tuple(self.dialect.GRAPHEME_INVENTORY),
+        )
+
         graphemes = []
-        # char_to_syllable = self._build_char_to_syllable_map(normalized_syllables)
-
-        # Process each syllable
         for syl_idx, syllable in enumerate(normalized_syllables):
-            syl_pos = 0
-
-            while syl_pos < len(syllable):
-                # Try longest match first (greedy)
-                matched = False
-
-                for grapheme in self.dialect.GRAPHEME_INVENTORY:
-                    if syllable[syl_pos:].startswith(grapheme):
-                        # Found match
-                        graphemes.append(
-                            GraphemeToken(
-                                surface=syllable[syl_pos:syl_pos + len(grapheme)],
-                                grapheme_idx=len(graphemes),
-                                syllable_idx=syl_idx,
-                                parent_word=self
-                            )
-                        )
-                        syl_pos += len(grapheme)
-                        matched = True
-                        break
-
-                if not matched:
-                    # Single character fallback
-                    graphemes.append(
-                        GraphemeToken(
-                            surface=syllable[syl_pos],
-                            grapheme_idx=len(graphemes),
-                            syllable_idx=syl_idx,
-                            parent_word=self
-                        )
+            for token in tokenizer.tokenize(syllable):
+                if token.kind not in _GRAPHEME_TOKEN_KINDS:
+                    continue
+                graphemes.append(
+                    GraphemeToken(
+                        surface=token.grapheme,
+                        grapheme_idx=len(graphemes),
+                        syllable_idx=syl_idx,
+                        parent_word=self
                     )
-                    syl_pos += 1
+                )
 
         return graphemes
 
@@ -1822,10 +1926,24 @@ class WordToken:
             Full IPA transcription with stress and syllable marks
         """
         # Check irregular words first
-        if self.postag and self.normalized in self.dialect.HOMOGRAPHS and self.postag in self.dialect.HOMOGRAPHS[self.normalized]:
-            return self.dialect.HOMOGRAPHS[self.normalized][self.postag]
         if self.normalized in self.dialect.IRREGULAR_WORDS:
             return self.dialect.IRREGULAR_WORDS[self.normalized]
+
+        # B6 stage-2: route the out-of-lexicon base through the shared
+        # orthography2ipa lattice (the beam) instead of the private grapheme
+        # cascade below, when the dialect opts in. The adapter returns the
+        # canonical tugaphone layout so the regional accent primitives compose
+        # unchanged; a None result (lattice covers no grapheme) falls through
+        # to the cascade fallback.
+        if getattr(self.dialect, "USE_O2I_LATTICE_BASE", False):
+            from tugaphone.lattice_adapter import lattice_base_ipa
+            lattice_ipa = lattice_base_ipa(
+                self.normalized, self.dialect.dialect_code,
+                stress_token=self.dialect.PRIMARY_STRESS_TOKEN,
+                hiatus_token=self.dialect.HIATUS_TOKEN,
+            )
+            if lattice_ipa:
+                return lattice_ipa
 
         # Generate grapheme IPAs grouped by syllable
         syllable_ipas = [[] for _ in self.syllables]
@@ -1866,7 +1984,6 @@ class WordToken:
             "n_syllables": self.n_syllables,
             "idx_in_sentence": self.idx_in_sentence,
             "stressed_syllable_idx": self.stressed_syllable_idx,
-            "pos": self.postag,
         }
 
         for grapheme in self.graphemes:
@@ -1923,33 +2040,6 @@ class Sentence:
     surface: str
     words: List[WordToken] = dataclasses.field(default_factory=list)
     dialect: DialectInventory = dataclasses.field(default_factory=EuropeanPortuguese)
-
-    @staticmethod
-    def from_postagged(surface: str, tags: List[Tuple[str, str]],
-                       dialect: Optional[DialectInventory] = None) -> "Sentence":
-        words: List[WordToken] = []
-
-        # Compute word positions in sentence
-        char_position = 0
-        for idx, (word_surface, pos) in enumerate(tags):
-            # Find word in original sentence
-            word_start = surface.find(word_surface, char_position)
-
-            # Create word token
-            word_token = WordToken(
-                surface=word_surface,
-                word_idx=idx,
-                postag=pos,
-                dialect=dialect
-            )
-            word_token._idx_in_sentence = word_start
-
-            words.append(word_token)
-
-            # Update position (word length + space)
-            char_position = word_start + len(word_surface) + 1
-
-        return Sentence(surface, words=words, dialect=dialect)
 
     def __post_init__(self):
         """
