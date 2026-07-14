@@ -13,7 +13,6 @@ import pytest
 from silabificador import syllabify
 
 import orthography2ipa
-from orthography2ipa.g2p_plugin import G2PPlugin
 from orthography2ipa.syllabifier_plugin import SyllabifierPlugin
 
 from tugaphone.dialects import EuropeanPortuguese
@@ -75,10 +74,14 @@ class TestSyllabifierPlugin:
         assert detect_stress("viagem", rules, lang="pt-PT") == 1
 
 
-class TestG2PPluginInterface:
+class TestG2PEngineSurface:
     def test_implements_base_lazily(self):
         plugin = TugaphoneG2PPlugin()
-        assert isinstance(plugin, G2PPlugin)
+        # tugaphone is an engine BUILT ON orthography2ipa, not a plugin TO it —
+        # nothing over there discovers or calls this. What matters is the surface,
+        # not the inheritance.
+        for method in ("transcribe", "transcribe_word"):
+            assert callable(getattr(plugin, method))
         assert plugin._phonemizer is None  # nothing heavy loaded yet
         assert set(plugin.language_codes) >= {"pt-PT", "pt-BR"}
 

@@ -2,7 +2,7 @@
 
 tugaphone *consumes* orthography2ipa — its Portuguese spec data, the
 declarative stress rules and the shared
-:class:`~orthography2ipa.g2p_plugin.G2PPlugin`/``WordContext`` types —
+``WordContext`` type —
 and owns the Portuguese pipeline (lexicon, gender-aware numbers, regional
 accent transforms). Use the engine directly:
 
@@ -20,14 +20,14 @@ Two classes live here:
 """
 from typing import List, Optional
 
-from orthography2ipa.g2p_plugin import G2PPlugin, WordContext
+from orthography2ipa import WordContext
 from orthography2ipa.syllabifier_plugin import SyllabifierPlugin
 from silabificador import syllabify as _syllabify
 
 from tugaphone.registry import list_dialects
 
 
-class TugaphoneG2PPlugin(G2PPlugin):
+class TugaphoneG2PPlugin:
     """Dialect-aware Portuguese G2P via the tugaphone pipeline.
 
     The underlying :class:`tugaphone.TugaPhonemizer` (lexicon + bifonia
