@@ -60,7 +60,15 @@ class TugaphoneG2PPlugin(G2PPlugin):
 
 
 class SilabificadorSyllabifier(SyllabifierPlugin):
-    """Portuguese syllabifier for orthography2ipa's stress detection."""
+    """Portuguese syllabifier for orthography2ipa's stress detection.
+
+    **Kept as a class, no longer registered as an entry point.**
+    orthography2ipa ships this same plugin itself now
+    (``orthography2ipa[portuguese]``, wrapping the same ``silabificador``), and
+    two entry points claiming ``pt-PT`` at the same priority meant the winner was
+    whichever importlib enumerated last — a coin flip between two objects that do
+    the identical thing. One owner, and it is the library the plugin plugs into.
+    """
 
     @property
     def language_codes(self) -> List[str]:
