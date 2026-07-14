@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.1a1](https://github.com/TigreGotico/tugaphone/tree/0.9.1a1) (2026-07-14)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.0a1...0.9.1a1)
+
+**Merged pull requests:**
+
+- fix: pin silabificador\>=2.1.0a1, and pin the stress agreement [\#77](https://github.com/TigreGotico/tugaphone/pull/77) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.9.0a1](https://github.com/TigreGotico/tugaphone/tree/0.9.0a1) (2026-07-14)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a3...0.9.0a1)
