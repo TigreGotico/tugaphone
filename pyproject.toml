@@ -31,11 +31,8 @@ dependencies = [
     "silabificador>=2.1.0a1",
     "tugalex>=2.0.1a1",
     "bifonia>=0.1.1",
-    "orthography2ipa>=1.71.0a1",
+    "orthography2ipa[portuguese]>=4.6.0a1",
 ]
-
-[project.entry-points."orthography2ipa.syllabify"]
-portuguese = "tugaphone.plugin:SilabificadorSyllabifier"
 
 [project.optional-dependencies]
 test = [
