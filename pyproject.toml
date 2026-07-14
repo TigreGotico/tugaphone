@@ -28,7 +28,7 @@ classifiers = [
 ]
 dependencies = [
     "unicode-rbnf",
-    "silabificador",
+    "silabificador>=2.1.0a1",
     "tugalex>=2.0.1a1",
     "bifonia>=0.1.1",
     "orthography2ipa>=1.71.0a1",
