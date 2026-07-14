@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.0a1](https://github.com/TigreGotico/tugaphone/tree/0.9.0a1) (2026-07-14)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a3...0.9.0a1)
+
+**Merged pull requests:**
+
+- feat: phonological feature API on tokenizer tokens [\#44](https://github.com/TigreGotico/tugaphone/pull/44) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.8.1a3](https://github.com/TigreGotico/tugaphone/tree/0.8.1a3) (2026-07-14)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a2...0.8.1a3)
