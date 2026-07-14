@@ -72,6 +72,7 @@ QUICK REFERENCES:
 
 import dataclasses
 import string
+import unicodedata
 from functools import cached_property, lru_cache
 from typing import List, Optional, Dict, Tuple
 
@@ -530,9 +531,219 @@ class CharToken:
         """
         return self.normalized in ["i", "u", "ê", "ô"]
 
+    @cached_property
+    def _vowel_phone(self) -> Optional[str]:
+        """The base vowel phone this character realizes, or None.
+
+        Reads the character's own IPA so dialect-specific reduction is
+        honoured (EP unstressed e → [ɨ], BR keeps [e]); nasality and other
+        combining marks are stripped before lookup.
+        """
+        if not self.is_vowel:
+            return None
+        for phone in unicodedata.normalize("NFD", self.ipa):
+            if phone in self.dialect.VOWEL_HEIGHT:
+                return phone
+        return None
+
+    @cached_property
+    def vowel_height(self) -> Optional[str]:
+        """Tongue height of the realized vowel: high, mid-high, mid-low or low.
+
+        None for consonants, punctuation and silent vowels.
+        """
+        phone = self._vowel_phone
+        return self.dialect.VOWEL_HEIGHT.get(phone) if phone else None
+
+    @cached_property
+    def vowel_backness(self) -> Optional[str]:
+        """Tongue backness of the realized vowel: front, central or back."""
+        phone = self._vowel_phone
+        return self.dialect.VOWEL_BACKNESS.get(phone) if phone else None
+
+    @cached_property
+    def vowel_roundedness(self) -> Optional[str]:
+        """Lip rounding of the realized vowel: rounded or unrounded."""
+        phone = self._vowel_phone
+        if not phone:
+            return None
+        return "rounded" if phone in self.dialect.ROUNDED_VOWEL_PHONES else "unrounded"
+
+    @cached_property
+    def is_front_vowel(self) -> bool:
+        """True if the realized vowel is front ([i, e, ɛ, y])."""
+        return self.vowel_backness == "front"
+
+    @cached_property
+    def is_back_vowel(self) -> bool:
+        """True if the realized vowel is back ([u, o, ɔ])."""
+        return self.vowel_backness == "back"
+
+    @cached_property
+    def is_rounded_vowel(self) -> bool:
+        """True if the realized vowel is rounded ([u, o, ɔ, y])."""
+        return self.vowel_roundedness == "rounded"
+
+    # =========================================================================
+    # ARTICULATORY CLASSIFICATION (consonants)
+    # =========================================================================
+    # These classify the LETTER by the typical realization of its default
+    # phoneme. Letters whose phone is context-dependent (c → [k]/[s],
+    # g → [ɡ]/[ʒ], s → [s]/[z]/[ʃ], x → [ʃ]/[ks]/[z]) carry the default
+    # reading; check the character's .ipa for the realized phone.
+
+    @cached_property
+    def manner_of_articulation(self) -> Optional[str]:
+        """Manner of the consonant's default phoneme.
+
+        Categories: plosive, fricative, nasal, lateral, rhotic.
+        None for vowels, punctuation and letters outside the table (h, w, y).
+        """
+        if not self.is_consonant:
+            return None
+        return self.dialect.MANNER_OF_ARTICULATION.get(self.normalized)
+
+    @cached_property
+    def place_of_articulation(self) -> Optional[str]:
+        """Place of the consonant's default phoneme.
+
+        Categories: bilabial, labiodental, alveolar, postalveolar, velar.
+        None for vowels, punctuation and letters outside the table.
+        """
+        if not self.is_consonant:
+            return None
+        return self.dialect.PLACE_OF_ARTICULATION.get(self.normalized)
+
+    @cached_property
+    def voicing(self) -> Optional[str]:
+        """'voiced' or 'voiceless' for the default realization; None otherwise.
+
+        Vowels are voiced; intervocalic s is voiced ([z], casa).
+        """
+        if self.is_punct:
+            return None
+        if self.is_vowel:
+            return "voiced"
+        s = self.normalized
+        if s == "s" and self.is_intervocalic:
+            return "voiced"
+        if s in self.dialect.VOICED_CONSONANT_CHARS:
+            return "voiced"
+        if s in self.dialect.VOICELESS_CONSONANT_CHARS:
+            return "voiceless"
+        return None
+
+    @cached_property
+    def is_plosive(self) -> bool:
+        """True if the consonant's default phoneme is a plosive."""
+        return self.manner_of_articulation == "plosive"
+
+    @cached_property
+    def is_fricative(self) -> bool:
+        """True if the consonant's default phoneme is a fricative."""
+        return self.manner_of_articulation == "fricative"
+
+    @cached_property
+    def is_nasal_consonant(self) -> bool:
+        """True for the nasal consonant letters m, n."""
+        return self.is_consonant and self.normalized in self.dialect.NASAL_CONSONANT_CHARS
+
+    @cached_property
+    def is_liquid(self) -> bool:
+        """True for the liquid letters l, r."""
+        return self.is_consonant and self.normalized in self.dialect.LIQUID_CHARS
+
+    @cached_property
+    def is_sibilant(self) -> bool:
+        """True for letters whose default phoneme is a sibilant (s, z, x, j, ç)."""
+        return self.is_consonant and self.normalized in self.dialect.SIBILANT_CHARS
+
+    @cached_property
+    def is_rhotic(self) -> bool:
+        """True for the rhotic letter r."""
+        return self.is_consonant and self.normalized in self.dialect.RHOTIC_CHARS
+
+    @cached_property
+    def is_sonorant(self) -> bool:
+        """True for vowels and nasal/lateral/rhotic consonants."""
+        if self.is_vowel:
+            return True
+        return self.manner_of_articulation in ("nasal", "lateral", "rhotic")
+
+    @cached_property
+    def is_obstruent(self) -> bool:
+        """True for plosive and fricative consonants."""
+        return self.manner_of_articulation in ("plosive", "fricative")
+
     # =========================================================================
     # POSITIONAL PROPERTIES
     # =========================================================================
+
+    @cached_property
+    def parent_syllable(self) -> Optional[str]:
+        """The syllable string containing this character.
+
+        Syllables are the doubled-consonant normalized ones the grapheme
+        tokenizer aligns to (car.ro → ca.rro), so the result is consistent
+        with :attr:`idx_in_syllable`.
+        """
+        g = self.parent_grapheme
+        if not g or not g.parent_word or g.syllable_idx < 0:
+            return None
+        syllables = g.parent_word.normalized_syllables
+        if g.syllable_idx >= len(syllables):
+            return None
+        return syllables[g.syllable_idx]
+
+    @cached_property
+    def idx_in_syllable(self) -> int:
+        """Index of this character within its syllable, or -1 if unparented."""
+        g = self.parent_grapheme
+        if not g or not g.parent_word or self.parent_syllable is None:
+            return -1
+        preceding = sum(
+            len(s) for s in g.parent_word.normalized_syllables[:g.syllable_idx]
+        )
+        return self.idx_in_word - preceding
+
+    @cached_property
+    def _syllable_vowel_letters(self) -> set:
+        """All vowel letters, tilde vowels included, for syllable-position tests."""
+        return self.dialect.ALL_VOWEL_CHARS | self.dialect.TILDE_VOWEL_CHARS
+
+    @cached_property
+    def is_nucleus(self) -> bool:
+        """True if this vowel is the syllable nucleus (not the glide of a diphthong)."""
+        if not self.is_vowel:
+            return False
+        g = self.parent_grapheme
+        if g and g.is_triphthong:
+            return 0 < self.char_idx < g.n_chars - 1
+        if g and g.is_diphthong:
+            if g.is_rising_diphthong:
+                return self.char_idx == g.n_chars - 1
+            return self.char_idx == 0
+        return True
+
+    @cached_property
+    def is_onset(self) -> bool:
+        """True if this consonant sits in the syllable onset (before the nucleus)."""
+        if not self.is_consonant or self.is_silent:
+            return False
+        syllable, idx = self.parent_syllable, self.idx_in_syllable
+        if syllable is None or idx < 0:
+            return False
+        return not any(ch in self._syllable_vowel_letters for ch in syllable[:idx])
+
+    @cached_property
+    def is_coda(self) -> bool:
+        """True if this consonant sits in the syllable coda (after the nucleus)."""
+        if not self.is_consonant or self.is_silent:
+            return False
+        syllable, idx = self.parent_syllable, self.idx_in_syllable
+        if syllable is None or idx < 0:
+            return False
+        return any(ch in self._syllable_vowel_letters for ch in syllable[:idx])
 
     @cached_property
     def is_first_word_letter(self) -> bool:
@@ -1006,6 +1217,27 @@ class CharToken:
             "has_diacritics": self.has_diacritics,
             "has_primary_stress": self.has_primary_stress,
             "has_secondary_stress": self.has_secondary_stress,
+            "idx_in_syllable": self.idx_in_syllable,
+            "is_nucleus": self.is_nucleus,
+            "is_onset": self.is_onset,
+            "is_coda": self.is_coda,
+            "manner_of_articulation": self.manner_of_articulation,
+            "place_of_articulation": self.place_of_articulation,
+            "voicing": self.voicing,
+            "vowel_height": self.vowel_height,
+            "vowel_backness": self.vowel_backness,
+            "vowel_roundedness": self.vowel_roundedness,
+            "is_front_vowel": self.is_front_vowel,
+            "is_back_vowel": self.is_back_vowel,
+            "is_rounded_vowel": self.is_rounded_vowel,
+            "is_plosive": self.is_plosive,
+            "is_fricative": self.is_fricative,
+            "is_nasal_consonant": self.is_nasal_consonant,
+            "is_liquid": self.is_liquid,
+            "is_sibilant": self.is_sibilant,
+            "is_rhotic": self.is_rhotic,
+            "is_sonorant": self.is_sonorant,
+            "is_obstruent": self.is_obstruent,
         }
 
     def __eq__(self, other) -> bool:
@@ -1465,6 +1697,95 @@ class GraphemeToken:
         return self.normalized in self.dialect.HETEROSYLLABIC_CLUSTERS
 
     # =========================================================================
+    # PHONOLOGICAL FEATURES
+    # =========================================================================
+
+    @cached_property
+    def is_vowel_grapheme(self) -> bool:
+        """True if every character of this grapheme is a vowel letter."""
+        return all(c.is_vowel for c in self.characters)
+
+    @cached_property
+    def is_consonant_grapheme(self) -> bool:
+        """True if every character of this grapheme is a consonant letter."""
+        return all(c.is_consonant for c in self.characters)
+
+    @property
+    def idx_in_syllable(self) -> int:
+        """Index of this grapheme's first character within its syllable."""
+        return self.first_char.idx_in_syllable
+
+    @cached_property
+    def syllable_position(self) -> str:
+        """Position in the syllable: 'nucleus', 'onset' or 'coda'.
+
+        Vowel graphemes, diphthongs, triphthongs and nasal graphemes are the
+        nucleus; consonants split by whether a vowel precedes them in the
+        syllable. Silent syllable-initial letters (h) classify as onset.
+        """
+        if (self.is_vowel_grapheme or self.is_diphthong or self.is_triphthong
+                or self.is_nasal):
+            return "nucleus"
+        if self.first_char.is_coda:
+            return "coda"
+        return "onset"
+
+    @cached_property
+    def phonological_weight(self) -> int:
+        """Number of phones this grapheme contributes (mora estimate).
+
+        Silent graphemes weigh 0, diphthongs 2; otherwise the length of the
+        IPA with stress/length/syllable markers and combining marks stripped.
+        """
+        if all(c.is_silent for c in self.characters):
+            return 0
+        if self.is_diphthong:
+            return 2
+        ipa = self.ipa
+        for marker in ("ˈ", "ˌ", "ː", "·"):
+            ipa = ipa.replace(marker, "")
+        ipa = "".join(
+            ch for ch in unicodedata.normalize("NFD", ipa)
+            if not unicodedata.combining(ch)
+        )
+        return len(ipa)
+
+    @cached_property
+    def has_complex_onset(self) -> bool:
+        """True for a consonant grapheme that is part of a branching onset (pr, tr, …)."""
+        if self.syllable_position != "onset" or not self.is_consonant_grapheme:
+            return False
+        for neighbor in (self.prev_grapheme, self.next_grapheme):
+            if (neighbor is not None
+                    and neighbor.syllable_idx == self.syllable_idx
+                    and neighbor.is_consonant_grapheme
+                    and neighbor.syllable_position == "onset"):
+                return True
+        return False
+
+    @property
+    def is_onset_cluster(self) -> bool:
+        """True if this grapheme belongs to a complex onset cluster."""
+        return self.has_complex_onset
+
+    @cached_property
+    def is_palatal(self) -> bool:
+        """True for digraphs realized as palatal consonants (nh → [ɲ], lh → [ʎ])."""
+        return self.dialect.DIGRAPH2IPA.get(self.normalized) in ("ɲ", "ʎ")
+
+    @cached_property
+    def triggers_palatalization(self) -> bool:
+        """True for vocalic graphemes realizing a high front vowel ([i]).
+
+        High front vowels trigger /t d/ palatalization in Brazilian
+        Portuguese (dia → [dʒˈi·ɐ]).
+        """
+        if not (self.is_vowel_grapheme or self.is_diphthong):
+            return False
+        first = self.first_char
+        return first.vowel_height == "high" and first.vowel_backness == "front"
+
+    # =========================================================================
     # STRESS PROPERTIES
     # =========================================================================
 
@@ -1600,6 +1921,16 @@ class GraphemeToken:
             "is_rising_diphthong": self.is_rising_diphthong,
             "is_nasal_diphthong": self.is_nasal_diphthong,
             "is_oral_diphthong": self.is_oral_diphthong,
+            "is_vocalic_hiatus": self.is_vocalic_hiatus,
+            "is_vowel_grapheme": self.is_vowel_grapheme,
+            "is_consonant_grapheme": self.is_consonant_grapheme,
+            "idx_in_syllable": self.idx_in_syllable,
+            "syllable_position": self.syllable_position,
+            "phonological_weight": self.phonological_weight,
+            "has_complex_onset": self.has_complex_onset,
+            "is_onset_cluster": self.is_onset_cluster,
+            "is_palatal": self.is_palatal,
+            "triggers_palatalization": self.triggers_palatalization,
             "has_primary_stress": self.has_primary_stress,
             "has_secondary_stress": self.has_secondary_stress,
         }
@@ -1901,6 +2232,95 @@ class WordToken:
             self.dialect
         )
 
+    @cached_property
+    def stress_pattern(self) -> str:
+        """Stress classification by stressed-syllable position.
+
+        'monosyllable', 'oxytone' (final), 'paroxytone' (penultimate),
+        'proparoxytone' (antepenultimate) or 'irregular'.
+        """
+        if self.n_syllables == 1:
+            return "monosyllable"
+        position_from_end = self.n_syllables - self.stressed_syllable_idx
+        if position_from_end == 1:
+            return "oxytone"
+        if position_from_end == 2:
+            return "paroxytone"
+        if position_from_end == 3:
+            return "proparoxytone"
+        return "irregular"
+
+    # =========================================================================
+    # PHONOLOGICAL FEATURES
+    # =========================================================================
+
+    @cached_property
+    def _vowel_letters(self) -> set:
+        """All vowel letters, tilde vowels included."""
+        return self.dialect.ALL_VOWEL_CHARS | self.dialect.TILDE_VOWEL_CHARS
+
+    @cached_property
+    def has_diphthongs(self) -> bool:
+        """True if any grapheme is a diphthong."""
+        return any(g.is_diphthong for g in self.graphemes)
+
+    @cached_property
+    def has_nasal_sounds(self) -> bool:
+        """True if any grapheme is nasal (tilde vowel or nasal digraph)."""
+        return any(g.is_nasal for g in self.graphemes)
+
+    @cached_property
+    def has_palatal_sounds(self) -> bool:
+        """True if any grapheme realizes a palatal consonant (nh, lh)."""
+        return any(g.is_palatal for g in self.graphemes)
+
+    @cached_property
+    def has_consonant_clusters(self) -> bool:
+        """True if any syllable has a branching onset (pr, tr, …)."""
+        return any(g.has_complex_onset for g in self.graphemes)
+
+    @cached_property
+    def syllable_structure_pattern(self) -> str:
+        """CV skeleton per syllable, dot-separated (casa → 'CV.CV')."""
+        return ".".join(
+            "".join("V" if ch in self._vowel_letters else "C" for ch in syllable)
+            for syllable in self.normalized_syllables
+        )
+
+    @cached_property
+    def phoneme_count(self) -> int:
+        """Estimated number of phones (sum of grapheme weights)."""
+        return sum(g.phonological_weight for g in self.graphemes)
+
+    @cached_property
+    def vowel_sequence(self) -> str:
+        """The word's vowel letters in order, dot-separated (casa → 'a.a')."""
+        return ".".join(ch for ch in self.normalized if ch in self._vowel_letters)
+
+    @cached_property
+    def consonant_sequence(self) -> str:
+        """The word's consonant letters in order, dot-separated (casa → 'c.s')."""
+        return ".".join(
+            ch for ch in self.normalized
+            if ch.isalpha() and ch not in self._vowel_letters
+        )
+
+    @cached_property
+    def is_homograph(self) -> bool:
+        """True if the word is a heterophonic homograph (gosto, sede, …).
+
+        Homograph knowledge lives in **bifonia**, which owns the disambiguation
+        (tugaphone dropped its own POS tagging and delegates to it). Asking the
+        dialect would ask the wrong library.
+        """
+        from bifonia import HOMOGRAPHS
+        return self.normalized in HOMOGRAPHS
+
+    @cached_property
+    def is_irregular(self) -> bool:
+        """True if the word's IPA comes from the irregular-word lexicon."""
+        return self.normalized in self.dialect.IRREGULAR_WORDS
+
     # =========================================================================
     # IPA GENERATION
     # =========================================================================
@@ -1981,9 +2401,24 @@ class WordToken:
             Dictionary with word features and nested grapheme features
         """
         feats = {
+            "text": self.normalized,
+            "ipa": self.ipa,
+            "syllables": list(self.syllables),
             "n_syllables": self.n_syllables,
             "idx_in_sentence": self.idx_in_sentence,
             "stressed_syllable_idx": self.stressed_syllable_idx,
+            "stress_pattern": self.stress_pattern,
+            "syllable_structure_pattern": self.syllable_structure_pattern,
+            "phoneme_count": self.phoneme_count,
+            "vowel_sequence": self.vowel_sequence,
+            "consonant_sequence": self.consonant_sequence,
+            "has_diphthongs": self.has_diphthongs,
+            "has_nasal_sounds": self.has_nasal_sounds,
+            "has_palatal_sounds": self.has_palatal_sounds,
+            "has_consonant_clusters": self.has_consonant_clusters,
+            "is_homograph": self.is_homograph,
+            "is_irregular": self.is_irregular,
+            "is_archaic": self.is_archaic,
         }
 
         for grapheme in self.graphemes:

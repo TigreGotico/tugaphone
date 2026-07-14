@@ -97,6 +97,64 @@ The deepest level, `CharToken`, carries the phonetic primitives: `is_vowel`,
 `is_intervocalic`, and its own `.ipa`. These drive the allophone rules the higher
 levels assemble.
 
+## Phonological features
+
+Beyond the orthographic predicates, every level exposes articulatory and
+syllable-structure features.
+
+> **Orthographic heuristics.** Consonant classifications describe the typical
+> realization of a letter's *default* phoneme. Letters whose value is
+> context-dependent (`c` → [k]/[s], `g` → [ɡ]/[ʒ], `s` → [s]/[z]/[ʃ],
+> `x` → [ʃ]/[ks]/[z]) carry the default reading — check the character's
+> `.ipa` for the realized phone. Vowel features, by contrast, classify the
+> *realized* phone, so dialect-specific reduction is honoured.
+
+### Character
+
+| Property | Values | Example (`vinho`) |
+|----------|--------|-------------------|
+| `manner_of_articulation` | plosive, fricative, nasal, lateral, rhotic | `v` → fricative |
+| `place_of_articulation` | bilabial, labiodental, alveolar, postalveolar, velar | `v` → labiodental |
+| `voicing` | voiced, voiceless (intervocalic `s` → voiced) | `v` → voiced |
+| `vowel_height` | high, mid-high, mid-low, low | `i` → high |
+| `vowel_backness` | front, central, back | `i` → front |
+| `vowel_roundedness` | rounded, unrounded | `i` → unrounded |
+| `is_nucleus` / `is_onset` / `is_coda` | syllable role | `i` → nucleus |
+| `idx_in_syllable` | position within the syllable | |
+| `is_sonorant`, `is_obstruent`, `is_liquid`, `is_sibilant`, `is_rhotic`, `is_plosive`, `is_fricative`, `is_nasal_consonant`, `is_front_vowel`, `is_back_vowel`, `is_rounded_vowel` | booleans | |
+
+Vowel features read the character's realized IPA, so European Portuguese
+unstressed `e` (→ [ɨ]) classifies as high/central while the same letter in
+Brazilian Portuguese (→ [e]) classifies as mid-high/front.
+
+### Grapheme
+
+| Property | Meaning | Example (`vinho`) |
+|----------|---------|-------------------|
+| `syllable_position` | nucleus, onset or coda | `nh` → onset |
+| `phonological_weight` | phones contributed (silent → 0, diphthong → 2) | `nh` → 1 |
+| `has_complex_onset` / `is_onset_cluster` | branching onset (`pr`, `tr`, …) | |
+| `is_palatal` | digraph realized as [ɲ]/[ʎ] | `nh` → True |
+| `triggers_palatalization` | high front vowel ([i]) | |
+| `is_vowel_grapheme` / `is_consonant_grapheme` | letter composition | |
+
+### Word
+
+```python
+w = Sentence("vinho", dialect=EuropeanPortuguese()).words[0]
+w.ipa                          # 'vˈi·ɲu'
+w.stress_pattern               # 'paroxytone'
+w.syllable_structure_pattern   # 'CV.CCV'
+w.phoneme_count                # 4
+w.vowel_sequence               # 'i.o'
+w.consonant_sequence           # 'v.n.h'
+w.has_palatal_sounds           # True
+```
+
+Also: `has_diphthongs`, `has_nasal_sounds`, `has_consonant_clusters`,
+`is_homograph` (POS-dependent IPA, e.g. *gosto*) and `is_irregular` (IPA comes
+from the lexicon rather than the rules).
+
 ## Feature extraction
 
 Every level has a `.features` dict. `Sentence.features` flattens the whole tree
