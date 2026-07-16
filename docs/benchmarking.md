@@ -1,8 +1,42 @@
 # Benchmarking
 
-tugaphone's accuracy is measured continuously, offline, against a
-committed sample of the unified Portuguese pronunciation gold. The
-current numbers live in [scoreboard.md](scoreboard.md).
+tugaphone is measured against two golds, one per path. The
+**phonemization pipeline** — a dialect selected by its lect code, driving the
+orthography2ipa lattice — is scored sentence-level against orthography2ipa's TTS
+gold. The **rules-only grapheme cascade** (the benchmark baseline, not the
+pipeline) is scored word-level against the unified pronunciation gold; those
+numbers live in [scoreboard.md](scoreboard.md).
+
+## Pipeline: the TTS-gold harness
+
+The reference for the phonemization pipeline is orthography2ipa's sentence-level
+TTS gold — one gold set per Portuguese lect (`data/gold/portuguese_tts/<lect>.tsv`
+in orthography2ipa), authored in the broad IPA tradition the lect specs are
+written to, spanning 39+ lects. `scripts/tts_gold_benchmark.py` scores it end to
+end, reusing orthography2ipa's own character-level PER and IPA normalization:
+
+```bash
+python scripts/tts_gold_benchmark.py            # every lect
+python scripts/tts_gold_benchmark.py pt-PT pt-BR
+```
+
+The mean sentence-level PER across the lects is **0.064**. The reading splits
+cleanly by path:
+
+- the ~30 **pure-lattice** lects (no lexicon overlay) match the gold
+  near-exactly — the lect spec and the gold share one convention;
+- the **lexicon-overlay** lects (`pt-PT`, `pt-BR`, `pt-AO`, `pt-MZ`, `pt-TL` and
+  their city variants) carry a small residual, because the `tugalex` lexicon is
+  transcribed in a narrower tradition than the gold's broad convention. The
+  overlay is retained anyway: it is authoritative for the lexical facts the rules
+  get wrong. Read the number as agreement-with-the-spec-tradition, not absolute
+  correctness.
+
+## Rules-only baseline
+
+The sections below measure the grapheme cascade in `tugaphone.tokenizer` /
+`tugaphone.dialects` — the rules-only baseline, not the lattice pipeline —
+against the unified pronunciation lexicon gold.
 
 ## Gold source
 

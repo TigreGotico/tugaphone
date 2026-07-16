@@ -48,8 +48,8 @@ def test_05_token_tree():
     assert r.returncode == 0, r.stderr
 
 
-def test_06_serialize_accent():
-    r = _run(EXAMPLES_DIR / "06_serialize_accent.py")
+def test_06_dialect_provenance():
+    r = _run(EXAMPLES_DIR / "06_dialect_provenance.py")
     assert r.returncode == 0, r.stderr
 
 

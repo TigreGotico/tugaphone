@@ -1,62 +1,50 @@
-# Advanced recipes
+# Advanced
 
-Once the basic `phonemize_sentence` loop is clear, these are the knobs worth
-knowing.
+Once the basic `phonemize_sentence` loop is clear, this is what sits underneath
+it.
 
-## Regional accents
+## The lattice core and the caller-owned layers
 
-On top of the five dialect codes, `tugaphone.regional` ships sub-regional accent
-presets as `RegionalTransforms`. Pass one through `regional_dialect`; it is
-applied on top of the `lang` dialect:
+tugaphone phonemizes by driving the shared
+[orthography2ipa](https://github.com/TigreGotico/orthography2ipa) candidate
+lattice. A dialect *is* an orthography2ipa lect spec:
+`phonemize_sentence(text, lang)` resolves `lang` to a lect code and runs
+`orthography2ipa.G2P(lect).transcribe(text)`. The spec's grapheme table,
+`allophone_rules` and cross-word `sandhi_rules` produce the dialect's phonology —
+betacism, rising diphthongs, palatalization, `/u/` fronting, coda-sibilant
+voicing sandhi and the rest — with no string-transform pass after transcription.
 
-```python
-from tugaphone import TugaPhonemizer
-from tugaphone.regional import (PortoDialect, MinhoDialect, BragaDialect,
-                                TrasMontanoDialect, FafeDialect)
+tugaphone adds only the stages orthography2ipa leaves to the caller, wired
+through orthography2ipa's own extension points:
 
-ph = TugaPhonemizer()
-sentence = "a gente sente o que sabe"
-for name, accent in [("porto", PortoDialect), ("minho", MinhoDialect),
-                     ("braga", BragaDialect), ("trasmontano", TrasMontanoDialect),
-                     ("fafe", FafeDialect)]:
-    print(name, "→", ph.phonemize_sentence(sentence, "pt-PT", regional_dialect=accent))
-```
+1. **Normalization** — number/ordinal verbalization
+   (`tugaphone.number_utils.normalize_numbers`) and sense-based homograph marking
+   (`bifonia.add_extra_diacritics`) run as the engine's `normalizer`, before the
+   lattice sees the text.
+2. **Lexicon** — the curated `tugalex` lexicon is registered per lect via
+   `orthography2ipa.register_lexicon()`, so a covered word folds into the same
+   override path as a spec `word_exceptions` entry; the lattice generates only
+   out-of-vocabulary words.
+3. **Syllabification** — supplied by orthography2ipa's own `silabificador`
+   `syllabify` plugin.
 
-| Preset | Signature features |
-|--------|--------------------|
-| `NorthernDialect` | `<ou>/<ei>` retention + betacism /v/→[b] (core northern). |
-| `CoimbraDialect` | Diphthong retention only (neutral baseline, no betacism). |
-| `PortoDialect` | Rising `o` diphthong (stressed /o/→[uo]) + northern core. |
-| `MinhoDialect` | Vowel-centralization resistance, open vowels, alveolar rhotic. |
-| `BragaDialect` | Palatal epenthesis (`abelha` → `abeilha`) on top of Minho rules. |
-| `FamalicaoDialect` | Conservative `o`-nasal retention + Minho rules. |
-| `FafeDialect` | Nasal diphthongization of `e` (`gente` → `geinte`) + Minho rules. |
-| `TrasMontanoDialect` | `ch` affrication, s-voicing, final nasal denasalization. |
-| `AlentejoDialect` | Intervocalic /d/ deletion, `meu`→[me], `ei`→[e]. |
-| `AlgarveDialect` | `meu`→[me], coda-sibilant voicing sandhi. |
-| `MadeiraDialect` | l-palatalisation, nasal diphthong → Ṽ+[n]. |
-| `AzoresDialect` | Stressed /u/→[y], l-palatalisation, `oi`→[o]. |
+For the full breakdown of what comes from where, see
+[architecture.md](architecture.md).
 
-These are explicitly experimental — real variation is messier than any rule set.
+## The lexicon-overlay boundary
 
-### Serializing an accent
+The lexicon overlay is registered for **only** the eight lects whose lexical
+tradition matches a `tugalex` region: `pt-PT` and `pt-PT-x-lisbon` (Lisbon),
+`pt-BR` and `pt-BR-x-rj` (Rio), `pt-BR-x-sp` (São Paulo), `pt-AO` (Luanda),
+`pt-MZ` (Maputo) and `pt-TL` (Dili). Every other lect is produced purely by the
+lattice.
 
-`RegionalTransforms` round-trips through a plain dict, so an accent config can
-live in JSON or YAML:
-
-```python
-from tugaphone.regional import PortoDialect, RegionalTransforms
-
-cfg = PortoDialect.as_dict
-# {'morpheme_rules': [], 'ipa_rules': ['rising_diphthong_o', ...]}
-
-clone = RegionalTransforms.from_dict(cfg)
-[r.__name__ for r in clone.ipa_rules]
-```
-
-`from_dict` raises `ValueError` on an unknown IPA rule name. Only rules listed in
-`tugaphone.regional.RULE_MAP` survive the round-trip; accents that use other rule
-functions serialize a subset of their behaviour.
+The boundary is deliberate: a `tugalex` region encodes one tradition's lexical
+pronunciations, so registering the Lisbon lexicon on a Porto lect would overwrite
+the Porto spec's phonology with Lisbon forms. `tugalex` entries are relaid from
+its `·`-joined, nucleus-marked layout into the spec's stress-before-syllable
+layout on registration, keeping a lexicon hit and a lattice-generated word in one
+notation so a sentence's IPA stays internally consistent.
 
 ## Number normalization
 
@@ -74,54 +62,43 @@ normalize_numbers("897654356789098", "pt-BR")  # short scale (trilhões)
 
 Gender is inferred from preceding articles (`a`, `as`, `da`, `das`) and from the
 shape of the following noun (`-a`, `-dade`, `-agem` endings lean feminine). Pass
-`strict=False` to leave unparseable tokens in place instead of raising.
+`strict=False` to leave unparseable tokens in place instead of raising. Inside
+the pipeline this runs as the engine's `normalize` stage, so a bare digit in the
+input sentence is verbalized before the lattice transcribes it.
 
 ## Integration with sibling libraries
 
 `tugaphone` composes the TigreGotico Portuguese NLP stack; each library is
 usable on its own:
 
-- [`tugalex`](https://github.com/TigreGotico/tugalex) — the phonetic lexicon
-  (`LEXICON` in `tugaphone.dialects`).
-- [`silabificador`](https://github.com/TigreGotico/silabificador) — the
-  syllabifier behind `WordToken.syllables`.
-- [`bifonia`](https://github.com/TigreGotico/bifonia) — meaning-based
-  heterophone disambiguation; called via `add_extra_diacritics` before G2P.
 - [`orthography2ipa`](https://github.com/TigreGotico/orthography2ipa) — the
-  `G2PPlugin` base interface and declarative stress rules tugaphone exposes.
+  candidate lattice and the lect specs that are tugaphone's core.
+- [`tugalex`](https://github.com/TigreGotico/tugalex) — the phonetic lexicon
+  (`LEXICON` in `tugaphone.dialects`), registered per lect as an override.
+- [`silabificador`](https://github.com/TigreGotico/silabificador) — the
+  syllabifier, wired in as orthography2ipa's `syllabify` plugin.
+- [`bifonia`](https://github.com/TigreGotico/bifonia) — meaning-based
+  heterophone disambiguation, called via `add_extra_diacritics` in the
+  `normalize` stage.
 
-A TTS front-end typically wires `tugaphone` as the G2P stage: normalize text,
-phonemize per target dialect, hand the IPA string to the acoustic model.
+A TTS front-end typically wires `tugaphone` as the G2P stage: pass text and a
+target lect code, hand the returned IPA string to the acoustic model. It can also
+be loaded through the `orthography2ipa` G2P plugin interface — see
+[api.md](api.md#tugaphoneplugin).
 
-## Cross-word phonology
+## The token-feature API
 
-`Sentence.ipa` joins each `WordToken.ipa` with spaces and transcribes every word
-**independently** — a character-level cascade (`CharToken` → `GraphemeToken` →
-`WordToken` → `Sentence`) that never crosses a word boundary. tugaphone consumes
-`orthography2ipa`'s shared *primitives* (grapheme trie, vowel classification,
-stress rules, `LanguageSpec`) but does not route IPA generation through o2i's
-`G2P.transcribe` or its pronunciation lattice.
-
-Because generation runs word-by-word, cross-word processes are not modelled on
-that path:
-
-- Standard European Portuguese **external `/s`-sandhi** (coda `/s` `[ʃ]` → `[z]`
-  before a vowel-initial next word: *os amigos* → `[ˈuz ɐˈmiɡuʃ]`) is not
-  applied in base `pt-PT`; `os` stays `[ˈuʃ]`.
-- The southern/insular `sibilant_voicing_sandhi` IPA transform is a per-token
-  approximation: it voices a token's own final `[ʃ]` → `[ʒ]` whenever the word
-  ends in `<s>`, with no visibility of the following word — so it fires even
-  utterance-finally, where a true cross-word rule would not.
-
-For the optional o2i-lattice base path (which changes only the base IPA of
-out-of-vocabulary words, not cross-word phonology) see
-[lattice-base-migration.md](lattice-base-migration.md).
+`tugaphone.tokenizer` and `tugaphone.dialects` expose a token tree (manner,
+place, voicing, vowel height, syllable roles, CV skeletons) and back the
+rules-only benchmark baseline. This is a feature-inspection surface, **not** the
+phonemization path — `phonemize_sentence` runs on the lattice and never routes
+through it. See [tokenizer.md](tokenizer.md).
 
 ## Where next
 
+- [architecture.md](architecture.md) — the pipeline in full
 - [api.md](api.md) — full signatures
-- [dialects.md](dialects.md) — the five inventories and sub-regional accent presets
+- [dialects.md](dialects.md) — the lect codes, aliases and lexicon overlay
 - [homographs.md](homographs.md) — meaning-based disambiguation
 - [numbers.md](numbers.md) — number normalization and gender agreement
 - [tokenizer.md](tokenizer.md) — inspect syllables, stress and graphemes directly
-- [quickstart.md](quickstart.md) — the basics

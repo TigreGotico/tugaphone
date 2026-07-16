@@ -1,10 +1,10 @@
 """tugaphone on the orthography2ipa base interfaces.
 
-tugaphone *consumes* orthography2ipa — its Portuguese spec data, the
-declarative stress rules and the shared
-``WordContext`` type —
-and owns the Portuguese pipeline (lexicon, gender-aware numbers, regional
-accent transforms). Use the engine directly:
+tugaphone *consumes* orthography2ipa — it drives the shared candidate lattice
+(the Portuguese lect specs, their stress and sandhi rules) and adds the stages
+orthography2ipa leaves to the caller: gender-aware number verbalization,
+sense-based homograph marking and the curated ``tugalex`` lexicon overlay (see
+:mod:`tugaphone.lattice_core`). Use the engine directly:
 
     >>> from tugaphone.plugin import TugaphoneG2PPlugin
     >>> TugaphoneG2PPlugin().transcribe("o gato dorme")

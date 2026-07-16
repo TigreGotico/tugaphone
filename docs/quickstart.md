@@ -2,12 +2,12 @@
 
 `tugaphone` turns Portuguese text into IPA phonemes, and it does it per dialect.
 Give it a sentence and a Lusophone dialect code, get back a phoneme string with
-stress markers and syllable boundaries.
+stress markers.
 
 ```
-Choveu muito ontem.
-pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j
-pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj
+O gato dorme.
+pt-PT → ˈo ˈgatu ˈdɔɾmɨ
+pt-BR → ˈu ˈgatʊ ˈdoɾmi
 ```
 
 ## 1. Install
@@ -34,16 +34,22 @@ the spelling:
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # ˈu gˈa·tu ˈdoɾ·mɨ
-print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # ˈu gˈa·tʊ ˈdoɾ·mɪ
+print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # ˈo ˈgatu ˈdɔɾmɨ
+print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # ˈu ˈgatʊ ˈdoɾmi
 ```
 
 The return value is a space-separated phoneme string: one token per word, with
-`ˈ` marking primary stress and `·` marking syllable boundaries.
+`ˈ` marking primary stress. Selecting `lang` selects an
+[orthography2ipa](https://github.com/TigreGotico/orthography2ipa) lect spec whose
+grapheme table, allophone rules and cross-word sandhi produce that dialect's
+phonology — so `lang` changes the sounds, not just the spelling. See
+[architecture.md](architecture.md).
 
 ## 3. Pick a dialect
 
-Five Lusophone dialects are supported through the `lang` argument:
+Every Portuguese-family lect is reachable by its BCP-47 code — the five national
+standards plus the European, Brazilian, African, Asian and other varieties.
+`list_dialects()` returns all 41.
 
 ```python
 ph = TugaPhonemizer()
@@ -59,8 +65,9 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 | `pt-MZ` | Mozambican Portuguese (Maputo) |
 | `pt-TL` | Timorese Portuguese (Dili) |
 
-Anything that is not one of the four non-European codes falls back to European
-Portuguese.
+Sub-regional varieties use private-use subtags (`pt-PT-x-porto`,
+`pt-BR-x-sp`, …). An unrecognised code falls back to European Portuguese. The
+full list and the legacy aliases are in [dialects.md](dialects.md).
 
 ## 4. First real call
 
@@ -84,21 +91,18 @@ print(ph.phonemize_sentence(text, "pt-PT"))
 
 ## 5. Sub-regional accents
 
-On top of the five dialects, `tugaphone` ships experimental sub-regional accents
-as `RegionalTransforms` presets. Pass one through `regional_dialect`:
+Sub-regional accents are lects like any other — select them by their BCP-47
+code. The accent's phonology is encoded in the orthography2ipa lect spec, so no
+extra argument is needed:
 
 ```python
-from tugaphone import TugaPhonemizer
-from tugaphone.regional import PortoDialect
-
 ph = TugaPhonemizer()
-print(ph.phonemize_sentence("O Porto é uma cidade bonita.", regional_dialect=PortoDialect))
+print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
+# ˈwo ˈbiɲu ˈjɛ ˈmujtu ˈbõ   (betacism: vinho → binho, rising diphthongs)
 ```
 
-Each rule is annotated in the source with the phenomenon it models and a source
-reference, but the presets are experimental approximations — hand-tuned against
-project gold, not validated field transcriptions. See
-[dialects.md](dialects.md#sub-regional-accent-presets) for the full list.
+See [dialects.md](dialects.md) for the full list of European and Brazilian
+sub-regional codes and the legacy aliases.
 
 ## 6. orthography2ipa plugin
 
@@ -110,7 +114,7 @@ loads phonemizers through that interface:
 from tugaphone.plugin import TugaphoneG2PPlugin
 
 p = TugaphoneG2PPlugin(lang="pt-PT")
-print(p.transcribe("o gato dorme"))   # ˈu gˈa·tu ˈdoɾ·mɨ
+print(p.transcribe("o gato dorme"))   # ˈo ˈgatu ˈdɔɾmɨ
 ```
 
 `SilabificadorSyllabifier` is a `SyllabifierPlugin` you can use directly.
@@ -120,9 +124,10 @@ entry point for it.
 
 ## Where next
 
+- [architecture.md](architecture.md) — the lattice core and the caller-owned layers
 - [api.md](api.md) — every public class, function and keyword argument with real signatures
-- [dialects.md](dialects.md) — the five inventories and sub-regional accent presets
+- [dialects.md](dialects.md) — the lect codes, aliases and lexicon overlay
 - [homographs.md](homographs.md) — meaning-based disambiguation
 - [numbers.md](numbers.md) — number normalization and gender agreement
-- [advanced.md](advanced.md) — regional accents, number normalization, the token tree
-- [tokenizer.md](tokenizer.md) — the `Sentence → Word → Grapheme → Character` model and its features
+- [advanced.md](advanced.md) — the pipeline internals and integration
+- [tokenizer.md](tokenizer.md) — the `Sentence → Word → Grapheme → Character` feature model
