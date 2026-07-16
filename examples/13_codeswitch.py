@@ -7,7 +7,7 @@ inventory, while the Portuguese function words are untouched.
 
 Run::
 
-    python examples/11_codeswitch.py
+    python examples/13_codeswitch.py
 """
 from tugaphone import TugaPhonemizer
 
