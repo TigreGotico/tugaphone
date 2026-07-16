@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.2a3](https://github.com/TigreGotico/tugaphone/tree/0.9.2a3) (2026-07-16)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.2a2...0.9.2a3)
+
+**Merged pull requests:**
+
+- docs: timeless polish pass over README, docs and examples [\#83](https://github.com/TigreGotico/tugaphone/pull/83) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.9.2a2](https://github.com/TigreGotico/tugaphone/tree/0.9.2a2) (2026-07-14)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.2a1...0.9.2a2)
