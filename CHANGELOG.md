@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.0a1](https://github.com/TigreGotico/tugaphone/tree/1.0.0a1) (2026-07-16)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.2a3...1.0.0a1)
+
+**Breaking changes:**
+
+- feat!: drive phonemization through the orthography2ipa lattice [\#85](https://github.com/TigreGotico/tugaphone/pull/85) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.9.2a3](https://github.com/TigreGotico/tugaphone/tree/0.9.2a3) (2026-07-16)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.2a2...0.9.2a3)
