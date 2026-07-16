@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0a1](https://github.com/TigreGotico/tugaphone/tree/1.2.0a1) (2026-07-16)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.1.0a1...1.2.0a1)
+
+**Merged pull requests:**
+
+- feat: code-switch handling — detect and nativize embedded es/fr/en [\#91](https://github.com/TigreGotico/tugaphone/pull/91) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.1.0a1](https://github.com/TigreGotico/tugaphone/tree/1.1.0a1) (2026-07-16)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.0.0a2...1.1.0a1)
