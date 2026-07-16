@@ -315,8 +315,18 @@ GUARD = [
 
 
 class TestIpaUnchanged:
-    """The feature layer is inert: transcription output is pinned per dialect."""
+    """The feature layer is inert: the grapheme cascade's per-token IPA is
+    pinned per dialect, so exposing manner/place/height features off the tokens
+    changes no transcription.
+
+    This guards the token-cascade (``Sentence.ipa``), not the phonemization
+    path — the public ``phonemize_sentence`` drives the orthography2ipa lattice
+    (see ``tugaphone.lattice_core``) and is guarded by the gold benchmark.
+    """
 
     @pytest.mark.parametrize("code,sentence,expected", GUARD)
-    def test_output_pinned(self, pho, code, sentence, expected):
-        assert pho.phonemize_sentence(sentence, code) == expected
+    def test_output_pinned(self, code, sentence, expected):
+        from tugaphone.registry import get_dialect_inventory
+        from tugaphone.tokenizer import Sentence
+        inv = get_dialect_inventory(code)
+        assert Sentence(sentence, dialect=inv).ipa == expected

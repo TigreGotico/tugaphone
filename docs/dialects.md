@@ -1,187 +1,122 @@
-# Dialects and regional accents
+# Dialects
 
-## The five dialect inventories
-
-tugaphone ships a `DialectInventory` subclass for each of the five major
-Lusophone dialect groups. Pass the corresponding IETF tag to
-`phonemize_sentence`:
+A tugaphone dialect *is* an orthography2ipa lect spec. The dialect set is the
+Portuguese-family lects orthography2ipa ships, each reachable by its BCP-47
+code. Select one through the `lang` argument to `phonemize_sentence`; `lang`
+changes the phonology, not just the spelling.
 
 ```python
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
-    print(code, "→", ph.phonemize_sentence("Choveu muito ontem.", code))
-# pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j
-# pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj
-# pt-AO → ʃo·ˈvew mˈũjn·tʊ ˈõn·tẽj
-# pt-MZ → ʃu·ˈvew mˈũj·tu ˈõ·tẽj
-# pt-TL → ʃo·ˈvew mˈuj·tʊ ˈõn·tɐ̃j
+    print(code, "→", ph.phonemize_sentence("O gato dorme.", code))
+# pt-PT → ˈo ˈgatu ˈdɔɾmɨ
+# pt-BR → ˈu ˈgatʊ ˈdoɾmi
+# pt-AO → ˈʊ ˈgatʊ ˈdɔʁmɨ
+# pt-MZ → ˈu ˈgatu ˈdɔrme
+# pt-TL → ˈo ˈgatʊ ˈdɔrme
 ```
 
-### pt-PT — European Portuguese
+## The lect codes
 
-`EuropeanPortuguese`. The Lisbon standard is the base inventory:
-- Heavy vowel reduction in unstressed position (unstressed /e/ → [ɨ])
-- Post-alveolar sibilants in syllable-final position (`<s>` → [ʃ])
-- Velarized lateral [ɫ] in coda position
-- Uvular /ʁ/ for strong R
+`tugaphone.list_dialects()` returns every reachable code — 41 in all, derived
+from `orthography2ipa.available_codes()`.
 
-### pt-BR — Brazilian Portuguese
+### National standards
 
-`BrazilianPortuguese`. Key differences from European:
-- Fuller unstressed vowels (less reduction)
-- Palatalisation of /t d/ before [i] → [tʃ dʒ]
-- Coda /l/ vocalisation → [w] (creates diphthongs absent in European)
-- Alveolar [s] for syllable-final position (not post-alveolar)
+| Code | Variety |
+|------|---------|
+| `pt-PT` | European Portuguese |
+| `pt-BR` | Brazilian Portuguese |
+| `pt-AO` | Angolan Portuguese |
+| `pt-MZ` | Mozambican Portuguese |
+| `pt-TL` | Timorese Portuguese |
 
-### pt-AO — Angolan Portuguese
+### European sub-regional varieties
 
-`AngolanPortuguese`. Centred on Luanda:
-- Less vowel reduction than European Portuguese
-- Alveolar trill [r] for strong R
-- Bantu-influenced prosody (substrate vowel lengthening)
+`pt-PT-x-porto`, `pt-PT-x-braga`, `pt-PT-x-minho`, `pt-PT-x-viana`,
+`pt-PT-x-alfena`, `pt-PT-x-trasosmontes`, `pt-PT-x-aveiro`, `pt-PT-x-beira`,
+`pt-PT-x-coimbra`, `pt-PT-x-alentejo`, `pt-PT-x-algarve`, `pt-PT-x-madeira`,
+`pt-PT-x-acores`, `pt-PT-x-sao-miguel`, `pt-PT-x-terceira`, `pt-PT-x-lisbon`,
+`pt-PT-x-medieval`.
 
-### pt-MZ — Mozambican Portuguese
-
-`MozambicanPortuguese`. Centred on Maputo:
-- Bantu substrate influence from Tswa, Ronga, Chona and others
-- Less vowel reduction than European
-- Regional variation between north and south
-
-### pt-TL — Timorese Portuguese
-
-`TimoresePortuguese`. Second language for most speakers; influenced by Tetum
-and other Austronesian languages. Conservative consonantism, /u/ not fronted.
-
-## Dialect codes
-
-Every supported dialect — the five majors, the city-level inventories and the
-regional accent presets below — resolves from a single registry by BCP-47
-code. Regional accents use private-use subtags (`pt-PT-x-porto`), the
-convention shared across the phonetics stack:
+Each spec's `allophone_rules` and `sandhi_rules` encode the variety's phonology
+directly:
 
 ```python
-from tugaphone import list_dialects, resolve_dialect
+# Porto: rising diphthongs, betacism /v/ → [b]
+print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
+# ˈwo ˈbiɲu ˈjɛ ˈmujtu ˈbõ
 
-print(list_dialects())
-# ['pt-AO', 'pt-BR', 'pt-BR-x-rio-janeiro', 'pt-BR-x-sao-paulo', 'pt-MZ',
-#  'pt-PT', 'pt-PT-x-alentejo', 'pt-PT-x-algarve', 'pt-PT-x-azores',
-#  'pt-PT-x-braga', 'pt-PT-x-coimbra', 'pt-PT-x-fafe', 'pt-PT-x-famalicao',
-#  'pt-PT-x-lisbon', 'pt-PT-x-madeira', 'pt-PT-x-minho', 'pt-PT-x-north',
-#  'pt-PT-x-porto', 'pt-PT-x-transmontano', 'pt-TL']
+# Trás-os-Montes: <ch> → [tʃ], betacism
+print(ph.phonemize_sentence("A chave.", "pt-PT-x-trasosmontes"))
+# ˈɐ ˈtʃabɨ
 
-entry = resolve_dialect("pt-PT-x-porto")
-print(entry.region)   # Porto / Douro Litoral
+# Madeira: /l/ palatalization → [ʎ]
+print(ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-madeira"))
+# ˈo ˈviɲu ˈɛ ˈbõ
 ```
 
-Resolution is case-insensitive and accepts common aliases (`pt`,
-`pt-PT-x-lisboa`, `pt-PT-x-acores`, `pt-PT-x-tras-os-montes`,
-`pt-PT-x-central`, `pt-BR-x-rio`, `pt-PT-x-norte`). An unknown private-use
-subtag falls back to its parent (`pt-PT-x-anything` → `pt-PT`); any other
-unrecognised tag falls back to European Portuguese.
+### Brazilian sub-regional varieties
 
-### City inventories
-
-Three city-level `DialectInventory` subclasses carry their own lexicon
-region maps: `pt-PT-x-lisbon` (`LisbonPortuguese`), `pt-BR-x-rio-janeiro`
-(`RioJaneiroPortuguese`) and `pt-BR-x-sao-paulo` (`SaoPauloPortuguese`).
+`pt-BR-x-sp`, `pt-BR-x-rj`, `pt-BR-x-mg`, `pt-BR-x-pr`, `pt-BR-x-sul`,
+`pt-BR-x-caipira`, `pt-BR-x-fluminense`, `pt-BR-x-bahia`, `pt-BR-x-recife`,
+`pt-BR-x-ce`, `pt-BR-x-norte`, `pt-BR-x-brasilia`.
 
 ```python
-print(ph.phonemize_sentence("noite", "pt-BR"))             # nˈoj·tʃɪ
-print(ph.phonemize_sentence("noite", "pt-BR-x-sao-paulo")) # nˈoj·ti
+print(ph.phonemize_sentence("noite", "pt-BR"))       # ˈnojtʃɪ
+print(ph.phonemize_sentence("noite", "pt-BR-x-sp"))  # ˈnojti
 ```
 
----
+### African, Asian and other lects
 
-## Sub-regional accent presets
+`pt-CV` (Cape Verde), `pt-GW` (Guinea-Bissau), `pt-ST` (São Tomé and Príncipe),
+`pt-MO` (Macau), `pt-UY` (Uruguay), `ext-PT-x-barrancos` (Barranquenho), and
+`roa-x-galaicopt` (Galician-Portuguese).
 
-Each preset is a composition of transform rules. Every rule is annotated in the
-source (`tugaphone.regional`) with the phonological phenomenon it models, the
-dialect zone it is attested in, and a source reference (Cintra 1971; ALEPG /
-Saramago 2006; and others). The presets are **experimental approximations** —
-several rules rest on internal field notes rather than published sources, and
-each preset is hand-tuned to match the project's gold slices rather than
-independently validated field data. Reach one through its dialect code, or layer
-any preset explicitly via the `regional_dialect` argument — the explicit
-argument wins over whatever the code resolves to:
+## Legacy aliases
+
+Legacy tugaphone accent codes resolve to their orthography2ipa equivalents.
+Resolution is case-insensitive; an unresolved private-use subtag falls back to
+its parent tag, and any unrecognised code falls back to `pt-PT`.
+
+| Alias | Resolves to |
+|-------|-------------|
+| `pt` | `pt-PT` |
+| `pt-PT-x-lisboa` | `pt-PT-x-lisbon` |
+| `pt-PT-x-azores` | `pt-PT-x-acores` |
+| `pt-PT-x-north`, `pt-PT-x-norte`, `pt-PT-x-fafe` | `pt-PT-x-minho` |
+| `pt-PT-x-famalicao` | `pt-PT-x-viana` |
+| `pt-PT-x-transmontano`, `pt-PT-x-tras-os-montes` | `pt-PT-x-trasosmontes` |
+| `pt-PT-x-central` | `pt-PT-x-coimbra` |
+| `pt-BR-x-sao-paulo` | `pt-BR-x-sp` |
+| `pt-BR-x-rio-janeiro`, `pt-BR-x-rio` | `pt-BR-x-rj` |
 
 ```python
-from tugaphone.regional import AzoresDialect
+from tugaphone import resolve_lect
 
-ph = TugaPhonemizer()
-s = "O vinho é muito bom."
-
-print(ph.phonemize_sentence(s, "pt-PT"))
-# pt-PT standard: ˈu vˈi·ɲu ˈɛ mˈũj·tu ˈbõ
-
-print(ph.phonemize_sentence(s, "pt-PT-x-porto"))
-# Porto: ˈu bˈi·ɲu ˈɛ mˈũj·tu ˈbõ  (betacism: vinho → binho)
-
-print(ph.phonemize_sentence(s, "pt-PT", regional_dialect=AzoresDialect))
-# Açores: ˈy vˈi·ɲu ˈɛ mˈỹj·tu ˈbõ  (stressed /u/ → [y])
+resolve_lect("pt-PT-x-lisboa")     # 'pt-PT-x-lisbon'
+resolve_lect("pt-BR-x-sao-paulo")  # 'pt-BR-x-sp'
+resolve_lect("pt")                 # 'pt-PT'
 ```
 
-### Preset table
+## Lexicon overlay vs pure lattice
 
-All presets are importable from `tugaphone.regional`.
+Eight lects carry the curated `tugalex` lexicon overlay, because their lexical
+tradition matches a `tugalex` region: `pt-PT` and `pt-PT-x-lisbon` (Lisbon),
+`pt-BR` and `pt-BR-x-rj` (Rio), `pt-BR-x-sp` (São Paulo), `pt-AO` (Luanda),
+`pt-MZ` (Maputo) and `pt-TL` (Dili). For a covered word the lexicon supplies the
+pronunciation and the lattice fills in only the out-of-vocabulary words.
 
-| Code | Preset | Region | Signature rules |
-|------|--------|--------|-----------------|
-| `pt-PT-x-north` | `NorthernDialect` | Northern Portugal (generic) | `<ou>/<ei>` retention, betacism /v/→[b] |
-| `pt-PT-x-coimbra` | `CoimbraDialect` | Coimbra / Centro-Litoral | `<ou>/<ei>` retention, no betacism |
-| `pt-PT-x-porto` | `PortoDialect` | Porto / Douro Litoral | Stressed /o/→[uo] rising diphthong + northern core |
-| `pt-PT-x-minho` | `MinhoDialect` | Minho (conservative rural) | Vowel-centralisation resistance, open /a/, alveolar [r] |
-| `pt-PT-x-braga` | `BragaDialect` | Braga | Palatal epenthesis (`abelha`→`abeilha`) + Minho |
-| `pt-PT-x-famalicao` | `FamalicaoDialect` | Vila Nova de Famalicão | Conservative `-ão`→[õ] retention + Minho |
-| `pt-PT-x-fafe` | `FafeDialect` | Fafe / inner Minho | Nasal /ẽ/→[eĩ] diphthongisation + Minho |
-| `pt-PT-x-transmontano` | `TrasMontanoDialect` | Trás-os-Montes | `<ch>` affrication, s-voicing, nasal denasalisation |
-| `pt-PT-x-alentejo` | `AlentejoDialect` | Alentejo | Intervocalic /d/ deletion, `meu`→[me], `ei`→[e] |
-| `pt-PT-x-algarve` | `AlgarveDialect` | Algarve | `meu`→[me], coda-sibilant voicing sandhi |
-| `pt-PT-x-madeira` | `MadeiraDialect` | Madeira | l-palatalisation, nasal diphthong → Ṽ+[n] |
-| `pt-PT-x-azores` | `AzoresDialect` | Açores (São Miguel) | Stressed /u/→[y], l-palatalisation, `oi`→[o] |
-
-### Building a custom accent
-
-Compose any rules from `RULE_MAP`:
-
-```python
-from tugaphone.regional import RegionalTransforms, RULE_MAP
-
-my_accent = RegionalTransforms(
-    ipa_rules=[RULE_MAP["betacism"], RULE_MAP["monophthongize_ei"]],
-)
-print(ph.phonemize_sentence("Vou beber vinho.", "pt-PT", regional_dialect=my_accent))
-```
-
-A `RegionalTransforms` round-trips through a plain dict:
-
-```python
-cfg = my_accent.as_dict
-# {'morpheme_rules': [], 'ipa_rules': ['betacism', 'monophthongize_ei']}
-clone = RegionalTransforms.from_dict(cfg)
-```
-
-### Rules-only mode
-
-Instantiate a dialect inventory with an empty `IRREGULAR_WORDS` to bypass
-the lexicon and rely purely on grapheme rules:
-
-```python
-from tugaphone.dialects import EuropeanPortuguese
-from tugaphone.tokenizer import Sentence
-
-inv = EuropeanPortuguese()
-inv.IRREGULAR_WORDS = {}
-s = Sentence("gato dorme", dialect=inv)
-print(s.ipa)   # ˈɡa·tu ˈdoɾ·mɨ
-```
-
----
+Every other lect is **pure lattice** — its phonology comes entirely from the
+orthography2ipa spec. The overlay is withheld deliberately: registering the
+Lisbon lexicon on a Porto lect would overwrite the Porto spec's phonology with
+Lisbon forms. See [architecture.md](architecture.md) for the layer boundary.
 
 ## Where next
 
+- [architecture.md](architecture.md) — the pipeline and the caller-owned layers
 - [homographs.md](homographs.md) — meaning-based disambiguation
 - [numbers.md](numbers.md) — number normalization
 - [api.md](api.md) — full class reference
-- [advanced.md](advanced.md) — serialization and integration

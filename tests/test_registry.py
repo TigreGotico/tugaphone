@@ -1,23 +1,14 @@
 """Dialect registry: code resolution, listing and phonemizer integration.
 
-Every pinned IPA string in this file was captured by running the phonemizer.
+A dialect is an orthography2ipa lect code. Every pinned IPA string was captured
+by running the phonemizer.
 """
 
 import pytest
 
-from tugaphone.dialects import (EuropeanPortuguese, LisbonPortuguese,
-                                BrazilianPortuguese, RioJaneiroPortuguese,
-                                SaoPauloPortuguese, AngolanPortuguese,
-                                MozambicanPortuguese, TimoresePortuguese)
-from tugaphone.regional import (NorthernDialect, PortoDialect, MinhoDialect,
-                                BragaDialect, FamalicaoDialect, FafeDialect,
-                                TrasMontanoDialect, CoimbraDialect,
-                                AlentejoDialect, AlgarveDialect,
-                                MadeiraDialect, AzoresDialect)
-from tugaphone.registry import (DIALECT_REGISTRY, DialectEntry,
-                                normalize_dialect_code, resolve_dialect,
-                                get_dialect_inventory, get_regional_transforms,
-                                list_dialects)
+from tugaphone.registry import (normalize_dialect_code, resolve_lect,
+                                resolve_dialect, lexicon_region, list_dialects,
+                                get_dialect_inventory)
 
 
 class TestNormalization:
@@ -35,92 +26,76 @@ class TestNormalization:
 
 
 class TestResolution:
-    @pytest.mark.parametrize("code,inventory", [
-        ("pt-PT", EuropeanPortuguese),
-        ("pt-BR", BrazilianPortuguese),
-        ("pt-AO", AngolanPortuguese),
-        ("pt-MZ", MozambicanPortuguese),
-        ("pt-TL", TimoresePortuguese),
-        ("pt-PT-x-lisbon", LisbonPortuguese),
-        ("pt-BR-x-rio-janeiro", RioJaneiroPortuguese),
-        ("pt-BR-x-sao-paulo", SaoPauloPortuguese),
+    @pytest.mark.parametrize("code", [
+        "pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL",
+        "pt-PT-x-lisbon", "pt-PT-x-porto", "pt-BR-x-sp", "pt-BR-x-rj",
+        "pt-CV", "pt-GW", "pt-ST", "pt-MO", "pt-UY",
     ])
-    def test_inventory_codes(self, code, inventory):
-        entry = resolve_dialect(code)
-        assert entry.code == code
-        assert entry.inventory is inventory
-        assert isinstance(get_dialect_inventory(code), inventory)
+    def test_canonical_codes_resolve_to_self(self, code):
+        assert resolve_lect(code) == code
 
-    @pytest.mark.parametrize("code,preset", [
-        ("pt-PT-x-north", NorthernDialect),
-        ("pt-PT-x-porto", PortoDialect),
-        ("pt-PT-x-minho", MinhoDialect),
-        ("pt-PT-x-braga", BragaDialect),
-        ("pt-PT-x-famalicao", FamalicaoDialect),
-        ("pt-PT-x-fafe", FafeDialect),
-        ("pt-PT-x-transmontano", TrasMontanoDialect),
-        ("pt-PT-x-coimbra", CoimbraDialect),
-        ("pt-PT-x-alentejo", AlentejoDialect),
-        ("pt-PT-x-algarve", AlgarveDialect),
-        ("pt-PT-x-madeira", MadeiraDialect),
-        ("pt-PT-x-azores", AzoresDialect),
-    ])
-    def test_preset_codes(self, code, preset):
-        entry = resolve_dialect(code)
-        assert entry.transforms is preset
-        assert entry.inventory is EuropeanPortuguese
-        assert get_regional_transforms(code) is preset
-
-    @pytest.mark.parametrize("alias,canonical", [
+    @pytest.mark.parametrize("alias,lect", [
         ("pt", "pt-PT"),
         ("pt-PT-x-lisboa", "pt-PT-x-lisbon"),
-        ("pt-BR-x-rio", "pt-BR-x-rio-janeiro"),
-        ("pt-PT-x-norte", "pt-PT-x-north"),
-        ("pt-PT-x-tras-os-montes", "pt-PT-x-transmontano"),
+        ("pt-BR-x-rio", "pt-BR-x-rj"),
+        ("pt-BR-x-rio-janeiro", "pt-BR-x-rj"),
+        ("pt-BR-x-sao-paulo", "pt-BR-x-sp"),
+        ("pt-PT-x-norte", "pt-PT-x-minho"),
+        ("pt-PT-x-tras-os-montes", "pt-PT-x-trasosmontes"),
+        ("pt-PT-x-transmontano", "pt-PT-x-trasosmontes"),
         ("pt-PT-x-central", "pt-PT-x-coimbra"),
-        ("pt-PT-x-acores", "pt-PT-x-azores"),
+        ("pt-PT-x-azores", "pt-PT-x-acores"),
     ])
-    def test_aliases(self, alias, canonical):
-        assert resolve_dialect(alias).code == canonical
+    def test_legacy_aliases(self, alias, lect):
+        assert resolve_lect(alias) == lect
 
     def test_case_insensitive(self):
-        assert resolve_dialect("PT-BR").inventory is BrazilianPortuguese
-        assert resolve_dialect("pt-pt-X-PORTO").transforms is PortoDialect
+        assert resolve_lect("PT-BR") == "pt-BR"
+        assert resolve_lect("pt-pt-X-PORTO") == "pt-PT-x-porto"
 
     def test_unknown_private_use_falls_back_to_parent(self):
-        entry = resolve_dialect("pt-PT-x-unknown")
-        assert entry.code == "pt-PT"
-        assert entry.transforms is None
+        assert resolve_lect("pt-PT-x-unknown") == "pt-PT"
 
     def test_unknown_language_falls_back_to_default(self):
-        assert resolve_dialect("fr").code == "pt-PT"
-        assert resolve_dialect("").code == "pt-PT"
+        assert resolve_lect("fr") == "pt-PT"
+        assert resolve_lect("") == "pt-PT"
 
-    def test_majors_have_no_preset(self):
-        for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
-            assert get_regional_transforms(code) is None
 
-    def test_fresh_inventory_per_resolution(self):
-        assert get_dialect_inventory("pt-PT") is not get_dialect_inventory("pt-PT")
+class TestLexiconRegion:
+    @pytest.mark.parametrize("lect,region", [
+        ("pt-PT", "lbx"), ("pt-PT-x-lisbon", "lbx"),
+        ("pt-BR", "rjx"), ("pt-BR-x-sp", "spx"),
+        ("pt-AO", "lda"), ("pt-MZ", "mpx"), ("pt-TL", "dli"),
+    ])
+    def test_lexicon_overlaid_lects(self, lect, region):
+        assert lexicon_region(lect) == region
+
+    @pytest.mark.parametrize("lect", [
+        "pt-PT-x-porto", "pt-PT-x-madeira", "pt-BR-x-caipira", "pt-CV",
+    ])
+    def test_pure_lattice_lects_have_no_lexicon(self, lect):
+        # Overlaying the Lisbon lexicon on a Porto lect would overwrite the
+        # spec's phonology with Lisbon forms — these lects are lattice-only.
+        assert lexicon_region(lect) is None
 
 
 class TestListDialects:
-    def test_sorted_canonical_no_aliases(self):
+    def test_covers_the_portuguese_family(self):
         codes = list_dialects()
         assert codes == sorted(codes)
-        assert "pt-PT" in codes and "pt-PT-x-porto" in codes
+        for expected in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL",
+                         "pt-PT-x-porto", "pt-BR-x-sp", "pt-CV"]:
+            assert expected in codes
+        # aliases are not canonical codes
         assert "pt" not in codes and "pt-PT-x-lisboa" not in codes
-        assert len(codes) == len(DIALECT_REGISTRY)
 
     def test_plugin_exposes_registry(self):
         from tugaphone.plugin import TugaphoneG2PPlugin
         assert TugaphoneG2PPlugin().language_codes == list_dialects()
 
-    def test_entries_are_frozen(self):
-        entry = resolve_dialect("pt-PT")
-        with pytest.raises(Exception):
-            entry.code = "other"
-        assert isinstance(entry, DialectEntry)
+    def test_resolve_dialect_deprecated(self):
+        with pytest.deprecated_call():
+            assert resolve_dialect("pt-BR") == "pt-BR"
 
 
 @pytest.fixture(scope="module")
@@ -130,42 +105,29 @@ def pho():
 
 
 class TestPhonemizerIntegration:
-    # Pinned outputs below track the canonical-register regional lexicon
-    # bundled with tugalex >= 2.0 (one pronunciation per word, the
-    # fewest-narrow-marks register pick, rebuilt from
-    # portuguese-unified-pronunciation-lexicon).  Notable lexicon-sourced
-    # forms: "ontem" carries each region's nasal-diphthong ending
-    # (e.g. EP [ˈõtɐ̃j]) instead of the rules-derived [ˈõtẽ], and the
-    # Lisbon register elides the final reduced vowel of "noite" ([nojt]).
     SENTENCE = "Choveu muito ontem à noite."
 
-    def test_preset_code_equals_manual_kwarg(self, pho):
-        via_code = pho.phonemize_sentence(self.SENTENCE, "pt-PT-x-porto")
-        via_kwarg = pho.phonemize_sentence(self.SENTENCE, "pt-PT",
-                                           regional_dialect=PortoDialect)
-        assert via_code == via_kwarg
-        assert via_code == "ʃu·ˈbew mˈũj·tu ˈwõ·tɐ̃j ˈa nˈojt"
-
-    def test_explicit_kwarg_overrides_code(self, pho):
-        override = pho.phonemize_sentence(self.SENTENCE, "pt-PT-x-porto",
-                                          regional_dialect=AzoresDialect)
-        pure = pho.phonemize_sentence(self.SENTENCE, "pt-PT-x-azores")
-        assert override == pure
-
-    def test_city_inventory_differs_from_major(self, pho):
-        assert pho.phonemize_sentence("noite", "pt-BR") == "nˈoj·tʃɪ"
-        # spx lexicon entry: canonical register without the [tʃ] affrication mark
-        assert pho.phonemize_sentence("noite", "pt-BR-x-sao-paulo") == "nˈoj·ti"
-
     @pytest.mark.parametrize("code,expected", [
-        ("pt-PT", "ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j ˈa nˈojt"),
-        ("pt-BR", "ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj ˈa nˈoj·tʃɪ"),
-        ("pt-AO", "ʃo·ˈvew mˈũjn·tʊ ˈõn·tẽj ˈa nˈoj·tɨ"),
-        ("pt-MZ", "ʃu·ˈvew mˈũj·tu ˈõ·tẽj ˈa nˈɔj·tɨ"),
-        ("pt-TL", "ʃo·ˈvew mˈuj·tʊ ˈõn·tɐ̃j ˈa nˈojtʰ"),
+        ("pt-PT", "ʃuˈvew ˈmũjtu ˈõtɐ̃j ˈa ˈnojt"),
+        ("pt-BR", "ʃoˈvew ˈmwĩtʊ ˈõtẽj ˈa ˈnojtʃɪ"),
+        ("pt-AO", "ʃoˈvew ˈmũjntʊ ˈõntẽj ˈa ˈnojtɨ"),
+        ("pt-MZ", "ʃoˈvew ˈmũjtu ˈõtẽj ˈa ˈnɔjtɨ"),
+        ("pt-TL", "ʃoˈvew ˈmujtʊ ˈõntɐ̃j ˈa ˈnojtʰ"),
+        ("pt-PT-x-porto", "ʃuˈbew ˈmujtu ˈwõtɨ̃ ˈa ˈnojtɨ"),
     ])
-    def test_major_dialect_output_unchanged(self, pho, code, expected):
-        assert pho.phonemize_sentence(self.SENTENCE, code) == expected
+    def test_dialect_output(self, pho, code, expected):
+        import unicodedata
+        got = unicodedata.normalize("NFC", pho.phonemize_sentence(self.SENTENCE, code))
+        assert got == unicodedata.normalize("NFC", expected)
+
+    def test_lexicon_overlay_differs_across_regions(self, pho):
+        assert pho.phonemize_sentence("noite", "pt-BR") == "ˈnojtʃɪ"
+        assert pho.phonemize_sentence("noite", "pt-BR-x-sp") == "ˈnojti"
+
+    def test_regional_dialect_kwarg_deprecated_and_ignored(self, pho):
+        with pytest.deprecated_call():
+            out = pho.phonemize_sentence("gato", "pt-PT", regional_dialect=object())
+        assert out == pho.phonemize_sentence("gato", "pt-PT")
 
     def test_unrecognised_tag_matches_default(self, pho):
         assert (pho.phonemize_sentence(self.SENTENCE, "pt-PT-x-nowhere")
