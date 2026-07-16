@@ -1,108 +1,79 @@
+"""tugaphone — dialect-aware Portuguese phonemization on the orthography2ipa lattice.
+
+The phonemizer drives the shared orthography2ipa candidate lattice: a dialect is
+an orthography2ipa lect spec, and the lattice — the spec's grapheme table,
+``allophone_rules`` and cross-word ``sandhi_rules`` — produces the dialect's
+phonology directly. tugaphone contributes the stages orthography2ipa leaves to
+the caller (number/ordinal verbalization, sense-based homograph marking, the
+curated ``tugalex`` lexicon, syllabification), wired through orthography2ipa's
+own extension points. See :mod:`tugaphone.lattice_core`.
+"""
+import warnings
 from typing import Optional
 
-from tugaphone.dialects import (DialectInventory, LEXICON,
-                                EuropeanPortuguese, BrazilianPortuguese,
-                                AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
-from tugaphone.lexicon import TugaLexicon
-from tugaphone.pos import TugaTagger
-from tugaphone.regional import RegionalTransforms
-from tugaphone.tokenizer import Sentence, DialectInventory
+from tugaphone.version import __version__
+from tugaphone.lattice_core import phonemize as _phonemize
+from tugaphone.registry import list_dialects, resolve_lect
 
 
 class TugaPhonemizer:
-    """
-    TugaPhonemizer applies dialect-aware Portuguese phonemization.
+    """Dialect-aware Portuguese phonemization on the orthography2ipa lattice.
 
-    Supports:
-        - pt-PT (Portugal)
-        - pt-BR (Brazil)
-        - pt-AO (Angola)
-        - pt-MZ (Mozambique)
-        - pt-TL (Timor-Leste)
+    Every Portuguese-family lect orthography2ipa ships is reachable by its
+    BCP-47 code — the national standards ("pt-PT", "pt-BR", "pt-AO", "pt-MZ",
+    "pt-TL"), the European and Brazilian sub-regional varieties
+    ("pt-PT-x-porto", "pt-BR-x-sp", …), and the African, Asian and historical
+    lects; the full list comes from :func:`tugaphone.list_dialects`.
     """
 
-    def __init__(self,
-                 postag_engine="auto",
-                 postag_model="pt_core_news_lg"):
-        """
-        Initialize the TugaPhonemizer by loading the regional lexicon and configuring the part-of-speech tagger.
-
-        Parameters:
-            postag_engine (str): Tagging engine selection passed to TugaTagger (e.g., "auto" to let the tagger choose the best available engine).
-            postag_model (str): Model name or identifier used by the POS tagger (for engines that accept a model parameter).
-        """
-        self.postag = TugaTagger(postag_engine, postag_model)
-        # lexicon is lazy loaded on first usage, do it now so first inference is faster
-        _ = LEXICON.ipa
-
-    @staticmethod
-    def get_dialect_inventory(lang: str = "pt-PT") -> DialectInventory:
-        if lang == "pt-BR":
-            return BrazilianPortuguese()
-        elif lang == "pt-AO":
-            return AngolanPortuguese()
-        elif lang == "pt-MZ":
-            return MozambicanPortuguese()
-        elif lang == "pt-TL":
-            return TimoresePortuguese()
-        return EuropeanPortuguese()
+    def __init__(self) -> None:
+        pass
 
     def phonemize_sentence(self, sentence: str, lang: str = "pt-PT",
-                           regional_dialect: Optional[RegionalTransforms] = None) -> str:
-        """
-        Phonemizes a sentence for the given Portuguese dialect.
+                           regional_dialect: Optional[object] = None) -> str:
+        """Phonemize ``sentence`` for the ``lang`` dialect.
 
         Parameters:
-            sentence (str): Input sentence to phonemize.
-            lang (str): ISO dialect code to target (e.g., "pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL").
+            sentence: Input text to phonemize.
+            lang: BCP-47 lect code to target. National standards, sub-regional
+                varieties and the African/Asian lects all resolve to an
+                orthography2ipa spec; see :func:`tugaphone.list_dialects`.
+            regional_dialect: Deprecated and ignored. Dialect is now selected
+                entirely by ``lang``; the regional accent is encoded in the
+                orthography2ipa lect spec, not applied as a post-hoc transform.
 
         Returns:
-            phonemized (str): Space-separated phoneme tokens for each word; punctuation tokens are preserved unchanged.
+            Space-separated IPA for each word.
         """
-        tagged = self.postag.tag(sentence)
+        if regional_dialect is not None:
+            warnings.warn(
+                "regional_dialect= is deprecated and ignored; select the "
+                "accent through lang= (e.g. lang='pt-PT-x-porto'). The accent "
+                "is encoded in the orthography2ipa lect spec.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return _phonemize(sentence, lang)
 
-        if regional_dialect:
-            # 1. apply morpheme transforms
-            morph = lambda tok, pos: regional_dialect.apply_morpheme(word=tok, postag=pos)
-            tagged = [(morph(tok, pos), pos) for tok, pos in tagged]
-            morphed_sentence = " ".join([w[0] for w in tagged])
+    @staticmethod
+    def is_supported(lang: str) -> bool:
+        """Whether ``lang`` resolves to a known Portuguese lect."""
+        return resolve_lect(lang) is not None
 
-            # 2. phonemize
-            nlp = Sentence.from_postagged(surface=morphed_sentence,
-                                          tags=tagged,
-                                          dialect=self.get_dialect_inventory(lang))
-            ipa_str = nlp.ipa
 
-            # 3. apply IPA transforms
-            ipa_transform = lambda ipa, tok, pos: regional_dialect.apply_ipa(word=tok, phonemes=ipa, postag=pos)
-            morphed_ipa = [ipa_transform(ipa, word, pos) for ipa, (word, pos) in zip(ipa_str.split(), tagged)]
-            return " ".join(morphed_ipa)
-
-        nlp = Sentence.from_postagged(surface=sentence, tags=tagged, dialect=self.get_dialect_inventory(lang))
-        return nlp.ipa
+__all__ = ["TugaPhonemizer", "list_dialects", "resolve_lect", "__version__"]
 
 
 if __name__ == "__main__":
-    from tugaphone.regional import PortoDialect
-
     ph = TugaPhonemizer()
-
     sentences = [
         "O gato dorme.",
         "Tu falas português muito bem.",
         "O comboio chegou à estação.",
-        "A menina comeu o pão todo.",
         "Vou pôr a manteiga no frigorífico.",
-        "Ele está a trabalhar no escritório.",
-        "Choveu muito ontem à noite.",
-        "A rapariga comprou um telemóvel novo.",
-        "Vamos tomar um pequeno-almoço.",
-        "O carro ficou sem gasolina."
     ]
-
     for s in sentences:
         print(s)
-        print(f"pt-PT-x-porto → {ph.phonemize_sentence(s, regional_dialect=PortoDialect)}")
-        for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
+        for code in ["pt-PT", "pt-PT-x-porto", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
             print(f"{code} → {ph.phonemize_sentence(s, code)}")
         print("######")
