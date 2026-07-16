@@ -6,8 +6,8 @@ stress markers and syllable boundaries.
 
 ```
 Choveu muito ontem.
-pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tẽ
-pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ
+pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j
+pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj
 ```
 
 ## 1. Install
@@ -95,13 +95,16 @@ ph = TugaPhonemizer()
 print(ph.phonemize_sentence("O Porto é uma cidade bonita.", regional_dialect=PortoDialect))
 ```
 
-These are based on documented phonological features and should be treated as
-approximate. See [advanced.md](advanced.md#regional-accents) for the full list.
+Each rule is annotated in the source with the phenomenon it models and a source
+reference, but the presets are experimental approximations — hand-tuned against
+project gold, not validated field transcriptions. See
+[dialects.md](dialects.md#sub-regional-accent-presets) for the full list.
 
 ## 6. orthography2ipa plugin
 
-`TugaphoneG2PPlugin` implements the `orthography2ipa` `G2PPlugin` interface —
-useful when a framework already loads phonemizers through that registry:
+`TugaphoneG2PPlugin` implements the `orthography2ipa` G2P plugin interface
+(`transcribe`, `transcribe_word`, `language_codes`) — useful when a framework
+loads phonemizers through that interface:
 
 ```python
 from tugaphone.plugin import TugaphoneG2PPlugin
@@ -110,9 +113,10 @@ p = TugaphoneG2PPlugin(lang="pt-PT")
 print(p.transcribe("o gato dorme"))   # ˈu gˈa·tu ˈdoɾ·mɨ
 ```
 
-`SilabificadorSyllabifier` is registered at the `orthography2ipa.syllabify`
-entry point so stress detection in orthography2ipa uses silabificador for
-Portuguese automatically.
+`SilabificadorSyllabifier` is a `SyllabifierPlugin` you can use directly.
+`orthography2ipa[portuguese]` (a tugaphone dependency) already ships its own
+`silabificador`-backed syllabifier, so tugaphone does not register a competing
+entry point for it.
 
 ## Where next
 

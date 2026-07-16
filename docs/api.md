@@ -209,10 +209,10 @@ p.transcribe("o gato dorme")   # 'ˈu gˈa·tu ˈdoɾ·mɨ'
 
 ### `SilabificadorSyllabifier`
 
-Implements `orthography2ipa.syllabifier_plugin.SyllabifierPlugin` and is
-registered at the `orthography2ipa.syllabify` entry point so
-`orthography2ipa`'s stress detection syllabifies Portuguese with
-`silabificador` automatically.
+Implements `orthography2ipa.syllabifier_plugin.SyllabifierPlugin`, wrapping
+`silabificador`. Usable directly. `orthography2ipa[portuguese]` (a tugaphone
+dependency) already ships its own `silabificador`-backed syllabifier, so
+tugaphone does not register a competing entry point for it.
 
 ```python
 from tugaphone.plugin import SilabificadorSyllabifier

@@ -27,11 +27,11 @@ print(ph.phonemize_sentence("Tenho muita sede."))
 
 # sede headquarters (open /ɛ/)
 print(ph.phonemize_sentence("A sede da empresa fica em Lisboa."))
-# ˈɐ ˈsɛ·dɨ ˈdɐ ẽ·pɾˈe·zɐ ˈfi·kɐ ˈẽ liʒ·bˈo·ɐ
+# ɐ ˈsɛ·dɨ ˈdɐ ẽ·pɾˈe·zɐ ˈfi·kɐ ẽj liʒ·bˈo·ɐ
 
 # gosto verb (open /ɔ/)
 print(ph.phonemize_sentence("Eu gosto de música."))
-# ˈew ˈɡɔʃ·tu ˈdɨ mˈu·zi·kɐ
+# ˈew ˈɡɔʃ·tu dɨ mˈu·zi·kɐ
 
 # gosto noun (closed /o/)
 print(ph.phonemize_sentence("Tenho bom gosto."))

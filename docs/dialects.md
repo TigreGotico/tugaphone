@@ -12,11 +12,11 @@ from tugaphone import TugaPhonemizer
 ph = TugaPhonemizer()
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
     print(code, "→", ph.phonemize_sentence("Choveu muito ontem.", code))
-# pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈ···
-# pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽ ˈ···
-# pt-AO → ʃo·ˈvew mˈũjn·tʊ ˈõ·tẽ ˈ···
-# pt-MZ → ʃu·ˈvew mˈũj·tu ˈõ·tẽ ˈ···
-# pt-TL → ʃo·ˈvew mˈuj·tʊ ˈõ·tẽ ˈ···
+# pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j
+# pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj
+# pt-AO → ʃo·ˈvew mˈũjn·tʊ ˈõn·tẽj
+# pt-MZ → ʃu·ˈvew mˈũj·tu ˈõ·tẽj
+# pt-TL → ʃo·ˈvew mˈuj·tʊ ˈõn·tɐ̃j
 ```
 
 ### pt-PT — European Portuguese
@@ -89,17 +89,22 @@ region maps: `pt-PT-x-lisbon` (`LisbonPortuguese`), `pt-BR-x-rio-janeiro`
 
 ```python
 print(ph.phonemize_sentence("noite", "pt-BR"))             # nˈoj·tʃɪ
-print(ph.phonemize_sentence("noite", "pt-BR-x-sao-paulo")) # nˈoj·tʃi
+print(ph.phonemize_sentence("noite", "pt-BR-x-sao-paulo")) # nˈoj·ti
 ```
 
 ---
 
 ## Sub-regional accent presets
 
-Each preset is a composition of grounded phonological rules cited to
-published sources (Cintra 1971; ALEPG 2006). Reach one through its dialect
-code, or layer any preset explicitly via the `regional_dialect` argument —
-the explicit argument wins over whatever the code resolves to:
+Each preset is a composition of transform rules. Every rule is annotated in the
+source (`tugaphone.regional`) with the phonological phenomenon it models, the
+dialect zone it is attested in, and a source reference (Cintra 1971; ALEPG /
+Saramago 2006; and others). The presets are **experimental approximations** —
+several rules rest on internal field notes rather than published sources, and
+each preset is hand-tuned to match the project's gold slices rather than
+independently validated field data. Reach one through its dialect code, or layer
+any preset explicitly via the `regional_dialect` argument — the explicit
+argument wins over whatever the code resolves to:
 
 ```python
 from tugaphone.regional import AzoresDialect
@@ -108,13 +113,13 @@ ph = TugaPhonemizer()
 s = "O vinho é muito bom."
 
 print(ph.phonemize_sentence(s, "pt-PT"))
-# pt-PT standard: ˈu vˈi·ɲu ˈɛ mˈũj·tu bˈõ ˈ···
+# pt-PT standard: ˈu vˈi·ɲu ˈɛ mˈũj·tu ˈbõ
 
 print(ph.phonemize_sentence(s, "pt-PT-x-porto"))
-# Porto: ˈu bˈi·ɲu ˈɛ mˈũj·tu bˈuõ ˈ···  (betacism + rising diphthong)
+# Porto: ˈu bˈi·ɲu ˈɛ mˈũj·tu ˈbõ  (betacism: vinho → binho)
 
 print(ph.phonemize_sentence(s, "pt-PT", regional_dialect=AzoresDialect))
-# Açores: ˈy vˈi·ɲu ˈɛ mˈỹj·tu bˈõ ˈ···  (stressed /u/ → [y])
+# Açores: ˈy vˈi·ɲu ˈɛ mˈỹj·tu ˈbõ  (stressed /u/ → [y])
 ```
 
 ### Preset table
