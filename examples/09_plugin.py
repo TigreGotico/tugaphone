@@ -1,8 +1,9 @@
 """Example — orthography2ipa G2P plugin and syllabifier plugin.
 
-TugaphoneG2PPlugin implements the orthography2ipa G2PPlugin interface.
-SilabificadorSyllabifier implements the SyllabifierPlugin interface and is
-registered at the ``orthography2ipa.syllabify`` entry point.
+TugaphoneG2PPlugin implements the orthography2ipa G2P plugin interface
+(transcribe / transcribe_word / language_codes). SilabificadorSyllabifier
+implements the SyllabifierPlugin interface and wraps silabificador; use it
+directly.
 
 Run::
 
