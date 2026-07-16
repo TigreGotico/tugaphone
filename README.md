@@ -1,244 +1,251 @@
-# TugaPhone — Dialect-aware Portuguese Phonemizer
+# tugaphone — dialect-aware Portuguese phonemizer
 
-**TugaPhone** is a Python library that phonemizes arbitrary Portuguese text across major Lusophone dialects (pt-PT, pt-BR, pt-AO, pt-MZ, pt-TL). It uses a curated phonetic lexicon plus a rule-based fallback to deliver plausible phoneme transcriptions while preserving dialectal variation.
+**tugaphone** turns Portuguese text into IPA, and it does it per Lusophone
+dialect. Give it a sentence and a dialect code, get back a phoneme string with
+stress marks and syllable boundaries.
 
 ```
-Choveu muito ontem à noite.
-pt-PT-x-porto → ˈʃɔ·vew mˈũj·tu õ·ˈtẽ ˈa nˈuoj·tɨ 
-pt-PT → ˈʃɔ·vew mˈũj·tu õ·ˈtẽ ˈa nˈoj·tɨ 
-pt-BR → ˈʃɔ·vew mwˈĩ·tʊ õ·ˈtẽ ˈa nˈoj·tʃɪ 
-pt-AO → ˈʃɔ·vew mˈũjn·tʊ õ·ˈtẽ ˈa nˈoj·tɨ 
-pt-MZ → ˈʃɔ·vew mˈũj·tu õ·ˈtẽ ˈa nˈɔj·tɨ 
-pt-TL → ˈʃɔ·vew mˈuj·tʊ õ·ˈtẽ ˈa nˈojtʰ 
+O gato dorme.
+pt-PT → ˈu gˈa·tu ˈdoɾ·mɨ
+pt-BR → ˈu gˈa·tʊ ˈdoɾ·mɪ
+pt-AO → ˈu gˈa·tʊ ˈdoɾ·me
+pt-MZ → ˈu gˈa·tu ˈdoɾ·me
+pt-TL → ˈu gˈa·tʊ ˈdoɾ·me
 ```
+
+Under the hood it is the Portuguese text-to-speech front-end built on
+[orthography2ipa](https://github.com/TigreGotico/orthography2ipa): it adds a
+phonetic lexicon, meaning-based homograph resolution, gender- and scale-aware
+number expansion, and a sub-regional accent layer on top of o2i's shared
+grapheme-to-phoneme machinery.
 
 ---
 
-## 🚀 Features
-
-- **Multi-dialect support**: European Portuguese (pt-PT), Brazilian Portuguese (pt-BR), Angolan (pt-AO), Mozambican (pt-MZ), and Timorese (pt-TL)
-- **Regional accent modeling**: Additional micro-dialects like Porto, Minho, Braga, Trás-os-Montes, and more
-- **Hybrid approach**: Combines a curated phonetic lexicon ([Portuguese Phonetic Lexicon](https://huggingface.co/datasets/TigreGotico/portuguese_phonetic_lexicon)) with rule-based G2P fallback
-- **Context-aware**: Takes part-of-speech tags into account for homograph disambiguation
-- **Number normalization**: Automatically converts digits to their Portuguese spoken forms with proper gender agreement
-- **Syllabification**: Rule-based syllable boundary detection (~99.6% accuracy on benchmark)
-- **Stress detection**: Automatic stress placement following Portuguese phonological rules
-- **IPA output**: Full International Phonetic Alphabet transcription with stress markers and syllable boundaries
-
----
-
-## 📦 Installation
+## Install
 
 ```bash
 pip install tugaphone
 ```
 
+Its runtime dependencies (`orthography2ipa`, `silabificador`, `tugalex`,
+`bifonia`, `unicode-rbnf`) install automatically. The phonetic lexicon rides in
+through [`tugalex`](https://github.com/TigreGotico/tugalex).
+
 ---
 
-## 🧰 Usage
-
-### Basic Phonemization
+## 30-second quick start
 
 ```python
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-
-sentences = [
-    "O gato dorme.",
-    "Tu falas português muito bem.",
-    "O comboio chegou à estação.",
-    "A menina comeu o pão todo.",
-    "Vou pôr a manteiga no frigorífico."
-]
-
-for s in sentences:
-    print(f"Sentence: {s}")
-    for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
-        phones = ph.phonemize_sentence(s, code)
-        print(f"  {code} → {phones}")
-    print("-----")
+print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))
+# ˈu gˈa·tu ˈdoɾ·mɨ
 ```
 
-### Regional Dialects
+Construct `TugaPhonemizer()` once — it loads the lexicon — then call
+`phonemize_sentence(text, lang)` as often as you like. The result is a
+space-separated phoneme string, one token per word, with `ˈ` marking primary
+stress and `·` marking syllable boundaries. `lang` changes the phonology, not
+just the spelling.
 
-```python
-from tugaphone import TugaPhonemizer
-from tugaphone.regional import PortoDialect, MinhoDialect, BragaDialect
-
-ph = TugaPhonemizer()
-
-sentence = "O Porto é uma cidade bonita."
-
-# Standard European Portuguese
-print(f"pt-PT: {ph.phonemize_sentence(sentence, 'pt-PT')}")
-
-# Porto accent (rising diphthongs, rhotic realization)
-print(f"Porto: {ph.phonemize_sentence(sentence, regional_dialect=PortoDialect)}")
-
-# Minho accent (vowel resistance, open vowels)
-print(f"Minho: {ph.phonemize_sentence(sentence, regional_dialect=MinhoDialect)}")
-```
-
-### Number Normalization
+Digits are best spelled out first, with gender agreement:
 
 ```python
 from tugaphone.number_utils import normalize_numbers
 
-# Automatic gender agreement
-print(normalize_numbers("vou comprar 1 casa"))    # uma casa
-print(normalize_numbers("vou comprar 2 casas"))   # duas casas
-print(normalize_numbers("vou adotar 1 cão"))      # um cão
-print(normalize_numbers("vou adotar 2 cães"))     # dois cães
-
-# Ordinals
-print(normalize_numbers("1º lugar"))              # primeiro lugar
-print(normalize_numbers("1ª vez"))                # primeira vez
-
-# Large numbers with scale differences
-print(normalize_numbers("897654356789098", "pt-PT"))  # long-scale (biliões)
-print(normalize_numbers("897654356789098", "pt-BR"))  # short-scale (trilhões)
+text = normalize_numbers("comprei 2 casas")   # 'comprei duas casas'
+print(ph.phonemize_sentence(text, "pt-PT"))
 ```
 
-### Syllabification
+---
+
+## Why tugaphone
+
+Most Portuguese G2P you can reach for treats Portuguese as one or two varieties.
+tugaphone's reason to exist is **dialect granularity**: one API that spans the
+whole Lusophone space and, within European Portuguese, a set of sub-regional
+accents.
+
+| Tool | Portuguese coverage | Notes |
+|------|--------------------|-------|
+| **espeak-ng** | `pt` (European) + `pt-br` (Brazilian) | Tiny, fast, rule-based, ~100 languages, battle-tested as a TTS front-end. Two Portuguese varieties only; no African/Asian Lusophone, no sub-regional accents. |
+| **phonemizer** (bootphon) | via espeak-ng | A backend wrapper; for Portuguese it delegates to espeak-ng, so the same two varieties. Needs the espeak binary. |
+| Single-variety Portuguese toolkits (e.g. Brazilian-focused phonetic transcribers) | one national variety | Strong within their variety; not built to cover the full Lusophone range from one interface. |
+| **tugaphone** | five national standards + city + sub-regional accents | Pure Python, IPA output with stress and syllable structure, meaning-based homograph resolution, an inspectable token tree. |
+
+What tugaphone buys you over the coarse options:
+
+- **Five national standards** — `pt-PT`, `pt-BR`, `pt-AO`, `pt-MZ`, `pt-TL` —
+  plus city inventories and a dozen European sub-regional accent presets.
+- **Meaning-based homograph resolution** — *sede* thirst vs headquarters,
+  *gosto* verb vs noun — via [bifonia](https://github.com/TigreGotico/bifonia).
+- **Gender- and scale-aware number expansion** (long scale for `pt-PT`, short
+  scale for `pt-BR`).
+- **An inspectable token tree** — syllables, stress, graphemes and phonological
+  features, not just the final string.
+
+Honest trade-offs: tugaphone is Portuguese-only and younger than espeak-ng,
+which covers far more languages and years of field use. Its sub-regional accent
+presets are **experimental approximations** (see below), not validated field
+transcriptions. Out-of-vocabulary words go through grapheme rules whose accuracy
+is measured openly per dialect — see [docs/scoreboard.md](docs/scoreboard.md).
+
+---
+
+## Features
+
+### Five dialect inventories
+
+| Code | Region |
+|------|--------|
+| `pt-PT` | European Portuguese — heavy vowel reduction, post-alveolar fricatives, uvular /ʁ/ |
+| `pt-BR` | Brazilian Portuguese — fuller vowels, /t d/ palatalisation, l-vocalisation |
+| `pt-AO` | Angolan Portuguese — moderate reduction, alveolar trill, Bantu substrate |
+| `pt-MZ` | Mozambican Portuguese — similar to European with regional variation |
+| `pt-TL` | Timorese Portuguese — conservative pronunciation, Tetum substrate |
 
 ```python
-from tugaphone.syl import syllabify
-
-words = ["casa", "Brasil", "extraordinário", "português"]
-
-for word in words:
-    syllables = syllabify(word)
-    print(f"{word} → {'.'.join(syllables)}")
-
-# Output:
-# casa → ca.sa
-# Brasil → bra.sil
-# extraordinário → ex.tra.or.di.ná.rio
-# português → por.tu.guês
+for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
+    print(code, "→", ph.phonemize_sentence("Choveu muito ontem.", code))
+# pt-PT → ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j
+# pt-BR → ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj
+# pt-AO → ʃo·ˈvew mˈũjn·tʊ ˈõn·tẽj
+# pt-MZ → ʃu·ˈvew mˈũj·tu ˈõ·tẽj
+# pt-TL → ʃo·ˈvew mˈuj·tʊ ˈõn·tɐ̃j
 ```
 
-### Advanced: Tokenization and Features
+### Homograph disambiguation
+
+Heterophonic homographs are resolved by meaning via **bifonia**: *sede* thirst
+vs headquarters, *forma* mould vs shape, *gosto* noun vs verb. bifonia inserts
+open/closed-vowel diacritics that the grapheme rules read directly, so the same
+spelling maps to different pronunciations depending on sentence context.
 
 ```python
-from tugaphone.tokenizer import Sentence
-from tugaphone.dialects import EuropeanPortuguese
-
-sentence = Sentence("O cão comeu o pão.", dialect=EuropeanPortuguese())
-
-print(f"IPA: {sentence.ipa}")
-
-# Access word-level details
-for word in sentence.words:
-    print(f"\nWord: {word.surface}")
-    print(f"  Syllables: {'.'.join(word.syllables)}")
-    print(f"  Stress: syllable {word.stressed_syllable_idx}")
-    print(f"  IPA: {word.ipa}")
-    
-    # Access grapheme-level details
-    for grapheme in word.graphemes:
-        if grapheme.is_diphthong:
-            print(f"  Diphthong: {grapheme.surface} → {grapheme.ipa}")
+print(ph.phonemize_sentence("Eu gosto de música."))   # verb → ˈew ˈɡɔʃ·tu dɨ mˈu·zi·kɐ
+print(ph.phonemize_sentence("Tenho bom gosto."))       # noun → ˈte·ɲu ˈbõ ˈɡoʃ·tu
 ```
 
----
+### Sub-regional accents
 
-## 📖 Documentation
-
-### Supported Dialects
-
-| Dialect Code | Region | Characteristics |
-|-------------|--------|-----------------|
-| `pt-PT` | European Portuguese (Lisbon) | Heavy vowel reduction, fricative palatalization, uvular /r/ |
-| `pt-BR` | Brazilian Portuguese (Rio) | Less vowel reduction, t/d palatalization, l-vocalization |
-| `pt-AO` | Angolan Portuguese (Luanda) | Moderate vowel reduction, alveolar trill /r/, Bantu substrate |
-| `pt-MZ` | Mozambican Portuguese (Maputo) | Similar to European with regional variation, Bantu influence |
-| `pt-TL` | Timorese Portuguese (Dili) | Conservative pronunciation, Tetum substrate influence |
-
-### Regional Accents (Experimental)
-
-TugaPhone includes experimental support for sub-regional Portuguese accents:
-
-- **PortoDialect**: Rising diphthongs (o → uo), rhotic realization
-- **MinhoDialect**: Reduced vowel centralization, open vowel preference
-- **BragaDialect**: Palatal epenthesis (abelha → abeilha)
-- **TrasMontanoDialect**: Palatal affrication, s-voicing, final nasal denasalization
-- **FafeDialect**: Nasal diphthongization (gente → geinte)
-
-**Note**: These are based on documented phonological features but should be considered approximate. Real-world variation is more complex.
-
-### Part-of-Speech Tagging
-
-TugaPhone uses POS tags to disambiguate homographs:
+`RegionalTransforms` presets layer phonological rules on top of any dialect.
+Every preset is reachable by its BCP-47 private-use code:
 
 ```python
-from tugaphone import TugaPhonemizer
+# Porto: betacism (/v/ → [b]) among its northern features
+print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
+# ˈu bˈi·ɲu ˈɛ mˈũj·tu ˈbõ
 
-ph = TugaPhonemizer(postag_engine="spacy")  # or "brill", "auto"
+# Açores: stressed /u/ → [y], l-palatalisation
+print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-azores"))
+# ˈy vˈi·ɲu ˈɛ mˈỹj·tu ˈbõ
 
-# "para" has different pronunciations as preposition vs. verb
-print(ph.phonemize_sentence("Vou para casa."))      # preposition
-print(ph.phonemize_sentence("Ele para o carro."))   # verb
+from tugaphone import list_dialects
+print(list_dialects())   # all 20 registered codes
 ```
 
-Supported engines:
-- `spacy`: Requires `spacy` and Portuguese model (most accurate)
-- `brill`: Requires `brill-postaggers` (lighter, faster)
-- `lexicon`: Uses built-in lexicon lookup (limited coverage)
-- `auto`: Falls back through available engines
-- `dummy`: Simple rule-based fallback (no dependencies)
+Each preset is a composition of transform rules; each rule is annotated in the
+source with the phonological phenomenon it models, the dialect zone it is
+attested in, and a source reference (Cintra 1971 and others). Treat them as
+**experimental approximations** — several rules rest on internal field notes
+rather than published sources, and the presets are hand-tuned against the
+project's gold slices, not independently validated. Real regional variation is
+messier than any rule set. See [docs/dialects.md](docs/dialects.md).
 
----
+### Number normalization
 
-## 🏗️ Architecture
+Digits are spelled out with gender agreement and long/short scale per dialect:
 
-TugaPhone uses a hierarchical tokenization model:
+```python
+from tugaphone.number_utils import normalize_numbers
 
+normalize_numbers("vou comprar 1 casa")   # 'vou comprar uma casa'
+normalize_numbers("vou adotar 1 cão")     # 'vou adotar um cão'
+normalize_numbers("comprei 2 casas")      # 'comprei duas casas'
 ```
-Sentence → Words → Graphemes → Characters
+
+### Syllabification and stress
+
+Syllabification comes from [silabificador](https://github.com/TigreGotico/silabificador);
+stress detection delegates to `orthography2ipa`'s declarative `StressRules`.
+
+### Rules-only mode
+
+Empty a dialect inventory's `IRREGULAR_WORDS` to bypass the lexicon and use only
+grapheme rules — useful for testing rule coverage or transcribing words that are
+intentionally out of vocabulary.
+
+### orthography2ipa plugin interface
+
+`TugaphoneG2PPlugin` implements the `orthography2ipa` G2P plugin interface
+(`transcribe`, `transcribe_word`, `language_codes`), so a framework that loads
+phonemizers through that interface can drive tugaphone:
+
+```python
+from tugaphone.plugin import TugaphoneG2PPlugin
+
+p = TugaphoneG2PPlugin(lang="pt-BR")
+print(p.transcribe("o gato dorme"))   # ˈu gˈa·tʊ ˈdoɾ·mɪ
 ```
 
-Each level applies context-sensitive phonological rules:
+---
 
-1. **Character level**: Vowel quality, consonant allophones
-2. **Grapheme level**: Digraphs (ch, nh), diphthongs (ai, ou)
-3. **Word level**: Stress assignment, syllabification
-4. **Sentence level**: Prosodic boundaries (future: liaison, phrasal stress)
+## Architecture: relationship to orthography2ipa
 
-The phonemization process:
+tugaphone is the Portuguese front-end **over** o2i, not a fork of it. It builds a
+sentence's IPA from a **character-level cascade**: each `CharToken.ipa` composes
+into a `GraphemeToken`, graphemes into a `WordToken.ipa`, and `Sentence.ipa` is
+those word IPAs joined with spaces — each word transcribed **independently**.
 
-1. Normalize text (numbers → words)
-2. POS tagging (for homograph disambiguation)
-3. Lexicon lookup (for known words)
-4. Rule-based G2P fallback (for unknown words)
-5. Dialect-specific transformations (regional accents)
+From o2i it consumes only the shared *primitives*: the `PhonetokTokenizer`
+grapheme trie, vowel classification, `StressRules`, and `LanguageSpec` loading.
+It supplies the Portuguese-specific data on top: the grapheme→IPA inventories,
+the lexicon, the homograph pass, number expansion, and the regional accent
+rules.
+
+Because generation runs word-by-word, genuinely cross-word phonology is not
+modelled on that path. Standard European Portuguese external `/s`-sandhi — a
+word-final coda `/s` ([ʃ]) voicing before a vowel-initial next word (*os amigos*
+→ [ˈuz ɐˈmiɡuʃ]) — is not applied in base `pt-PT`; `os` stays [ˈuʃ]. The
+southern/insular presets' `sibilant_voicing_sandhi` is a per-token
+approximation: it voices a token's own final [ʃ]→[ʒ] when the word ends in
+`<s>`, with no visibility of the following word.
+
+For the full token model see [docs/tokenizer.md](docs/tokenizer.md); for the
+optional o2i-lattice base path see
+[docs/lattice-base-migration.md](docs/lattice-base-migration.md).
 
 ---
 
-## ⚠️ Limitations & Future Work
+## Sibling libraries
 
-### Current Limitations
+tugaphone is part of the TigreGotico Portuguese NLP stack:
 
-- **Lexicon coverage**: Many words (especially names, foreign words, neologisms) rely solely on rule-based fallback
-- **Sparse coverage**: African and Timorese dialects have less lexicon data than European/Brazilian
-- **Lexical variation**: Dialect-specific vocabulary (e.g., "trem" vs "comboio") is not handled; text is assumed orthographically consistent
-- **Regional accents**: Sub-regional dialects are experimental and approximate
-- **Prosody**: Sentence-level features (liaison, phrasal stress, intonation) are simplified
-- **Homograph disambiguation**: Limited to POS-based rules; doesn't handle semantic context
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Areas where help is especially needed:
-
-- **Lexicon expansion**: Especially for pt-AO, pt-MZ, pt-TL
-- **Regional accent validation**: Native speaker verification of dialectal features
-- **Test cases**: Edge cases, challenging words, dialectal examples
-- **Documentation**: Usage examples, linguistic explanations
+| Library | Role |
+|---------|------|
+| [tugalex](https://github.com/TigreGotico/tugalex) | Phonetic lexicon |
+| [silabificador](https://github.com/TigreGotico/silabificador) | Syllabifier |
+| [bifonia](https://github.com/TigreGotico/bifonia) | Heterophone sense disambiguation |
+| [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) | Shared G2P primitives + stress rules |
 
 ---
 
-## 📄 License
+## Documentation
 
-This project is licensed under the Apache License 2.0. See LICENSE for details.
+- [docs/quickstart.md](docs/quickstart.md) — install, first call, dialect overview
+- [docs/dialects.md](docs/dialects.md) — five inventories and sub-regional accent presets
+- [docs/homographs.md](docs/homographs.md) — meaning-based disambiguation
+- [docs/numbers.md](docs/numbers.md) — number normalization and gender agreement
+- [docs/api.md](docs/api.md) — full class and function reference
+- [docs/tokenizer.md](docs/tokenizer.md) — the Sentence → Word → Grapheme → Character model
+- [docs/advanced.md](docs/advanced.md) — accents, serialization, integration
+- [docs/benchmarking.md](docs/benchmarking.md) — the gold benchmark: rules-only PER per dialect
+- [docs/scoreboard.md](docs/scoreboard.md) — accuracy per dialect
+- [examples/](examples/) — ten runnable scripts
+
+---
+
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE).
