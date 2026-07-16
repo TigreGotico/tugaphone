@@ -13,7 +13,17 @@ from typing import Optional
 
 from tugaphone.version import __version__
 from tugaphone.lattice_core import phonemize as _phonemize
+from tugaphone.lattice_core import phonemize
 from tugaphone.registry import list_dialects, resolve_lect
+from tugaphone.accent import (
+    force_accent,
+    respell,
+    respell_word,
+    AccentOverlay,
+    Transform,
+    RespellRule,
+    DEFAULT_RESPELL_RULES,
+)
 
 
 class TugaPhonemizer:
@@ -56,12 +66,39 @@ class TugaPhonemizer:
         return _phonemize(sentence, lang)
 
     @staticmethod
+    def force_accent(text: str, lect: str, mode: str = "ipa",
+                     base_lect: str = "pt-PT",
+                     overlay: Optional["AccentOverlay"] = None) -> str:
+        """Force ``text`` into the ``lect`` accent for a downstream TTS.
+
+        ``mode="ipa"`` returns the target lect's IPA (phoneme-input TTS);
+        ``mode="respell"`` returns Portuguese text respelled so a grapheme-input
+        TTS speaking ``base_lect`` pronounces the target accent. See
+        :func:`tugaphone.accent.force_accent`.
+        """
+        return force_accent(text, lect, mode=mode, base_lect=base_lect,
+                            overlay=overlay)
+
+    @staticmethod
     def is_supported(lang: str) -> bool:
         """Whether ``lang`` resolves to a known Portuguese lect."""
         return resolve_lect(lang) is not None
 
 
-__all__ = ["TugaPhonemizer", "list_dialects", "resolve_lect", "__version__"]
+__all__ = [
+    "TugaPhonemizer",
+    "phonemize",
+    "list_dialects",
+    "resolve_lect",
+    "force_accent",
+    "respell",
+    "respell_word",
+    "AccentOverlay",
+    "Transform",
+    "RespellRule",
+    "DEFAULT_RESPELL_RULES",
+    "__version__",
+]
 
 
 if __name__ == "__main__":

@@ -40,6 +40,9 @@ test = [
     "pytest-cov",
 ]
 
+[project.scripts]
+tugaphone = "tugaphone.__main__:main"
+
 [project.urls]
 Homepage = "https://github.com/TigreGotico/tugaphone"
 Repository = "https://github.com/TigreGotico/tugaphone"

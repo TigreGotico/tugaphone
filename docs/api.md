@@ -49,6 +49,44 @@ TugaPhonemizer.is_supported(lang: str) -> bool
 
 Whether `lang` resolves to a known Portuguese lect.
 
+## `tugaphone.accent`
+
+Accent forcing for downstream TTS. All symbols are re-exported from the package
+root. See [accent_forcing.md](accent_forcing.md) for the guide.
+
+### `force_accent`
+
+```python
+force_accent(text: str, lect: str, mode: str = "ipa",
+             base_lect: str = "pt-PT",
+             overlay: AccentOverlay | None = None) -> str
+```
+
+Force `text` into the `lect` accent. `mode="ipa"` returns the target lect's IPA
+(phoneme-input TTS); `mode="respell"` returns Portuguese text respelled so a
+grapheme-input TTS speaking `base_lect` pronounces the target accent. An optional
+`overlay` of user tweaks is applied last.
+
+### `respell` / `respell_word`
+
+```python
+respell(text: str, target_lect: str, base_lect: str = "pt-PT", rules=…) -> str
+respell_word(word: str, target_lect: str, base_lect: str = "pt-PT", rules=…) -> str
+```
+
+The respeller behind `mode="respell"`. Verification-gated: an orthographic edit
+is kept only if re-transcribing it with `base_lect` moves it closer to the target
+IPA, so respelling never worsens a word and leaves unspellable contrasts
+unchanged. `rules` defaults to `DEFAULT_RESPELL_RULES` (a tuple of `RespellRule`).
+
+### `AccentOverlay` / `Transform`
+
+User-space ad-hoc tweak layer applied after the lattice. An `AccentOverlay` is an
+ordered list of `Transform`s (`kind` `"regex"`/`"word"`, `pattern`,
+`replacement`, `stage` `"ipa"`/`"text"`, `ignore_case`). JSON-serialisable via
+`to_json` / `from_json` (and `to_dict` / `from_dict`) so a voice tweak is
+shareable.
+
 ## `tugaphone.registry`
 
 The dialect registry behind code resolution. `list_dialects` and `resolve_lect`

@@ -71,3 +71,13 @@ def test_09_plugin():
 def test_10_dialect_registry():
     r = _run(EXAMPLES_DIR / "10_dialect_registry.py")
     assert r.returncode == 0, r.stderr
+
+
+def test_11_force_accent():
+    r = _run(EXAMPLES_DIR / "11_force_accent.py")
+    assert r.returncode == 0, r.stderr
+
+
+def test_12_synthetic_corpus():
+    r = _run(EXAMPLES_DIR / "12_synthetic_corpus.py")
+    assert r.returncode == 0, r.stderr
