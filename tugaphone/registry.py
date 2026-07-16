@@ -127,6 +127,22 @@ def list_dialects() -> List[str]:
     return list(_CANONICAL)
 
 
+#: Lects that embed Spanish rather than English by default. ``pt-UY`` is
+#: Uruguayan border Portuguese (*portunhol*), in daily contact with Spanish.
+_SPANISH_CONTACT_LECTS = frozenset({"pt-UY"})
+
+
+def default_contact(lect: str) -> str:
+    """The default code-switch contact language for ``lect``.
+
+    English is the dominant loan source across the Lusophone world — the
+    Brazilian tech/media register especially — so it is the default side an
+    unclassified contact word falls to. The Uruguayan border lect (``pt-UY``,
+    *portunhol*) embeds Spanish instead.
+    """
+    return "es" if lect in _SPANISH_CONTACT_LECTS else "en"
+
+
 # --------------------------------------------------------------------------
 # Backwards-compatible shims (deprecated).
 # --------------------------------------------------------------------------

@@ -34,8 +34,9 @@ class TugaphoneG2PPlugin:
     homograph resolution) loads lazily on first transcription.
     """
 
-    def __init__(self, lang: str = "pt-PT") -> None:
+    def __init__(self, lang: str = "pt-PT", contact: str = "none") -> None:
         self.lang = lang
+        self.contact = contact
         self._phonemizer = None
 
     @property
@@ -49,14 +50,16 @@ class TugaphoneG2PPlugin:
         return self._phonemizer
 
     def transcribe(self, text: str) -> str:
-        return self._engine().phonemize_sentence(text, lang=self.lang)
+        return self._engine().phonemize_sentence(
+            text, lang=self.lang, contact=self.contact)
 
     def transcribe_word(
         self, word: str, context: Optional[WordContext] = None
     ) -> str:
         lang = (context.lang if context is not None and context.lang
                 else self.lang)
-        return self._engine().phonemize_sentence(word, lang=lang)
+        return self._engine().phonemize_sentence(
+            word, lang=lang, contact=self.contact)
 
     def force_accent(self, text: str, lect: str, mode: str = "ipa",
                      base_lect: Optional[str] = None,

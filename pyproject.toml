@@ -35,9 +35,15 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Statistical char-Markov code-switch detector. Optional: without it, the
+# orthographic heuristic is used. The bundled models are scored by markovonnx.
+langdetect = [
+    "markovonnx>=1.0.1",
+]
 test = [
     "pytest",
     "pytest-cov",
+    "markovonnx>=1.0.1",
 ]
 
 [project.scripts]
@@ -49,6 +55,9 @@ Repository = "https://github.com/TigreGotico/tugaphone"
 
 [tool.setuptools]
 packages = ["tugaphone"]
+
+[tool.setuptools.package-data]
+tugaphone = ["data/langdetect/*.json.gz"]
 
 [tool.setuptools.dynamic]
 version = {attr = "tugaphone.version.__version__"}

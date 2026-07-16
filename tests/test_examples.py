@@ -81,3 +81,8 @@ def test_11_force_accent():
 def test_12_synthetic_corpus():
     r = _run(EXAMPLES_DIR / "12_synthetic_corpus.py")
     assert r.returncode == 0, r.stderr
+
+
+def test_13_codeswitch():
+    r = _run(EXAMPLES_DIR / "13_codeswitch.py")
+    assert r.returncode == 0, r.stderr

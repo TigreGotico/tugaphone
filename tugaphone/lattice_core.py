@@ -38,11 +38,16 @@ import os
 from pathlib import Path
 from typing import Dict, Optional
 
+from typing import List
+
 from orthography2ipa import G2P, register_lexicon
 
+from tugaphone.codeswitch import split_runs, transcribe_contact
 from tugaphone.dialects import LEXICON
 from tugaphone.number_utils import normalize_numbers
-from tugaphone.registry import lexicon_region, resolve_lect
+from tugaphone.registry import default_contact, lexicon_region, resolve_lect
+
+_VALID_CONTACT = ("auto", "es", "fr", "en", "none")
 
 try:  # bifonia is a hard dependency, but keep the import failure legible
     from bifonia import add_extra_diacritics as _mark_heterophones
@@ -141,10 +146,49 @@ def engine(lect: str) -> G2P:
     return G2P(lect, normalizer=_normalizer(lect))
 
 
-def phonemize(text: str, lang: str = "pt-PT") -> str:
-    """Phonemize ``text`` for ``lang`` through the orthography2ipa lattice."""
+def _validate_contact(contact: str) -> None:
+    if contact not in _VALID_CONTACT:
+        raise ValueError(
+            f"unknown contact {contact!r}; expected one of {_VALID_CONTACT}")
+
+
+def phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str:
+    """Phonemize ``text`` for ``lang`` through the orthography2ipa lattice.
+
+    Portuguese tokens are transcribed by the ``lang`` lattice (numbers verbalized
+    by the normalizer, cross-word sandhi preserved within contiguous Portuguese
+    runs); detected contact-language tokens are transcribed through the
+    ``es-ES``/``fr-FR``/``en-US`` lattice and nativized onto the Portuguese
+    inventory (see :mod:`tugaphone.codeswitch`). ``contact`` is one of ``auto``
+    (detect and classify each contact word among es/fr/en, unclassified words
+    falling to the dialect's side), ``es``, ``fr``, ``en`` or ``none`` (the
+    default: disable switching — the engine-only, behaviour-preserving path).
+    """
+    _validate_contact(contact)
     lect = resolve_lect(lang)
-    return engine(lect).transcribe(text)
+    if contact == "none":
+        return engine(lect).transcribe(text)
+
+    side = default_contact(lect)
+    runs = split_runs(text, contact, default_side=side)
+    out: List[str] = []
+    # Transcribe contiguous Portuguese tokens as one phrase to preserve sandhi;
+    # nativize each contact token individually.
+    pt_buffer: List[str] = []
+
+    def flush() -> None:
+        if pt_buffer:
+            out.append(engine(lect).transcribe(" ".join(pt_buffer)))
+            pt_buffer.clear()
+
+    for contact_lang, token in runs:
+        if contact_lang is not None:
+            flush()
+            out.append(transcribe_contact(token, contact_lang))
+        else:
+            pt_buffer.append(token)
+    flush()
+    return " ".join(p for p in out if p)
 
 
 def clear_caches() -> None:

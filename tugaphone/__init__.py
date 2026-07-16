@@ -40,6 +40,7 @@ class TugaPhonemizer:
         pass
 
     def phonemize_sentence(self, sentence: str, lang: str = "pt-PT",
+                           contact: str = "none",
                            regional_dialect: Optional[object] = None) -> str:
         """Phonemize ``sentence`` for the ``lang`` dialect.
 
@@ -48,6 +49,16 @@ class TugaPhonemizer:
             lang: BCP-47 lect code to target. National standards, sub-regional
                 varieties and the African/Asian lects all resolve to an
                 orthography2ipa spec; see :func:`tugaphone.list_dialects`.
+            contact: Embedded-language policy. Defaults to ``"none"`` — the
+                engine-only path, so the out-of-the-box output is unchanged by
+                this feature (Portuguese shares the Romance character-shape with
+                its contact languages too tightly for statistical routing to be
+                safe by default). Opt in with ``"auto"`` (detect and classify
+                each contact word among es/fr/en, unclassified words falling to
+                the dialect's side) or force a single lattice with ``"es"`` /
+                ``"fr"`` / ``"en"``. Contact words are transcribed through the
+                orthography2ipa contact lattice and nativized onto the Portuguese
+                inventory; see :mod:`tugaphone.codeswitch`.
             regional_dialect: Deprecated and ignored. Dialect is now selected
                 entirely by ``lang``; the regional accent is encoded in the
                 orthography2ipa lect spec, not applied as a post-hoc transform.
@@ -63,7 +74,7 @@ class TugaPhonemizer:
                 DeprecationWarning,
                 stacklevel=2,
             )
-        return _phonemize(sentence, lang)
+        return _phonemize(sentence, lang, contact)
 
     @staticmethod
     def force_accent(text: str, lect: str, mode: str = "ipa",
