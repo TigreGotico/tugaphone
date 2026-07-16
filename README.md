@@ -276,6 +276,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 - [docs/dialects.md](docs/dialects.md) — the 41 lect codes, aliases and lexicon overlay
 - [docs/accent_forcing.md](docs/accent_forcing.md) — forcing an accent into a TTS (IPA / respelling / overlays)
 - [docs/homographs.md](docs/homographs.md) — meaning-based disambiguation
+- [docs/codeswitch.md](docs/codeswitch.md) — embedded es/fr/en detection and nativization
 - [docs/numbers.md](docs/numbers.md) — number normalization and gender agreement
 - [docs/api.md](docs/api.md) — full class and function reference
 - [docs/tokenizer.md](docs/tokenizer.md) — the token-tree feature model
