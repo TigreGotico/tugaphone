@@ -162,6 +162,33 @@ Legacy tugaphone accent codes resolve as aliases (`pt-PT-x-azores` →
 `pt-PT-x-acores`, `pt-BR-x-sao-paulo` → `pt-BR-x-sp`, …). See
 [docs/dialects.md](docs/dialects.md).
 
+### Forcing an accent for a TTS
+
+Selecting a lect *describes* an accent; `force_accent` *forces* one into a
+downstream voice. For a phoneme-input TTS (phoonnx-style) that is the target
+IPA; for a grapheme-input TTS (a fixed pt-PT voice) it is Portuguese text
+**respelled** so the base voice reads it as the target sounds — feed a pt-PT
+voice `binho` to force the Northern betacism of `vinho`.
+
+```python
+from tugaphone import force_accent
+
+# phoneme-input TTS: the target accent's IPA
+force_accent("o vinho verde", "pt-PT-x-porto", mode="ipa")
+# 'o ˈbiɲu ˈbjɛɾd'
+
+# grapheme-input pt-PT TTS: respelled text it will pronounce with the accent
+force_accent("o vinho verde", "pt-PT-x-porto", mode="respell", base_lect="pt-PT")
+# 'o binho berde'
+```
+
+The respeller is verification-gated (an edit is kept only if it moves the base
+voice's own reading toward the target), so it never makes a word worse and
+leaves unspellable contrasts alone. Ad-hoc per-voice tweaks live in a
+JSON-serialisable `AccentOverlay`, and `examples/12_synthetic_corpus.py`
+generates a parallel `(sentence, lect, ipa, respelled_text)` training corpus.
+See [docs/accent_forcing.md](docs/accent_forcing.md).
+
 ### Number normalization
 
 Digits are spelled out with gender agreement and long/short scale per dialect:
@@ -247,6 +274,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 - [docs/quickstart.md](docs/quickstart.md) — install, first call, dialect overview
 - [docs/architecture.md](docs/architecture.md) — the lattice core and the caller-owned layers
 - [docs/dialects.md](docs/dialects.md) — the 41 lect codes, aliases and lexicon overlay
+- [docs/accent_forcing.md](docs/accent_forcing.md) — forcing an accent into a TTS (IPA / respelling / overlays)
 - [docs/homographs.md](docs/homographs.md) — meaning-based disambiguation
 - [docs/numbers.md](docs/numbers.md) — number normalization and gender agreement
 - [docs/api.md](docs/api.md) — full class and function reference

@@ -58,6 +58,21 @@ class TugaphoneG2PPlugin:
                 else self.lang)
         return self._engine().phonemize_sentence(word, lang=lang)
 
+    def force_accent(self, text: str, lect: str, mode: str = "ipa",
+                     base_lect: Optional[str] = None,
+                     overlay=None) -> str:
+        """Force ``text`` into ``lect`` for a downstream TTS.
+
+        Thin exposure of :func:`tugaphone.accent.force_accent` through the
+        plugin. ``base_lect`` defaults to the plugin's own ``lang`` — the accent
+        the grapheme-input voice this plugin drives speaks — so ``mode="respell"``
+        respells against the right base without the caller repeating it.
+        """
+        from tugaphone.accent import force_accent as _force_accent
+
+        return _force_accent(text, lect, mode=mode,
+                             base_lect=base_lect or self.lang, overlay=overlay)
+
 
 class SilabificadorSyllabifier(SyllabifierPlugin):
     """Portuguese syllabifier for orthography2ipa's stress detection.
