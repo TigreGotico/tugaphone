@@ -108,12 +108,15 @@ class TestPhonemizerIntegration:
     SENTENCE = "Choveu muito ontem à noite."
 
     @pytest.mark.parametrize("code,expected", [
-        ("pt-PT", "ʃuˈvew ˈmũjtu ˈõtɐ̃j ˈa ˈnojt"),
-        ("pt-BR", "ʃoˈvew ˈmwĩtʊ ˈõtẽj ˈa ˈnojtʃɪ"),
-        ("pt-AO", "ʃoˈvew ˈmũjntʊ ˈõntẽj ˈa ˈnojtɨ"),
-        ("pt-MZ", "ʃoˈvew ˈmũjtu ˈõtẽj ˈa ˈnɔjtɨ"),
-        ("pt-TL", "ʃoˈvew ˈmujtʊ ˈõntɐ̃j ˈa ˈnojtʰ"),
-        ("pt-PT-x-porto", "ʃuˈbew ˈmujtu ˈwõtɨ̃ ˈa ˈnojtɨ"),
+        # "à" is a function word: the pan-pt clitic rule destresses it while
+        # keeping its open /a/ quality (proclitic to "noite").
+        ("pt-PT", "ʃuˈvew ˈmũjtu ˈõtɐ̃j a ˈnojt"),
+        ("pt-BR", "ʃoˈvew ˈmwĩtʊ ˈõtẽj a ˈnojtʃɪ"),
+        ("pt-AO", "ʃoˈvew ˈmũjntʊ ˈõntẽj a ˈnojtɨ"),
+        ("pt-MZ", "ʃoˈvew ˈmũjtu ˈõtẽj a ˈnɔjtɨ"),
+        ("pt-TL", "ʃoˈvew ˈmujtʊ ˈõntɐ̃j a ˈnojtʰ"),
+        # Porto "ontem" carries the nasal -em diphthong [ɐ̃j̃].
+        ("pt-PT-x-porto", "ʃuˈbew ˈmujtu ˈwõtɐ̃j̃ a ˈnojtɨ"),
     ])
     def test_dialect_output(self, pho, code, expected):
         import unicodedata

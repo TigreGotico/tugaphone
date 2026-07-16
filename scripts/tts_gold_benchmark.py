@@ -6,14 +6,23 @@ specs are written to. This measures the phonemization pipeline end to end (a
 dialect is selected by its lect code) with the same character-level PER and IPA
 normalization orthography2ipa's own benchmark uses.
 
-    python scripts/tts_gold_benchmark.py            # every lect
+    python scripts/tts_gold_benchmark.py            # every pt-family lect
     python scripts/tts_gold_benchmark.py pt-PT pt-BR
 
-Because the gold is authored to the lect specs' broad convention while the
-``tugalex`` lexicon overlay is transcribed in a narrower tradition, a lexicon
-hit can raise a lect's PER relative to the pure lattice; the overlay is retained
-because it is authoritative for the lexical facts the rules get wrong. Read the
-number as agreement-with-the-spec-tradition, not absolute correctness.
+The default lect set is the intersection of orthography2ipa's Portuguese TTS
+gold with tugaphone's own canonical dialects
+(:func:`tugaphone.registry.list_dialects`): the Portuguese family. orthography2ipa
+also ships gold for the Astur-Leonese lects of Portugal (Mirandese ``mwl``, the
+``ast-PT`` border varieties); those are out of tugaphone's scope — dedicated
+downstream phonemizers own them — so scoring them here through the pt-PT fallback
+would be meaningless, and they are excluded. Pass explicit lect codes to override.
+
+Read the number as agreement-with-the-spec-tradition, not absolute correctness:
+the gold is authored to the lect specs' broad convention. The ``tugalex`` lexicon
+overlay (registered for the lects in :data:`tugaphone.registry._LEXICON_REGION`)
+is retained as the authority for lexical facts the rules would otherwise get
+wrong; where the lattice already reproduces the lexicon form it has no effect on
+the score.
 """
 from __future__ import annotations
 
@@ -60,8 +69,20 @@ def _per(pairs, phonemize, *, strip_stress=True, broad=False):
     return (sum(pers) / len(pers)) if pers else float("nan")
 
 
+def _default_lects():
+    """The pt-family gold sets: orthography2ipa TTS gold ∩ tugaphone dialects.
+
+    Keeps orthography2ipa's non-pt Portuguese-territory lects (Mirandese, the
+    ``ast-PT`` varieties), which dedicated downstream phonemizers own, out of
+    tugaphone's score rather than measuring them through the pt-PT fallback.
+    """
+    from tugaphone.registry import list_dialects
+
+    return sorted(set(O2I._PORTUGUESE_TTS_LANGS) & set(list_dialects()))
+
+
 def main(argv):
-    lects = argv or sorted(O2I._PORTUGUESE_TTS_LANGS)
+    lects = argv or _default_lects()
     pho = TugaPhonemizer()
     print(f"{'lect':<24}{'PER':>10}{'n':>6}")
     scores = []

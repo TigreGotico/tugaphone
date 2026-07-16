@@ -12,25 +12,33 @@ numbers live in [scoreboard.md](scoreboard.md).
 The reference for the phonemization pipeline is orthography2ipa's sentence-level
 TTS gold — one gold set per Portuguese lect (`data/gold/portuguese_tts/<lect>.tsv`
 in orthography2ipa), authored in the broad IPA tradition the lect specs are
-written to, spanning 39+ lects. `scripts/tts_gold_benchmark.py` scores it end to
-end, reusing orthography2ipa's own character-level PER and IPA normalization:
+written to. `scripts/tts_gold_benchmark.py` scores it end to end, reusing
+orthography2ipa's own character-level PER and IPA normalization:
 
 ```bash
-python scripts/tts_gold_benchmark.py            # every lect
+python scripts/tts_gold_benchmark.py            # every pt-family lect
 python scripts/tts_gold_benchmark.py pt-PT pt-BR
 ```
 
-The mean sentence-level PER across the lects is **0.064**. The reading splits
-cleanly by path:
+The default lect set is the intersection of orthography2ipa's Portuguese TTS gold
+with tugaphone's own 41 canonical dialects — the Portuguese family. orthography2ipa
+also ships gold for the Astur-Leonese lects of Portugal (Mirandese `mwl`, the
+`ast-PT` border varieties), which dedicated downstream phonemizers own; those are
+out of tugaphone's scope and are excluded rather than scored through the pt-PT
+fallback.
 
-- the ~30 **pure-lattice** lects (no lexicon overlay) match the gold
-  near-exactly — the lect spec and the gold share one convention;
+The mean sentence-level PER across the 41 pt-family lects is **0.034**. The
+reading splits cleanly by path:
+
+- the **pure-lattice** lects (no lexicon overlay) match the gold near-exactly —
+  the lect spec and the gold share one convention; most score **0.000**;
 - the **lexicon-overlay** lects (`pt-PT`, `pt-BR`, `pt-AO`, `pt-MZ`, `pt-TL` and
-  their city variants) carry a small residual, because the `tugalex` lexicon is
-  transcribed in a narrower tradition than the gold's broad convention. The
-  overlay is retained anyway: it is authoritative for the lexical facts the rules
-  get wrong. Read the number as agreement-with-the-spec-tradition, not absolute
-  correctness.
+  their city variants) carry a small residual (`pt-PT` 0.11, `pt-BR` 0.17,
+  `pt-TL` 0.31), because the gold is authored in a broader convention than the
+  lect spec resolves to. The `tugalex` lexicon overlay now reproduces the lattice
+  output for the words these sentences exercise, so it neither helps nor hurts the
+  score; it is retained as the authority for lexical facts outside the gold. Read
+  the number as agreement-with-the-spec-tradition, not absolute correctness.
 
 ## Rules-only baseline
 
