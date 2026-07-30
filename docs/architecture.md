@@ -37,10 +37,9 @@ own, wired through orthography2ipa's own extension points (see
 Gender-aware number and ordinal expansion
 (`tugaphone.number_utils.normalize_numbers`) and sense-based
 heterophonic-homograph marking (`bifonia.add_extra_diacritics`, e.g. *sede*
-thirst `/ˈsedɨ/` vs seat `/ˈsɛdɨ/`) run as the engine's `normalizer` — the
+thirst `/ˈsedɨ/` vs seat `/ˈsɛdɨ/`) run as the engine's `normalizer`, the
 orthography2ipa `normalize` stage, before the lattice sees the text. Numbers are
-verbalized first so their spelled-out words are available to homograph marking;
-both are orthographic, pre-lattice transformations.
+verbalized first so their spelled-out words are available to homograph marking, both are orthographic, pre-lattice transformations.
 
 ### 2. Lexicon
 
@@ -89,7 +88,7 @@ stage, so stress lands on the same syllable the lattice would choose.
 
 ## Selecting a dialect
 
-The accent is selected entirely by `lang`; there is no runtime accent argument.
+The accent is selected entirely by `lang`, there is no runtime accent argument.
 
 ```python
 from tugaphone import TugaPhonemizer
@@ -109,11 +108,15 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 `tugaphone.tokenizer` and `tugaphone.dialects` remain as a token-tree
 linguistic **feature** API (manner, place, voicing, vowel height, syllable
 roles, CV skeletons) and as the rules-only benchmark baseline. They are **not**
-the phonemization path — `phonemize_sentence` never routes through them. See
+the phonemization path, `phonemize_sentence` never routes through them. See
 [tokenizer.md](tokenizer.md) for the feature model.
 
 ## Where next
 
-- [dialects.md](dialects.md) — the lect codes, aliases and lexicon overlay
-- [api.md](api.md) — the public surface
-- [benchmarking.md](benchmarking.md) — how accuracy is measured
+- [dialects.md](dialects.md), the lect codes, aliases and lexicon overlay
+- [api.md](api.md), the public surface
+- [benchmarking.md](benchmarking.md), how accuracy is measured
+
+
+---
+[← Quickstart](quickstart.md) · [Home](../README.md) · [Dialects →](dialects.md)

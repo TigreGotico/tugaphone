@@ -9,7 +9,7 @@ Sentence → Word → Grapheme → Character
 
 Each level carries phonological features and its own IPA. This is the layer to
 reach for when you want syllables, stress positions, diphthong detection, or a
-feature dict for machine learning — not just the final phoneme string.
+feature dict for machine learning, not just the final phoneme string.
 
 ## Built on the orthography2ipa shared substrate
 
@@ -21,11 +21,11 @@ library so tugaphone rides its substrate instead of forking it:
   `ch`/`nh`, diphthongs like `ão`/`ei`, trigraphs like `que`) is done by
   `orthography2ipa.phonetok.PhonetokTokenizer`'s maximal-munch trie, driven by
   the dialect's own `GRAPHEME_INVENTORY`. tugaphone supplies the Portuguese
-  grapheme data; the segmentation algorithm is shared.
+  grapheme data, the segmentation algorithm is shared.
 - **Vowel classification.** `CharToken.is_vowel` and the c/g front-vowel
   softening rules delegate to `orthography2ipa.vowels`
-  (`is_orthographic_vowel`, `is_front_vowel`) — the single owner of
-  vowel-letter membership — rather than maintaining tugaphone's own vowel and
+  (`is_orthographic_vowel`, `is_front_vowel`), the single owner of
+  vowel-letter membership, rather than maintaining tugaphone's own vowel and
   front-vowel character sets.
 
 `orthography2ipa.vowels.is_orthographic_vowel` recognises the full precomposed
@@ -64,8 +64,8 @@ cão  cão      stress@ 0 → kˈɐ̃w
 comeu co.meu  stress@ 1 → ku·ˈmew
 ```
 
-`syllables` comes from the `silabificador` library; `stressed_syllable_idx` is
-the index of the stressed syllable; `n_syllables` counts them.
+`syllables` comes from the `silabificador` library, `stressed_syllable_idx` is
+the index of the stressed syllable, `n_syllables` counts them.
 
 ## Grapheme level
 
@@ -105,7 +105,7 @@ syllable-structure features.
 > **Orthographic heuristics.** Consonant classifications describe the typical
 > realization of a letter's *default* phoneme. Letters whose value is
 > context-dependent (`c` → [k]/[s], `g` → [ɡ]/[ʒ], `s` → [s]/[z]/[ʃ],
-> `x` → [ʃ]/[ks]/[z]) carry the default reading — check the character's
+> `x` → [ʃ]/[ks]/[z]) carry the default reading, check the character's
 > `.ipa` for the realized phone. Vowel features, by contrast, classify the
 > *realized* phone, so dialect-specific reduction is honoured.
 
@@ -166,11 +166,15 @@ feats = s.features
 #  'word_0_n_syllables': 1, 'word_0_stressed_syllable_idx': 0, ...}
 ```
 
-Long sentences produce large dictionaries — for ML pipelines, project the keys
+Long sentences produce large dictionaries, for ML pipelines, project the keys
 you need rather than materializing the whole thing per sample.
 
 ## Where next
 
-- [api.md](api.md) — the class table and signatures
-- [advanced.md](advanced.md) — accents, numbers
-- [quickstart.md](quickstart.md) — the basics
+- [api.md](api.md), the class table and signatures
+- [advanced.md](advanced.md), accents, numbers
+- [quickstart.md](quickstart.md), the basics
+
+
+---
+[← API](api.md) · [Home](../README.md) · [Advanced →](advanced.md)

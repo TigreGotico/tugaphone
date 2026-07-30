@@ -2,7 +2,7 @@
 
 A tugaphone dialect *is* an orthography2ipa lect spec. The dialect set is the
 Portuguese-family lects orthography2ipa ships, each reachable by its BCP-47
-code. Select one through the `lang` argument to `phonemize_sentence`; `lang`
+code. Select one through the `lang` argument to `phonemize_sentence`, `lang`
 changes the phonology, not just the spelling.
 
 ```python
@@ -20,7 +20,7 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 
 ## The lect codes
 
-`tugaphone.list_dialects()` returns every reachable code — 41 in all, derived
+`tugaphone.list_dialects()` returns every reachable code, 41 in all, derived
 from `orthography2ipa.available_codes()`.
 
 ### National standards
@@ -78,7 +78,7 @@ print(ph.phonemize_sentence("noite", "pt-BR-x-sp"))  # ˈnojti
 ## Legacy aliases
 
 Legacy tugaphone accent codes resolve to their orthography2ipa equivalents.
-Resolution is case-insensitive; an unresolved private-use subtag falls back to
+Resolution is case-insensitive, an unresolved private-use subtag falls back to
 its parent tag, and any unrecognised code falls back to `pt-PT`.
 
 | Alias | Resolves to |
@@ -109,14 +109,18 @@ tradition matches a `tugalex` region: `pt-PT` and `pt-PT-x-lisbon` (Lisbon),
 `pt-MZ` (Maputo) and `pt-TL` (Dili). For a covered word the lexicon supplies the
 pronunciation and the lattice fills in only the out-of-vocabulary words.
 
-Every other lect is **pure lattice** — its phonology comes entirely from the
+Every other lect is **pure lattice**, its phonology comes entirely from the
 orthography2ipa spec. The overlay is withheld deliberately: registering the
 Lisbon lexicon on a Porto lect would overwrite the Porto spec's phonology with
 Lisbon forms. See [architecture.md](architecture.md) for the layer boundary.
 
 ## Where next
 
-- [architecture.md](architecture.md) — the pipeline and the caller-owned layers
-- [homographs.md](homographs.md) — meaning-based disambiguation
-- [numbers.md](numbers.md) — number normalization
-- [api.md](api.md) — full class reference
+- [architecture.md](architecture.md), the pipeline and the caller-owned layers
+- [homographs.md](homographs.md), meaning-based disambiguation
+- [numbers.md](numbers.md), number normalization
+- [api.md](api.md), full class reference
+
+
+---
+[← Architecture](architecture.md) · [Home](../README.md) · [Accent forcing →](accent_forcing.md)
