@@ -1,0 +1,32 @@
+[
+  {
+    "region": "pt-PT",
+    "mode": "tugaphone_full",
+    "n_words": 10,
+    "failed": 0,
+    "per_narrow": 0.1566,
+    "per_broad": 0.3049,
+    "word_accuracy_narrow": 0.4,
+    "word_accuracy_broad": 0.2
+  },
+  {
+    "region": "pt-PT",
+    "mode": "espeak",
+    "n_words": 10,
+    "failed": 0,
+    "per_narrow": 0.3012,
+    "per_broad": 0.4024,
+    "word_accuracy_narrow": 0.2,
+    "word_accuracy_broad": 0.0
+  },
+  {
+    "region": "pt-PT",
+    "mode": "epitran",
+    "n_words": 10,
+    "failed": 0,
+    "per_narrow": 0.4458,
+    "per_broad": 0.5366,
+    "word_accuracy_narrow": 0.0,
+    "word_accuracy_broad": 0.0
+  }
+]
