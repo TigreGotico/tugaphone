@@ -3,9 +3,7 @@
 Portuguese has heterophonic homographs (same spelling, different pronunciation)
 where the vowel quality shifts depending on which sense is active:
 
-- *sede* as thirst /ˈsedɨ/ vs as headquarters /ˈsɛdɨ/;
-- *forma* as mould /ˈfoɾmɐ/ vs as shape /ˈfɔɾmɐ/;
-- *gosto* as "I like" /ˈgɔʃtu/ vs as "taste" /ˈgoʃtu/.
+- *sede* as thirst /ˈsedɨ/ vs as headquarters /ˈsɛdɨ/, - *forma* as mould /ˈfoɾmɐ/ vs as shape /ˈfɔɾmɐ/, - *gosto* as "I like" /ˈgɔʃtu/ vs as "taste" /ˈgoʃtu/.
 
 ## Meaning-based: bifonia
 
@@ -42,6 +40,10 @@ print(ph.phonemize_sentence("Tenho bom gosto."))
 
 ## Where next
 
-- [dialects.md](dialects.md) — the five inventories and sub-regional accents
-- [api.md](api.md) — `TugaPhonemizer`
-- [advanced.md](advanced.md) — regional accents, numbers
+- [dialects.md](dialects.md), the five inventories and sub-regional accents
+- [api.md](api.md), `TugaPhonemizer`
+- [advanced.md](advanced.md), regional accents, numbers
+
+
+---
+[← Accent forcing](accent_forcing.md) · [Home](../README.md) · [Code-switch →](codeswitch.md)

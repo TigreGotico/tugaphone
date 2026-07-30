@@ -1,4 +1,4 @@
-# tugaphone — dialect-aware Portuguese phonemizer
+# tugaphone: dialect-aware Portuguese phonemizer
 
 **tugaphone** turns Portuguese text into IPA, and it does it per Lusophone
 dialect. Give it a sentence and a dialect code, get back a phoneme string with
@@ -17,9 +17,9 @@ Under the hood it drives the
 [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) candidate
 lattice: a dialect **is** an orthography2ipa lect spec, and the spec's grapheme
 table, allophone rules and cross-word sandhi produce that dialect's phonology
-directly. tugaphone adds the stages orthography2ipa leaves to the caller — a
+directly. tugaphone adds the stages orthography2ipa leaves to the caller: a
 phonetic lexicon, meaning-based homograph resolution, and gender- and scale-aware
-number expansion — wired through orthography2ipa's own extension points. See
+number expansion, wired through orthography2ipa's own extension points. See
 [docs/architecture.md](docs/architecture.md).
 
 ---
@@ -71,26 +71,26 @@ accents.
 
 | Tool | Portuguese coverage | Notes |
 |------|--------------------|-------|
-| **espeak-ng** | `pt` (European) + `pt-br` (Brazilian) | Tiny, fast, rule-based, ~100 languages, battle-tested as a TTS front-end. Two Portuguese varieties only; no African/Asian Lusophone, no sub-regional accents. |
-| **phonemizer** (bootphon) | via espeak-ng | A backend wrapper; for Portuguese it delegates to espeak-ng, so the same two varieties. Needs the espeak binary. |
-| Single-variety Portuguese toolkits (e.g. Brazilian-focused phonetic transcribers) | one national variety | Strong within their variety; not built to cover the full Lusophone range from one interface. |
+| **espeak-ng** | `pt` (European) + `pt-br` (Brazilian) | Small, fast, rule-based, about 100 languages, widely used as a TTS front-end. Two Portuguese varieties only, no African/Asian Lusophone, no sub-regional accents. |
+| **phonemizer** (bootphon) | via espeak-ng | A backend wrapper, for Portuguese it delegates to espeak-ng, so the same two varieties. Needs the espeak binary. |
+| Single-variety Portuguese toolkits (e.g. Brazilian-focused phonetic transcribers) | one national variety | Strong within their variety, not built to cover the full Lusophone range from one interface. |
 | **tugaphone** | 41 lects: five national standards + European, Brazilian, African, Asian and other varieties | Pure Python, IPA output with stress, meaning-based homograph resolution, one API across the whole Lusophone space. |
 
 What tugaphone buys you over the coarse options:
 
-- **41 Portuguese-family lects** reachable by BCP-47 code — the five national
+- **41 Portuguese-family lects** reachable by BCP-47 code, the five national
   standards (`pt-PT`, `pt-BR`, `pt-AO`, `pt-MZ`, `pt-TL`) plus European and
   Brazilian sub-regional varieties and the African, Asian and other lects.
-- **Meaning-based homograph resolution** — *sede* thirst vs headquarters,
-  *gosto* verb vs noun — via [bifonia](https://github.com/TigreGotico/bifonia).
+- **Meaning-based homograph resolution**, *sede* thirst vs headquarters,
+  *gosto* verb vs noun, via [bifonia](https://github.com/TigreGotico/bifonia).
 - **Gender- and scale-aware number expansion** (long scale for `pt-PT`, short
   scale for `pt-BR`).
-- **A phonology-accurate core** — each dialect's sounds come from its
+- **A phonology-accurate core**, each dialect's sounds come from its
   orthography2ipa lect spec, not from a post-hoc string-edit layer.
 
 Honest trade-offs: tugaphone is Portuguese-only and younger than espeak-ng,
 which covers far more languages and years of field use. Its accuracy against the
-per-lect gold is measured openly — see
+per-lect gold is measured openly, see
 [docs/benchmarking.md](docs/benchmarking.md).
 
 ---
@@ -100,15 +100,15 @@ per-lect gold is measured openly — see
 ### Dialect coverage
 
 The five national standards, plus European, Brazilian, African, Asian and other
-sub-regional lects — 41 codes in all, from `list_dialects()`:
+sub-regional lects, 41 codes in all, from `list_dialects()`:
 
 | Code | Region |
 |------|--------|
-| `pt-PT` | European Portuguese — heavy vowel reduction, post-alveolar fricatives, uvular /ʁ/ |
-| `pt-BR` | Brazilian Portuguese — fuller vowels, /t d/ palatalisation, l-vocalisation |
-| `pt-AO` | Angolan Portuguese — moderate reduction, alveolar trill, Bantu substrate |
-| `pt-MZ` | Mozambican Portuguese — similar to European with regional variation |
-| `pt-TL` | Timorese Portuguese — conservative pronunciation, Tetum substrate |
+| `pt-PT` | European Portuguese, heavy vowel reduction, post-alveolar fricatives, uvular /ʁ/ |
+| `pt-BR` | Brazilian Portuguese, fuller vowels, /t d/ palatalisation, l-vocalisation |
+| `pt-AO` | Angolan Portuguese, moderate reduction, alveolar trill, Bantu substrate |
+| `pt-MZ` | Mozambican Portuguese, similar to European with regional variation |
+| `pt-TL` | Timorese Portuguese, conservative pronunciation, Tetum substrate |
 
 ```python
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
@@ -140,7 +140,7 @@ print(ph.phonemize_sentence("Tenho bom gosto."))       # noun → ˈtɛɲu ˈbõ
 
 ### Sub-regional accents
 
-Sub-regional accents are lects like any other — select one by its BCP-47
+Sub-regional accents are lects like any other, select one by its BCP-47
 private-use code. Its phonology (betacism, rising diphthongs, palatalization,
 `/u/` fronting, coda-sibilant sandhi, …) is encoded in the orthography2ipa lect
 spec, so no extra argument is needed:
@@ -164,10 +164,10 @@ Legacy tugaphone accent codes resolve as aliases (`pt-PT-x-azores` →
 
 ### Forcing an accent for a TTS
 
-Selecting a lect *describes* an accent; `force_accent` *forces* one into a
+Selecting a lect *describes* an accent, `force_accent` *forces* one into a
 downstream voice. For a phoneme-input TTS (phoonnx-style) that is the target
-IPA; for a grapheme-input TTS (a fixed pt-PT voice) it is Portuguese text
-**respelled** so the base voice reads it as the target sounds — feed a pt-PT
+IPA, for a grapheme-input TTS (a fixed pt-PT voice) it is Portuguese text
+**respelled** so the base voice reads it as the target sounds, feed a pt-PT
 voice `binho` to force the Northern betacism of `vinho`.
 
 ```python
@@ -203,8 +203,7 @@ normalize_numbers("comprei 2 casas")      # 'comprei duas casas'
 
 ### Syllabification and stress
 
-Stress and the dialect's phonology come from the orthography2ipa lect spec;
-syllabification is supplied by
+Stress and the dialect's phonology come from the orthography2ipa lect spec, syllabification is supplied by
 [silabificador](https://github.com/TigreGotico/silabificador), wired in as
 orthography2ipa's `syllabify` plugin.
 
@@ -229,8 +228,8 @@ tugaphone phonemizes by driving the shared o2i candidate lattice. A dialect
 **is** an o2i lect spec: `phonemize_sentence(text, lang)` resolves `lang` to a
 lect code and runs `orthography2ipa.G2P(lect).transcribe(text)`. The spec's
 grapheme table, `allophone_rules` and cross-word `sandhi_rules` produce the
-dialect's phonology — including genuinely cross-word processes like
-coda-sibilant voicing sandhi — with no string-transform pass after
+dialect's phonology, including genuinely cross-word processes like
+coda-sibilant voicing sandhi, with no string-transform pass after
 transcription.
 
 tugaphone contributes only the stages o2i leaves to the caller, wired through
@@ -246,11 +245,11 @@ o2i's own extension points:
 
 The lexicon overlay applies only to the lects whose lexical tradition matches a
 `tugalex` region (`pt-PT`/`pt-PT-x-lisbon`, `pt-BR`/`pt-BR-x-rj`, `pt-BR-x-sp`,
-`pt-AO`, `pt-MZ`, `pt-TL`); every other lect is pure lattice.
+`pt-AO`, `pt-MZ`, `pt-TL`), every other lect is pure lattice.
 
 `tugaphone.tokenizer` and `tugaphone.dialects` remain as a token-tree
 linguistic **feature** API (manner, place, voicing, syllable roles, CV
-skeletons) and the rules-only benchmark baseline — not the phonemization path.
+skeletons) and the rules-only benchmark baseline, not the phonemization path.
 See [docs/architecture.md](docs/architecture.md) and
 [docs/tokenizer.md](docs/tokenizer.md).
 
@@ -271,19 +270,19 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 
 ## Documentation
 
-- [docs/quickstart.md](docs/quickstart.md) — install, first call, dialect overview
-- [docs/architecture.md](docs/architecture.md) — the lattice core and the caller-owned layers
-- [docs/dialects.md](docs/dialects.md) — the 41 lect codes, aliases and lexicon overlay
-- [docs/accent_forcing.md](docs/accent_forcing.md) — forcing an accent into a TTS (IPA / respelling / overlays)
-- [docs/homographs.md](docs/homographs.md) — meaning-based disambiguation
-- [docs/codeswitch.md](docs/codeswitch.md) — embedded es/fr/en detection and nativization
-- [docs/numbers.md](docs/numbers.md) — number normalization and gender agreement
-- [docs/api.md](docs/api.md) — full class and function reference
-- [docs/tokenizer.md](docs/tokenizer.md) — the token-tree feature model
-- [docs/advanced.md](docs/advanced.md) — the pipeline internals and integration
-- [docs/benchmarking.md](docs/benchmarking.md) — the TTS-gold and rules-only benchmarks
-- [docs/scoreboard.md](docs/scoreboard.md) — accuracy per dialect
-- [examples/](examples/) — runnable scripts
+- [docs/quickstart.md](docs/quickstart.md), install, first call, dialect overview
+- [docs/architecture.md](docs/architecture.md), the lattice core and the caller-owned layers
+- [docs/dialects.md](docs/dialects.md), the 41 lect codes, aliases and lexicon overlay
+- [docs/accent_forcing.md](docs/accent_forcing.md), forcing an accent into a TTS (IPA / respelling / overlays)
+- [docs/homographs.md](docs/homographs.md), meaning-based disambiguation
+- [docs/codeswitch.md](docs/codeswitch.md), embedded es/fr/en detection and nativization
+- [docs/numbers.md](docs/numbers.md), number normalization and gender agreement
+- [docs/api.md](docs/api.md), full class and function reference
+- [docs/tokenizer.md](docs/tokenizer.md), the token-tree feature model
+- [docs/advanced.md](docs/advanced.md), the pipeline internals and integration
+- [docs/benchmarking.md](docs/benchmarking.md), the TTS-gold and rules-only benchmarks
+- [docs/scoreboard.md](docs/scoreboard.md), accuracy per dialect
+- [examples/](examples/), runnable scripts
 
 ---
 

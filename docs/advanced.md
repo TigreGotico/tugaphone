@@ -10,22 +10,21 @@ tugaphone phonemizes by driving the shared
 lattice. A dialect *is* an orthography2ipa lect spec:
 `phonemize_sentence(text, lang)` resolves `lang` to a lect code and runs
 `orthography2ipa.G2P(lect).transcribe(text)`. The spec's grapheme table,
-`allophone_rules` and cross-word `sandhi_rules` produce the dialect's phonology —
-betacism, rising diphthongs, palatalization, `/u/` fronting, coda-sibilant
-voicing sandhi and the rest — with no string-transform pass after transcription.
+`allophone_rules` and cross-word `sandhi_rules` produce the dialect's phonology, betacism, rising diphthongs, palatalization, `/u/` fronting, coda-sibilant
+voicing sandhi and the rest, with no string-transform pass after transcription.
 
 tugaphone adds only the stages orthography2ipa leaves to the caller, wired
 through orthography2ipa's own extension points:
 
-1. **Normalization** — number/ordinal verbalization
+1. **Normalization**, number/ordinal verbalization
    (`tugaphone.number_utils.normalize_numbers`) and sense-based homograph marking
    (`bifonia.add_extra_diacritics`) run as the engine's `normalizer`, before the
    lattice sees the text.
-2. **Lexicon** — the curated `tugalex` lexicon is registered per lect via
+2. **Lexicon**, the curated `tugalex` lexicon is registered per lect via
    `orthography2ipa.register_lexicon()`, so a covered word folds into the same
-   override path as a spec `word_exceptions` entry; the lattice generates only
+   override path as a spec `word_exceptions` entry, the lattice generates only
    out-of-vocabulary words.
-3. **Syllabification** — supplied by orthography2ipa's own `silabificador`
+3. **Syllabification**, supplied by orthography2ipa's own `silabificador`
    `syllabify` plugin.
 
 For the full breakdown of what comes from where, see
@@ -68,22 +67,22 @@ input sentence is verbalized before the lattice transcribes it.
 
 ## Integration with sibling libraries
 
-`tugaphone` composes the TigreGotico Portuguese NLP stack; each library is
+`tugaphone` composes the TigreGotico Portuguese NLP stack, each library is
 usable on its own:
 
-- [`orthography2ipa`](https://github.com/TigreGotico/orthography2ipa) — the
+- [`orthography2ipa`](https://github.com/TigreGotico/orthography2ipa), the
   candidate lattice and the lect specs that are tugaphone's core.
-- [`tugalex`](https://github.com/TigreGotico/tugalex) — the phonetic lexicon
+- [`tugalex`](https://github.com/TigreGotico/tugalex), the phonetic lexicon
   (`LEXICON` in `tugaphone.dialects`), registered per lect as an override.
-- [`silabificador`](https://github.com/TigreGotico/silabificador) — the
+- [`silabificador`](https://github.com/TigreGotico/silabificador), the
   syllabifier, wired in as orthography2ipa's `syllabify` plugin.
-- [`bifonia`](https://github.com/TigreGotico/bifonia) — meaning-based
+- [`bifonia`](https://github.com/TigreGotico/bifonia), meaning-based
   heterophone disambiguation, called via `add_extra_diacritics` in the
   `normalize` stage.
 
 A TTS front-end typically wires `tugaphone` as the G2P stage: pass text and a
 target lect code, hand the returned IPA string to the acoustic model. It can also
-be loaded through the `orthography2ipa` G2P plugin interface — see
+be loaded through the `orthography2ipa` G2P plugin interface, see
 [api.md](api.md#tugaphoneplugin).
 
 ## The token-feature API
@@ -91,14 +90,18 @@ be loaded through the `orthography2ipa` G2P plugin interface — see
 `tugaphone.tokenizer` and `tugaphone.dialects` expose a token tree (manner,
 place, voicing, vowel height, syllable roles, CV skeletons) and back the
 rules-only benchmark baseline. This is a feature-inspection surface, **not** the
-phonemization path — `phonemize_sentence` runs on the lattice and never routes
+phonemization path, `phonemize_sentence` runs on the lattice and never routes
 through it. See [tokenizer.md](tokenizer.md).
 
 ## Where next
 
-- [architecture.md](architecture.md) — the pipeline in full
-- [api.md](api.md) — full signatures
-- [dialects.md](dialects.md) — the lect codes, aliases and lexicon overlay
-- [homographs.md](homographs.md) — meaning-based disambiguation
-- [numbers.md](numbers.md) — number normalization and gender agreement
-- [tokenizer.md](tokenizer.md) — inspect syllables, stress and graphemes directly
+- [architecture.md](architecture.md), the pipeline in full
+- [api.md](api.md), full signatures
+- [dialects.md](dialects.md), the lect codes, aliases and lexicon overlay
+- [homographs.md](homographs.md), meaning-based disambiguation
+- [numbers.md](numbers.md), number normalization and gender agreement
+- [tokenizer.md](tokenizer.md), inspect syllables, stress and graphemes directly
+
+
+---
+[← Tokenizer](tokenizer.md) · [Home](../README.md) · [Benchmarking →](benchmarking.md)

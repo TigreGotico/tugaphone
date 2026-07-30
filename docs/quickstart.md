@@ -1,4 +1,4 @@
-# Quickstart — zero to hero
+# Quickstart: zero to hero
 
 `tugaphone` turns Portuguese text into IPA phonemes, and it does it per dialect.
 Give it a sentence and a Lusophone dialect code, get back a phoneme string with
@@ -42,12 +42,12 @@ The return value is a space-separated phoneme string: one token per word, with
 `ˈ` marking primary stress. Selecting `lang` selects an
 [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) lect spec whose
 grapheme table, allophone rules and cross-word sandhi produce that dialect's
-phonology — so `lang` changes the sounds, not just the spelling. See
+phonology, so `lang` changes the sounds, not just the spelling. See
 [architecture.md](architecture.md).
 
 ## 3. Pick a dialect
 
-Every Portuguese-family lect is reachable by its BCP-47 code — the five national
+Every Portuguese-family lect is reachable by its BCP-47 code, the five national
 standards plus the European, Brazilian, African, Asian and other varieties.
 `list_dialects()` returns all 41.
 
@@ -91,7 +91,7 @@ print(ph.phonemize_sentence(text, "pt-PT"))
 
 ## 5. Sub-regional accents
 
-Sub-regional accents are lects like any other — select them by their BCP-47
+Sub-regional accents are lects like any other, select them by their BCP-47
 code. The accent's phonology is encoded in the orthography2ipa lect spec, so no
 extra argument is needed:
 
@@ -107,7 +107,7 @@ sub-regional codes and the legacy aliases.
 ## 6. orthography2ipa plugin
 
 `TugaphoneG2PPlugin` implements the `orthography2ipa` G2P plugin interface
-(`transcribe`, `transcribe_word`, `language_codes`) — useful when a framework
+(`transcribe`, `transcribe_word`, `language_codes`), useful when a framework
 loads phonemizers through that interface:
 
 ```python
@@ -124,10 +124,14 @@ entry point for it.
 
 ## Where next
 
-- [architecture.md](architecture.md) — the lattice core and the caller-owned layers
-- [api.md](api.md) — every public class, function and keyword argument with real signatures
-- [dialects.md](dialects.md) — the lect codes, aliases and lexicon overlay
-- [homographs.md](homographs.md) — meaning-based disambiguation
-- [numbers.md](numbers.md) — number normalization and gender agreement
-- [advanced.md](advanced.md) — the pipeline internals and integration
-- [tokenizer.md](tokenizer.md) — the `Sentence → Word → Grapheme → Character` feature model
+- [architecture.md](architecture.md), the lattice core and the caller-owned layers
+- [api.md](api.md), every public class, function and keyword argument with real signatures
+- [dialects.md](dialects.md), the lect codes, aliases and lexicon overlay
+- [homographs.md](homographs.md), meaning-based disambiguation
+- [numbers.md](numbers.md), number normalization and gender agreement
+- [advanced.md](advanced.md), the pipeline internals and integration
+- [tokenizer.md](tokenizer.md), the `Sentence → Word → Grapheme → Character` feature model
+
+
+---
+[Home](../README.md) · [Architecture →](architecture.md)

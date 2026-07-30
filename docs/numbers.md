@@ -34,8 +34,7 @@ normalize_numbers("abc 1 xyz", strict=False)
 
 ## Number scale
 
-`pt-PT` uses the **long scale** (thousand million = *mil milhões*);
-`pt-BR` uses the **short scale** (billion = *bilhão*).
+`pt-PT` uses the **long scale** (thousand million = *mil milhões*), `pt-BR` uses the **short scale** (billion = *bilhão*).
 
 ```python
 normalize_numbers("tem 19 anos", lang="pt-BR")   # 'tem dezenove anos'
@@ -90,15 +89,19 @@ NumberParser.get_number_gender("1", next_word="casa")         # 'feminine'
 
 Gender is inferred from:
 - The preceding word (articles `a`, `as`, `da`, `das` → feminine)
-- The following word's ending (`-a`, `-dade`, `-agem` → feminine; default masculine)
+- The following word's ending (`-a`, `-dade`, `-agem` → feminine, default masculine)
 - An explicit `gender` override passed to `pronounce_number_word`
 
-Only numbers 1, 2, and the hundreds (100–900) change form with gender in
+Only numbers 1, 2, and the hundreds (100 to 900) change form with gender in
 Portuguese.
 
 ---
 
 ## Where next
 
-- [quickstart.md](quickstart.md) — normalize_numbers in context
-- [api.md](api.md) — full `NumberParser` reference
+- [quickstart.md](quickstart.md), normalize_numbers in context
+- [api.md](api.md), full `NumberParser` reference
+
+
+---
+[← Code-switch](codeswitch.md) · [Home](../README.md) · [API →](api.md)

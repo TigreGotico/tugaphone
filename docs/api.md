@@ -5,7 +5,7 @@ source.
 
 ## `tugaphone.TugaPhonemizer`
 
-The phonemizer entry class. It drives the orthography2ipa lattice; see
+The phonemizer entry class. It drives the orthography2ipa lattice, see
 [architecture.md](architecture.md).
 
 ```python
@@ -21,18 +21,18 @@ phonemize_sentence(sentence: str,
 ```
 
 Transcribes `sentence` to IPA for the target dialect through the orthography2ipa
-lattice. Returns a space-separated phoneme string — one token per word, with `ˈ`
+lattice. Returns a space-separated phoneme string, one token per word, with `ˈ`
 marking primary stress.
 
 `lang` is any code from `list_dialects()` (or a legacy alias): the five national
 standards (`pt-PT`, `pt-BR`, `pt-AO`, `pt-MZ`, `pt-TL`), the European and
 Brazilian sub-regional varieties (`pt-PT-x-porto`, `pt-BR-x-sp`, …), and the
 African, Asian and other lects. Resolution is case-insensitive with alias
-support; an unresolved code falls back to `pt-PT`. See
+support, an unresolved code falls back to `pt-PT`. See
 [dialects.md](dialects.md#the-lect-codes).
 
 `regional_dialect` is **deprecated and ignored**. The accent is selected
-entirely by `lang` — it is encoded in the orthography2ipa lect spec, not applied
+entirely by `lang`, it is encoded in the orthography2ipa lect spec, not applied
 as a post-hoc transform. Passing it emits a `DeprecationWarning`.
 
 ```python
@@ -63,7 +63,7 @@ force_accent(text: str, lect: str, mode: str = "ipa",
 ```
 
 Force `text` into the `lect` accent. `mode="ipa"` returns the target lect's IPA
-(phoneme-input TTS); `mode="respell"` returns Portuguese text respelled so a
+(phoneme-input TTS), `mode="respell"` returns Portuguese text respelled so a
 grapheme-input TTS speaking `base_lect` pronounces the target accent. An optional
 `overlay` of user tweaks is applied last.
 
@@ -94,11 +94,11 @@ are re-exported from the package root.
 
 | Symbol | Role |
 |--------|------|
-| `resolve_lect(lang="pt-PT")` | Resolve any BCP-47 code (case-insensitive, alias-aware) to the orthography2ipa lect code that answers for it; unresolved codes fall back to the parent tag, then `pt-PT`. |
+| `resolve_lect(lang="pt-PT")` | Resolve any BCP-47 code (case-insensitive, alias-aware) to the orthography2ipa lect code that answers for it, unresolved codes fall back to the parent tag, then `pt-PT`. |
 | `list_dialects()` | Sorted list of every reachable lect code (the Portuguese-family orthography2ipa specs). |
 | `lexicon_region(lect)` | The `tugalex` region whose lexicon overlays `lect`, or `None` for a pure-lattice lect. |
 | `normalize_dialect_code(lang)` | BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). |
-| `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`; emits a `DeprecationWarning`. |
+| `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`, emits a `DeprecationWarning`. |
 
 ```python
 from tugaphone import resolve_lect, list_dialects
@@ -154,18 +154,18 @@ NumberParser.get_number_gender("1", next_word="casa")                          #
 ## `tugaphone.tokenizer` and `tugaphone.dialects`
 
 These modules are the token-tree **feature** API and the rules-only benchmark
-baseline. They are not the phonemization path — `phonemize_sentence` runs on the
+baseline. They are not the phonemization path, `phonemize_sentence` runs on the
 orthography2ipa lattice and never routes through them. Use them to inspect
 manner, place, voicing, vowel height, syllable roles and CV skeletons. See
-[tokenizer.md](tokenizer.md) for the full model; the public surface is:
+[tokenizer.md](tokenizer.md) for the full model, the public surface is:
 
 | Symbol | Role |
 |--------|------|
-| `Sentence(surface, words=[], dialect=EuropeanPortuguese())` | Top-level container; `.ipa`, `.words`, `.n_words`, `.features`. |
+| `Sentence(surface, words=[], dialect=EuropeanPortuguese())` | Top-level container, `.ipa`, `.words`, `.n_words`, `.features`. |
 | `Sentence.from_postagged(surface, tags, dialect=None)` | Build from `(token, pos)` pairs. |
-| `WordToken` | `.surface`, `.syllables`, `.graphemes`, `.stressed_syllable_idx`, `.ipa`, `.features`; phonological summaries `.stress_pattern`, `.syllable_structure_pattern`, `.phoneme_count`, `.vowel_sequence`, `.consonant_sequence`, `.has_diphthongs`, `.has_nasal_sounds`, `.has_palatal_sounds`, `.has_consonant_clusters`, `.is_homograph`, `.is_irregular`. |
-| `GraphemeToken` | `.surface`, `.ipa`, `.is_diphthong`, `.is_nasal`, `.is_digraph`, `.features`; syllable features `.syllable_position`, `.phonological_weight`, `.has_complex_onset`, `.is_palatal`, `.triggers_palatalization`, `.is_vowel_grapheme`/`.is_consonant_grapheme`. |
-| `CharToken` | character-level predicates (`.is_vowel`, `.is_consonant`, `.ipa`, ...); articulatory features `.manner_of_articulation`, `.place_of_articulation`, `.voicing`, `.vowel_height`/`.vowel_backness`/`.vowel_roundedness`, syllable role `.is_nucleus`/`.is_onset`/`.is_coda`. |
+| `WordToken` | `.surface`, `.syllables`, `.graphemes`, `.stressed_syllable_idx`, `.ipa`, `.features`, phonological summaries `.stress_pattern`, `.syllable_structure_pattern`, `.phoneme_count`, `.vowel_sequence`, `.consonant_sequence`, `.has_diphthongs`, `.has_nasal_sounds`, `.has_palatal_sounds`, `.has_consonant_clusters`, `.is_homograph`, `.is_irregular`. |
+| `GraphemeToken` | `.surface`, `.ipa`, `.is_diphthong`, `.is_nasal`, `.is_digraph`, `.features`, syllable features `.syllable_position`, `.phonological_weight`, `.has_complex_onset`, `.is_palatal`, `.triggers_palatalization`, `.is_vowel_grapheme`/`.is_consonant_grapheme`. |
+| `CharToken` | character-level predicates (`.is_vowel`, `.is_consonant`, `.ipa`, ...), articulatory features `.manner_of_articulation`, `.place_of_articulation`, `.voicing`, `.vowel_height`/`.vowel_backness`/`.vowel_roundedness`, syllable role `.is_nucleus`/`.is_onset`/`.is_coda`. |
 
 `tugaphone.dialects` supplies the `DialectInventory` subclasses those tokens
 read (`EuropeanPortuguese`, `BrazilianPortuguese`, `AngolanPortuguese`,
@@ -186,9 +186,9 @@ Implements `orthography2ipa.g2p_plugin.G2PPlugin`.
 
 | Member | Description |
 |--------|-------------|
-| `language_codes` | `list_dialects()` — every reachable lect code. |
+| `language_codes` | `list_dialects()`, every reachable lect code. |
 | `transcribe(text)` | Phonemize a full sentence. |
-| `transcribe_word(word, context=None)` | Phonemize a single word; `context.lang` overrides `self.lang`. |
+| `transcribe_word(word, context=None)` | Phonemize a single word, `context.lang` overrides `self.lang`. |
 
 ```python
 from tugaphone.plugin import TugaphoneG2PPlugin
@@ -213,8 +213,12 @@ s.syllabify("fonologia")   # ['fo', 'no', 'lo', 'gi', 'a']
 
 ## Where next
 
-- [architecture.md](architecture.md) — the lattice core and caller-owned layers
-- [dialects.md](dialects.md) — the lect codes and aliases
-- [homographs.md](homographs.md) — meaning-based disambiguation
-- [numbers.md](numbers.md) — number normalization and gender agreement
-- [tokenizer.md](tokenizer.md) — the token tree and feature extraction
+- [architecture.md](architecture.md), the lattice core and caller-owned layers
+- [dialects.md](dialects.md), the lect codes and aliases
+- [homographs.md](homographs.md), meaning-based disambiguation
+- [numbers.md](numbers.md), number normalization and gender agreement
+- [tokenizer.md](tokenizer.md), the token tree and feature extraction
+
+
+---
+[← Numbers](numbers.md) · [Home](../README.md) · [Tokenizer →](tokenizer.md)
