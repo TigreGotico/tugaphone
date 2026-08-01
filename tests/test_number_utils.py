@@ -25,6 +25,21 @@ class TestNormalizeNumbers:
     def test_no_numeric_token_unchanged(self):
         assert normalize_numbers("o gato dorme") == "o gato dorme"
 
+    def test_ordinal_feminine_indicator(self):
+        assert normalize_numbers("1ª vez") == "primeira vez"
+
+    def test_ordinal_masculine_indicator(self):
+        assert normalize_numbers("1º lugar") == "primeiro lugar"
+
+    def test_ordinal_feminine_indicator_second(self):
+        assert normalize_numbers("2ª vez") == "segunda vez"
+
+    def test_ordinal_masculine_indicator_second(self):
+        assert normalize_numbers("2º lugar") == "segundo lugar"
+
+    def test_ordinal_larger_number(self):
+        assert normalize_numbers("10ª posição") == "décima posição"
+
 
 class TestNumberParserPronounce:
     def test_cardinal_masculine_default(self):
