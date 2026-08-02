@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tugaphone"
+dynamic = ["version"]
+description = "Dialect-aware Portuguese (Lusophone) text-to-IPA phonemizer"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.9"
+authors = [
+    {name = "JarbasAi", email = "jarbasai@mailfence.com"},
+]
+keywords = ["portuguese", "phonemizer", "g2p", "ipa", "phonetics", "tts", "nlp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: Portuguese",
+    "Natural Language :: Portuguese (Brazilian)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+    "unicode-rbnf",
+    "silabificador>=2.1.0a1",
+    "tugalex>=2.0.1a1",
+    "bifonia>=0.1.1",
+    "orthography2ipa[portuguese]>=7.44.0a4",
+]
+
+[project.optional-dependencies]
+# Statistical char-Markov code-switch detector. Optional: without it, the
+# orthographic heuristic is used. The bundled models are scored by markovonnx.
+langdetect = [
+    "markovonnx>=1.0.1",
+]
+test = [
+    "pytest",
+    "pytest-cov",
+    "markovonnx>=1.0.1",
+]
+
+[project.scripts]
+tugaphone = "tugaphone.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/TigreGotico/tugaphone"
+Repository = "https://github.com/TigreGotico/tugaphone"
+
+[tool.setuptools]
+packages = ["tugaphone"]
+
+[tool.setuptools.package-data]
+tugaphone = ["data/langdetect/*.json.gz"]
+
+[tool.setuptools.dynamic]
+version = {attr = "tugaphone.version.__version__"}

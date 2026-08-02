@@ -62,7 +62,10 @@ class NumberParser:
         fmt = FormatPurpose.ORDINAL if is_ord else FormatPurpose.CARDINAL
 
         # 3. Generate the base text using RBNF (Rule-Based Number Format)
+        # The ordinal markers (º/ª) are only used to detect ordinality/gender above;
+        # RbnfEngine expects a plain numeric string, so strip them before formatting.
         word = word.replace(" º", "º").replace(" ª", "ª").strip()
+        word = word.rstrip(cls.ORDINAL_MALE + cls.ORDINAL_FEMALE)
         spelled = cls.engine_br.format_number(word, fmt) if is_brazilian else cls.engine_pt.format_number(word, fmt)
 
         # Select the specific ruleset based on grammar results
