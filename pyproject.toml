@@ -31,7 +31,7 @@ dependencies = [
     "silabificador>=2.1.0a1",
     "tugalex>=2.0.1a1",
     "bifonia>=0.1.1",
-    "orthography2ipa[portuguese]>=7.19.2a1",
+    "orthography2ipa[portuguese]>=7.44.0a4",
 ]
 
 [project.optional-dependencies]
