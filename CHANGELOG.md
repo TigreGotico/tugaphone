@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.2.1a1](https://github.com/TigreGotico/tugaphone/tree/1.2.1a1) (2026-08-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.0a2...1.2.1a1)
+
+**Merged pull requests:**
+
+- fix: expand Portuguese ordinals instead of failing on the ordinal indicator [\#96](https://github.com/TigreGotico/tugaphone/pull/96) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.2.0a2](https://github.com/TigreGotico/tugaphone/tree/1.2.0a2) (2026-07-30)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.0a1...1.2.0a2)
+
+**Merged pull requests:**
+
+- docs: rewrite README in Simplified Technical English [\#94](https://github.com/TigreGotico/tugaphone/pull/94) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.2.0a1](https://github.com/TigreGotico/tugaphone/tree/1.2.0a1) (2026-07-16)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.1.0a1...1.2.0a1)
