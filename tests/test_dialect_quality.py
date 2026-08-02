@@ -28,8 +28,14 @@ class TestNorthernSignatures:
     """Northern European Portuguese hallmarks from the lect specs."""
 
     def test_porto_rising_diphthong_o(self, pho):
-        # Cintra 1971:684 "[o] em [wo]"; o2i PT_PORTO_DIPHTHONGISE_O.
-        assert "wo" in say(pho, "porto", "pt-PT-x-porto")
+        # Cintra 1971:684 "[o] em [wo]"; o2i PT_PORTO_DIPHTHONGISE_O /
+        # PT_PORTO_DIPHTHONGISE_O_OPEN (Brissos 2018, pp.196-197, 200-201):
+        # the emblematic stressed <o> in "Porto" surfaces as a rising [w]
+        # on-glide, with the following mid vowel realised as either close
+        # [o] or open [ɔ] depending on the base engine's pre-lexical pick
+        # (gold corpus pt-PT-x-porto-011 attests "Porto" -> [ˈpwɔɾtu]).
+        # Assert the on-glide itself rather than pinning one vowel quality.
+        assert re.search(r"w[oɔ]", say(pho, "porto", "pt-PT-x-porto"))
 
     def test_porto_betacism(self, pho):
         # Northern /v/ → [b]; o2i PT_PORTO_BETACISM.
