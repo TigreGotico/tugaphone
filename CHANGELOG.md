@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0a1](https://github.com/TigreGotico/tugaphone/tree/1.4.0a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.6a1...1.4.0a1)
+
+**Merged pull requests:**
+
+- feat: read common English loanwords with their English pronunciation [\#125](https://github.com/TigreGotico/tugaphone/pull/125) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.3.6a1](https://github.com/TigreGotico/tugaphone/tree/1.3.6a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.5a1...1.3.6a1)
