@@ -53,18 +53,39 @@ class TestClockTimes:
     def test_hh_mm(self):
         assert expand_clock_times("16:54") == "16 e 54"
 
-    def test_out_of_range_hour_untouched(self):
-        # 24 is not a valid hour of day; the colon is left for the caller.
-        assert expand_clock_times("24:00") == "24:00"
+    def test_minute_leading_zero_dropped(self):
+        assert expand_clock_times("9:05") == "9 e 5"
+
+    def test_minute_leading_zero_before_punctuation(self):
+        # A comma glued to the minute digits ("05,") makes both
+        # NumberParser.is_int and is_float fail downstream, so the minute
+        # must come out as a clean, space-separated numeric token.
+        assert expand_clock_times("9:05, sala 2.") == "9 e 5 , sala 2."
+
+    def test_whole_hour_24(self):
+        assert expand_clock_times("24:00") == "24 horas"
+
+    def test_hour_25_untouched(self):
+        # 25 is not a valid hour of day.
+        assert expand_clock_times("25:00") == "25:00"
 
     def test_note_colon_untouched(self):
         assert expand_clock_times("Nota: importante") == "Nota: importante"
 
     def test_full_pipeline_normalize_numbers(self):
         expanded = expand_clock_times("São 16:30.")
-        assert expanded == "São 16 e 30."
+        assert expanded == "São 16 e 30 ."
         spelled = normalize_numbers(expanded, "pt-PT")
-        assert spelled == "São dezasseis e trinta"
+        assert spelled == "São dezasseis e trinta ."
+
+    def test_full_pipeline_minute_with_leading_zero_and_comma(self):
+        expanded = expand_clock_times("Reunião às 9:05, sala 2.")
+        spelled = normalize_numbers(expanded, "pt-PT")
+        assert spelled == "Reunião às nove e cinco , sala dois"
+
+    def test_full_pipeline_whole_hour_24(self):
+        spelled = normalize_numbers(expand_clock_times("24:00"), "pt-PT")
+        assert spelled == "vinte e quatro horas"
 
 
 class TestNumberSeparators:
@@ -125,6 +146,24 @@ class TestAbbreviations:
         # "Dr." not followed by a name-like capitalised word: left alone.
         assert expand_abbreviations("Dr. disse que sim") == "Dr. disse que sim"
         assert expand_abbreviations("ele é dr.") == "ele é dr."
+
+    def test_unconditional_reference_markers(self):
+        assert expand_abbreviations("gatos vs. cães") == "gatos versus cães"
+        assert expand_abbreviations("ver pág. 12") == "ver página 12"
+        assert expand_abbreviations("ver págs. 12 a 15") == "ver páginas 12 a 15"
+        assert expand_abbreviations("tel. 212345678") == "telefone 212345678"
+        assert expand_abbreviations("art. 5") == "artigo 5"
+        assert expand_abbreviations("fig. 3") == "figura 3"
+        assert expand_abbreviations("cap. 2") == "capítulo 2"
+        assert expand_abbreviations("séc. XX") == "século XX"
+
+    def test_place_abbreviations_before_lowercase_word(self):
+        # Place abbreviations expand unconditionally, unlike the personal
+        # honorifics: a lowercase word or end of sentence still triggers them.
+        assert expand_abbreviations("A avenida R. de Lisboa fica em Lx.") ==             "A avenida Rua de Lisboa fica em Lisboa"
+
+    def test_place_abbreviation_at_sentence_end(self):
+        assert expand_abbreviations("fica em Lx.") == "fica em Lisboa"
 
 
 class TestRegnalNumerals:
@@ -205,3 +244,19 @@ class TestFullPipelineEndToEnd:
         assert not any(c.isdigit() for c in ps)
         assert "dɨzɐˈsɐjz" in ps   # dezasseis
         assert "ˈtɾĩtɐ" in ps      # trinta
+
+    def test_minutes_with_leading_zero_pt_lisbon_no_empty_output(self):
+        # "Reunião às 9:05." must not go silent on the "05" minute.
+        ps = TugaPhonemizer().phonemize_sentence("Reunião às 9:05.", "pt-PT-x-lisbon")
+        assert ps
+        assert not any(c.isdigit() for c in ps)
+        assert "ˈnɔv" in ps    # nove
+        assert "ˈsĩku" in ps   # cinco
+
+    def test_whole_hour_24_pt_lisbon_no_empty_output(self):
+        ps = TugaPhonemizer().phonemize_sentence("24:00.", "pt-PT-x-lisbon")
+        assert ps
+        assert not any(c.isdigit() for c in ps)
+        assert "ˈvĩt" in ps    # vinte
+        assert "ˈkwatɾu" in ps  # quatro
+        assert "ˈoɾɐʃ" in ps    # horas
