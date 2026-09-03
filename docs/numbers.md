@@ -178,8 +178,9 @@ Portuguese.
 ## Where next
 
 - [quickstart.md](quickstart.md), normalize_numbers in context
+- [text_normalization.md](text_normalization.md), the orthographic rewrites that run before `normalize_numbers`
 - [api.md](api.md), full `NumberParser` reference
 
 
 ---
-[← Code-switch](codeswitch.md) · [Home](../README.md) · [API →](api.md)
+[← Code-switch](codeswitch.md) · [Home](../README.md) · [Text normalization →](text_normalization.md)
