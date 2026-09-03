@@ -16,12 +16,29 @@ class NumberParser:
           https://en.wikipedia.org/wiki/Long_and_short_scales
           https://pt.wikipedia.org/wiki/Escalas_curta_e_longa
 
+    The `scale` parameter selects which of the two engines does the
+    formatting, independently of the requested dialect (`is_brazilian`).
+    Since each engine bundles a full ruleset (dialect spelling AND scale
+    words together), forcing e.g. `scale="short"` on a pt-PT call means
+    the number is spelled entirely with the pt-BR ruleset (e.g. "trilhão"
+    instead of "bilião") -- unicode_rbnf does not expose scale and dialect
+    as independent axes, so this is the closest available approximation.
+
     Limitations:
-        - Can not set number scale independently of language
-        - Can not handle very large numbers  TODO: document max value
+        - Numbers whose integer part exceeds `MAX_SAFE_INTEGER` are refused
+          (see `MAX_SAFE_INTEGER` below) instead of being spelled out wrong.
     """
     engine_pt = RbnfEngine.for_language("pt_PT")
     engine_br = RbnfEngine.for_language("pt")
+
+    # RbnfEngine.format_number() casts its argument through float() (see
+    # unicode_rbnf/engine.py). IEEE-754 doubles represent every integer
+    # exactly only up to 2**53 - 1; beyond that, some magnitudes are
+    # silently rounded to a *different* integer before being spelled out
+    # (verified by execution: 9007199254741103 gets spelled as if it were
+    # 9007199254741104). This ceiling applies to both scales -- it comes
+    # from float precision, not from the language rules.
+    MAX_SAFE_INTEGER = 2 ** 53 - 1  # 9_007_199_254_740_991
 
     # Symbols used in PT to denote ordinals (like the English 'st', 'nd', 'rd')
     ORDINAL_MALE = "º"  # e.g., 1º (primeiro)
@@ -34,25 +51,32 @@ class NumberParser:
                               next_word: Optional[str] = None,
                               gender: Optional[str] = None,
                               as_ordinal: Optional[bool] = None,
-                              is_brazilian=False) -> str:
+                              is_brazilian=False,
+                              scale: Optional[str] = None) -> str:
         """
         Convert a numeric token into its spelled-out Portuguese form using surrounding context.
 
         Parameters:
-            word (str): Numeric string to convert (e.g., "1", "2.5", "1e9").
+            word (str): Numeric string to convert (e.g., "1", "2.5", "10,4", "1e9").
             prev_word (Optional[str]): Word immediately before `word`, used to infer gender.
             next_word (Optional[str]): Word immediately after `word`, used to infer ordinality and gender.
             gender (Optional[str]): Explicit gender override ("masculine" or "feminine"); if omitted a heuristic is applied.
             as_ordinal (Optional[bool]): If provided, forces ordinal (`True`) or cardinal (`False`) interpretation; otherwise context is used.
             is_brazilian (bool): If True, use Brazilian Portuguese formatting rules (pt-BR); otherwise use pt-PT.
+            scale (Optional[str]): "long" or "short", overriding the scale that `is_brazilian` would
+                otherwise pick (long for pt-PT, short for pt-BR). See the class docstring for the
+                caveat that this also switches the dialect, since scale and dialect share one engine.
 
         Returns:
             Optional[str]: The spelled-out form of the number in Portuguese, or `None` if a textual form cannot be produced.
+
+        Raises:
+            ValueError: If the integer part of `word` exceeds `MAX_SAFE_INTEGER`.
         """
-        # TODO: allow scale independent from language code
-        #       ie. enable pt-PT+short-scale and pt-BR+long-scale
         if cls.is_scientific_notation(word):
-            return cls.pronounce_scientific(word, is_brazilian=is_brazilian)
+            return cls.pronounce_scientific(word, is_brazilian=is_brazilian, scale=scale)
+
+        cls._check_ceiling(word)
 
         # 1. Determine if the number is an ordinal (1st, 2nd) or cardinal (1, 2)
         is_ord = cls.is_ordinal(word, next_word) if as_ordinal is None else as_ordinal
@@ -62,8 +86,14 @@ class NumberParser:
         fmt = FormatPurpose.ORDINAL if is_ord else FormatPurpose.CARDINAL
 
         # 3. Generate the base text using RBNF (Rule-Based Number Format)
+        # The ordinal markers (º/ª) are only used to detect ordinality/gender above;
+        # RbnfEngine expects a plain numeric string, so strip them before formatting.
         word = word.replace(" º", "º").replace(" ª", "ª").strip()
-        spelled = cls.engine_br.format_number(word, fmt) if is_brazilian else cls.engine_pt.format_number(word, fmt)
+        word = word.rstrip(cls.ORDINAL_MALE + cls.ORDINAL_FEMALE)
+        # RbnfEngine expects a dot as the decimal separator; PT/BR write decimals with a comma.
+        word = word.replace(",", ".", 1)
+        use_short_scale = scale == "short" if scale else is_brazilian
+        spelled = cls.engine_br.format_number(word, fmt) if use_short_scale else cls.engine_pt.format_number(word, fmt)
 
         # Select the specific ruleset based on grammar results
         if is_ord:
@@ -73,6 +103,51 @@ class NumberParser:
 
         text = spelled.text_by_ruleset[key]
         return text
+
+    @classmethod
+    def _check_ceiling(cls, word: str) -> None:
+        """
+        Raise if the integer part of `word` exceeds `MAX_SAFE_INTEGER`.
+
+        Parameters:
+            word (str): Numeric token, possibly with ordinal markers, a sign, and a decimal part.
+
+        Raises:
+            ValueError: If the integer part is larger than `MAX_SAFE_INTEGER`.
+        """
+        core = word.strip(cls.ORDINAL_MALE + cls.ORDINAL_FEMALE + string.whitespace)
+        core = core.lstrip("+-")
+        int_part = core.split(",")[0].split(".")[0]
+        if int_part.isdigit() and int(int_part) > cls.MAX_SAFE_INTEGER:
+            raise ValueError(
+                f"'{word}' exceeds the largest integer NumberParser can spell out "
+                f"correctly (MAX_SAFE_INTEGER = {cls.MAX_SAFE_INTEGER})"
+            )
+
+    # Punctuation that can trail a numeric token in running text without
+    # being part of the number itself (sentence-final marks, list commas).
+    # Deliberately excludes the ordinal markers (º/ª), which are handled
+    # separately and carry meaning for gender/ordinality detection.
+    TRAILING_PUNCTUATION = ".,;:!?)\"”…"
+
+    @classmethod
+    def split_trailing_punctuation(cls, word: str) -> tuple:
+        """
+        Split a numeric token from any trailing punctuation glued to it.
+
+        Parameters:
+            word (str): Token that may end in one or more punctuation marks
+                (e.g. "54.", "05,", "5!").
+
+        Returns:
+            tuple[str, str]: (core, trail) where `core` is the token with
+                trailing punctuation removed and `trail` is the removed
+                punctuation (possibly empty).
+        """
+        i = len(word)
+        while i > 0 and word[i - 1] in cls.TRAILING_PUNCTUATION:
+            i -= 1
+        return word[:i], word[i:]
 
     # digit/string conversion
     @classmethod
@@ -87,7 +162,7 @@ class NumberParser:
             int: The parsed integer value on success.
             None: If the token contains a decimal point (treated as a non-integer) or cannot be parsed as an integer after cleaning.
         """
-        if "." in word:
+        if "." in word or "," in word:
             return None  # may be a decimal
         try:
             # Remove ordinal markers and standard punctuation
@@ -114,10 +189,12 @@ class NumberParser:
     @classmethod
     def to_float(cls, word: str) -> Optional[float]:
         """
-        Convert a numeric string (possibly containing ordinal markers, punctuation, or surrounding whitespace) into a float.
+        Convert a numeric string (possibly containing ordinal markers, punctuation, PT/BR comma
+        decimals, or surrounding whitespace) into a float.
 
         Parameters:
-            word (str): The input string to parse; may include ordinal symbols (º, ª), punctuation, or whitespace.
+            word (str): The input string to parse; may include ordinal symbols (º, ª), punctuation,
+                a comma or dot decimal separator, scientific notation, or whitespace.
 
         Returns:
             float: The parsed numeric value if conversion succeeds, `None` if the input cannot be converted to a float.
@@ -127,6 +204,8 @@ class NumberParser:
             word = word.strip(cls.ORDINAL_MALE +
                               cls.ORDINAL_FEMALE +
                               string.whitespace)
+            # PT/BR write decimals with a comma; float() only accepts a dot
+            word = word.replace(",", ".", 1)
             return float(word)
         except (ValueError, TypeError):
             return None
@@ -134,13 +213,29 @@ class NumberParser:
     @classmethod
     def is_float(cls, word: str) -> bool:
         """
-        Determine whether a string represents a decimal/floating point number.
+        Determine whether a string represents any floating-point value: a plain integer, a
+        decimal (comma or dot separator), or scientific notation.
 
-        TODO: differentiate float and decimal , float also handles scientific notation
         Returns:
             `true` if the string can be parsed as a float, `false` otherwise.
         """
         return cls.to_float(word) is not None
+
+    @classmethod
+    def is_decimal(cls, word: str) -> bool:
+        """
+        Determine whether a token is a plain decimal number -- an integer part plus a fractional
+        part separated by a comma or dot -- as opposed to a bare integer or scientific notation.
+
+        Parameters:
+            word (str): Token to test.
+
+        Returns:
+            `true` if the token is a non-scientific decimal, `false` otherwise.
+        """
+        if cls.is_scientific_notation(word):
+            return False
+        return ("," in word or "." in word) and cls.is_float(word)
 
     @classmethod
     def is_scientific_notation(cls, word: str) -> bool:
@@ -160,13 +255,14 @@ class NumberParser:
         return cls.is_float(nums[0]) and cls.is_int(nums[1])
 
     @classmethod
-    def pronounce_scientific(cls, word: str, is_brazilian=False) -> str:
+    def pronounce_scientific(cls, word: str, is_brazilian=False, scale: Optional[str] = None) -> str:
         """
         Convert a number in scientific notation into its Portuguese spoken form.
 
         Parameters:
-        	word (str): A numeric string in scientific notation (e.g., "1.5e10").
+        	word (str): A numeric string in scientific notation (e.g., "1.5e10", "2,5e3").
         	is_brazilian (bool): If True, use Brazilian Portuguese variants; otherwise use Portugal variants.
+        	scale (Optional[str]): "long" or "short", overriding the scale `is_brazilian` would pick.
 
         Returns:
         	spoken (str): The spelled-out Portuguese phrase for the notation, combining mantissa and exponent (e.g., "um vírgula cinco vezes dez elevado a dez").
@@ -177,8 +273,8 @@ class NumberParser:
         if not cls.is_scientific_notation(word):
             raise ValueError(f"word is not scientific notation: '{word}'")
         a, b = word.lower().split("e")
-        a_str = cls.pronounce_number_word(a, is_brazilian=is_brazilian)
-        b_str = cls.pronounce_number_word(b, is_brazilian=is_brazilian)
+        a_str = cls.pronounce_number_word(a, is_brazilian=is_brazilian, scale=scale)
+        b_str = cls.pronounce_number_word(b, is_brazilian=is_brazilian, scale=scale)
         return f"{a_str} vezes dez elevado a {b_str}"
 
     # contextual rules
@@ -250,30 +346,39 @@ class NumberParser:
         return "masculine"
 
 
-def normalize_numbers(text: str, lang: str = "pt-PT", strict=True) -> str:
+def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
+                       scale: Optional[str] = None) -> str:
     """
     Replace numeric tokens in a sentence with their contextually correct Portuguese written forms.
 
-    This function normalizes the language tag (treating any variant of "pt-br" as "pt-BR"), collapses spaced ordinal markers (e.g., "1 º" -> "1º") for parsing, and converts integer, float and scientific-notation tokens into their spelled-out Portuguese equivalents, preserving other tokens and surrounding context.
+    This function normalizes the language tag (treating any variant of "pt-br" as "pt-BR"), collapses spaced ordinal markers (e.g., "1 º" -> "1º") for parsing, and converts integer, decimal and scientific-notation tokens into their spelled-out Portuguese equivalents, preserving other tokens and surrounding context.
 
     Parameters:
         text (str): Input sentence containing numeric and non-numeric tokens.
         lang (str): Language variant to use for spelling rules (defaults to "pt-PT"; any "pt-br" variant is treated as "pt-BR").
-        strict (bool): raise or ignore exceptions in RbnfEngine
+        strict (bool): If True, a number that cannot be spelled out (e.g. past `NumberParser.MAX_SAFE_INTEGER`) raises `ValueError`; if False, its digits are left untouched.
+        scale (Optional[str]): "long" or "short", overriding the numeric scale that `lang` would otherwise pick (long for pt-PT/pt-AO/pt-MZ/pt-TL, short for pt-BR).
 
     Returns:
         str: The input sentence with numeric tokens replaced by their spelled-out Portuguese forms.
     """
     if "pt-br" in lang.lower():
         lang = "pt-BR"
+    is_brazilian = lang == "pt-BR"
+    if scale is None:
+        scale = "short" if is_brazilian else "long"
 
     # Pre-process: ensure symbols like 1 º become 1º for easier parsing
     words = text.replace(" º", "º").replace(" ª", "ª").split()
     normalized_words = []
 
     for idx, word in enumerate(words):
-        # is this word a number?
-        is_num = NumberParser.is_int(word) or NumberParser.is_float(word)
+        # A numeric token may carry trailing punctuation glued to it
+        # ("54.", "05,", "5!") -- split it off so is_int/is_float see a
+        # clean number, then glue it back onto the spelled-out word so the
+        # caller never has to detach it with a space (see #116).
+        core, trail = NumberParser.split_trailing_punctuation(word)
+        is_num = NumberParser.is_int(core) or NumberParser.is_float(core)
         if is_num:
             # Lookahead and Lookbehind for grammatical context
             next_word = words[idx + 1] if idx + 1 < len(words) else None
@@ -281,9 +386,9 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True) -> str:
             # spell out the number
             try:
                 spelled = NumberParser.pronounce_number_word(
-                    word, prev_word, next_word, is_brazilian=lang == "pt-BR"
+                    core, prev_word, next_word, is_brazilian=is_brazilian, scale=scale
                 )
-                normalized_words.append(spelled)
+                normalized_words.append(spelled + trail)
             except Exception as e:
                 if strict:
                     raise e
