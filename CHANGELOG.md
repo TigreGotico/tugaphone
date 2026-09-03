@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.4a1](https://github.com/TigreGotico/tugaphone/tree/1.3.4a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.3a2...1.3.4a1)
+
+**Merged pull requests:**
+
+- test: lock hiatus before diminutive suffixes \(rainha, moinho\) as a guarded invariant [\#115](https://github.com/TigreGotico/tugaphone/pull/115) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.3.3a2](https://github.com/TigreGotico/tugaphone/tree/1.3.3a2) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.3a1...1.3.3a2)
@@ -51,19 +59,19 @@
 
 ## [1.2.2a1](https://github.com/TigreGotico/tugaphone/tree/1.2.2a1) (2026-09-03)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.2a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.2a1)
 
 **Merged pull requests:**
 
 - fix: invalidate the materialised lexicon cache when tugalex changes [\#101](https://github.com/TigreGotico/tugaphone/pull/101) ([JarbasAl](https://github.com/JarbasAl))
 
-## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
-
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.1a3)
-
 ## [1.2.1a2](https://github.com/TigreGotico/tugaphone/tree/1.2.1a2) (2026-08-02)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a2)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.1a2)
+
+## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a3)
 
 **Merged pull requests:**
 
