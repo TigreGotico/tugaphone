@@ -98,3 +98,121 @@ class TestNumberParserPredicates:
 
     def test_to_float(self):
         assert NumberParser.to_float("3.14") == pytest.approx(3.14)
+
+    def test_to_float_comma_decimal(self):
+        assert NumberParser.to_float("10,4") == pytest.approx(10.4)
+
+    def test_to_int_rejects_comma_decimal(self):
+        assert NumberParser.to_int("10,4") is None
+
+    def test_is_decimal(self):
+        assert NumberParser.is_decimal("10,4")
+        assert NumberParser.is_decimal("10.4")
+        assert not NumberParser.is_decimal("42")
+        assert not NumberParser.is_decimal("1e6")
+
+    def test_is_scientific_notation_comma_mantissa(self):
+        assert NumberParser.is_scientific_notation("2,5e3")
+
+
+class TestNumberCeiling:
+    """
+    The ceiling is not an arbitrary round number: IEEE-754 doubles only
+    represent every integer exactly up to 2**53 - 1. unicode_rbnf's
+    RbnfEngine.format_number() casts its argument through float() (see
+    unicode_rbnf/engine.py), so beyond that value some magnitudes are
+    silently rounded to a *different* integer before being spelled out.
+    Verified by execution: 9007199254741103 (2**53 + 111) is spelled as
+    if it were 9007199254741104 -- a silent off-by-one corruption, not
+    an error.
+    """
+
+    def test_ceiling_value(self):
+        assert NumberParser.MAX_SAFE_INTEGER == 2 ** 53 - 1 == 9007199254740991
+
+    def test_pronounce_at_ceiling_pt(self):
+        result = NumberParser.pronounce_number_word(str(NumberParser.MAX_SAFE_INTEGER))
+        assert result == (
+            "nove mil biliões sete biliões cento e noventa e nove mil milhões "
+            "duzentos e cinquenta e quatro milhões setecentos e quarenta mil "
+            "novecentos e noventa e um"
+        )
+
+    def test_pronounce_at_ceiling_br(self):
+        result = NumberParser.pronounce_number_word(
+            str(NumberParser.MAX_SAFE_INTEGER), is_brazilian=True
+        )
+        assert result == (
+            "nove quatrilhões sete trilhões cento e noventa e nove bilhões "
+            "duzentos e cinquenta e quatro milhões setecentos e quarenta mil "
+            "novecentos e noventa e um"
+        )
+
+    def test_pronounce_beyond_ceiling_raises(self):
+        with pytest.raises(ValueError):
+            NumberParser.pronounce_number_word(str(NumberParser.MAX_SAFE_INTEGER + 1))
+
+    def test_normalize_beyond_ceiling_strict_raises(self):
+        with pytest.raises(ValueError):
+            normalize_numbers(str(NumberParser.MAX_SAFE_INTEGER + 1), strict=True)
+
+    def test_normalize_beyond_ceiling_lenient_leaves_digits(self):
+        word = str(NumberParser.MAX_SAFE_INTEGER + 1)
+        assert normalize_numbers(word, strict=False) == word
+
+    def test_normalize_at_ceiling_does_not_raise(self):
+        # sanity: the ceiling itself is still fully supported
+        normalize_numbers(str(NumberParser.MAX_SAFE_INTEGER), strict=True)
+
+
+class TestScaleParameter:
+    def test_default_long_scale_pt_pt(self):
+        assert normalize_numbers("1000000000000", lang="pt-PT") == "um bilião"
+
+    def test_default_short_scale_pt_br(self):
+        assert normalize_numbers("1000000000000", lang="pt-BR") == "um trilhão"
+
+    def test_scale_override_short_on_pt_pt(self):
+        assert (
+            normalize_numbers("1000000000000", lang="pt-PT", scale="short")
+            == "um trilhão"
+        )
+
+    def test_scale_override_long_on_pt_br(self):
+        assert (
+            normalize_numbers("1000000000000", lang="pt-BR", scale="long")
+            == "um bilião"
+        )
+
+    def test_pronounce_number_word_scale_kwarg(self):
+        assert (
+            NumberParser.pronounce_number_word(
+                "1000000000000", is_brazilian=False, scale="short"
+            )
+            == "um trilhão"
+        )
+
+
+class TestScientificNotation:
+    def test_simple_exponent(self):
+        assert normalize_numbers("1e6") == "um vezes dez elevado a seis"
+
+    def test_comma_decimal_mantissa(self):
+        assert (
+            normalize_numbers("2,5e3")
+            == "dois vírgula cinco vezes dez elevado a três"
+        )
+
+    def test_dot_decimal_mantissa(self):
+        assert (
+            normalize_numbers("1.5e10")
+            == "um vírgula cinco vezes dez elevado a dez"
+        )
+
+
+class TestDecimalCommaReading(object):
+    def test_comma_decimal_in_sentence(self):
+        assert normalize_numbers("tem 10,4 graus") == "tem dez vírgula quatro graus"
+
+    def test_dot_decimal_still_works(self):
+        assert normalize_numbers("tem 10.4 graus") == "tem dez vírgula quatro graus"
