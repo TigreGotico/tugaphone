@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.3a1](https://github.com/TigreGotico/tugaphone/tree/1.2.3a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.2a1...1.2.3a1)
+
+**Merged pull requests:**
+
+- fix: require tugalex 2.0.2a1 for IPA ɡ transcriptions [\#104](https://github.com/TigreGotico/tugaphone/pull/104) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.2.2a1](https://github.com/TigreGotico/tugaphone/tree/1.2.2a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.2a1)
