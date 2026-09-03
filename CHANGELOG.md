@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.2a1](https://github.com/TigreGotico/tugaphone/tree/1.3.2a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.1a1...1.3.2a1)
+
+**Merged pull requests:**
+
+- fix: restore lost minute/24:00/abbreviation reading fixes; credit tts\_eu\_pt [\#110](https://github.com/TigreGotico/tugaphone/pull/110) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.3.1a1](https://github.com/TigreGotico/tugaphone/tree/1.3.1a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.0a1...1.3.1a1)
@@ -26,19 +34,19 @@
 
 ## [1.2.2a1](https://github.com/TigreGotico/tugaphone/tree/1.2.2a1) (2026-09-03)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.2a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.2a1)
 
 **Merged pull requests:**
 
 - fix: invalidate the materialised lexicon cache when tugalex changes [\#101](https://github.com/TigreGotico/tugaphone/pull/101) ([JarbasAl](https://github.com/JarbasAl))
 
-## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
-
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.1a3)
-
 ## [1.2.1a2](https://github.com/TigreGotico/tugaphone/tree/1.2.1a2) (2026-08-02)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a2)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.1a2)
+
+## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a3)
 
 **Merged pull requests:**
 
