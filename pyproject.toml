@@ -57,7 +57,7 @@ Repository = "https://github.com/TigreGotico/tugaphone"
 packages = ["tugaphone"]
 
 [tool.setuptools.package-data]
-tugaphone = ["data/langdetect/*.json.gz"]
+tugaphone = ["data/langdetect/*.json.gz", "data/loanwords.json"]
 
 [tool.setuptools.dynamic]
 version = {attr = "tugaphone.version.__version__"}

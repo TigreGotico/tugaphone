@@ -157,6 +157,43 @@ genuinely share Portuguese's character statistics. Where a contact word does sli
 through as Portuguese, **total nativization** would have projected it onto the
 same inventory anyway, so the failure is contained.
 
+## The curated loanword lexicon
+
+Both the heuristic and the detector are deliberately conservative, so a common
+tech/consumer loan with no non-native letter, no English digraph and an
+only-marginally-English statistical fit stays Portuguese by design — the "null
+beats wrong" policy above. `airbag` is the clean example: no `k w y` letter, no
+`th sh wh ck gh ph` digraph, not in the hand-picked stopword list, so on its
+own the heuristic never flags it.
+
+`tugaphone/data/loanwords.json` closes that gap with a curated list of common
+English nouns Portuguese speakers pronounce with (an approximation of) their
+English sound. A whole-word, case-insensitive hit routes the token onto the
+`en` contact path exactly as if the heuristic or detector had flagged it — the
+word is still transcribed through the ordinary `en-US` lattice and nativized by
+the English projection table above, not by a stored pronunciation.
+
+```python
+ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="auto")
+# kõˈpɾej ˈũ ɛɐɾbɐɡ ˈnovu   -- "airbag" nativized; "comprei"/"novo" untouched
+ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="none")
+# kõˈpɾej ˈũ ajɾˈbɐɡ ˈnovu  -- code-switching off: "airbag" read as Portuguese spelling
+```
+
+The list is ported from [logus2k/tts_eu_pt](https://github.com/logus2k/tts_eu_pt)
+(Antonio Cruz, Apache-2.0), which curated it to common nouns only — proper
+nouns and acronyms excluded — and shipped each entry with an `en-GB` IPA
+transcription generated offline with espeak. That upstream IPA ships alongside
+the word list as documentation and test-gold material; it is raw English
+phonology (`ə ɪ ɹ ɒ ʌ θ h ː`) and is never read at phonemization time.
+Every one of the 774 upstream entries was checked against `tugalex`'s
+Portuguese pronunciation dictionary; 17 words that are already a lusophonized
+Portuguese loan there (`cover`, `face`, `for`, `gin`, `java`, `media`, `metal`,
+`pixel`, `polo`, `remix`, `sugar`, `xerox`, ...) were dropped so the lexicon
+never hijacks a word tugalex already owns, and about 130 proper nouns/brand
+names/personal names the upstream curation missed (`aberdeen`, `batman`,
+`google`, U.S. state and city names, ...) were dropped too — 630 entries ship.
+
 
 ---
 [← Homographs](homographs.md) · [Home](../README.md) · [Numbers →](numbers.md)

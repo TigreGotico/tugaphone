@@ -309,6 +309,15 @@ rules in `tugaphone/text_normalization.py` are ported from
 front-end by Antonio Cruz, released under the Apache License 2.0. The rules
 were reimplemented in tugaphone's own idiom rather than copied verbatim.
 
+The English loanword lexicon in `tugaphone/data/loanwords.json` (see
+[docs/codeswitch.md](docs/codeswitch.md)) is likewise ported from
+[tts_eu_pt](https://github.com/logus2k/tts_eu_pt). The word list is kept as
+upstream curated it, minus a handful of proper nouns and words that collide
+with an existing `tugalex` Portuguese pronunciation; the `en-GB` IPA upstream
+generated offline with espeak ships alongside it as reference/test-gold
+material, tugaphone's own `en-US` lattice and nativization produce the
+pronunciation actually spoken.
+
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE).
