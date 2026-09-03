@@ -40,6 +40,26 @@ class TestNormalizeNumbers:
     def test_ordinal_larger_number(self):
         assert normalize_numbers("10ª posição") == "décima posição"
 
+    def test_trailing_period_glued(self):
+        # "custa 25." -> the period stays glued to the spelled number
+        assert normalize_numbers("custa 25.") == "custa vinte e cinco."
+
+    def test_trailing_comma_glued(self):
+        # "porta" (fem.) as next_word makes "2" feminine, per the existing
+        # gender heuristic -- this test is about the comma staying glued.
+        assert normalize_numbers("sala 2, porta 4") == "sala duas, porta quatro"
+
+    def test_trailing_exclamation_glued(self):
+        assert normalize_numbers("ganhei 5!") == "ganhei cinco!"
+
+    def test_full_clock_pipeline_no_space_before_final_period(self):
+        # Regression for #116: "16:54." must not become "16 e 54 ."
+        from tugaphone.text_normalization import normalize_orthography
+        result = normalize_numbers(
+            normalize_orthography("Reunião às 9:05, sala 2."), "pt-PT"
+        )
+        assert result == "Reunião às nove e cinco, sala dois."
+
 
 class TestNumberParserPronounce:
     def test_cardinal_masculine_default(self):

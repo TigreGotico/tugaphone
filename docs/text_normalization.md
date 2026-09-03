@@ -47,6 +47,8 @@ expand_clock_times("A reunião é às 16:00")
 # 'A reunião é às 16 horas'
 expand_clock_times("O comboio parte às 16:54")
 # 'O comboio parte às 16 e 54'
+expand_clock_times("O comboio parte às 16:54.")
+# 'O comboio parte às 16 e 54.'
 expand_clock_times("Combinámos para a 1:00")
 # 'Combinámos para a 1 hora'
 expand_clock_times("O despertador tocou às 9:05")
