@@ -930,7 +930,9 @@ class DialectInventory:
                 "ultra",  # ultra-ortodoxo
             }
 
-    # TODO - hiatus suffixes. eg. for suffix "inha" - Vinha -> V.inha
+    # Hiatus suffixes (rainha -> ra.i.nha) need no rule here: syllabification
+    # already gives the diminutive suffix vowel a syllable of its own, and
+    # tests/test_hiatus_suffixes.py guards that.
 
     def _initialize_diphthongs(self):
         """
