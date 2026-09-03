@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import functools
 import os
+from importlib.metadata import PackageNotFoundError, version as _pkg_version
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -92,6 +93,22 @@ def _relayout(ipa: str) -> str:
     return "".join(out)
 
 
+def _tugalex_version() -> str:
+    """The installed tugalex version, or ``"0"`` when it can't be resolved.
+
+    Used as the cache-invalidation key so a materialised TSV is tied to the
+    tugalex data that produced it, not just the lect name.
+    """
+    try:
+        return _pkg_version("tugalex")
+    except PackageNotFoundError:  # pragma: no cover - exercised only on a broken install
+        return "0"
+
+
+def _stamp_path(path: Path) -> Path:
+    return path.with_suffix(".version")
+
+
 def _write_lexicon(region: str, path: Path) -> None:
     ipa_map: Dict[str, str] = LEXICON.get_ipa_map(region=region)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -100,6 +117,24 @@ def _write_lexicon(region: str, path: Path) -> None:
         for word in sorted(ipa_map):
             fh.write(f"{word}\t{_relayout(ipa_map[word])}\n")
     tmp.replace(path)
+    _stamp_path(path).write_text(_tugalex_version(), encoding="utf-8")
+
+
+def _is_stale(path: Path) -> bool:
+    """Whether the materialised TSV at ``path`` needs to be rewritten.
+
+    True when the file is missing, empty (a previous write got interrupted),
+    or was materialised from a different tugalex version than is installed
+    now — the case that otherwise lets a tugalex data fix never reach an
+    installation that already has the TSV.
+    """
+    if not path.exists() or path.stat().st_size == 0:
+        return True
+    stamp = _stamp_path(path)
+    try:
+        return stamp.read_text(encoding="utf-8").strip() != _tugalex_version()
+    except OSError:
+        return True
 
 
 _registered: set = set()
@@ -114,7 +149,7 @@ def _ensure_lexicon(lect: str) -> None:
         _registered.add(lect)
         return
     path = _LEXICON_CACHE / f"{lect}.tsv"
-    if not path.exists():
+    if _is_stale(path):
         _write_lexicon(region, path)
     register_lexicon(lect, str(path))
     _registered.add(lect)
