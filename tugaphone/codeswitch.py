@@ -47,11 +47,44 @@ borrowings documents a substitution it is followed (interdental stopping to
 mapping, denasalised-then-renasalised French vowels onto Portuguese nasals);
 where the literature is silent the mapping is stated as a **convention**, not a
 claim. The per-table comments mark which is which.
+
+Curated loanword lexicon
+-------------------------
+``tugaphone/data/loanwords.json`` is a set of common-noun English loans
+(``online``, ``software``, ``site``, ``airbag``, ...) that a Portuguese speaker
+pronounces with (an approximation of) their English sound but that the
+orthographic heuristic and the Markov detector's conservative margin can miss,
+because they are spelled with Portuguese-legal letters and carry no non-native
+digraph. Membership routes the word onto the ``en`` contact path
+(:func:`is_known_loanword`, wired into :func:`is_contact_word`,
+:func:`contact_language` and the ``auto``-contact classifier), exactly as if
+the orthographic/statistical signal had flagged it; the word is still
+transcribed by the ordinary ``en-US`` lattice and nativized by
+:func:`_nativize` above, not by a stored pronunciation. Lookup is whole-word
+and case-insensitive, never on a substring.
+
+The word list is ported from `logus2k/tts_eu_pt
+<https://github.com/logus2k/tts_eu_pt>`_ (Antonio Cruz, Apache-2.0), which
+curated it to common nouns only (proper nouns and acronyms excluded) and
+shipped each entry with an ``en-GB`` IPA transcription generated offline with
+espeak. tugaphone keeps that upstream IPA in the data file as documentation
+and NL-TDD test-gold material only — it is a raw-English-phonology
+transcription (``ə ɪ ɹ ɒ ʌ θ h ː``) and is never read at phonemization time;
+production pronunciation always comes from tugaphone's own ``en-US`` lattice
+projected through :func:`_nativize`. A further ~140 entries the upstream list
+carried were dropped before shipping here: entries that collide with an
+existing ``tugalex`` Portuguese pronunciation (``cover``, ``face``, ``for``,
+``media``, ..., where the word is already a lusophonized loan in the curated
+Portuguese lexicon and must keep that pronunciation, not the raw-English one),
+and proper nouns/brand names/personal names the upstream curation missed
+(``aberdeen``, ``batman``, ``google``, U.S. state and city names, ...).
 """
 from __future__ import annotations
 
 import functools
-from typing import List, Optional, Tuple
+import json
+from pathlib import Path
+from typing import Dict, FrozenSet, List, Optional, Tuple
 
 # ---------------------------------------------------------------------------
 # Detection (orthographic fallback — used only when the Markov detector,
@@ -102,6 +135,27 @@ _ENGLISH_STOPWORDS = {
 #: Union of all contact stopwords, for the language-agnostic contact test.
 _CONTACT_STOPWORDS = _SPANISH_STOPWORDS | _FRENCH_STOPWORDS | _ENGLISH_STOPWORDS
 
+# Lookup is whole-word only (never a substring). A hit forces the token onto
+# the English contact route; the word is still transcribed and nativized by
+# the normal ``en-US`` lattice path (:func:`transcribe_contact`), not by a
+# stored pronunciation. See the module docstring for provenance/rationale.
+
+_LOANWORD_DATA = Path(__file__).parent / "data" / "loanwords.json"
+
+
+@functools.lru_cache(maxsize=1)
+def _loanwords() -> FrozenSet[str]:
+    """The curated English-loanword set (lower-case, whole-word keys)."""
+    data: Dict[str, str] = json.loads(_LOANWORD_DATA.read_text(encoding="utf-8"))
+    return frozenset(data)
+
+
+def is_known_loanword(token: str) -> bool:
+    """Whether *token* is a whole-word, case-insensitive hit in the curated
+    English loanword lexicon (:func:`_loanwords`). Never matched on a
+    substring — a token that merely *contains* a loanword does not count."""
+    return _strip(token) in _loanwords()
+
 
 def _strip(token: str) -> str:
     """Lower-case a token and strip surrounding punctuation for testing."""
@@ -130,6 +184,8 @@ def is_contact_word(token: str) -> bool:
     core = _strip(token)
     if not core:
         return False
+    if core in _loanwords():
+        return True
     if any(ch in _NON_PT_LETTERS or ch in _FRENCH_LETTERS for ch in core):
         return True
     if _has_english_signal(core):
@@ -147,6 +203,8 @@ def contact_language(token: str, default_side: str = "en") -> str:
     contact side — English for most lects, Spanish for the Uruguayan border).
     """
     core = _strip(token)
+    if core in _loanwords():
+        return "en"
     if _has_english_signal(core):
         return "en"
     if any(ch in _FRENCH_LETTERS for ch in core) or core in _FRENCH_STOPWORDS:
@@ -248,10 +306,16 @@ def transcribe_contact(word: str, contact: str) -> str:
 def _classify(token: str, default_side: str) -> Optional[str]:
     """Route *token*: ``None`` for Portuguese, else the contact language.
 
-    Prefers the char-Markov detector (:mod:`tugaphone.langdetect`), which returns
-    the contact language directly; falls back to the orthographic heuristic when
-    the detector's models are unavailable.
+    The curated loanword lexicon (:func:`is_known_loanword`) is checked first
+    and, on a hit, forces ``"en"`` outright — it exists precisely to catch the
+    common loans (``airbag``, ``mainframe``, ``kit``) that sit inside the
+    Markov detector's conservative margin and would otherwise stay ``pt``.
+    Otherwise prefers the char-Markov detector (:mod:`tugaphone.langdetect`),
+    which returns the contact language directly; falls back to the
+    orthographic heuristic when the detector's models are unavailable.
     """
+    if is_known_loanword(token):
+        return "en"
     from tugaphone.langdetect import get_detector
 
     detector = get_detector()
@@ -264,7 +328,10 @@ def _classify(token: str, default_side: str) -> Optional[str]:
 
 
 def _is_contact(token: str) -> bool:
-    """Whether *token* is contact-language material (detector, else heuristic)."""
+    """Whether *token* is contact-language material (lexicon, detector, else
+    heuristic)."""
+    if is_known_loanword(token):
+        return True
     from tugaphone.langdetect import get_detector
 
     detector = get_detector()
