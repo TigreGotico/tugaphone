@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.5a1](https://github.com/TigreGotico/tugaphone/tree/1.3.5a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.4a2...1.3.5a1)
+
+**Merged pull requests:**
+
+- fix: spell numbers that carry trailing punctuation without detaching it [\#121](https://github.com/TigreGotico/tugaphone/pull/121) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.3.4a2](https://github.com/TigreGotico/tugaphone/tree/1.3.4a2) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.4a1...1.3.4a2)
