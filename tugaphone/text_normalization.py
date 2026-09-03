@@ -59,14 +59,13 @@ def normalize_number_separators(text: str) -> str:
 # ordinary 0-23 range.
 #
 # The minute is emitted WITHOUT a leading zero ("9:05" -> "9 e 5", not
-# "9 e 05"): normalize_numbers's tokenizer splits on whitespace and only
-# tolerates a bare digit run, so a minute glued to trailing punctuation with
-# no leading zero ("9:05, sala" -> "...e 5, sala") still risks becoming an
-# unparseable token like "05," (the comma makes both is_int/is_float fail,
-# so the digits are never spelled out and the phonemizer silently drops
-# them). The regexes below also split off any punctuation immediately
-# following the minutes/hour digits so the numeric token they leave behind
-# is always clean.
+# "9 e 05"): normalize_numbers's tokenizer splits on whitespace, and a
+# leading zero would otherwise make the token ambiguous with an ordinal or
+# decimal spelling. Any punctuation immediately following the minutes/hour
+# digits is left glued to them ("16:54." -> "16 e 54.") -- normalize_numbers
+# itself splits trailing punctuation off a numeric token before checking
+# whether it is a number, spells the digits, and glues the punctuation back
+# on, so there is no need to detach it here with a space.
 # ---------------------------------------------------------------------------
 _HOUR = r"(?:[01]?\d|2[0-3])"
 _HOUR_OR_24 = r"(?:[01]?\d|2[0-4])"
@@ -84,7 +83,7 @@ def _whole_hour_repl(match: "re.Match[str]") -> str:
 def _clock_time_repl(match: "re.Match[str]") -> str:
     hh, mm, punct = match.group(1), match.group(2), match.group(3)
     mm = str(int(mm))  # drop the leading zero: "05" -> "5"
-    return f"{hh} e {mm} {punct}" if punct else f"{hh} e {mm}"
+    return f"{hh} e {mm}{punct}"
 
 
 def expand_clock_times(text: str) -> str:

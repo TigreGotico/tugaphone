@@ -57,10 +57,11 @@ class TestClockTimes:
         assert expand_clock_times("9:05") == "9 e 5"
 
     def test_minute_leading_zero_before_punctuation(self):
-        # A comma glued to the minute digits ("05,") makes both
-        # NumberParser.is_int and is_float fail downstream, so the minute
-        # must come out as a clean, space-separated numeric token.
-        assert expand_clock_times("9:05, sala 2.") == "9 e 5 , sala 2."
+        # Punctuation glued to the minute digits stays glued: NumberParser
+        # now accepts a numeric token with trailing punctuation ("5,"),
+        # spells the digits and keeps the punctuation attached, so there is
+        # no need to detach it with a space here.
+        assert expand_clock_times("9:05, sala 2.") == "9 e 5, sala 2."
 
     def test_whole_hour_24(self):
         assert expand_clock_times("24:00") == "24 horas"
@@ -74,14 +75,20 @@ class TestClockTimes:
 
     def test_full_pipeline_normalize_numbers(self):
         expanded = expand_clock_times("São 16:30.")
-        assert expanded == "São 16 e 30 ."
+        assert expanded == "São 16 e 30."
         spelled = normalize_numbers(expanded, "pt-PT")
-        assert spelled == "São dezasseis e trinta ."
+        assert spelled == "São dezasseis e trinta."
 
     def test_full_pipeline_minute_with_leading_zero_and_comma(self):
         expanded = expand_clock_times("Reunião às 9:05, sala 2.")
         spelled = normalize_numbers(expanded, "pt-PT")
-        assert spelled == "Reunião às nove e cinco , sala dois"
+        assert spelled == "Reunião às nove e cinco, sala dois."
+
+    def test_sentence_final_period_glued(self):
+        # Regression for #116: a period after the minutes must stay glued,
+        # not be pushed off by a space.
+        assert expand_clock_times("O comboio parte às 16:54.") == \
+            "O comboio parte às 16 e 54."
 
     def test_full_pipeline_whole_hour_24(self):
         spelled = normalize_numbers(expand_clock_times("24:00"), "pt-PT")

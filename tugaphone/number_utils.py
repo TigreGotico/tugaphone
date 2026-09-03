@@ -124,6 +124,31 @@ class NumberParser:
                 f"correctly (MAX_SAFE_INTEGER = {cls.MAX_SAFE_INTEGER})"
             )
 
+    # Punctuation that can trail a numeric token in running text without
+    # being part of the number itself (sentence-final marks, list commas).
+    # Deliberately excludes the ordinal markers (º/ª), which are handled
+    # separately and carry meaning for gender/ordinality detection.
+    TRAILING_PUNCTUATION = ".,;:!?)\"”…"
+
+    @classmethod
+    def split_trailing_punctuation(cls, word: str) -> tuple:
+        """
+        Split a numeric token from any trailing punctuation glued to it.
+
+        Parameters:
+            word (str): Token that may end in one or more punctuation marks
+                (e.g. "54.", "05,", "5!").
+
+        Returns:
+            tuple[str, str]: (core, trail) where `core` is the token with
+                trailing punctuation removed and `trail` is the removed
+                punctuation (possibly empty).
+        """
+        i = len(word)
+        while i > 0 and word[i - 1] in cls.TRAILING_PUNCTUATION:
+            i -= 1
+        return word[:i], word[i:]
+
     # digit/string conversion
     @classmethod
     def to_int(cls, word: str) -> Optional[int]:
@@ -348,8 +373,12 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
     normalized_words = []
 
     for idx, word in enumerate(words):
-        # is this word a number?
-        is_num = NumberParser.is_int(word) or NumberParser.is_float(word)
+        # A numeric token may carry trailing punctuation glued to it
+        # ("54.", "05,", "5!") -- split it off so is_int/is_float see a
+        # clean number, then glue it back onto the spelled-out word so the
+        # caller never has to detach it with a space (see #116).
+        core, trail = NumberParser.split_trailing_punctuation(word)
+        is_num = NumberParser.is_int(core) or NumberParser.is_float(core)
         if is_num:
             # Lookahead and Lookbehind for grammatical context
             next_word = words[idx + 1] if idx + 1 < len(words) else None
@@ -357,9 +386,9 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
             # spell out the number
             try:
                 spelled = NumberParser.pronounce_number_word(
-                    word, prev_word, next_word, is_brazilian=is_brazilian, scale=scale
+                    core, prev_word, next_word, is_brazilian=is_brazilian, scale=scale
                 )
-                normalized_words.append(spelled)
+                normalized_words.append(spelled + trail)
             except Exception as e:
                 if strict:
                     raise e
