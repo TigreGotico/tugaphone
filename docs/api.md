@@ -221,4 +221,4 @@ s.syllabify("fonologia")   # ['fo', 'no', 'lo', 'gi', 'a']
 
 
 ---
-[← Numbers](numbers.md) · [Home](../README.md) · [Tokenizer →](tokenizer.md)
+[← Text normalization](text_normalization.md) · [Home](../README.md) · [Tokenizer →](tokenizer.md)

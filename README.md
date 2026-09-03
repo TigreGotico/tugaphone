@@ -201,6 +201,20 @@ normalize_numbers("vou adotar 1 cão")     # 'vou adotar um cão'
 normalize_numbers("comprei 2 casas")      # 'comprei duas casas'
 ```
 
+### Text normalization
+
+Before numbers are spelled out, `tugaphone.text_normalization` rewrites other
+written conventions into words a TTS can read: digit-dash-digit ranges
+("1139-1185" → "1139 a 1185"), clock times ("16:00" → "16 horas", "9:05" →
+"9 e 5", "24:00" → "24 horas"), European thousands and decimal separators
+("92.073" → "92073", "10,4" → "10 vírgula 4"), abbreviations — some
+unconditional ("vs." → "versus"), some only before a capitalised name
+("Sr. Silva" → "Senhor Silva") — regnal Roman numerals ("Afonso I" → "Afonso
+Primeiro"), and acronyms spelled out with Portuguese letter names ("IA" → "i
+á"). It runs ahead of `normalize_numbers` in the pipeline, and the numbers
+themselves are spelled out in standard European Portuguese ("vinte e cinco").
+See [docs/text_normalization.md](docs/text_normalization.md).
+
 ### Syllabification and stress
 
 Stress and the dialect's phonology come from the orthography2ipa lect spec, syllabification is supplied by
@@ -277,6 +291,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 - [docs/homographs.md](docs/homographs.md), meaning-based disambiguation
 - [docs/codeswitch.md](docs/codeswitch.md), embedded es/fr/en detection and nativization
 - [docs/numbers.md](docs/numbers.md), number normalization and gender agreement
+- [docs/text_normalization.md](docs/text_normalization.md), ranges, clock times, separators, abbreviations, regnal numerals, acronyms
 - [docs/api.md](docs/api.md), full class and function reference
 - [docs/tokenizer.md](docs/tokenizer.md), the token-tree feature model
 - [docs/advanced.md](docs/advanced.md), the pipeline internals and integration

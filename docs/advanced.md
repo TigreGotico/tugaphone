@@ -16,10 +16,11 @@ voicing sandhi and the rest, with no string-transform pass after transcription.
 tugaphone adds only the stages orthography2ipa leaves to the caller, wired
 through orthography2ipa's own extension points:
 
-1. **Normalization**, number/ordinal verbalization
-   (`tugaphone.number_utils.normalize_numbers`) and sense-based homograph marking
-   (`bifonia.add_extra_diacritics`) run as the engine's `normalizer`, before the
-   lattice sees the text.
+1. **Normalization**, orthographic rewrites
+   (`tugaphone.text_normalization.normalize_orthography`), number/ordinal
+   verbalization (`tugaphone.number_utils.normalize_numbers`) and sense-based
+   homograph marking (`bifonia.add_extra_diacritics`) run as the engine's
+   `normalizer`, before the lattice sees the text.
 2. **Lexicon**, the curated `tugalex` lexicon is registered per lect via
    `orthography2ipa.register_lexicon()`, so a covered word folds into the same
    override path as a spec `word_exceptions` entry, the lattice generates only
@@ -44,6 +45,27 @@ the Porto spec's phonology with Lisbon forms. `tugalex` entries are relaid from
 its `·`-joined, nucleus-marked layout into the spec's stress-before-syllable
 layout on registration, keeping a lexicon hit and a lattice-generated word in one
 notation so a sentence's IPA stays internally consistent.
+
+## Lexicon cache
+
+Each lect's overlay isn't queried from `tugalex` word by word: the first call
+that needs it materialises the whole region's `word\tipa` map as a TSV under
+`TUGAPHONE_LEXICON_DIR` (default `~/.cache/tugaphone/lexicon`) and registers
+that file with `orthography2ipa.register_lexicon()`. Later calls for the same
+lect reuse the materialised file instead of rebuilding it.
+
+The TSV carries a sidecar `.version` file next to it holding the installed
+`tugalex` version. A cached TSV is rebuilt when it is missing, empty (a
+previous write was interrupted), or its `.version` sidecar doesn't match the
+currently installed `tugalex` — the case that otherwise lets a `tugalex` data
+fix never reach an installation that already has a TSV on disk. Set
+`TUGAPHONE_LEXICON_DIR` to control where the cache lives, for example to keep
+it outside the default XDG cache directory or to give each test run an
+isolated cache:
+
+```bash
+export TUGAPHONE_LEXICON_DIR=/path/to/lexicon-cache
+```
 
 ## Number normalization
 
@@ -100,6 +122,7 @@ through it. See [tokenizer.md](tokenizer.md).
 - [dialects.md](dialects.md), the lect codes, aliases and lexicon overlay
 - [homographs.md](homographs.md), meaning-based disambiguation
 - [numbers.md](numbers.md), number normalization and gender agreement
+- [text_normalization.md](text_normalization.md), the orthographic rewrites that run ahead of number normalization
 - [tokenizer.md](tokenizer.md), inspect syllables, stress and graphemes directly
 
 
