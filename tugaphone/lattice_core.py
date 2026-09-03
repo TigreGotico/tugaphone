@@ -47,6 +47,7 @@ from tugaphone.codeswitch import split_runs, transcribe_contact
 from tugaphone.dialects import LEXICON
 from tugaphone.number_utils import normalize_numbers
 from tugaphone.registry import default_contact, lexicon_region, resolve_lect
+from tugaphone.text_normalization import normalize_orthography
 
 _VALID_CONTACT = ("auto", "es", "fr", "en", "none")
 
@@ -158,13 +159,16 @@ def _ensure_lexicon(lect: str) -> None:
 def _normalizer(lect: str):
     """The orthography2ipa ``normalize`` callable tugaphone supplies for ``lect``.
 
-    Numbers and ordinals are verbalized first (so their spelled-out words are
-    then available to homograph marking), then heterophonic homographs are
-    marked by sense; both are orthographic, pre-lattice transformations.
+    Orthographic rewrites (ranges, clock times, European number separators,
+    abbreviations, regnal numerals, letter-spelled acronyms) run first, since
+    they produce the digit tokens and words number verbalization then reads;
+    numbers and ordinals are verbalized next (so their spelled-out words are
+    then available to homograph marking); heterophonic homographs are marked
+    last. All three stages are orthographic, pre-lattice transformations.
     """
 
     def normalize(text: str) -> str:
-        return _mark_heterophones(normalize_numbers(text, lect))
+        return _mark_heterophones(normalize_numbers(normalize_orthography(text), lect))
 
     return normalize
 
