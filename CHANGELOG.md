@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0a1](https://github.com/TigreGotico/tugaphone/tree/1.3.0a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.3a1...1.3.0a1)
+
+**Merged pull requests:**
+
+- feat: read ranges, clock times, abbreviations, regnal numerals and acronyms in Portuguese text [\#102](https://github.com/TigreGotico/tugaphone/pull/102) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.2.3a1](https://github.com/TigreGotico/tugaphone/tree/1.2.3a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.2a1...1.2.3a1)
