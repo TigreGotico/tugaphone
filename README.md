@@ -31,7 +31,7 @@ pip install tugaphone
 ```
 
 Its runtime dependencies (`orthography2ipa`, `silabificador`, `tugalex`,
-`bifonia`, `unicode-rbnf`) install automatically. The phonetic lexicon rides in
+`bifonia`, `ovos-number-parser`) install automatically. The phonetic lexicon rides in
 through [`tugalex`](https://github.com/TigreGotico/tugalex).
 
 ---

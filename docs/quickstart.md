@@ -17,7 +17,7 @@ pip install tugaphone            # from PyPI
 pip install -e .                 # from a source checkout
 ```
 
-Runtime dependencies (`unicode-rbnf`, `silabificador`, `tugalex`,
+Runtime dependencies (`ovos-number-parser`, `silabificador`, `tugalex`,
 `bifonia`, `orthography2ipa`) install automatically. The phonetic lexicon ships through
 [`tugalex`](https://github.com/TigreGotico/tugalex), which wraps the HuggingFace
 dataset `TigreGotico/portuguese_phonetic_lexicon`. It is lazy-loaded on first use

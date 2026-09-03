@@ -112,6 +112,17 @@ class TestNumberParserPredicates:
     def test_get_number_gender_masculine_default(self):
         assert NumberParser.get_number_gender("2", next_word="cães") == "masculine"
 
+    def test_get_number_gender_preposition_a_not_article(self):
+        # "3 a 2." (a score/range reading): the "a" before "2" is the
+        # preposition "to", not the feminine article "a" -- there is no
+        # following noun for it to introduce, so the number stays masculine.
+        assert NumberParser.get_number_gender("2", prev_word="a", next_word=".") == "masculine"
+        assert NumberParser.get_number_gender("2", prev_word="a", next_word=None) == "masculine"
+
+    def test_get_number_gender_article_a_before_noun(self):
+        # "a 1 casa": here "a" really is the feminine article.
+        assert NumberParser.get_number_gender("1", prev_word="a", next_word="casa") == "feminine"
+
     def test_to_int(self):
         assert NumberParser.to_int("42") == 42
         assert NumberParser.to_int("1º") == 1
@@ -135,54 +146,81 @@ class TestNumberParserPredicates:
         assert NumberParser.is_scientific_notation("2,5e3")
 
 
-class TestNumberCeiling:
+class TestLargeNumbers:
     """
-    The ceiling is not an arbitrary round number: IEEE-754 doubles only
-    represent every integer exactly up to 2**53 - 1. unicode_rbnf's
-    RbnfEngine.format_number() casts its argument through float() (see
-    unicode_rbnf/engine.py), so beyond that value some magnitudes are
-    silently rounded to a *different* integer before being spelled out.
-    Verified by execution: 9007199254741103 (2**53 + 111) is spelled as
-    if it were 9007199254741104 -- a silent off-by-one corruption, not
-    an error.
+    ovos-number-parser spells out arbitrarily large Python integers
+    correctly in both scales; there is no ceiling. Expected strings below
+    were computed against these scale tables and verified by execution
+    against ovos-number-parser 0.19.13:
+
+    pt-PT/pt-AO/pt-MZ/pt-TL long scale: milhão 10^6, mil milhões 10^9,
+    bilião 10^12, mil biliões 10^15, trilião 10^18, quatrilião 10^24.
+
+    pt-BR short scale: milhão 10^6, bilhão 10^9, trilhão 10^12,
+    quatrilhão 10^15, quintilhão 10^18, sextilhão 10^21, septilhão 10^24.
     """
 
-    def test_ceiling_value(self):
-        assert NumberParser.MAX_SAFE_INTEGER == 2 ** 53 - 1 == 9007199254740991
-
-    def test_pronounce_at_ceiling_pt(self):
-        result = NumberParser.pronounce_number_word(str(NumberParser.MAX_SAFE_INTEGER))
-        assert result == (
-            "nove mil biliões sete biliões cento e noventa e nove mil milhões "
-            "duzentos e cinquenta e quatro milhões setecentos e quarenta mil "
-            "novecentos e noventa e um"
+    def test_beyond_2_53_long_scale(self):
+        assert NumberParser.pronounce_number_word("9007199254740991") == (
+            "nove mil e sete biliões cento e noventa e nove mil duzentos e "
+            "cinquenta e quatro milhões setecentos e quarenta mil novecentos "
+            "e noventa e um"
         )
 
-    def test_pronounce_at_ceiling_br(self):
-        result = NumberParser.pronounce_number_word(
-            str(NumberParser.MAX_SAFE_INTEGER), is_brazilian=True
-        )
-        assert result == (
+    def test_beyond_2_53_short_scale(self):
+        assert NumberParser.pronounce_number_word(
+            "9007199254740991", is_brazilian=True
+        ) == (
             "nove quatrilhões sete trilhões cento e noventa e nove bilhões "
             "duzentos e cinquenta e quatro milhões setecentos e quarenta mil "
             "novecentos e noventa e um"
         )
 
-    def test_pronounce_beyond_ceiling_raises(self):
-        with pytest.raises(ValueError):
-            NumberParser.pronounce_number_word(str(NumberParser.MAX_SAFE_INTEGER + 1))
+    def test_10_15_long_scale(self):
+        assert normalize_numbers("1000000000000000", lang="pt-PT") == "mil biliões"
 
-    def test_normalize_beyond_ceiling_strict_raises(self):
-        with pytest.raises(ValueError):
-            normalize_numbers(str(NumberParser.MAX_SAFE_INTEGER + 1), strict=True)
+    def test_10_15_short_scale(self):
+        assert normalize_numbers("1000000000000000", lang="pt-BR") == "um quatrilhão"
 
-    def test_normalize_beyond_ceiling_lenient_leaves_digits(self):
-        word = str(NumberParser.MAX_SAFE_INTEGER + 1)
-        assert normalize_numbers(word, strict=False) == word
+    def test_10_18_long_scale(self):
+        assert normalize_numbers("1000000000000000000", lang="pt-PT") == "um trilião"
 
-    def test_normalize_at_ceiling_does_not_raise(self):
-        # sanity: the ceiling itself is still fully supported
-        normalize_numbers(str(NumberParser.MAX_SAFE_INTEGER), strict=True)
+    def test_10_18_short_scale(self):
+        assert normalize_numbers("1000000000000000000", lang="pt-BR") == "um quintilhão"
+
+    def test_10_24_long_scale(self):
+        assert (
+            normalize_numbers("1000000000000000000000000", lang="pt-PT")
+            == "um quatrilião"
+        )
+
+    def test_10_24_short_scale(self):
+        assert (
+            normalize_numbers("1000000000000000000000000", lang="pt-BR")
+            == "um septilhão"
+        )
+
+    def test_27_digit_long_scale(self):
+        assert normalize_numbers(
+            "123456789012345678901234567", lang="pt-PT"
+        ) == (
+            "cento e vinte e três quatriliões quatrocentos e cinquenta e "
+            "seis mil setecentos e oitenta e nove triliões doze mil "
+            "trezentos e quarenta e cinco biliões seiscentos e setenta e "
+            "oito mil novecentos e um milhões duzentos e trinta e quatro "
+            "mil quinhentos e sessenta e sete"
+        )
+
+    def test_27_digit_short_scale(self):
+        assert normalize_numbers(
+            "123456789012345678901234567", lang="pt-BR"
+        ) == (
+            "cento e vinte e três septilhões quatrocentos e cinquenta e "
+            "seis sextilhões setecentos e oitenta e nove quintilhões doze "
+            "quatrilhões trezentos e quarenta e cinco trilhões seiscentos e "
+            "setenta e oito bilhões novecentos e um milhões duzentos e "
+            "trinta e quatro mil quinhentos e sessenta e sete"
+        )
 
 
 class TestScaleParameter:
@@ -193,15 +231,19 @@ class TestScaleParameter:
         assert normalize_numbers("1000000000000", lang="pt-BR") == "um trilhão"
 
     def test_scale_override_short_on_pt_pt(self):
+        # scale overrides only the magnitude word, keeping pt-PT spelling
+        # ("trilião", not the pt-BR "trilhão")
         assert (
             normalize_numbers("1000000000000", lang="pt-PT", scale="short")
-            == "um trilhão"
+            == "um trilião"
         )
 
     def test_scale_override_long_on_pt_br(self):
+        # scale overrides only the magnitude word, keeping pt-BR spelling
+        # ("bilhão", not the pt-PT "bilião")
         assert (
             normalize_numbers("1000000000000", lang="pt-BR", scale="long")
-            == "um bilião"
+            == "um bilhão"
         )
 
     def test_pronounce_number_word_scale_kwarg(self):
@@ -209,7 +251,7 @@ class TestScaleParameter:
             NumberParser.pronounce_number_word(
                 "1000000000000", is_brazilian=False, scale="short"
             )
-            == "um trilhão"
+            == "um trilião"
         )
 
 

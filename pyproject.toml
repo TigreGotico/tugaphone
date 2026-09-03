@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Multimedia :: Sound/Audio :: Speech",
 ]
 dependencies = [
-    "unicode-rbnf",
+    "ovos-number-parser>=0.19.13",
     "silabificador>=2.1.0a1",
     "tugalex>=2.0.2a1",
     "bifonia>=0.1.1",

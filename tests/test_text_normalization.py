@@ -33,6 +33,13 @@ class TestNumberRanges:
         assert split_number_ranges("chamo-me") == "chamo-me"
         assert split_number_ranges("guarda-chuva") == "guarda-chuva"
 
+    def test_full_pipeline_score_reading(self):
+        # "3-2" -> "3 a 2" -> "três a dois": the "a" is the preposition "to",
+        # not the feminine article, so "2" stays masculine ("dois", not "duas").
+        expanded = normalize_orthography("O jogo é 3-2.")
+        assert expanded == "O jogo é 3 a 2."
+        assert normalize_numbers(expanded, "pt-PT") == "O jogo é três a dois."
+
 
 class TestClockTimes:
     def test_whole_hour_16(self):
