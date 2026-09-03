@@ -352,22 +352,34 @@ class CharToken:
 
     @cached_property
     def prev_char(self) -> Optional['CharToken']:
-        """Previous character in the grapheme, or None if first."""
+        """
+        Previous character in the word.
+
+        Crosses into the last character of the previous grapheme at a
+        grapheme boundary (e.g. the "a" of "ca" before the "rr" of "carro").
+        None only at the start of the word.
+        """
         if not self.parent_grapheme:
             return None
         if self.char_idx == 0:
-            # TODO: go to prev grapheme
-            return None
+            prev_grapheme = self.parent_grapheme.prev_grapheme
+            return prev_grapheme.last_char if prev_grapheme else None
         return self.parent_grapheme.characters[self.char_idx - 1]
 
     @cached_property
     def next_char(self) -> Optional['CharToken']:
-        """Next character in the grapheme, or None if last."""
+        """
+        Next character in the word.
+
+        Crosses into the first character of the next grapheme at a
+        grapheme boundary (e.g. the "a" of "chave" after the "h" of "ch").
+        None only at the end of the word.
+        """
         if self.char_idx == -1 or not self.parent_grapheme:
             return None
         if self.char_idx >= len(self.parent_grapheme.characters) - 1:
-            # TODO: go to next grapheme
-            return None
+            next_grapheme = self.parent_grapheme.next_grapheme
+            return next_grapheme.first_char if next_grapheme else None
         return self.parent_grapheme.characters[self.char_idx + 1]
 
     # -------------------------------
@@ -847,7 +859,10 @@ class CharToken:
         if self.normalized in self.dialect.SECONDARY_STRESS_MARKERS:
             return True
 
-        if self.is_vowel and self.prev_char and self.prev_char.normalized == "h":
+        # Silent initial "h" (its own grapheme, not the "ch"/"lh"/"nh" digraphs)
+        # immediately before a vowel, crossing the grapheme boundary.
+        if (self.is_vowel and self.prev_char and self.prev_char.normalized == "h"
+                and self.prev_char.parent_grapheme.surface == "h"):
             return True
 
         # Defer to parent grapheme
@@ -1531,7 +1546,17 @@ class GraphemeToken:
         # Os outros casos que na escrita costumam estar representados por «i» + vogal ou «u» mais vogal
         # (ou, no português europeu, «e» + vogal ou «o» + vogal),
         # costumam ser considerados como hiatos.
-        return False  # TODO
+
+        # A diphthong is one vowel grapheme, e.g. "ai" in "cai" -> single
+        # syllable. A hiatus is two adjacent vowel graphemes whose
+        # syllabifier put them in different syllables, e.g. "a"/"í" in "país".
+        if not self.is_vowel_grapheme:
+            return False
+        for neighbor in (self.prev_grapheme, self.next_grapheme):
+            if (neighbor is not None and neighbor.is_vowel_grapheme
+                    and neighbor.syllable_idx != self.syllable_idx):
+                return True
+        return False
 
     @cached_property
     def is_diphthong(self) -> bool:
