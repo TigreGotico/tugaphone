@@ -48,18 +48,18 @@ normalize_numbers("1000000000000", lang="pt-BR")               # 'um trilhão' (
 ```
 
 Pass `scale="long"` or `scale="short"` to override the scale the language
-would otherwise pick:
+would otherwise pick, while keeping the dialect's own spelling:
 
 ```python
-normalize_numbers("1000000000000", lang="pt-PT", scale="short")  # 'um trilhão'
-normalize_numbers("1000000000000", lang="pt-BR", scale="long")   # 'um bilião'
+normalize_numbers("1000000000000", lang="pt-PT", scale="short")  # 'um trilião'
+normalize_numbers("1000000000000", lang="pt-BR", scale="long")   # 'um bilhão'
 ```
 
-`unicode-rbnf` bundles scale and dialect spelling into a single ruleset per
-language, so overriding `scale` also switches which ruleset spells the rest
-of the number (e.g. `pt-PT` forced to `scale="short"` is spelled entirely
-with the `pt-BR` ruleset). There is no way to mix a pt-PT dialect with
-short-scale words in the underlying library.
+The long-scale words (pt-PT, pt-AO, pt-MZ, pt-TL) are: *milhão* (10⁶), *mil
+milhões* (10⁹), *bilião* (10¹²), *mil biliões* (10¹⁵), *trilião* (10¹⁸),
+*quatrilião* (10²⁴). The short-scale words (pt-BR) are: *milhão* (10⁶),
+*bilhão* (10⁹), *trilhão* (10¹²), *quatrilhão* (10¹⁵), *quintilhão* (10¹⁸),
+*sextilhão* (10²¹), *septilhão* (10²⁴).
 
 ---
 
@@ -87,33 +87,19 @@ notation; `NumberParser.is_scientific_notation(word)` detects the latter.
 
 ---
 
-## Number ceiling
+## Large numbers
 
-`NumberParser.MAX_SAFE_INTEGER` (`2**53 - 1 = 9007199254740991`) is the
-largest integer part `normalize_numbers` and `NumberParser.pronounce_number_word`
-will spell out. The limit comes from `unicode-rbnf`'s `RbnfEngine`, which
-casts numbers through a Python `float` internally: IEEE-754 doubles only
-represent every integer exactly up to `2**53 - 1`, and beyond that some
-values silently round to a *different* integer before being spelled out
-(e.g. `9007199254741103` gets read as if it were `9007199254741104`).
-
-Past the ceiling, `normalize_numbers` and `pronounce_number_word` raise
-`ValueError` instead of producing a wrong reading:
-
-```python
-NumberParser.MAX_SAFE_INTEGER          # 9007199254740991
-normalize_numbers("9007199254740992")  # raises ValueError
-normalize_numbers("9007199254740992", strict=False)  # '9007199254740992' (left untouched)
-```
-
-The ceiling applies equally to both scales; the largest value each dialect
-can still spell correctly is:
+Cardinal and ordinal reading is delegated to
+[`ovos-number-parser`](https://github.com/OpenVoiceOS/ovos-number-parser),
+which spells out arbitrarily large Python integers correctly in either
+scale, grouping each magnitude by its scale word instead of by every three
+digits. There is no ceiling on the integer part.
 
 ```python
 NumberParser.pronounce_number_word("9007199254740991")
-# 'nove mil biliões sete biliões cento e noventa e nove mil milhões
-#  duzentos e cinquenta e quatro milhões setecentos e quarenta mil
-#  novecentos e noventa e um'
+# 'nove mil e sete biliões cento e noventa e nove mil duzentos e
+#  cinquenta e quatro milhões setecentos e quarenta mil novecentos
+#  e noventa e um'
 NumberParser.pronounce_number_word("9007199254740991", is_brazilian=True)
 # 'nove quatrilhões sete trilhões cento e noventa e nove bilhões
 #  duzentos e cinquenta e quatro milhões setecentos e quarenta mil
@@ -143,7 +129,7 @@ Use it for single-token control.
 
 | Method | Returns |
 |--------|---------|
-| `pronounce_number_word(word, prev_word=None, next_word=None, gender=None, as_ordinal=None, is_brazilian=False, scale=None)` | Spelled-out form of one numeric token; raises `ValueError` past `MAX_SAFE_INTEGER`. |
+| `pronounce_number_word(word, prev_word=None, next_word=None, gender=None, as_ordinal=None, is_brazilian=False, scale=None)` | Spelled-out form of one numeric token. |
 | `to_int(word)` / `is_int(word)` | Integer value (ordinal markers, comma/dot decimals stripped out) / membership test. |
 | `to_float(word)` / `is_float(word)` | Float value (comma or dot decimal, scientific notation) / membership test. |
 | `is_decimal(word)` | `True` for a non-scientific decimal like `"10,4"` or `"10.4"`. |
@@ -151,7 +137,6 @@ Use it for single-token control.
 | `pronounce_scientific(word, is_brazilian=False, scale=None)` | Spoken form of scientific notation. |
 | `is_ordinal(word, next_word=None)` | Detects `º`/`ª` markers, attached or separate. |
 | `get_number_gender(word, prev_word=None, next_word=None)` | `"feminine"` or `"masculine"`. |
-| `MAX_SAFE_INTEGER` | `9007199254740991` (`2**53 - 1`), the largest integer part guaranteed to spell out correctly. |
 
 ```python
 from tugaphone.number_utils import NumberParser
@@ -166,7 +151,10 @@ NumberParser.get_number_gender("1", next_word="casa")         # 'feminine'
 ## Gender inference
 
 Gender is inferred from:
-- The preceding word (articles `a`, `as`, `da`, `das` → feminine)
+- The preceding word, when it is the feminine article `a`/`as`/`da`/`das`
+  AND a noun follows the number (`"a 1 casa"` → feminine). A bare `a` with
+  nothing after the number is the preposition "to", not the article -- as in
+  a score reading like `"3 a 2"` -- and does not force feminine.
 - The following word's ending (`-a`, `-dade`, `-agem` → feminine, default masculine)
 - An explicit `gender` override passed to `pronounce_number_word`
 

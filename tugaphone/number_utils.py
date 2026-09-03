@@ -1,7 +1,8 @@
 import string
 from typing import Optional
 
-from unicode_rbnf import RbnfEngine, FormatPurpose
+from ovos_number_parser import pronounce_number
+from ovos_number_parser.util import GrammaticalGender
 
 
 class NumberParser:
@@ -12,33 +13,24 @@ class NumberParser:
     type (cardinal/ordinal) with the nouns they modify.
     Example: '1' can be 'um' (masc.), 'uma' (fem.), 'primeiro' (1st masc.), or 'primeira' (1st fem.).
 
-    NOTE: RbnfEngine defaults to short-scale for pt-BR and long-scale for pt-PT.
+    Numbers are read out by ovos-number-parser, which spells out arbitrarily
+    large Python integers correctly in either scale -- there is no ceiling.
+
+    NOTE: pt-BR defaults to short-scale, pt-PT/pt-AO/pt-MZ/pt-TL to long-scale.
           https://en.wikipedia.org/wiki/Long_and_short_scales
           https://pt.wikipedia.org/wiki/Escalas_curta_e_longa
 
-    The `scale` parameter selects which of the two engines does the
-    formatting, independently of the requested dialect (`is_brazilian`).
-    Since each engine bundles a full ruleset (dialect spelling AND scale
-    words together), forcing e.g. `scale="short"` on a pt-PT call means
-    the number is spelled entirely with the pt-BR ruleset (e.g. "trilhão"
-    instead of "bilião") -- unicode_rbnf does not expose scale and dialect
-    as independent axes, so this is the closest available approximation.
+    The `scale` parameter picks which scale words are used ("long" or
+    "short"), independently of the dialect spelling requested via
+    `is_brazilian`: e.g. `scale="short"` on a pt-PT call still spells the
+    number with pt-PT wording, just using "trilião"-style short-scale names
+    instead of the long-scale ones.
 
-    Limitations:
-        - Numbers whose integer part exceeds `MAX_SAFE_INTEGER` are refused
-          (see `MAX_SAFE_INTEGER` below) instead of being spelled out wrong.
+    Long scale reference (pt-PT/pt-AO/pt-MZ/pt-TL): milhão 10^6, mil milhões
+    10^9, bilião 10^12, mil biliões 10^15, trilião 10^18, quatrilião 10^24.
+    Short scale reference (pt-BR): milhão 10^6, bilhão 10^9, trilhão 10^12,
+    quatrilhão 10^15, quintilhão 10^18, sextilhão 10^21, septilhão 10^24.
     """
-    engine_pt = RbnfEngine.for_language("pt_PT")
-    engine_br = RbnfEngine.for_language("pt")
-
-    # RbnfEngine.format_number() casts its argument through float() (see
-    # unicode_rbnf/engine.py). IEEE-754 doubles represent every integer
-    # exactly only up to 2**53 - 1; beyond that, some magnitudes are
-    # silently rounded to a *different* integer before being spelled out
-    # (verified by execution: 9007199254741103 gets spelled as if it were
-    # 9007199254741104). This ceiling applies to both scales -- it comes
-    # from float precision, not from the language rules.
-    MAX_SAFE_INTEGER = 2 ** 53 - 1  # 9_007_199_254_740_991
 
     # Symbols used in PT to denote ordinals (like the English 'st', 'nd', 'rd')
     ORDINAL_MALE = "º"  # e.g., 1º (primeiro)
@@ -64,65 +56,35 @@ class NumberParser:
             as_ordinal (Optional[bool]): If provided, forces ordinal (`True`) or cardinal (`False`) interpretation; otherwise context is used.
             is_brazilian (bool): If True, use Brazilian Portuguese formatting rules (pt-BR); otherwise use pt-PT.
             scale (Optional[str]): "long" or "short", overriding the scale that `is_brazilian` would
-                otherwise pick (long for pt-PT, short for pt-BR). See the class docstring for the
-                caveat that this also switches the dialect, since scale and dialect share one engine.
+                otherwise pick (long for pt-PT, short for pt-BR).
 
         Returns:
             Optional[str]: The spelled-out form of the number in Portuguese, or `None` if a textual form cannot be produced.
-
-        Raises:
-            ValueError: If the integer part of `word` exceeds `MAX_SAFE_INTEGER`.
         """
         if cls.is_scientific_notation(word):
             return cls.pronounce_scientific(word, is_brazilian=is_brazilian, scale=scale)
-
-        cls._check_ceiling(word)
 
         # 1. Determine if the number is an ordinal (1st, 2nd) or cardinal (1, 2)
         is_ord = cls.is_ordinal(word, next_word) if as_ordinal is None else as_ordinal
 
         # 2. Determine grammatical gender (numbers 1, 2, and hundreds change in PT)
         gender = gender or cls.get_number_gender(word, prev_word, next_word)
-        fmt = FormatPurpose.ORDINAL if is_ord else FormatPurpose.CARDINAL
+        gender_enum = GrammaticalGender.FEMININE if gender == "feminine" else GrammaticalGender.MASCULINE
 
-        # 3. Generate the base text using RBNF (Rule-Based Number Format)
-        # The ordinal markers (º/ª) are only used to detect ordinality/gender above;
-        # RbnfEngine expects a plain numeric string, so strip them before formatting.
+        # 3. Turn the token into a Python number. The ordinal markers (º/ª) are only
+        # used to detect ordinality/gender above; strip them before parsing.
         word = word.replace(" º", "º").replace(" ª", "ª").strip()
         word = word.rstrip(cls.ORDINAL_MALE + cls.ORDINAL_FEMALE)
-        # RbnfEngine expects a dot as the decimal separator; PT/BR write decimals with a comma.
+        # PT/BR write decimals with a comma; Python only accepts a dot.
         word = word.replace(",", ".", 1)
+        number = float(word) if "." in word else int(word)
+
         use_short_scale = scale == "short" if scale else is_brazilian
-        spelled = cls.engine_br.format_number(word, fmt) if use_short_scale else cls.engine_pt.format_number(word, fmt)
-
-        # Select the specific ruleset based on grammar results
-        if is_ord:
-            key = f'spellout-ordinal-{gender}'
-        else:
-            key = f'spellout-cardinal-{gender}'
-
-        text = spelled.text_by_ruleset[key]
-        return text
-
-    @classmethod
-    def _check_ceiling(cls, word: str) -> None:
-        """
-        Raise if the integer part of `word` exceeds `MAX_SAFE_INTEGER`.
-
-        Parameters:
-            word (str): Numeric token, possibly with ordinal markers, a sign, and a decimal part.
-
-        Raises:
-            ValueError: If the integer part is larger than `MAX_SAFE_INTEGER`.
-        """
-        core = word.strip(cls.ORDINAL_MALE + cls.ORDINAL_FEMALE + string.whitespace)
-        core = core.lstrip("+-")
-        int_part = core.split(",")[0].split(".")[0]
-        if int_part.isdigit() and int(int_part) > cls.MAX_SAFE_INTEGER:
-            raise ValueError(
-                f"'{word}' exceeds the largest integer NumberParser can spell out "
-                f"correctly (MAX_SAFE_INTEGER = {cls.MAX_SAFE_INTEGER})"
-            )
+        lang = "pt-BR" if is_brazilian else "pt-PT"
+        return pronounce_number(
+            number, lang=lang, short_scale=use_short_scale,
+            ordinals=is_ord, gender=gender_enum,
+        )
 
     # Punctuation that can trail a numeric token in running text without
     # being part of the number itself (sentence-final marks, list commas).
@@ -316,8 +278,12 @@ class NumberParser:
         if (next_word and next_word == cls.ORDINAL_FEMALE) or cls.ORDINAL_FEMALE in word:
             return "feminine"
 
-        # Rule B: Check preceding articles/prepositions (a, as, da, das are feminine)
-        if prev_word and prev_word in ["a", "as", "da", "das"]:
+        # Rule B: Check preceding articles (a, as, da, das are feminine) -- but only
+        # when a noun actually follows the number ("a 1 casa"). Without a following
+        # noun, a bare "a"/"as" before the number is the preposition "to" (as in a
+        # score/range reading, "3 a 2"), not the feminine article, and must not
+        # force a feminine reading (Rule C already catches feminine nouns on its own).
+        if prev_word and prev_word in ["a", "as", "da", "das"] and next_word and next_word.isalpha():
             return "feminine"
 
         # Rule C: Check the following noun (the object being counted)
@@ -356,7 +322,7 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
     Parameters:
         text (str): Input sentence containing numeric and non-numeric tokens.
         lang (str): Language variant to use for spelling rules (defaults to "pt-PT"; any "pt-br" variant is treated as "pt-BR").
-        strict (bool): If True, a number that cannot be spelled out (e.g. past `NumberParser.MAX_SAFE_INTEGER`) raises `ValueError`; if False, its digits are left untouched.
+        strict (bool): If True, a token that cannot be spelled out raises whatever exception the parser raised; if False, its digits are left untouched.
         scale (Optional[str]): "long" or "short", overriding the numeric scale that `lang` would otherwise pick (long for pt-PT/pt-AO/pt-MZ/pt-TL, short for pt-BR).
 
     Returns:
@@ -415,11 +381,11 @@ if __name__ == "__main__":
 
 
     print(normalize_numbers("897654356789098", "pt-PT")) # long-scale
-    # oitocentos e noventa e sete biliões seiscentos e cinquenta e quatro mil milhões trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito
+    # oitocentos e noventa e sete biliões seiscentos e cinquenta e quatro mil trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito
     print(normalize_numbers("897654356789098", "pt-BR")) # short-scale
     # oitocentos e noventa e sete trilhões seiscentos e cinquenta e quatro bilhões trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito
 
-    print(normalize_numbers("1e-3")) # um vezes dez elevado a nove
+    print(normalize_numbers("1e-3")) # um vezes dez elevado a menos três
     print(normalize_numbers("1e9")) # um vezes dez elevado a nove
     print(normalize_numbers("1.5e10"))  # um vírgula cinco vezes dez elevado a dez
     print(normalize_numbers("1.5e10000000")) # um vírgula cinco vezes dez elevado a dez milhões
