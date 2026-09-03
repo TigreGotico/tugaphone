@@ -203,17 +203,17 @@ normalize_numbers("comprei 2 casas")      # 'comprei duas casas'
 
 ### Text normalization
 
-Before numbers are spelled out, `tugaphone.text_normalization` rewrites other
-written conventions into words a TTS can read: digit-dash-digit ranges
-("1139-1185" → "1139 a 1185"), clock times ("16:00" → "16 horas", "9:05" →
-"9 e 5", "24:00" → "24 horas"), European thousands and decimal separators
-("92.073" → "92073", "10,4" → "10 vírgula 4"), abbreviations — some
-unconditional ("vs." → "versus"), some only before a capitalised name
-("Sr. Silva" → "Senhor Silva") — regnal Roman numerals ("Afonso I" → "Afonso
-Primeiro"), and acronyms spelled out with Portuguese letter names ("IA" → "i
-á"). It runs ahead of `normalize_numbers` in the pipeline, and the numbers
-themselves are spelled out in standard European Portuguese ("vinte e cinco").
-See [docs/text_normalization.md](docs/text_normalization.md).
+Written text contains conventions that a phonemizer cannot read as they are: digit ranges, clock times, thousands separators, abbreviations, Roman numerals and acronyms. The `tugaphone.text_normalization` module rewrites each of them into words before the number rules run.
+
+A dash between two numbers is a range. "1139-1185" reads as "1139 a 1185". A colon between digits is a clock time. "16:00" reads as "16 horas", "9:05" as "9 e 5" and "24:00" as "24 horas".
+
+European number separators are kept. The dot in "92.073" groups thousands and is dropped. The comma in "10,4" is a decimal mark and reads as "10 vírgula 4".
+
+Abbreviations expand in two ways. Common ones such as "vs.", "pág." and "Av." always expand, so "vs." reads as "versus". Honorifics such as "Sr." and "Dr." expand only before a capitalised name, so "Sr. Silva" reads as "Senhor Silva" and a lone "Sr." at the end of a sentence stays as it is.
+
+A Roman numeral after a name becomes an ordinal: "Afonso I" reads as "Afonso Primeiro". Acronyms are spelled with Portuguese letter names, so "IA" reads as "i á", while lowercase words such as "ia" are left alone.
+
+The numbers themselves are then spelled out by `normalize_numbers` in standard European Portuguese, for example "vinte e cinco". The full rule list with examples is in [docs/text_normalization.md](docs/text_normalization.md).
 
 ### Syllabification and stress
 
@@ -231,7 +231,7 @@ phonemizers through that interface can drive tugaphone:
 from tugaphone.plugin import TugaphoneG2PPlugin
 
 p = TugaphoneG2PPlugin(lang="pt-BR")
-print(p.transcribe("o gato dorme"))   # ˈu ˈgatʊ ˈdoɾmi
+print(p.transcribe("o gato dorme"))   # u ˈɡatʊ ˈdoɾmi
 ```
 
 ---
