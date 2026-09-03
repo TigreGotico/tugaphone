@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.3a2](https://github.com/TigreGotico/tugaphone/tree/1.3.3a2) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.3a1...1.3.3a2)
+
+**Merged pull requests:**
+
+- docs: describe text normalisation and the lexicon cache [\#109](https://github.com/TigreGotico/tugaphone/pull/109) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.3.3a1](https://github.com/TigreGotico/tugaphone/tree/1.3.3a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.2a1...1.3.3a1)
