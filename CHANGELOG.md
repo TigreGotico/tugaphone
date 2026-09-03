@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.3a1](https://github.com/TigreGotico/tugaphone/tree/1.3.3a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.2a1...1.3.3a1)
+
+**Merged pull requests:**
+
+- fix: guard the number ceiling, expose the numeric scale and read scientific notation [\#112](https://github.com/TigreGotico/tugaphone/pull/112) ([JarbasAl](https://github.com/JarbasAl))
+- fix: detect vocalic hiatus and navigate chars across grapheme boundaries [\#111](https://github.com/TigreGotico/tugaphone/pull/111) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.3.2a1](https://github.com/TigreGotico/tugaphone/tree/1.3.2a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.1a1...1.3.2a1)
@@ -34,19 +43,19 @@
 
 ## [1.2.2a1](https://github.com/TigreGotico/tugaphone/tree/1.2.2a1) (2026-09-03)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.2a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.2a1)
 
 **Merged pull requests:**
 
 - fix: invalidate the materialised lexicon cache when tugalex changes [\#101](https://github.com/TigreGotico/tugaphone/pull/101) ([JarbasAl](https://github.com/JarbasAl))
 
-## [1.2.1a2](https://github.com/TigreGotico/tugaphone/tree/1.2.1a2) (2026-08-02)
-
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.1a2)
-
 ## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a3)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.1a3)
+
+## [1.2.1a2](https://github.com/TigreGotico/tugaphone/tree/1.2.1a2) (2026-08-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a2)
 
 **Merged pull requests:**
 
