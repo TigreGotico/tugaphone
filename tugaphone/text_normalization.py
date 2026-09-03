@@ -9,9 +9,13 @@ into :func:`tugaphone.lattice_core._normalizer` ahead of
 ``normalize_numbers``.
 
 The reading rules for ranges, clock times, separators, abbreviations, and
-regnal numerals follow the behaviour of the European-Portuguese TTS front-end
-logus2k/tts_eu_pt (Apache-2.0); the code here is an independent
-reimplementation in tugaphone's idiom, not a port of that project's source.
+regnal numerals are ported from the European-Portuguese TTS front-end
+tts_eu_pt (https://github.com/logus2k/tts_eu_pt), written by Antonio Cruz
+and released under the Apache License 2.0. The rules from that project's
+``tts_eu_pt/g2p.py`` were reimplemented here in tugaphone's own idiom; one
+rule was deliberately left out: the original elides "vinte e cinco" to
+"vinte cinco" in the twenties, but standard European Portuguese keeps the
+conjunction, so tugaphone always reads "vinte e cinco".
 """
 from __future__ import annotations
 
@@ -50,32 +54,77 @@ def normalize_number_separators(text: str) -> str:
 # normalize_numbers, which already picks the feminine form ("uma", "duas",
 # "vinte e uma", ...) from the following "hora"/"horas" noun, so no separate
 # gender table is needed here. Any other "HH:MM" is read "<hora> e <minutos>".
-# Hours are restricted to 0-23; anything else (e.g. "24:00") is left alone.
+# Whole hours additionally accept 24 ("24:00" -> "vinte e quatro horas");
+# 25+ is not a clock hour and is left alone. Non-whole times keep the
+# ordinary 0-23 range.
+#
+# The minute is emitted WITHOUT a leading zero ("9:05" -> "9 e 5", not
+# "9 e 05"): normalize_numbers's tokenizer splits on whitespace and only
+# tolerates a bare digit run, so a minute glued to trailing punctuation with
+# no leading zero ("9:05, sala" -> "...e 5, sala") still risks becoming an
+# unparseable token like "05," (the comma makes both is_int/is_float fail,
+# so the digits are never spelled out and the phonemizer silently drops
+# them). The regexes below also split off any punctuation immediately
+# following the minutes/hour digits so the numeric token they leave behind
+# is always clean.
 # ---------------------------------------------------------------------------
 _HOUR = r"(?:[01]?\d|2[0-3])"
-_WHOLE_HOUR = re.compile(rf"\b({_HOUR}):00\b")
-_CLOCK_TIME = re.compile(rf"\b({_HOUR}):([0-5]\d)\b")
+_HOUR_OR_24 = r"(?:[01]?\d|2[0-4])"
+_PUNCT = r"[.,;:!?)\"”…]?"
+_WHOLE_HOUR = re.compile(rf"\b({_HOUR_OR_24}):00({_PUNCT})")
+_CLOCK_TIME = re.compile(rf"\b({_HOUR}):([0-5]\d)({_PUNCT})")
 
 
 def _whole_hour_repl(match: "re.Match[str]") -> str:
-    hh = match.group(1)
+    hh, punct = match.group(1), match.group(2)
     unit = "hora" if int(hh) == 1 else "horas"
-    return f"{hh} {unit}"
+    return f"{hh} {unit}{punct}"
+
+
+def _clock_time_repl(match: "re.Match[str]") -> str:
+    hh, mm, punct = match.group(1), match.group(2), match.group(3)
+    mm = str(int(mm))  # drop the leading zero: "05" -> "5"
+    return f"{hh} e {mm} {punct}" if punct else f"{hh} e {mm}"
 
 
 def expand_clock_times(text: str) -> str:
-    """"16:00" -> "16 horas"; "16:54" -> "16 e 54". Whole hours must be
-    expanded first, so the ":00" case doesn't fall through to "16 e 0"."""
+    """"16:00" -> "16 horas"; "24:00" -> "24 horas"; "16:54" -> "16 e 54".
+    Whole hours must be expanded first, so the ":00" case doesn't fall
+    through to "16 e 0"."""
     text = _WHOLE_HOUR.sub(_whole_hour_repl, text)
-    return _CLOCK_TIME.sub(r"\1 e \2", text)
+    return _CLOCK_TIME.sub(_clock_time_repl, text)
 
 
 # ---------------------------------------------------------------------------
-# Honorific / place abbreviations, expanded before a capitalised word (the
-# name they introduce). "n.º"/"nº" always mean "número" and carry no such
-# condition -- they precede a plain number, not a name.
+# Abbreviations. Two groups:
+#
+# * UNCONDITIONAL: expanded wherever they appear, with no regard to what
+#   follows -- section/reference markers ("vs.", "pág./págs.", "tel.",
+#   "art.", "fig.", "cap.", "séc.") and place-name abbreviations ("Av.",
+#   "R.", "Lx.", "n.º"/"nº") that stand for the same word whether followed
+#   by a capitalised name, a lowercase word, or end of sentence.
+# * PERSONAL HONORIFICS: only expanded right before a capitalised word (the
+#   name they introduce), since standalone "Dr." or "Sr." at a sentence's
+#   end is more often the plain abbreviation than a title.
 # ---------------------------------------------------------------------------
-_ABBREVIATIONS = {
+_UNCONDITIONAL_ABBREVIATIONS = {
+    "vs.": "versus",
+    "pág.": "página",
+    "págs.": "páginas",
+    "tel.": "telefone",
+    "art.": "artigo",
+    "fig.": "figura",
+    "cap.": "capítulo",
+    "séc.": "século",
+    "Av.": "Avenida",
+    "R.": "Rua",
+    "Lx.": "Lisboa",
+    "n.º": "número",
+    "nº": "número",
+    "N.º": "número",
+    "Nº": "número",
+}
+_HONORIFIC_ABBREVIATIONS = {
     "D.": "Dom",
     "Sr.": "Senhor",
     "Sra.": "Senhora",
@@ -83,11 +132,7 @@ _ABBREVIATIONS = {
     "Dra.": "Doutora",
     "Eng.": "Engenheiro",
     "Prof.": "Professor",
-    "Av.": "Avenida",
-    "R.": "Rua",
-    "Lx.": "Lisboa",
 }
-_NUMERO_ABBREVIATIONS = {"n.º", "nº", "N.º", "Nº"}
 
 _LEAD_PUNCT = "(“\"'¿¡"
 
@@ -98,14 +143,17 @@ def _is_capitalised(word: str) -> bool:
 
 
 def expand_abbreviations(text: str) -> str:
-    """"Sr. Silva" -> "Senhor Silva"; "n.º 4" -> "número 4"."""
+    """"Sr. Silva" -> "Senhor Silva"; "n.º 4" -> "número 4"; "Av. Liberdade"
+    or a bare "R." at sentence end both -> "Avenida"/"Rua" regardless of
+    capitalisation, since these stand for the same word either way."""
     words = text.split()
     out = []
     for i, w in enumerate(words):
-        if w in _NUMERO_ABBREVIATIONS:
-            out.append("número")
+        expansion = _UNCONDITIONAL_ABBREVIATIONS.get(w)
+        if expansion is not None:
+            out.append(expansion)
             continue
-        expansion = _ABBREVIATIONS.get(w)
+        expansion = _HONORIFIC_ABBREVIATIONS.get(w)
         if expansion is not None and i + 1 < len(words) and _is_capitalised(words[i + 1]):
             out.append(expansion)
             continue

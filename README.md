@@ -286,6 +286,14 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 
 ---
 
+## Acknowledgements
+
+The clock-time, number-separator, abbreviation, and regnal-numeral reading
+rules in `tugaphone/text_normalization.py` are ported from
+[tts_eu_pt](https://github.com/logus2k/tts_eu_pt), a European-Portuguese TTS
+front-end by Antonio Cruz, released under the Apache License 2.0. The rules
+were reimplemented in tugaphone's own idiom rather than copied verbatim.
+
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE).
