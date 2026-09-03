@@ -296,11 +296,11 @@ GUARD = [
     # Pinned from dev, so the assertion below means what it says: adding the
     # feature layer changes no transcription. Re-pin from dev, never from this
     # branch — pinning from the branch would make the test assert nothing.
-    ("pt-PT", "O gato dorme.", "ˈu gˈa·tu ˈdoɾ·mɨ"),
-    ("pt-BR", "O gato dorme.", "ˈu gˈa·tʊ ˈdoɾ·mɪ"),
-    ("pt-AO", "O gato dorme.", "ˈu gˈa·tʊ ˈdoɾ·me"),
-    ("pt-MZ", "O gato dorme.", "ˈu gˈa·tu ˈdoɾ·me"),
-    ("pt-TL", "O gato dorme.", "ˈu gˈa·tʊ ˈdoɾ·me"),
+    ("pt-PT", "O gato dorme.", "ˈu ɡˈa·tu ˈdoɾ·mɨ"),
+    ("pt-BR", "O gato dorme.", "ˈu ɡˈa·tʊ ˈdoɾ·mɪ"),
+    ("pt-AO", "O gato dorme.", "ˈu ɡˈa·tʊ ˈdoɾ·me"),
+    ("pt-MZ", "O gato dorme.", "ˈu ɡˈa·tu ˈdoɾ·me"),
+    ("pt-TL", "O gato dorme.", "ˈu ɡˈa·tʊ ˈdoɾ·me"),
     ("pt-PT", "A menina comeu o pão todo.", "ɐ mɨ·nˈi·nɐ ku·ˈmew ˈu pˈɐ̃w tˈo·du"),
     ("pt-BR", "A menina comeu o pão todo.", "a mẽ·nˈĩ·nɐ ko·ˈmew ˈu pˈɐ̃w tˈo·dɐ"),
     ("pt-AO", "A menina comeu o pão todo.", "a me·nˈi·nɐ ko·ˈmew ˈu pˈɐ̃w tˈo·dɐ"),
@@ -318,6 +318,10 @@ class TestIpaUnchanged:
     """The feature layer is inert: the grapheme cascade's per-token IPA is
     pinned per dialect, so exposing manner/place/height features off the tokens
     changes no transcription.
+
+    The velar plosive in these pins is U+0261 LATIN SMALL LETTER SCRIPT G, the
+    IPA symbol, not ASCII "g" U+0067. The two are visually near-identical and an
+    editor that "corrects" one to the other silently breaks the pin.
 
     This guards the token-cascade (``Sentence.ipa``), not the phonemization
     path — the public ``phonemize_sentence`` drives the orthography2ipa lattice
