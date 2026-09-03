@@ -123,7 +123,7 @@ import dataclasses
 import string
 from typing import List, Dict, Set
 
-from tugaphone.lexicon import TugaLexicon
+from tugalex import TugaLexicon
 
 # singleton - load .csv into memory only once
 LEXICON = TugaLexicon()
@@ -261,6 +261,33 @@ class DialectInventory:
     ALL_VOWEL_CHARS: Set[str] = dataclasses.field(default_factory=set)
 
     # =========================================================================
+    # PHONOLOGICAL CLASS TABLES
+    # =========================================================================
+    # Articulatory classification used by the tokenizer's feature API.
+    # Consonant tables are keyed by ORTHOGRAPHIC letter and classify the
+    # typical realization of that letter's default phoneme
+    # (DEFAULT_CHAR2PHONEMES); context-dependent letters (c, g, s, x) carry
+    # their default reading — see each consumer property for the caveat.
+    # Vowel tables are keyed by IPA PHONE, so reduction-aware classification
+    # (unstressed e → [ɨ] = high central) comes out right per dialect.
+
+    # letter → manner: plosive, fricative, nasal, lateral, rhotic
+    MANNER_OF_ARTICULATION: Dict[str, str] = dataclasses.field(default_factory=dict)
+    # letter → place: bilabial, labiodental, alveolar, postalveolar, velar
+    PLACE_OF_ARTICULATION: Dict[str, str] = dataclasses.field(default_factory=dict)
+    VOICED_CONSONANT_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    VOICELESS_CONSONANT_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    SIBILANT_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    LIQUID_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    NASAL_CONSONANT_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    RHOTIC_CHARS: Set[str] = dataclasses.field(default_factory=set)
+    # phone → height: high, mid-high, mid-low, low
+    VOWEL_HEIGHT: Dict[str, str] = dataclasses.field(default_factory=dict)
+    # phone → backness: front, central, back
+    VOWEL_BACKNESS: Dict[str, str] = dataclasses.field(default_factory=dict)
+    ROUNDED_VOWEL_PHONES: Set[str] = dataclasses.field(default_factory=set)
+
+    # =========================================================================
     # DIPHTHONG INVENTORIES
     # =========================================================================
     # Diphthongs are single-syllable vowel sequences
@@ -359,9 +386,6 @@ class DialectInventory:
     # These override all other rules
     IRREGULAR_WORDS: Dict[str, str] = dataclasses.field(default_factory=dict)
 
-    # words with different IPA depending on postag
-    HOMOGRAPHS: Dict[str, Dict[str, str]] = dataclasses.field(default_factory=dict)
-
     # =========================================================================
     # STRESS RULES
     # =========================================================================
@@ -394,6 +418,7 @@ class DialectInventory:
         - Override flexibility for subclasses
         """
         self._initialize_char_lists()
+        self._initialize_phonological_classes()
         self._initialize_normalized_vowels()
         self._initialize_punctuation()
         self._initialize_consonant_digraphs()
@@ -409,44 +434,6 @@ class DialectInventory:
         self._initialize_default_chars()
         self._initialize_stress_rules()
         self._compile_grapheme_inventory()
-
-        # words with different IPA depending on postag
-        self.HOMOGRAPHS = self.HOMOGRAPHS or {
-            "para": {"ADP": "ˈpɐɾɐ", "VERB": "ˈpaɾɐ"}, # para (preposição) vs pára (verbo) - sem distinção desde o AO1990
-            "pelo": {"ADP": "ˈpɨlu", "NOUN": "ˈpelu", "VERB": "ˈpɛlu"}, # pelo, pélo, pêlo - sem distinção desde o AO1990
-
-            "tola": {"NOUN": "ˈtɔlɐ", "ADJ": "ˈtolɐ"},  # tola (feminino de tolo, «tonto») – tola («cabeça», informal);
-            "seco": {"ADJ": "ˈseku", "VERB": "ˈsɛku"},  # "sêco" vs "séco"
-
-            "acordo": {"NOUN": "ɐˈkoɾdu", "VERB": "ɐˈkɔɾdu"}, # acordo («entendimento») – acordo (verbo acordar);
-            "acerto": {"NOUN": "ɐˈseɾtu", "VERB": "ɐˈsɛɾtu"}, # acerto («acordo», «correção») – acerto (verbo acertar);
-            "cerro": {"NOUN": "ˈseʁu", "VERB": "ˈsɛʁu"}, # cerro («elevação, colina») – cerro (verbo cerrar);
-            "choro": {"NOUN": "ˈʃoɾu", "VERB": "ˈʃɔɾu"}, # choro («pranto») – choro (verbo chorar);
-            "colher": {"NOUN": "kuˈʎɛɾ", "VERB": "kuˈʎeɾ"}, # colher («utensílio de mesa») – colher («apanhar»);
-            "começo": {"NOUN": "kuˈmesu", "VERB": "kuˈmɛsu"}, # começo («início») – começo (verbo começar);
-            "conserto": {"NOUN": "kõˈseɾtu", "VERB": "kõˈsɛɾtu"}, #  conserto (substantivo) - conserto (1.ª pess.sing. pres. ind. - verbo consertar)
-            "coro": {"NOUN": "ˈkoɾu", "VERB": "ˈkɔɾu"}, # coro («conjunto de cantores») – coro (verbo corar);
-            "corte": {"NOUN": "ˈkoɾtɨ", "VERB": "ˈkɔɾtɨ"}, # corte («morada do rei») – corte («ato de cortar»; verbo cortar);
-            "gozo": {"NOUN": "ˈgozu", "VERB": "ˈgɔzu"}, # gozo («prazer»; «troça») – gozo (verbo gozar);
-            "gosto": {"NOUN": "ˈgoʃtu", "VERB": "ˈgɔʃt"}, #   gosto (substantivo) - gosto (1.ª pess.sing. pres. ind. - verbo gostar)
-            "jogo": {"NOUN": "ˈʒoɡu", "VERB": "ˈʒɔɡu"}, # jogo («divertimento») – jogo (verbo jogar);
-            "molho": {"NOUN": "ˈmoʎu", "VERB": "ˈmɔʎu"}, # molho («líquido, caldo») – molho («feixe»; verbo molhar);
-            "olho": {"NOUN": "ˈoʎu", "VERB": "ˈɔʎu"}, # olho («órgão da visão») – olho (verbo olhar);
-            "rego": {"NOUN": "ˈʁeɡu", "VERB": "ˈʁɛɡu"}, # rego («sulco, vala») – rego (verbo regar);
-            "sede": {"NOUN": "ˈsɛdɨ", "VERB": "ˈsedɨ"}, # sede («vontade de beber») – sede («lugar»);
-            "sobre": {"NOUN": "ˈsobɾɨ", "VERB": "ˈsɔbɾɨ"}, # sobre («em cima») – sobre (verbo sobrar);
-            "torre": {"NOUN": "ˈtoʁɨ", "VERB": "ˈtɔʁɨ"}, # torre («coluna») – torre (verbo torrar);
-            "transtorno": {"NOUN": "tɾɐ̃ʃˈtoɾnu", "VERB": "tɾɐ̃ʃˈtɔɾnu"}, # transtorno («contrariedade») – transtorno (verbo transtornar);
-
-            "peso":  {"NOUN": "ˈpezu",  "VERB": "ˈpɛzu"},  # "pêso" vs "péso"
-            "porto": {"NOUN": "ˈpoɾtu", "VERB": "ˈpɔɾtu"},
-            "posto": {"NOUN": "ˈpoʃtu", "VERB": "ˈpɔʃtu"}, # eu "pósto" , o meu "pôsto", está "pôsto"
-            #"borra": {"NOUN": "ˈboʁɐ", "VERB": "ˈbɔʁɐ"}, # borra («resíduo») – borra (verbo borrar);  SKIP: uncommon - dialectal
-
-            # SKIP: disambiguation based on verb tense out of scope
-            # "vede": {"VERB": "ˈveðɨ", "VERB": "ˈvɛðɨ"}, # vede (verbo ver) – vede (verbo vedar).'
-            # "pode": {"PRESENT": "ˈpɔðɨ", "PAST": "ˈpoðɨ"},  # pode vs pôde
-        }
 
         # Até ao início do século XX, tanto em Portugal como no Brasil,
         # seguia-se uma ortografia que, por regra, baseava-se nos étimos latino ou grego para escrever cada palavra
@@ -514,6 +501,65 @@ class DialectInventory:
             self.OPEN_VOWELS = set("a")
         if not self.SEMI_OPEN_VOWELS:
             self.SEMI_OPEN_VOWELS = set("ɛɐɔ")
+
+    def _initialize_phonological_classes(self):
+        """Populate the articulatory classification tables.
+
+        Consonant tables classify each orthographic letter by the typical
+        realization of its default phoneme; letters whose value is
+        context-dependent (c → [k]/[s], g → [ɡ]/[ʒ], s → [s]/[z]/[ʃ],
+        x → [ʃ]/[ks]/[z]) carry the default reading. 'r' is filed under the
+        'rhotic' cover manner with alveolar place (the default tap [ɾ]);
+        dialects with a different default rhotic may override.
+
+        Vowel tables are keyed by IPA phone and derived from the openness
+        sets above, so subclass overrides of those sets propagate.
+        """
+        if not self.MANNER_OF_ARTICULATION:
+            self.MANNER_OF_ARTICULATION = {
+                **{c: "plosive" for c in "pbtdkgqc"},
+                **{c: "fricative" for c in "fvszxjç"},
+                **{c: "nasal" for c in "mn"},
+                "l": "lateral",
+                "r": "rhotic",
+            }
+        if not self.PLACE_OF_ARTICULATION:
+            self.PLACE_OF_ARTICULATION = {
+                **{c: "bilabial" for c in "pbm"},
+                **{c: "labiodental" for c in "fv"},
+                **{c: "alveolar" for c in "tdnszlçr"},
+                **{c: "postalveolar" for c in "xj"},
+                **{c: "velar" for c in "kgqc"},
+            }
+        if not self.VOICED_CONSONANT_CHARS:
+            self.VOICED_CONSONANT_CHARS = set("bdgvzjlmnr")
+        if not self.VOICELESS_CONSONANT_CHARS:
+            self.VOICELESS_CONSONANT_CHARS = set("ptkcfsxqç")
+        if not self.SIBILANT_CHARS:
+            self.SIBILANT_CHARS = set("szxjç")
+        if not self.LIQUID_CHARS:
+            self.LIQUID_CHARS = set("lr")
+        if not self.NASAL_CONSONANT_CHARS:
+            self.NASAL_CONSONANT_CHARS = set("mn")
+        if not self.RHOTIC_CHARS:
+            self.RHOTIC_CHARS = set("r")
+        if not self.VOWEL_HEIGHT:
+            self.VOWEL_HEIGHT = {
+                **{p: "high" for p in self.CLOSED_VOWELS},
+                **{p: "mid-high" for p in self.SEMI_CLOSED_VOWELS},
+                **{p: "mid-low" for p in self.SEMI_OPEN_VOWELS},
+                **{p: "low" for p in self.OPEN_VOWELS},
+                "y": "high",      # Azorean fronted /u/
+                "ə": "mid-low",   # Timorese reduction schwa
+            }
+        if not self.VOWEL_BACKNESS:
+            self.VOWEL_BACKNESS = {
+                **{p: "front" for p in "ieɛy"},
+                **{p: "central" for p in "ɨəɐa"},
+                **{p: "back" for p in "uoɔ"},
+            }
+        if not self.ROUNDED_VOWEL_PHONES:
+            self.ROUNDED_VOWEL_PHONES = set("uoɔy")
 
     def _initialize_normalized_vowels(self):
         """
@@ -1562,8 +1608,8 @@ class AngolanPortuguese(DialectInventory):
        - Prosodic patterns influenced by L1 Bantu speakers
     """
 
-    def __init__(self):
-        super().__init__(dialect_code="pt-AO",
+    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
+        super().__init__(dialect_code=dialect_code or "pt-AO",
                          DIGRAPH2IPA={
                              **AO1990.DIGRAPH2IPA,
                              "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
@@ -1571,11 +1617,13 @@ class AngolanPortuguese(DialectInventory):
                          # Moderate vowel reduction (between European and Brazilian)
                          DEFAULT_CHAR2PHONEMES={
                              **AO1990.DEFAULT_CHAR2PHONEMES,
+                             "a": "a",  # DIVERGENCE: Less reduction than European [ɐ]
                              "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
-                             "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
+                             "r": "ɾ",  # DIVERGENCE: Strong R is [r] (positional), tap [ɾ] elsewhere
                          },
-                         IRREGULAR_WORDS=LEXICON.get_ipa_map(region="lda") # Luanda
+                         IRREGULAR_WORDS=IRREGULAR_WORDS if IRREGULAR_WORDS is not None else LEXICON.get_ipa_map(region="lda"),  # Luanda
+                         **kwargs
          )
 
 
@@ -1610,20 +1658,22 @@ class MozambicanPortuguese(DialectInventory):
        - May have different rhythm patterns
     """
 
-    def __init__(self):
-        super().__init__(dialect_code="pt-MZ",
+    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
+        super().__init__(dialect_code=dialect_code or "pt-MZ",
                          DIGRAPH2IPA={
                              **AO1990.DIGRAPH2IPA,
-                             "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
+                             "rr": "r",  # DIVERGENCE: Alveolar trill [r] common in Mozambique
                          },
                          # Moderate vowel reduction (between European and Brazilian)
                          DEFAULT_CHAR2PHONEMES={
                              **AO1990.DEFAULT_CHAR2PHONEMES,
+                             # 'a' inherits European ɐ reduction (MZ gold uses ɐ frequently)
                              "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
-                             "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
+                             "r": "ɾ",  # Strong R is [r] (positional), tap [ɾ] elsewhere
                          },
-                         IRREGULAR_WORDS=LEXICON.get_ipa_map(region="mpx") # Maputo
+                         IRREGULAR_WORDS=IRREGULAR_WORDS if IRREGULAR_WORDS is not None else LEXICON.get_ipa_map(region="mpx"),  # Maputo
+                         **kwargs
          )
 
 
@@ -1662,20 +1712,21 @@ class TimoresePortuguese(DialectInventory):
        - Less dialectal innovation
     """
 
-    def __init__(self):
-        super().__init__(dialect_code="pt-TL",
+    def __init__(self, dialect_code=None, IRREGULAR_WORDS=None, **kwargs):
+        super().__init__(dialect_code=dialect_code or "pt-TL",
                          DIGRAPH2IPA={
                              **AO1990.DIGRAPH2IPA,
-                             "rr": "r",  # DIVERGENCE: Angolan uses alveolar trill [r]
+                             "rr": "r",  # DIVERGENCE: Alveolar trill [r] for strong R
                          },
-                         # Moderate vowel reduction (between European and Brazilian)
+                         # Less vowel reduction: Tetum/Austronesian substrate, simpler vowel system
                          DEFAULT_CHAR2PHONEMES={
                              **AO1990.DEFAULT_CHAR2PHONEMES,
-                             "a": "a",  # DIVERGENCE: Less reduction
+                             "a": "ə",  # DIVERGENCE: Tetum-influenced schwa; unstressed /a/ → [ə]
                              "e": "e",  # DIVERGENCE: Less reduction than European [ɨ]
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
-                             "r": "ɾ",  # DIVERGENCE: Strong R is [r], not [ʁ]
+                             "r": "ɾ",  # DIVERGENCE: Strong R is [r] (positional), tap [ɾ] elsewhere
                          },
-                         IRREGULAR_WORDS=LEXICON.get_ipa_map(region="dli") # Dili
+                         IRREGULAR_WORDS=IRREGULAR_WORDS if IRREGULAR_WORDS is not None else LEXICON.get_ipa_map(region="dli"),  # Dili
+                         **kwargs
          )
 
