@@ -111,10 +111,17 @@ because the Romance overlap is far tighter than Basque-vs-Romance, a small
 margin misroutes common native words. Below the margin the word stays `pt`. Two
 extra guards keep the default honest:
 
-* a **guard list of high-frequency Portuguese grammar words** (`de`, `que`, `com`,
-  `não`, `olá`, …) is always kept Portuguese. Encyclopedic training text
+* a **keep-list of high-frequency Portuguese wordforms** (`PORTUGUESE_KEEP`:
+  `de`, `que`, `com`, `não`, `olá`, the finite forms of the common irregular
+  verbs, …) is always kept Portuguese. Encyclopedic training text
   underrepresents conversational grammar, and these shared-Romance function words
-  are exactly the ones a Spanish or French model also fits.
+  are exactly the ones a Spanish or French model also fits. The orthographic
+  fallback consults the same list before its own contact stopword lists, so the
+  invariant holds whether or not `markovonnx` is installed, and a token that is a
+  Portuguese wordform stays Portuguese even when a contact stopword list also
+  lists it (`por` is Spanish, `mais` is French). Lookup ignores lost diacritics,
+  so the unaccented spellings speakers actually type (`mae`, `nao`, `voce`)
+  reach the accented entry.
 * an empty or all-punctuation token is Portuguese by default.
 
 A `default_side` tie-break routes a genuinely ambiguous embed (two foreign models

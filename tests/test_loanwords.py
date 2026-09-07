@@ -70,11 +70,12 @@ def test_tugalex_collisions_excluded_from_lexicon(word):
     assert not is_known_loanword(word)
 
 
-def test_portuguese_sentence_with_english_spelled_words_unchanged(ph):
+def test_portuguese_sentence_with_english_spelled_words_unchanged(ph, classifier):
     # "for" (subjunctive of "ser") and "media" ("média", diacritic dropped)
     # both exist as ordinary Portuguese words; a sentence using them must
     # phonemize identically under contact="auto" and contact="none" — the
-    # lexicon must never hijack them onto the English route.
+    # lexicon must never hijack them onto the English route, under either
+    # code-switch classifier.
     s = "se ele for a festa eu levo a media do jogo"
     auto = ph.phonemize_sentence(s, "pt-PT", contact="auto")
     none = ph.phonemize_sentence(s, "pt-PT", contact="none")

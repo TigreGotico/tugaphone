@@ -86,6 +86,8 @@ import json
 from pathlib import Path
 from typing import Dict, FrozenSet, List, Optional, Tuple
 
+from tugaphone.langdetect import is_keep_word
+
 # ---------------------------------------------------------------------------
 # Detection (orthographic fallback — used only when the Markov detector,
 # tugaphone.langdetect, is unavailable).
@@ -108,6 +110,13 @@ _FRENCH_LETTERS = set("èëïîûùœæ")
 #: ``lh`` (native digraphs), ``oo`` (``voo``, ``coordenar``) — so the signal
 #: never fires on a Portuguese word.
 _ENGLISH_DIGRAPHS = ("th", "sh", "wh", "ck", "gh", "ght", "ph", "ww", "yy")
+
+# Portuguese is the matrix language, so it wins every homograph: a token that is
+# a Portuguese wordform (:data:`tugaphone.langdetect.PORTUGUESE_KEEP`) stays
+# Portuguese no matter which contact list below also claims it. The lists stay
+# complete for the language they document — ``por`` really is a Spanish function
+# word and ``mais`` a French one — because a whole-word test cannot disambiguate
+# a homograph on its own.
 
 #: Very common Spanish function words (no non-Portuguese letter of their own).
 _SPANISH_STOPWORDS = {
@@ -184,6 +193,8 @@ def is_contact_word(token: str) -> bool:
     core = _strip(token)
     if not core:
         return False
+    if is_keep_word(core):
+        return False
     if core in _loanwords():
         return True
     if any(ch in _NON_PT_LETTERS or ch in _FRENCH_LETTERS for ch in core):
@@ -201,8 +212,12 @@ def contact_language(token: str, default_side: str = "en") -> str:
     specific), then the Spanish/French accent split; a token with no
     language-specific signal falls back to ``default_side`` (the dialect's
     contact side — English for most lects, Spanish for the Uruguayan border).
+    A Portuguese keep-list wordform returns ``"pt"``: it is not contact material,
+    whichever contact stopword list also lists it.
     """
     core = _strip(token)
+    if is_keep_word(core):
+        return "pt"
     if core in _loanwords():
         return "en"
     if _has_english_signal(core):
@@ -324,7 +339,8 @@ def _classify(token: str, default_side: str) -> Optional[str]:
         return None if lang == "pt" else lang
     if not is_contact_word(token):
         return None
-    return contact_language(token, default_side)
+    lang = contact_language(token, default_side)
+    return None if lang == "pt" else lang
 
 
 def _is_contact(token: str) -> bool:
