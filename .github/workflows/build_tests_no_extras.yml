@@ -1,0 +1,32 @@
+name: Run UnitTests (no extras)
+
+on:
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - 'tests/**'
+      - 'tugaphone/**'
+      - '.github/workflows/build_tests_no_extras.yml'
+  workflow_dispatch:
+
+# The optional markovonnx detector is absent in a plain `pip install tugaphone`,
+# so the orthographic code-switch fallback is what most users run. This job
+# exercises that configuration; build_tests.yml covers the detector.
+jobs:
+  build_tests_no_extras:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python_version: ["3.10", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python_version }}
+      - name: Install
+        run: |
+          pip install --pre .
+          pip install pytest
+      - name: Run tests
+        run: pytest tests -v
