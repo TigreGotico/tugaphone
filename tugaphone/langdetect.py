@@ -25,6 +25,11 @@ ambiguous shared-alphabet internationalisms (``hotel``, ``radio``, ``general``)
 sit inside that margin band and therefore stay Portuguese, which is exactly the
 conservative behaviour a TTS frontend wants.
 
+Known limit: an open-class native word typed without its diacritic and not on
+:data:`PORTUGUESE_KEEP` can still be routed out. ``como esta a tua mae`` is
+handled because every token is on the keep-list; an unaccented open-class word
+is scored by the models as written, and the models are trained on accented text.
+
 The detector is optional. It is used only when :mod:`markovonnx` is importable
 and the bundled models are present; otherwise the caller falls back to the
 orthographic heuristic. Loading is lazy and cached, so importing tugaphone never
@@ -56,16 +61,33 @@ _BOS, _EOS = "\x02", "\x03"
 #: cost (see ``docs/codeswitch.md``).
 DEFAULT_MARGIN: float = 0.5
 
-#: High-frequency Portuguese grammatical words that are always kept Portuguese,
+#: High-frequency Portuguese wordforms that are always kept Portuguese,
 #: regardless of the models. Encyclopedic training text underrepresents
 #: conversational grammar, so a char-model can rate a short function word like
 #: ``de`` or ``que`` as Spanish/French on its letter shape alone — and these
 #: shared-Romance function words are exactly the ones a Spanish or French model
 #: also fits well. They are unambiguously native here and must never be routed to
 #: a contact lattice, so the statistical decision is bypassed for them entirely.
-#: (Deliberately limited to closed-class grammar and a few fixed greetings;
-#: open-class words still go through the models.)
-_PORTUGUESE_KEEP = frozenset("""
+#: Both code-switch classifiers consult this set: the orthographic fallback in
+#: :mod:`tugaphone.codeswitch` checks it before its own contact stopword lists,
+#: so the invariant holds whether or not the detector is installed.
+#:
+#: Membership criterion: a Portuguese closed-class form — article, preposition,
+#: conjunction, pronoun, determiner — or a finite form of a high-frequency
+#: irregular verb belongs here regardless of what a model scores it. Open-class
+#: vocabulary goes through the models. The finite forms of *ser, ir, ter, estar,
+#: haver, fazer, ver, vir, dar, poder, querer, saber* are listed by paradigm
+#: cell: a whole tense goes in as soon as any of its forms is one a foreign
+#: model outscores Portuguese on (the future subjunctive of *ser* — ``for``,
+#: ``fores``, ``formos``, ``forem`` — is the motivating case). A tense no
+#: foreign model claims anywhere is left out rather than padding the set.
+#:
+#: The kinship and address words at the end are admitted as high-frequency
+#: native vocabulary rather than as grammar: their only foreign-looking property
+#: is a diacritic, and lookup is diacritic-folded (:func:`is_keep_word`) so the
+#: unaccented spellings Portuguese speakers actually type — ``mae``, ``nao``,
+#: ``voce`` — resolve to the accented entry.
+PORTUGUESE_KEEP = frozenset("""
 o a os as um uma uns umas de do da dos das em no na nos nas por pra pro
 para com sem sob sobre entre ate até desde após trás e ou nem mas porém
 que se como quando onde quem qual quais cujo cuja quanto porque porquê
@@ -78,6 +100,41 @@ eu tu ele ela nós vós eles elas me te lhe nos vos lhes mim ti si
 ser estar ter haver fazer ir vir dar ver dizer poder querer saber
 aqui ali aí lá cá agora hoje ontem amanhã sempre nunca depois antes então
 olá oi bom boa obrigado obrigada por favor tchau adeus
+és sois éramos fui fomos seremos fosses fôssemos fôsseis for fores fordes
+vais vai vamos ides íeis irás irá iremos iríamos ide tens tendes tive
+tiveste tivestes teremos tiver tiveres tiverdes estás estamos estarás
+estaremos estaria estarias estaríamos estiveres hás havemos havíamos houve
+houveste haverei haveremos houvesse houver houveres faço farás faremos
+faríamos faça fizer vejo vedes víamos vi viste vistes verás veremos vejas
+visse vires virdes vens vindes vieste viemos virei virás virá viremos viria
+virias viesse viessem vier vieres viermos vierem dais dávamos deste demos
+destes darei daremos daria deem desse der deres derem podíamos pude pudemos
+possa pudesses pudéssemos puder puderes puderem quero queres quer queremos
+querias quis quiseste quererá quereremos quereria quisesse quiser quiseres
+quiserem sei sabes sabe sabias sabíamos soube soubeste saberemos saiba
+saibas saibamos saibam soubesse soubessem souber souberes
+eras éreis eram foste fostes foram serei serás será sereis serão fosse
+fossem formos forem vou vão ia ias íamos iam irei ireis irão iria irias
+iríeis iriam vá vás vades tenho temos teve tivemos tiveram terei terás terá
+tereis terão tivermos tiverem estais estarei estará estareis estarão
+estaríeis estariam estiver estivermos estiverdes estiverem hei heis hão
+havias havieis haviam houvemos houvestes houveram haverás haverá havereis
+haverão houvesses houvéssemos houvessem houvermos houverdes houverem fazes
+faz fazemos fazeis fazem farei fará fareis farão faria farias faríeis fariam
+faças façamos façais façam fizeres fizermos fizerdes fizerem vês vê vemos
+veem via vias víeis viam viu vimos viram verei verá vereis verão veja
+vejamos vejais vejam visses víssemos vissem virmos virem venho vem vêm vim
+veio viestes vieram vireis virão viríamos viriam viesses viéssemos vierdes
+dou dás dá damos dão dava davas davam dei deu deram darás dará dareis darão
+darias daríamos dariam dê dês dêmos desses déssemos dessem dermos derdes
+podia podias podiam pudeste pôde pudestes puderam possas possamos possais
+possam pudesse pudessem pudermos puderdes quereis querem queria queríamos
+queriam quisemos quisestes quiseram quererei quererás quererão quereríamos
+quereriam quisesses quiséssemos quisessem quisermos quiserdes sabemos sabeis
+sabem sabia sabiam soubemos soubestes souberam saberei saberás saberá
+sabereis saberão saibais soubesses soubéssemos soubermos souberdes souberem
+mãe mães pai pais pão pães mão mãos irmã irmãs irmão irmãos avó avô avós
+você vocês coração
 """.split())
 
 #: Where the bundled JSON models live.
@@ -105,6 +162,35 @@ def _normalize(word: str) -> str:
     """NFC + lowercase + keep only alphabetic characters (training parity)."""
     word = unicodedata.normalize("NFC", word).lower()
     return "".join(ch for ch in word if ch.isalpha())
+
+
+#: Combining cedilla — kept by :func:`fold_diacritics` because ``ç`` is a native
+#: Portuguese letter and :func:`_normalize` treats it as one.
+_CEDILLA = "\u0327"
+
+
+def fold_diacritics(word: str) -> str:
+    """Strip diacritics from *word*, keeping the cedilla.
+
+    Portuguese is written unaccented all the time — search boxes, chat, ASR
+    output — and the models are trained on accented text, so an unaccented
+    native spelling looks foreign by construction. Folding both sides of the
+    keep-list lookup makes ``mae`` reach the entry for ``mãe``.
+    """
+    decomposed = unicodedata.normalize("NFD", word)
+    kept = "".join(ch for ch in decomposed
+                   if not unicodedata.combining(ch) or ch == _CEDILLA)
+    return unicodedata.normalize("NFC", kept)
+
+
+_KEEP_FOLDED = frozenset(fold_diacritics(w) for w in PORTUGUESE_KEEP)
+
+
+def is_keep_word(word: str) -> bool:
+    """Whether *word* is on :data:`PORTUGUESE_KEEP`, ignoring lost diacritics."""
+    core = _normalize(word)
+    return bool(core) and (core in PORTUGUESE_KEEP
+                           or fold_diacritics(core) in _KEEP_FOLDED)
 
 
 def _wrap(word: str) -> List[str]:
@@ -173,8 +259,8 @@ class MarkovLangDetector:
         core = _normalize(word)
         if not core:
             return "pt", {}
-        if core in _PORTUGUESE_KEEP:
-            # Unambiguously native grammar word: never route out of Portuguese.
+        if is_keep_word(core):
+            # Unambiguously native wordform: never route out of Portuguese.
             return "pt", {}
         scores = self.score(word)
         best = min(scores, key=scores.get)

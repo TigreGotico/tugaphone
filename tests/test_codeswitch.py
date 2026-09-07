@@ -165,9 +165,9 @@ def test_br_tech_register_switches(ph):
     assert "θ" not in auto and "ð" not in auto      # nothing English-only leaks
 
 
-def test_function_words_not_misrouted(ph):
+def test_function_words_not_misrouted(ph, classifier):
     # A sentence of pure Portuguese function words must be identical under auto
-    # and none — the guard/margin keeps every one of them Portuguese.
+    # and none — the keep-list holds it under either classifier.
     s = "o que eu tenho de fazer com isso"
     auto = ph.phonemize_sentence(s, "pt-PT", contact="auto")
     none = ph.phonemize_sentence(s, "pt-PT", contact="none")
