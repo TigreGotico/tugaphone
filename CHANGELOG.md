@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1a1](https://github.com/TigreGotico/tugaphone/tree/1.4.1a1) (2026-09-07)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.0a1...1.4.1a1)
+
+**Merged pull requests:**
+
+- fix: honour the Portuguese keep-list on both code-switch classifiers [\#127](https://github.com/TigreGotico/tugaphone/pull/127) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.4.0a1](https://github.com/TigreGotico/tugaphone/tree/1.4.0a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.6a1...1.4.0a1)
@@ -91,19 +99,19 @@
 
 ## [1.2.2a1](https://github.com/TigreGotico/tugaphone/tree/1.2.2a1) (2026-09-03)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.2a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.2a1)
 
 **Merged pull requests:**
 
 - fix: invalidate the materialised lexicon cache when tugalex changes [\#101](https://github.com/TigreGotico/tugaphone/pull/101) ([JarbasAl](https://github.com/JarbasAl))
 
-## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
-
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.1a3)
-
 ## [1.2.1a2](https://github.com/TigreGotico/tugaphone/tree/1.2.1a2) (2026-08-02)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a2)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.1a2)
+
+## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a3)
 
 **Merged pull requests:**
 
