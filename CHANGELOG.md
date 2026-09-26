@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1a2](https://github.com/TigreGotico/tugaphone/tree/1.4.1a2) (2026-09-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.1a1...1.4.1a2)
+
+**Merged pull requests:**
+
+- Update actions/setup-python action to v7 [\#129](https://github.com/TigreGotico/tugaphone/pull/129) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [1.4.1a1](https://github.com/TigreGotico/tugaphone/tree/1.4.1a1) (2026-09-07)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.0a1...1.4.1a1)
@@ -99,19 +107,19 @@
 
 ## [1.2.2a1](https://github.com/TigreGotico/tugaphone/tree/1.2.2a1) (2026-09-03)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.2a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.2a1)
 
 **Merged pull requests:**
 
 - fix: invalidate the materialised lexicon cache when tugalex changes [\#101](https://github.com/TigreGotico/tugaphone/pull/101) ([JarbasAl](https://github.com/JarbasAl))
 
-## [1.2.1a2](https://github.com/TigreGotico/tugaphone/tree/1.2.1a2) (2026-08-02)
-
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.1a2)
-
 ## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a3)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.1a3)
+
+## [1.2.1a2](https://github.com/TigreGotico/tugaphone/tree/1.2.1a2) (2026-08-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a2)
 
 **Merged pull requests:**
 
@@ -387,17 +395,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.2a1...0.2.2a2)
 
-**Merged pull requests:**
-
-- docs: add docs/ and examples/ [\#22](https://github.com/TigreGotico/tugaphone/pull/22) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.2.2a1](https://github.com/TigreGotico/tugaphone/tree/0.2.2a1) (2026-02-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.1...0.2.2a1)
-
-**Merged pull requests:**
-
-- refactor: upstream some logic to dependencies [\#16](https://github.com/TigreGotico/tugaphone/pull/16) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.2.1](https://github.com/TigreGotico/tugaphone/tree/0.2.1) (2026-02-06)
 
@@ -407,35 +407,17 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.0a2...0.2.0)
 
-**Merged pull requests:**
-
-- Release 0.2.0a2 [\#14](https://github.com/TigreGotico/tugaphone/pull/14) ([github-actions[bot]](https://github.com/apps/github-actions))
-
 ## [0.2.0a2](https://github.com/TigreGotico/tugaphone/tree/0.2.0a2) (2026-02-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.0a1...0.2.0a2)
-
-**Merged pull requests:**
-
-- Release 0.2.0a1 [\#13](https://github.com/TigreGotico/tugaphone/pull/13) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Configure Renovate [\#3](https://github.com/TigreGotico/tugaphone/pull/3) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [0.2.0a1](https://github.com/TigreGotico/tugaphone/tree/0.2.0a1) (2026-02-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.1.0a1...0.2.0a1)
 
-**Merged pull requests:**
-
-- feat: regional accent transformations [\#1](https://github.com/TigreGotico/tugaphone/pull/1) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.1.0a1](https://github.com/TigreGotico/tugaphone/tree/0.1.0a1) (2026-02-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.0.2...0.1.0a1)
-
-**Merged pull requests:**
-
-- Release 0.1.0a1 [\#6](https://github.com/TigreGotico/tugaphone/pull/6) ([github-actions[bot]](https://github.com/apps/github-actions))
-- feat: new phonemizer + postag backends [\#4](https://github.com/TigreGotico/tugaphone/pull/4) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.0.2](https://github.com/TigreGotico/tugaphone/tree/0.0.2) (2025-10-12)
 
@@ -444,10 +426,6 @@
 ## [0.0.2a1](https://github.com/TigreGotico/tugaphone/tree/0.0.2a1) (2025-10-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/f6c50d8226b24b4dad362d73a2d62629fc2fd5e4...0.0.2a1)
-
-**Merged pull requests:**
-
-- automations [\#2](https://github.com/TigreGotico/tugaphone/pull/2) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
