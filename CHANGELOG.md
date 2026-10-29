@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.9a1](https://github.com/TigreGotico/tugaphone/tree/1.4.9a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.8a1...1.4.9a1)
+
+**Merged pull requests:**
+
+- fix: pin stress on the accented vowel of a uí/oí hiatus [\#142](https://github.com/TigreGotico/tugaphone/pull/142) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.8a1](https://github.com/TigreGotico/tugaphone/tree/1.4.8a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.7a1...1.4.8a1)
@@ -287,10 +295,6 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a3...0.9.0a1)
 
-**Merged pull requests:**
-
-- feat: phonological feature API on tokenizer tokens [\#44](https://github.com/TigreGotico/tugaphone/pull/44) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.8.1a3](https://github.com/TigreGotico/tugaphone/tree/0.8.1a3) (2026-07-14)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a2...0.8.1a3)
@@ -391,10 +395,6 @@
 ## [0.6.0a1](https://github.com/TigreGotico/tugaphone/tree/0.6.0a1) (2026-06-13)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a3...0.6.0a1)
-
-**Merged pull requests:**
-
-- feat: resolve every dialect, city inventory and regional preset from BCP-47 codes [\#43](https://github.com/TigreGotico/tugaphone/pull/43) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.5.1a3](https://github.com/TigreGotico/tugaphone/tree/0.5.1a3) (2026-06-12)
 
