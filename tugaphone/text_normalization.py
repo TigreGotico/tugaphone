@@ -28,8 +28,6 @@ from tugaphone.number_utils import NumberParser
 
 _DATA = Path(__file__).parent / "data"
 
-from tugaphone.number_utils import NumberParser
-
 # ---------------------------------------------------------------------------
 # Number ranges: a dash BETWEEN two digits is a numeric range, read " a ".
 # Word hyphens ("chamo-me", "guarda-chuva") have letters on at least one side

@@ -176,14 +176,13 @@ def main() -> None:
                            "after 'D.', with their gender. Used by "
                            "tugaphone.text_normalization.",
             "sources": [
-                "Wikidata: Portuguese labels of popes and monarchs, and their "
-                "sex (P21); labels of given-name items (Q12308941, Q11879590, "
-                "Q3409032). Licence CC0 1.0 "
-                "(https://www.wikidata.org/wiki/Wikidata:Licensing).",
-                "IBGE Censo 2010 first names"
-                + (f", the {args.common} most frequent," if args.common else "")
-                + " as published by datasets-br/prenomes under ODC-PDDL-1.0 "
-                f"({IBGE_CSV}).",
+                ("Wikidata: Portuguese labels of popes and monarchs, and their "
+                 "sex (P21); labels of given-name items (Q12308941, Q11879590, "
+                 "Q3409032). Licence CC0 1.0 "
+                 "(https://www.wikidata.org/wiki/Wikidata:Licensing)."),
+                ("IBGE Censo 2010 first names"
+                 + (f", the {args.common} most frequent," if args.common else "")
+                 + f" as published by datasets-br/prenomes under ODC-PDDL-1.0 ({IBGE_CSV})."),
             ],
             "endpoint": args.endpoint,
             "retrieved": datetime.date.today().isoformat(),
