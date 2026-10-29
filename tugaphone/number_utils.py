@@ -37,6 +37,30 @@ class NumberParser:
     ORDINAL_FEMALE = "ª"  # e.g., 1ª (primeira)
     ORDINAL_TOKENS = [ORDINAL_MALE, ORDINAL_FEMALE]
 
+    # Singular nouns that a cardinal follows as a label ("artigo 1",
+    # "página 2"). In that position the cardinal stands for an ordinal and is
+    # invariable: "página dois", "página duzentos e um", not "duas" or
+    # "duzentas e uma". Cunha & Cintra and the Gulbenkian Gramática do
+    # Português state this, as quoted by Ciberdúvidas:
+    # https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/os-numerais-cardinais-usados-como-numerais-ordinais/33468
+    # https://ciberduvidas.iscte-iul.pt/consultorio/perguntas/pagina-trinta-e-um/33527
+    # Plural heads are absent: with "páginas" or "folhas" the cardinal agrees
+    # ("a páginas vinte e uma"), per Bechara as quoted in the second answer.
+    # "casa" and "quarto" are absent because in running text they often
+    # precede a number that is not their label.
+    LABEL_HEADS = frozenset({
+        "artigo", "número", "página", "folha", "capítulo", "alínea",
+        "ponto", "parágrafo", "secção", "seção", "anexo", "figura", "tabela",
+        "versículo", "apartamento", "cabine", "sala",
+        "art.", "art.º", "n.º", "nº", "pág.", "cap.",
+    })
+    # Plural function words that can follow a label numeral ("artigo 2 das
+    # disposições"). Any other plural word after the numeral is the noun the
+    # numeral counts ("na sala 2 pessoas").
+    PLURAL_FUNCTION_WORDS = frozenset({
+        "as", "os", "das", "dos", "nas", "nos", "às", "aos", "pelas", "pelos",
+    })
+
     @classmethod
     def pronounce_number_word(cls, word: str,
                               prev_word: Optional[str] = None,
@@ -268,7 +292,7 @@ class NumberParser:
 
         Parameters:
             word (str): The numeric token (may include ordinal symbols like 'º' or 'ª').
-            prev_word (Optional[str]): The preceding word in context, used for heuristic cues (e.g., articles).
+            prev_word (Optional[str]): The preceding word in context, used for heuristic cues (articles, label heads such as "artigo").
             next_word (Optional[str]): The following word in context, used to infer the gender of the counted noun.
 
         Returns:
@@ -277,6 +301,19 @@ class NumberParser:
         # Rule A: Ordinal symbols explicitly dictate gender (º = masc, ª = fem)
         if (next_word and next_word == cls.ORDINAL_FEMALE) or cls.ORDINAL_FEMALE in word:
             return "feminine"
+        if next_word == cls.ORDINAL_MALE or cls.ORDINAL_MALE in word:
+            return "masculine"
+
+        # Rule L: a cardinal after a singular label head ("artigo 1 da lei",
+        # "página 2 da revista") is invariable, so it takes the masculine form
+        # whatever word comes next. A plural content word after the numeral
+        # is the noun it counts, and the rules below decide.
+        if prev_word and prev_word.lower().lstrip("(«\"“") in cls.LABEL_HEADS:
+            following = (next_word or "").lower()
+            counts_next_word = (following.endswith("s")
+                                and following not in cls.PLURAL_FUNCTION_WORDS)
+            if not counts_next_word:
+                return "masculine"
 
         # Rule B: Check preceding articles (a, as, da, das are feminine) -- but only
         # when a noun actually follows the number ("a 1 casa"). Without a following

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.2a1](https://github.com/TigreGotico/tugaphone/tree/1.4.2a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.1a2...1.4.2a1)
+
+**Merged pull requests:**
+
+- fix: read a numeral after a label head as invariable [\#136](https://github.com/TigreGotico/tugaphone/pull/136) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.1a2](https://github.com/TigreGotico/tugaphone/tree/1.4.1a2) (2026-09-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.1a1...1.4.1a2)
