@@ -322,8 +322,4 @@ pronunciation actually spoken.
 
 ## License
 
-The code is licensed under the Apache License 2.0. See [LICENSE](LICENSE).
-
-The noun-gender list `tugaphone/data/noun_gender/noun_gender.tsv.gz` is
-derived from the English Wiktionary and is licensed under CC BY-SA 4.0. See
-[tugaphone/data/noun_gender/README.md](tugaphone/data/noun_gender/README.md).
+Apache License 2.0. See [LICENSE](LICENSE).

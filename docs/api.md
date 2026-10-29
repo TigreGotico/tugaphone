@@ -142,7 +142,6 @@ finer control or want to interrogate a single token.
 | `pronounce_scientific(word, is_brazilian=False)` | Spoken form of scientific notation. |
 | `is_ordinal(word, next_word=None)` | Detects `º`/`ª` markers, attached or separate. |
 | `get_number_gender(word, prev_word=None, next_word=None)` | `"feminine"` or `"masculine"`. |
-| `noun_gender(word)` | `"m"`, `"f"`, `"mf"` (both genders) or `None` (not in the noun list). |
 
 ```python
 from tugaphone.number_utils import NumberParser

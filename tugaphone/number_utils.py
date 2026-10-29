@@ -1,20 +1,9 @@
-import gzip
 import string
-from functools import lru_cache
-from pathlib import Path
 from typing import Optional
 
 from ovos_number_parser import pronounce_number
 from ovos_number_parser.util import GrammaticalGender
-
-NOUN_GENDER_DATA = Path(__file__).parent / "data" / "noun_gender" / "noun_gender.tsv.gz"
-
-
-@lru_cache(maxsize=1)
-def _noun_genders() -> dict:
-    """The noun-gender list built by ``scripts/build_noun_gender.py``."""
-    with gzip.open(NOUN_GENDER_DATA, "rt", encoding="utf-8") as fh:
-        return dict(line.rstrip("\n").split("\t") for line in fh if not line.startswith("#"))
+from tugalex import TugaLexicon
 
 
 class NumberParser:
@@ -76,18 +65,17 @@ class NumberParser:
     # number when a word follows the number ("as 2 artistas", "os 2 artistas").
     FEMININE_DETERMINERS = frozenset({"a", "as", "da", "das"})
     MASCULINE_DETERMINERS = frozenset({"o", "os", "do", "dos"})
-
-    @classmethod
-    def noun_gender(cls, word: str) -> Optional[str]:
-        """The gender of a Portuguese common noun in the bundled noun list.
-
-        Returns "m", "f", "mf" for a noun of both genders ("artista",
-        "capital"), or None when the word is not in the list. Function words
-        ("a", "os", "ou") are not in the list. The list is derived from
-        English Wiktionary (CC BY-SA 4.0), see
-        ``tugaphone/data/noun_gender/README.md``.
-        """
-        return _noun_genders().get(word.lower())
+    # Function words that can follow a number ("os 2 da equipa", "uma das
+    # casas"). They are not the counted noun, so the noun gender of their
+    # spelling does not decide.
+    FUNCTION_WORDS = frozenset({
+        "a", "as", "o", "os", "da", "das", "do", "dos", "na", "nas", "no", "nos",
+        "à", "às", "ao", "aos", "pela", "pelas", "pelo", "pelos", "de", "em",
+        "e", "ou", "que", "para", "por", "com", "sem",
+    })
+    # Words that join the two numbers of a range ("de 1 a 2 dias", "das 2 às
+    # 3 horas"); "e" joins them after "entre" ("entre 1 e 2 semanas").
+    RANGE_LINKS = frozenset({"a", "à", "às", "ao", "aos"})
 
     # Unit symbols read after a number, as (singular, plural) names. Symbols
     # and names follow the SI brochure ("Tradução luso-brasileira de 2021 do
@@ -406,26 +394,29 @@ class NumberParser:
 
         noun = cls.split_trailing_punctuation(next_word or "")[0].lower()
         is_word = noun.replace("-", "").isalpha()
-        listed = cls.noun_gender(noun) if is_word else None
+        listed = (TugaLexicon.get_noun_gender(noun)
+                  if is_word and noun not in cls.FUNCTION_WORDS else None)
+
+        # Rule N: the counted noun's gender in tugalex, from its exceptions
+        # list or its suffix rules ("1 lei" -> "uma lei", "1 dia" -> "um
+        # dia"). A single gender decides even against an article, which then
+        # belongs to a later noun ("o 2 vezes campeão" -> "duas"). A noun of
+        # both genders ("artista", "capital") falls through.
+        if listed in ("m", "f"):
+            return "feminine" if listed == "f" else "masculine"
 
         # Rule B: an article before the number sets its gender ("as 2
         # artistas", "os 2 artistas") -- but only when a word follows the
         # number. Without one, a bare "a"/"as" before the number is the
-        # preposition "to", as in a score or range reading ("3 a 2"). Before a
-        # masculine noun, "a" is the preposition too ("a 2 dias do fim").
+        # preposition "to", as in a score or range reading ("3 a 2").
         if prev_word and is_word:
-            if prev_word in cls.FEMININE_DETERMINERS and not (prev_word == "a" and listed == "m"):
+            if prev_word in cls.FEMININE_DETERMINERS:
                 return "feminine"
             if prev_word in cls.MASCULINE_DETERMINERS:
                 return "masculine"
 
-        # Rule N: the counted noun's gender in the noun list ("1 lei" -> "uma
-        # lei", "1 dia" -> "um dia"). A noun of both genders ("artista",
-        # "capital") falls through to the ending rules below.
-        if listed in ("m", "f"):
-            return "feminine" if listed == "f" else "masculine"
-
-        # Rule C: the ending of the following word, for a word not in the list
+        # Rule C: the ending of the following word, for a function word, a
+        # noun of both genders or a word that tugalex does not know
         if next_word:
             # Simple check: Words ending in 'a' are usually feminine (e.g., 'casa')
             # We strip 's' to account for plural nouns.
@@ -524,6 +515,15 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
             # (Priberam DLPO, "vezes", as cited in
             # tests/test_measure_normalization.py).
             gender = "masculine"
+        elif ((next_word in NumberParser.RANGE_LINKS or (next_word == "e" and prev_word == "entre"))
+              and is_number(words[idx + 2] if idx + 2 < len(words) else None)
+              and not NumberParser.is_ordinal(core, next_word)):
+            # Both numbers of a range agree with the noun after the second
+            # one ("de 1 a 2 dias" -> "de um a dois dias").
+            second, second_trail = NumberParser.split_trailing_punctuation(words[idx + 2])
+            after = None if second_trail or idx + 3 >= len(words) else words[idx + 3]
+            gender = ("masculine" if unit_symbol(after)
+                      else NumberParser.get_number_gender(second, next_word, after))
         try:
             spelled = []
             if is_fraction and core.isdigit():

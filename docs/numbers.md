@@ -199,21 +199,28 @@ Gender is inferred from:
   `"na página dois"`. A plural word after the number other than `das`/`dos`
   and similar is the noun it counts, and the rules below apply
   (`"na sala 2 pessoas"` → `"duas pessoas"`).
+- The gender of the following word from tugalex
+  (`TugaLexicon.get_noun_gender`), which reads suffix rules and a list of
+  exceptions: `"1 lei"` → `"uma lei"`, `"1 dia"` → `"um dia"`, `"2 vezes"`
+  → `"duas vezes"`. A single gender decides even against an article before
+  the number, because the article then belongs to a later noun:
+  `"o 2 vezes campeão"` → `"duas"`. A noun of both genders (`artista`,
+  `estudante`, `capital`, `rádio`) does not decide. Function words after the
+  number (`da`, `dos`, `de`) are not looked up.
 - The preceding word, when it is an article (`a`/`as`/`da`/`das` feminine,
   `o`/`os`/`do`/`dos` masculine) AND a word follows the number:
   `"as 2 artistas"` → `"duas"`, `"os 2 artistas"` → `"dois"`. A bare `a`
   with nothing after the number is the preposition "to", not the article, as
-  in a score reading like `"3 a 2"`, and does not force feminine. Before a
-  masculine noun, `a` is the preposition too: `"a 2 dias do fim"` → `"dois"`.
-- The gender of the following word in the bundled noun list
-  (`NumberParser.noun_gender`): `"1 lei"` → `"uma lei"`, `"1 dia"` →
-  `"um dia"`, `"2 vezes"` → `"duas vezes"`. The list holds singular and plural
-  forms. A noun of both genders (`artista`, `estudante`, `capital`, `rádio`)
-  is marked `mf` and does not decide. The list is derived from the English
-  Wiktionary and is licensed under CC BY-SA 4.0, see
-  `tugaphone/data/noun_gender/README.md`.
-- For a word that is not in the list, or a noun of both genders, the word's
-  ending (`-a`, `-dade`, `-agem` → feminine, default masculine)
+  in a score reading like `"3 a 2"`, and does not force feminine.
+- For a function word, a noun of both genders or a word that tugalex does
+  not know, the word's ending (`-a`, `-dade`, `-agem` → feminine, default
+  masculine)
+- In a range, both numbers agree with the noun after the second number:
+  `"de 1 a 2 dias"` → `"de um a dois dias"`, `"das 2 às 3 horas"` →
+  `"das duas às três horas"`, `"entre 1 e 2 semanas"` →
+  `"entre uma e duas semanas"`.
+- `vezes` between two numbers is the multiplication sign, and the number
+  before it is masculine: `"2 vezes 2"` → `"dois vezes dois"`.
 - A unit symbol after the number (`2 m`, `2 g`): always masculine
 - An explicit `gender` override passed to `pronounce_number_word`
 

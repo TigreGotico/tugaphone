@@ -174,15 +174,38 @@ class TestCountedNounGender:
     def test_unchanged_rows(self, text, expected):
         assert normalize_numbers(text) == expected
 
-    @pytest.mark.parametrize("word,gender", [
-        ("lei", "f"), ("leis", "f"), ("vezes", "f"), ("dia", "m"), ("problemas", "m"),
-        # common-gender and gender-by-meaning nouns are listed as both
-        ("artista", "mf"), ("estudante", "mf"), ("capital", "mf"), ("rádio", "mf"),
-        # function words are not listed, whatever their noun senses
-        ("a", None), ("os", None), ("da", None), ("ou", None),
+    @pytest.mark.parametrize("text,expected", [
+        # the number counts "vezes"; "o" belongs to "campeão"
+        ("o 2 vezes campeão", "o duas vezes campeão"),
+        ("a 2 metros", "a dois metros"),
+        # an article still decides for a noun of both genders
+        ("os 2 artistas", "os dois artistas"),
+        ("as 2 artistas", "as duas artistas"),
     ])
-    def test_list_entries(self, word, gender):
-        assert NumberParser.noun_gender(word) == gender
+    def test_single_gender_noun_beats_article(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        # both numbers of a range agree with the noun after the second
+        ("de 1 a 2 dias", "de um a dois dias"),
+        ("1 a 2 dias", "um a dois dias"),
+        ("de 1 a 3 semanas", "de uma a três semanas"),
+        ("das 2 às 3 horas", "das duas às três horas"),
+        ("entre 1 e 2 semanas", "entre uma e duas semanas"),
+        ("entre 1 e 2 dias", "entre um e dois dias"),
+        ("de 1 a 2", "de um a dois"),
+        ("3 a 2", "três a dois"),
+    ])
+    def test_range_agrees_with_final_noun(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        # "cores" is the plural of "a cor"; "o core" is a computing loan
+        ("2 cores", "duas cores"),
+        ("as 2 cores", "as duas cores"),
+    ])
+    def test_loanword_sense_does_not_decide(self, text, expected):
+        assert normalize_numbers(text) == expected
 
 
 class TestNumberParserPronounce:
