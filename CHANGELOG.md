@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.8a1](https://github.com/TigreGotico/tugaphone/tree/1.4.8a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.7a1...1.4.8a1)
+
+**Merged pull requests:**
+
+- fix: find orthography2ipa's benchmark module from a PyPI install [\#152](https://github.com/TigreGotico/tugaphone/pull/152) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.4.7a1](https://github.com/TigreGotico/tugaphone/tree/1.4.7a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.6a1...1.4.7a1)
