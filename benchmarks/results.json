@@ -119,7 +119,7 @@
     "failed": 0,
     "per": 0.2448,
     "word_accuracy": 0.08,
-    "stress_acc": 0.9518,
+    "stress_acc": 0.953,
     "n_stress": 893,
     "top_confusions": [
       {

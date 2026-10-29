@@ -105,6 +105,7 @@ class TestStress:
     @pytest.mark.parametrize("gold, hyp", [
         ("meˈʎɒɹ", "meˈʎɔ"),          # melhor: final consonant lost
         ("espeˈɾãⁿtʊ", "iʃpeˈɾɐ̃tʊ"),  # esperanto: nasal release lost
+        ("ˌeziʒˈe͡ɪŋsjæ", "eziˈʒẽsjɐ"),  # exigência: tied diphthong
     ])
     def test_segment_loss_after_the_stressed_vowel_hits(self, gold, hyp):
         # PER-optimal alignments tie here; the stressed vowels must pair

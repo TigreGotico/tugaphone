@@ -129,7 +129,9 @@ hit when the hypothesis matches any eligible variant.
 
 The hypothesis misses when it has no primary mark, more than one, or its mark
 on another syllable. To find the syllable, the harness aligns the two
-stress-stripped segment strings with the edit-distance alignment PER uses.
+stress-stripped segment strings with the edit-distance alignment PER uses. A
+segment is a character with its diacritics, and a tie bar joins the two
+characters it links (`t͡ʃ`, `e͡ɪ`) into one segment.
 When several alignments have the same minimum cost, the harness takes the one
 that pairs the fewest nuclei with non-nuclei. The hit condition is that the gold's stressed nucleus aligns with the hypothesis's
 stressed nucleus. A nucleus is a vowel that is not marked non-syllabic (`◌̯`)

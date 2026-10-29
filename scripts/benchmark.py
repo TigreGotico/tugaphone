@@ -144,6 +144,7 @@ def score_word(hyp: str, golds: List[str]) -> Tuple[int, int]:
 
 _PRIMARY = "ˈ"
 _SECONDARY = "ˌ"
+_TIES = "\u0361\u035c"
 _VOWELS = frozenset("iyɨʉɯuɪʏʊeøɘɵɤoəɛœɜɞʌɔæɐaɶɑɒɚɝ")
 _NON_SYLLABIC = "\u032f"
 _SYLLABIC = ("\u0329", "\u030d")
@@ -160,7 +161,8 @@ def _fold_stress(ipa: str) -> str:
 def _segments(ipa: str) -> Tuple[List[str], Optional[int], int]:
     """Split a folded transcription into segments for stress scoring.
 
-    A segment is a base character with its combining marks. Returns the
+    A segment is a base character with its combining marks; a tie bar
+    also takes in the character after it (``t͡ʃ``, ``e͡ɪ``). Returns the
     segments with every stress mark, syllable boundary and space removed,
     the index of the stressed nucleus, and the number of primary marks.
     The stressed nucleus is the first nucleus after the primary mark: the
@@ -171,7 +173,7 @@ def _segments(ipa: str) -> Tuple[List[str], Optional[int], int]:
     marks = 0
     stress_from = 0
     for ch in ipa:
-        if unicodedata.combining(ch):
+        if unicodedata.combining(ch) or (segs and segs[-1][-1] in _TIES):
             if segs:
                 segs[-1] += ch
         elif ch == _PRIMARY:

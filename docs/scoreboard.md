@@ -14,7 +14,7 @@ stress lands on the gold's syllable. PER cannot see that choice.
 | Dialect | Gold region | Words | PER | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|
 | pt-AO | pt-AO | 1000 | 0.2495 | 0.0700 | 993 | 0.9698 |
-| pt-BR | pt-BR | 1000 | 0.2448 | 0.0800 | 893 | 0.9518 |
+| pt-BR | pt-BR | 1000 | 0.2448 | 0.0800 | 893 | 0.9530 |
 | pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1543 | 0.2000 | 992 | 0.9778 |
 | pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1577 | 0.1960 | 992 | 0.9748 |
 | pt-MZ | pt-MZ-x-maputo | 1000 | 0.2246 | 0.1640 | 992 | 0.9778 |
