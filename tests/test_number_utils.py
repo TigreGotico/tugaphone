@@ -113,6 +113,101 @@ class TestLabelNumeralGender:
         assert normalize_numbers(text) == expected
 
 
+class TestCountedNounGender:
+    """A cardinal agrees with the gender of the noun it counts.
+
+    The expected genders do not come from tugaphone. Each noun has the same
+    gender in MorphoBr (LR-POR/MorphoBr, nouns/*.dict, +F or +M) and, for
+    "tarde" and "planeta", which MorphoBr lists without a gender, in the
+    Gender feature of the UD Portuguese-Bosque treebank. "um"/"uma",
+    "dois"/"duas" and the hundreds take the gender of the noun.
+    """
+
+    @pytest.mark.parametrize("text,expected", [
+        # feminine nouns that do not end in -a
+        ("1 lei", "uma lei"),
+        ("2 leis", "duas leis"),
+        ("um número 2 vezes maior", "um número duas vezes maior"),
+        ("1 vez", "uma vez"),
+        ("200 vezes", "duzentas vezes"),
+        ("1 mãe", "uma mãe"),
+        ("1 flor", "uma flor"),
+        ("1 cor", "uma cor"),
+        ("1 luz", "uma luz"),
+        ("1 nação", "uma nação"),
+        ("2 nações", "duas nações"),
+        ("1 ponte", "uma ponte"),
+        ("1 tarde", "uma tarde"),
+        ("1 lei.", "uma lei."),
+        # masculine nouns that end in -a
+        ("1 dia", "um dia"),
+        ("2 dias", "dois dias"),
+        ("1 mapa", "um mapa"),
+        ("1 problema", "um problema"),
+        ("2 problemas", "dois problemas"),
+        ("2 sistemas", "dois sistemas"),
+        ("1 clima", "um clima"),
+        ("1 programa", "um programa"),
+        ("1 planeta", "um planeta"),
+        # a masculine article decides for a noun of both genders
+        ("os 2 artistas", "os dois artistas"),
+        # "a" before a masculine noun is the preposition, not the article
+        ("estamos a 2 dias do fim", "estamos a dois dias do fim"),
+    ])
+    def test_listed_gender(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        ("2 casas", "duas casas"),
+        ("1 imagem", "uma imagem"),
+        ("1 hora", "uma hora"),
+        ("2 cães", "dois cães"),
+        ("o artigo 1 da lei", "o artigo um da lei"),
+        ("a 1.ª vez", "a primeira vez"),
+        ("a 1ª vez", "a primeira vez"),
+        ("o 1º dia", "o primeiro dia"),
+        ("as 2 artistas", "as duas artistas"),
+        ("são 2 da tarde", "são duas da tarde"),
+        # "vezes" between two numbers is the multiplication sign
+        ("2 vezes 2 são 4", "dois vezes dois são quatro"),
+    ])
+    def test_unchanged_rows(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        # the number counts "vezes"; "o" belongs to "campeão"
+        ("o 2 vezes campeão", "o duas vezes campeão"),
+        ("a 2 metros", "a dois metros"),
+        # an article still decides for a noun of both genders
+        ("os 2 artistas", "os dois artistas"),
+        ("as 2 artistas", "as duas artistas"),
+    ])
+    def test_single_gender_noun_beats_article(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        # both numbers of a range agree with the noun after the second
+        ("de 1 a 2 dias", "de um a dois dias"),
+        ("1 a 2 dias", "um a dois dias"),
+        ("de 1 a 3 semanas", "de uma a três semanas"),
+        ("das 2 às 3 horas", "das duas às três horas"),
+        ("entre 1 e 2 semanas", "entre uma e duas semanas"),
+        ("entre 1 e 2 dias", "entre um e dois dias"),
+        ("de 1 a 2", "de um a dois"),
+        ("3 a 2", "três a dois"),
+    ])
+    def test_range_agrees_with_final_noun(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        # "cores" is the plural of "a cor"; "o core" is a computing loan
+        ("2 cores", "duas cores"),
+        ("as 2 cores", "as duas cores"),
+    ])
+    def test_loanword_sense_does_not_decide(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+
 class TestNumberParserPronounce:
     def test_cardinal_masculine_default(self):
         result = NumberParser.pronounce_number_word("1", gender="masculine")
