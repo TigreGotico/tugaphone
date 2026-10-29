@@ -1914,10 +1914,14 @@ class GraphemeToken:
 
         if s in self.dialect.TRIGRAM2IPA:
             ipa = self.dialect.TRIGRAM2IPA[s]
-            if s[0] in "qg" and s[1] == "u" and not is_grapheme_silent(
-                    "u", s[0], s[2:], word, self.dialect):
-                # que/qui/gue/gui of a word that pronounces the u
-                return ipa[0] + "w" + ipa[1:]
+            if s[0] in "qg" and s[1] == "u":
+                # que/qui/gue/gui: the u is silent or [w]. The table holds
+                # the unstressed vowel; a stressed one keeps its full
+                # quality, as any other stressed vowel does
+                onset = "".join(c.ipa for c in self.characters[:2])
+                if self.has_primary_stress or self.has_secondary_stress:
+                    return onset + self.characters[2].ipa
+                return onset + ipa[1:]
             return ipa
 
         if s in self.dialect.NASAL_DIGRAPHS:
