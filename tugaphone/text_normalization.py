@@ -105,6 +105,14 @@ def expand_clock_times(text: str) -> str:
 # * PERSONAL HONORIFICS: only expanded right before a capitalised word (the
 #   name they introduce), since standalone "Dr." or "Sr." at a sentence's
 #   end is more often the plain abbreviation than a title.
+#
+# Forms with a superscript ending ("Sr.ª", "Sr.as", "n.os", "Ex.mo") match no
+# ordinary word, so they are unconditional. The expansions follow the
+# Vocabulário Ortográfico of the Academia das Ciências de Lisboa ("Sr.ª"
+# senhora, "V. Ex.ª" Vossa Excelência, "S. Ex.ª" Sua Excelência, "Ex.mo"
+# Excelentíssimo, "Dr.ª" Doutora, "Eng.ª" Engenheira, "prof.ª" professora)
+# and the vocabularies quoted by Ciberdúvidas: 33650 ("Srs.", "Sr.as",
+# "VV. Ex.as", "V. Exas.", "Exmos.") and 15826 ("n.os", "Ex.as").
 # ---------------------------------------------------------------------------
 _UNCONDITIONAL_ABBREVIATIONS = {
     "vs.": "versus",
@@ -122,16 +130,49 @@ _UNCONDITIONAL_ABBREVIATIONS = {
     "nº": "número",
     "N.º": "número",
     "Nº": "número",
+    "n.os": "números",
+    "N.os": "números",
+    "Sr.ª": "Senhora",
+    "Sr.as": "Senhoras",
+    "Dr.ª": "Doutora",
+    "Eng.ª": "Engenheira",
+    "Prof.ª": "Professora",
+    "Ex.ª": "Excelência",
+    "Ex.as": "Excelências",
+    "Exa.": "Excelência",
+    "Exas.": "Excelências",
+    "Ex.mo": "Excelentíssimo",
+    "Ex.ma": "Excelentíssima",
+    "Ex.mos": "Excelentíssimos",
+    "Ex.mas": "Excelentíssimas",
+    "Exmo.": "Excelentíssimo",
+    "Exma.": "Excelentíssima",
+    "Exmos.": "Excelentíssimos",
+    "Exmas.": "Excelentíssimas",
 }
 _HONORIFIC_ABBREVIATIONS = {
     "D.": "Dom",
     "Sr.": "Senhor",
     "Sra.": "Senhora",
+    "Srs.": "Senhores",
+    "Sras.": "Senhoras",
     "Dr.": "Doutor",
     "Dra.": "Doutora",
     "Eng.": "Engenheiro",
     "Prof.": "Professor",
 }
+
+# "V." and "S." are the possessive of a following "Excelência" form only:
+# alone, "V." is a letter or a Roman numeral and "S." is "São".
+_POSSESSIVES = {
+    "V.": ("Vossa", "Vossas"),
+    "VV.": ("Vossas", "Vossas"),
+    "Vv.": ("Vossas", "Vossas"),
+    "S.": ("Sua", "Suas"),
+}
+_EXCELENCIA_PLURAL = {"Ex.as": True, "Exas.": True, "Ex.ª": False, "Exa.": False}
+# Punctuation after an abbreviation's own period ("V. Ex.ª, obrigado").
+_ABBREVIATION_TRAIL = ",;:!?)\"”"
 
 _LEAD_PUNCT = "(“\"'¿¡"
 
@@ -146,15 +187,22 @@ def expand_abbreviations(text: str) -> str:
     or a bare "R." at sentence end both -> "Avenida"/"Rua" regardless of
     capitalisation, since these stand for the same word either way."""
     words = text.split()
+    cores = [w.rstrip(_ABBREVIATION_TRAIL) for w in words]
     out = []
     for i, w in enumerate(words):
-        expansion = _UNCONDITIONAL_ABBREVIATIONS.get(w)
-        if expansion is not None:
-            out.append(expansion)
+        core, trail = cores[i], w[len(cores[i]):]
+        following = cores[i + 1] if i + 1 < len(words) else None
+        possessive = _POSSESSIVES.get(core)
+        if possessive is not None and following in _EXCELENCIA_PLURAL:
+            out.append(possessive[_EXCELENCIA_PLURAL[following]] + trail)
             continue
-        expansion = _HONORIFIC_ABBREVIATIONS.get(w)
-        if expansion is not None and i + 1 < len(words) and _is_capitalised(words[i + 1]):
-            out.append(expansion)
+        expansion = _UNCONDITIONAL_ABBREVIATIONS.get(core)
+        if expansion is not None:
+            out.append(expansion + trail)
+            continue
+        expansion = _HONORIFIC_ABBREVIATIONS.get(core)
+        if expansion is not None and following is not None and _is_capitalised(words[i + 1]):
+            out.append(expansion + trail)
             continue
         out.append(w)
     return " ".join(out)
