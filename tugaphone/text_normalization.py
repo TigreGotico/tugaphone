@@ -1,8 +1,8 @@
 """Orthographic text transforms applied BEFORE number verbalisation.
 
-These rewrite raw written conventions (number ranges, clock times, European
-thousands/decimal separators, honorific abbreviations, regnal Roman numerals,
-letter-spelled acronyms) into plain words or digit tokens that
+These rewrite raw written conventions (unit symbols, number ranges, clock
+times, European thousands/decimal separators, honorific abbreviations, regnal
+Roman numerals, letter-spelled acronyms) into plain words or digit tokens that
 :func:`tugaphone.number_utils.normalize_numbers` can then read out loud. They
 run at the text level, before any lattice/phoneme work, so they are plugged
 into :func:`tugaphone.lattice_core._normalizer` ahead of
@@ -20,6 +20,8 @@ conjunction, so tugaphone always reads "vinte e cinco".
 from __future__ import annotations
 
 import re
+
+from tugaphone.number_utils import NumberParser
 
 # ---------------------------------------------------------------------------
 # Number ranges: a dash BETWEEN two digits is a numeric range, read " a ".
@@ -47,6 +49,52 @@ def normalize_number_separators(text: str) -> str:
     """"92.073" -> "92073"; "10,4" -> "10 vírgula 4"."""
     text = _THOUSANDS_DOT.sub("", text)
     return _DECIMAL_COMMA.sub(" vírgula ", text)
+
+
+# ---------------------------------------------------------------------------
+# Unit symbols. The SI writes a space between a number and its unit symbol
+# (SI brochure, IPQ/Inmetro 2021, §5.4.3) and between a number and "%"
+# (same brochure, p. 28). Text often glues them ("7kg", "20%") or puts the
+# euro sign first ("€20"). These rules restore "<number> <symbol>", which
+# normalize_numbers then reads with the unit name and number agreement.
+# A symbol counts only right after digits, so the letter "m" or a word
+# such as "kg" in running text is never touched.
+# ---------------------------------------------------------------------------
+_NUMBER = r"\d+(?:[.,]\d+)*"
+_SYMBOLS = "|".join(re.escape(s) for s in
+                    sorted(NumberParser.UNIT_NAMES, key=len, reverse=True))
+_GLUED_UNIT = re.compile(rf"(?<![\w.,])({_NUMBER})({_SYMBOLS})(?![\w/²³])")
+_EURO_FIRST = re.compile(rf"€ ?({_NUMBER})(?!\w)")
+# "2,50 €" is read "dois euros e cinquenta cêntimos" (Ciberdúvidas 25561:
+# "cinquenta euros e trinta cêntimos"). Only one or two decimals are cents.
+_EURO_CENTS = re.compile(r"(?<![\w.,])(\d+(?:\.\d{3})*),(\d{1,2}) €")
+# A "x" or "×" between two numbers is multiplication, read "vezes": "dois
+# vezes dois são quatro" (Priberam DLPO, "vezes"). Hex literals ("0x1F")
+# and words ("o x da questão") have a letter on one side and are untouched.
+_TIMES = re.compile(r"(?<![\w.,])(\d+(?:,\d+)?) ?[x×] ?(?=\d+(?:,\d+)?(?:[x×]\d|(?!\w)))")
+
+
+def _euro_cents_repl(match: "re.Match[str]") -> str:
+    euros, cents = match.group(1), int(match.group(2).ljust(2, "0"))
+    if cents == 0:
+        return f"{euros} €"
+    cents_text = f"{cents} cêntimo" if cents == 1 else f"{cents} cêntimos"
+    if int(euros.replace(".", "")) == 0:
+        return cents_text
+    return f"{euros} € e {cents_text}"
+
+
+def separate_unit_symbols(text: str) -> str:
+    """"7kg" -> "7 kg"; "20%" -> "20 %"; "€20" -> "20 €";
+    "2,50 €" -> "2 € e 50 cêntimos"; "15x8" -> "15 vezes 8"."""
+    text = _GLUED_UNIT.sub(r"\1 \2", text)
+    text = _EURO_FIRST.sub(r"\1 €", text)
+    text = _EURO_CENTS.sub(_euro_cents_repl, text)
+    while True:
+        expanded = _TIMES.sub(r"\1 vezes ", text)
+        if expanded == text:
+            return text
+        text = expanded
 
 
 # ---------------------------------------------------------------------------
@@ -323,8 +371,10 @@ def expand_acronyms(text: str) -> str:
 
 def normalize_orthography(text: str) -> str:
     """Apply every rule above, in the order that keeps them from interfering:
+    unit symbols first (the euro-cents rule needs the decimal comma), then
     separators and ranges (digit-only), then clock times (also digit-only),
     then abbreviations, regnal numerals and acronyms (word-token rules)."""
+    text = separate_unit_symbols(text)
     text = normalize_number_separators(text)
     text = split_number_ranges(text)
     text = expand_clock_times(text)

@@ -85,6 +85,46 @@ normalize_numbers("1.5e10")  # 'um vírgula cinco vezes dez elevado a dez'
 `NumberParser.is_decimal(word)` tells a plain decimal apart from scientific
 notation; `NumberParser.is_scientific_notation(word)` detects the latter.
 
+When the decimal comes from [`normalize_orthography`](text_normalization.md),
+the comma is already the word *vírgula* and the fractional digits are a token
+of their own. Their leading zeros are read one by one, and the integer part
+agrees with the noun after the whole decimal, not with *vírgula*:
+
+```python
+normalize_numbers("0 vírgula 02")      # 'zero vírgula zero dois'
+normalize_numbers("2 vírgula 5 anos")  # 'dois vírgula cinco anos'
+```
+
+---
+
+## Units, percent and euros
+
+A number followed by a unit symbol in `NumberParser.UNIT_NAMES` reads the
+symbol as its name: `%` (*por cento*), `€`, `mm`, `cm`, `m`, `km`, `km/h`,
+square and cubic metres (`m2`, `m²`, `m3`, `m³`, and the `cm`/`km` forms),
+`mg`, `g`, `kg`, `ml`, `cl`, `dl`, `l`, `L`. Symbols and names follow the SI
+brochure (*Tradução luso-brasileira de 2021 do SI*, IPQ/Inmetro, §5.2-5.3).
+Every unit name is masculine (*o grama*, *duzentos gramas*), so the number
+takes the masculine form.
+
+The name is plural after every number except one. In European Portuguese
+this includes zero and every decimal (*zero quilómetros*, *um vírgula cinco
+quilómetros*). In Brazilian Portuguese the name stays singular up to one
+(*zero quilômetro*). A round million takes *de* (*um milhão de euros*).
+
+```python
+normalize_numbers("pesa 200 g")          # 'pesa duzentos gramas'
+normalize_numbers("1 km")                # 'um quilómetro'
+normalize_numbers("3 vírgula 5 km")      # 'três vírgula cinco quilómetros'
+normalize_numbers("subiu 20 %")          # 'subiu vinte por cento'
+normalize_numbers("0 km", lang="pt-BR")  # 'zero quilômetro'
+```
+
+`normalize_orthography` separates glued symbols (`7kg`, `20%`), moves a
+leading euro sign after the number (`€20`), reads euro cents
+(`2,50 €` → *dois euros e cinquenta cêntimos*) and reads `x` or `×` between
+two numbers as *vezes*.
+
 ---
 
 ## Large numbers
@@ -164,6 +204,7 @@ Gender is inferred from:
   nothing after the number is the preposition "to", not the article -- as in
   a score reading like `"3 a 2"` -- and does not force feminine.
 - The following word's ending (`-a`, `-dade`, `-agem` → feminine, default masculine)
+- A unit symbol after the number (`2 m`, `2 g`): always masculine
 - An explicit `gender` override passed to `pronounce_number_word`
 
 Only numbers 1, 2, and the hundreds (100 to 900) change form with gender in
