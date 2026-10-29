@@ -478,6 +478,10 @@ _ACRONYMS = {
     "IA": "i á", "LLM": "éle éle éme", "UTC": "u tê cê", "TTS": "tê tê ésse",
     "PT": "pê tê", "EU": "e u",
 }
+# Acronyms whose letters also spell a Portuguese word ("IA" and the verb
+# form "ia", "EU" and the pronoun "eu"): inside all-caps text ("ELE IA SAIR",
+# "EU VI O FILME") they are the word.
+_WORD_ACRONYMS = frozenset({"IA", "EU"})
 for _a in ("GPS", "USB", "PDF", "SMS", "CPU", "URL", "API", "IVA", "IRS", "NIF", "SNS", "PS", "PSD"):
     _ACRONYMS[_a] = _spell_letters(_a)
 del _a
@@ -495,12 +499,29 @@ def _split_edges(w: str) -> tuple[str, str, str]:
     return w[:i], w[i:j], w[j:]
 
 
+def _in_caps_text(cores: list[str], i: int) -> bool:
+    """Whether cores[i] stands in a run of all-caps words that holds another
+    word of two or more letters ("ELA E EU"), so the run is all-caps text and
+    not one acronym in mixed-case text ("A IA aprende")."""
+    start, end = i, i
+    while start > 0 and _is_caps_word(cores[start - 1]):
+        start -= 1
+    while end + 1 < len(cores) and _is_caps_word(cores[end + 1]):
+        end += 1
+    return any(j != i and sum(c.isalpha() for c in cores[j]) >= 2
+               for j in range(start, end + 1))
+
+
 def expand_acronyms(text: str) -> str:
     """"IA" -> "i á"; lowercase "ia"/"eu" (ordinary words) are untouched."""
+    words = text.split()
+    cores = [_split_edges(w)[1] for w in words]
     out = []
-    for w in text.split():
+    for i, w in enumerate(words):
         lead, core, trail = _split_edges(w)
         repl = _ACRONYMS.get(core)
+        if core in _WORD_ACRONYMS and _in_caps_text(cores, i):
+            repl = None
         out.append(lead + (repl if repl is not None else core) + trail)
     return " ".join(out)
 

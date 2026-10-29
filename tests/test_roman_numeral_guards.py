@@ -143,3 +143,17 @@ class TestDataFiles:
         for phrase in data["expressions"]:
             word, letter = phrase.rsplit(" ", 1)
             assert word and len(letter) == 1 and letter.isupper()
+
+
+@pytest.mark.parametrize("text,expected", [
+    # "EU" in all-caps text is the pronoun; alone in mixed case, the acronym.
+    ("EU VI O FILME", "EU VI O FILME"),
+    ("ELA E EU", "ELA E EU"),
+    ("a EU decidiu", "a e u decidiu"),
+    ("A IA aprende", "A i á aprende"),
+    # "IA" is the acronym in mixed case and the verb "ia" in all-caps text.
+    ("a IA aprende", "a i á aprende"),
+    ("ELE IA SAIR", "ELE IA SAIR"),
+])
+def test_acronyms_that_spell_a_word(text, expected):
+    assert normalize_orthography(text) == expected
