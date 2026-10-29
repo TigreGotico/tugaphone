@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.10a1](https://github.com/TigreGotico/tugaphone/tree/1.4.10a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.9a1...1.4.10a1)
+
+**Merged pull requests:**
+
+- fix: read given-name genders from tugalex [\#157](https://github.com/TigreGotico/tugaphone/pull/157) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.4.9a1](https://github.com/TigreGotico/tugaphone/tree/1.4.9a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.8a1...1.4.9a1)
@@ -387,10 +395,6 @@
 ## [0.6.1a1](https://github.com/TigreGotico/tugaphone/tree/0.6.1a1) (2026-06-20)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.0a1...0.6.1a1)
-
-**Merged pull requests:**
-
-- fix: build\_tests caller passes inputs the reusable workflow no longer defines [\#45](https://github.com/TigreGotico/tugaphone/pull/45) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.6.0a1](https://github.com/TigreGotico/tugaphone/tree/0.6.0a1) (2026-06-13)
 
