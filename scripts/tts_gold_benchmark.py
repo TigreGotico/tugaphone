@@ -27,6 +27,7 @@ the score.
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 from importlib import import_module
 from pathlib import Path
@@ -37,19 +38,26 @@ from tugaphone import TugaPhonemizer
 def _load_o2i_benchmark():
     """Load orthography2ipa's benchmark module (PER/normalize/gold loader).
 
-    Imported by file path, not by name, so it never collides with tugaphone's
-    own ``scripts/benchmark.py`` on ``sys.path``.
+    The module lives in the orthography2ipa source tree, not in its wheel. It is
+    found in ``$O2I_ROOT``, or above an editable install. A ``scripts/`` directory
+    counts only when it sits next to the ``orthography2ipa`` package, so a venv
+    inside the tugaphone checkout never picks up tugaphone's own
+    ``scripts/benchmark.py``.
     """
     o2i_file = Path(import_module("orthography2ipa").__file__).resolve()
-    for parent in o2i_file.parents:
-        cand = parent / "scripts" / "benchmark.py"
-        if cand.exists():
+    roots = [Path(os.environ["O2I_ROOT"])] if os.environ.get("O2I_ROOT") else []
+    roots += o2i_file.parents
+    for root in roots:
+        cand = root / "scripts" / "benchmark.py"
+        if cand.exists() and (root / "orthography2ipa" / "__init__.py").exists():
             spec = importlib.util.spec_from_file_location("_o2i_benchmark", cand)
             module = importlib.util.module_from_spec(spec)
             sys.modules["_o2i_benchmark"] = module
             spec.loader.exec_module(module)
             return module
-    raise RuntimeError("orthography2ipa benchmark script not found")
+    raise RuntimeError(
+        "orthography2ipa's scripts/benchmark.py is not in its wheel: set O2I_ROOT "
+        "to an orthography2ipa checkout, or install orthography2ipa editable")
 
 
 O2I = _load_o2i_benchmark()

@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.4.10a1](https://github.com/TigreGotico/tugaphone/tree/1.4.10a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.9a1...1.4.10a1)
+
+**Merged pull requests:**
+
+- fix: read given-name genders from tugalex [\#157](https://github.com/TigreGotico/tugaphone/pull/157) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.9a1](https://github.com/TigreGotico/tugaphone/tree/1.4.9a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.8a1...1.4.9a1)
+
+**Merged pull requests:**
+
+- fix: pin stress on the accented vowel of a uí/oí hiatus [\#142](https://github.com/TigreGotico/tugaphone/pull/142) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.8a1](https://github.com/TigreGotico/tugaphone/tree/1.4.8a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.7a1...1.4.8a1)
+
+**Merged pull requests:**
+
+- fix: find orthography2ipa's benchmark module from a PyPI install [\#152](https://github.com/TigreGotico/tugaphone/pull/152) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.7a1](https://github.com/TigreGotico/tugaphone/tree/1.4.7a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.6a1...1.4.7a1)
+
+**Merged pull requests:**
+
+- fix: mark one primary stress per hyphenated compound [\#149](https://github.com/TigreGotico/tugaphone/pull/149) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.6a1](https://github.com/TigreGotico/tugaphone/tree/1.4.6a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.5a1...1.4.6a1)
@@ -271,10 +303,6 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a3...0.9.0a1)
 
-**Merged pull requests:**
-
-- feat: phonological feature API on tokenizer tokens [\#44](https://github.com/TigreGotico/tugaphone/pull/44) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.8.1a3](https://github.com/TigreGotico/tugaphone/tree/0.8.1a3) (2026-07-14)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a2...0.8.1a3)
@@ -368,25 +396,13 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.0a1...0.6.1a1)
 
-**Merged pull requests:**
-
-- fix: build\_tests caller passes inputs the reusable workflow no longer defines [\#45](https://github.com/TigreGotico/tugaphone/pull/45) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.6.0a1](https://github.com/TigreGotico/tugaphone/tree/0.6.0a1) (2026-06-13)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a3...0.6.0a1)
 
-**Merged pull requests:**
-
-- feat: resolve every dialect, city inventory and regional preset from BCP-47 codes [\#43](https://github.com/TigreGotico/tugaphone/pull/43) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.5.1a3](https://github.com/TigreGotico/tugaphone/tree/0.5.1a3) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a2...0.5.1a3)
-
-**Merged pull requests:**
-
-- docs: tighten sede row wording in homographs table [\#40](https://github.com/TigreGotico/tugaphone/pull/40) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.5.1a2](https://github.com/TigreGotico/tugaphone/tree/0.5.1a2) (2026-06-12)
 
