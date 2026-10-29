@@ -1,8 +1,8 @@
 """Orthographic text transforms applied BEFORE number verbalisation.
 
-These rewrite raw written conventions (number ranges, clock times, European
-thousands/decimal separators, honorific abbreviations, regnal Roman numerals,
-letter-spelled acronyms) into plain words or digit tokens that
+These rewrite raw written conventions (unit symbols, number ranges, clock
+times, European thousands/decimal separators, honorific abbreviations, regnal
+Roman numerals, letter-spelled acronyms) into plain words or digit tokens that
 :func:`tugaphone.number_utils.normalize_numbers` can then read out loud. They
 run at the text level, before any lattice/phoneme work, so they are plugged
 into :func:`tugaphone.lattice_core._normalizer` ahead of
@@ -27,6 +27,8 @@ from pathlib import Path
 from tugaphone.number_utils import NumberParser
 
 _DATA = Path(__file__).parent / "data"
+
+from tugaphone.number_utils import NumberParser
 
 # ---------------------------------------------------------------------------
 # Number ranges: a dash BETWEEN two digits is a numeric range, read " a ".
@@ -54,6 +56,52 @@ def normalize_number_separators(text: str) -> str:
     """"92.073" -> "92073"; "10,4" -> "10 vírgula 4"."""
     text = _THOUSANDS_DOT.sub("", text)
     return _DECIMAL_COMMA.sub(" vírgula ", text)
+
+
+# ---------------------------------------------------------------------------
+# Unit symbols. The SI writes a space between a number and its unit symbol
+# (SI brochure, IPQ/Inmetro 2021, §5.4.3) and between a number and "%"
+# (same brochure, p. 28). Text often glues them ("7kg", "20%") or puts the
+# euro sign first ("€20"). These rules restore "<number> <symbol>", which
+# normalize_numbers then reads with the unit name and number agreement.
+# A symbol counts only right after digits, so the letter "m" or a word
+# such as "kg" in running text is never touched.
+# ---------------------------------------------------------------------------
+_NUMBER = r"\d+(?:[.,]\d+)*"
+_SYMBOLS = "|".join(re.escape(s) for s in
+                    sorted(NumberParser.UNIT_NAMES, key=len, reverse=True))
+_GLUED_UNIT = re.compile(rf"(?<![\w.,])({_NUMBER})({_SYMBOLS})(?![\w/²³])")
+_EURO_FIRST = re.compile(rf"€ ?({_NUMBER})(?!\w)")
+# "2,50 €" is read "dois euros e cinquenta cêntimos" (Ciberdúvidas 25561:
+# "cinquenta euros e trinta cêntimos"). Only one or two decimals are cents.
+_EURO_CENTS = re.compile(r"(?<![\w.,])(\d+(?:\.\d{3})*),(\d{1,2}) €")
+# A "x" or "×" between two numbers is multiplication, read "vezes": "dois
+# vezes dois são quatro" (Priberam DLPO, "vezes"). Hex literals ("0x1F")
+# and words ("o x da questão") have a letter on one side and are untouched.
+_TIMES = re.compile(r"(?<![\w.,])(\d+(?:,\d+)?) ?[x×] ?(?=\d+(?:,\d+)?(?:[x×]\d|(?!\w)))")
+
+
+def _euro_cents_repl(match: "re.Match[str]") -> str:
+    euros, cents = match.group(1), int(match.group(2).ljust(2, "0"))
+    if cents == 0:
+        return f"{euros} €"
+    cents_text = f"{cents} cêntimo" if cents == 1 else f"{cents} cêntimos"
+    if int(euros.replace(".", "")) == 0:
+        return cents_text
+    return f"{euros} € e {cents_text}"
+
+
+def separate_unit_symbols(text: str) -> str:
+    """"7kg" -> "7 kg"; "20%" -> "20 %"; "€20" -> "20 €";
+    "2,50 €" -> "2 € e 50 cêntimos"; "15x8" -> "15 vezes 8"."""
+    text = _GLUED_UNIT.sub(r"\1 \2", text)
+    text = _EURO_FIRST.sub(r"\1 €", text)
+    text = _EURO_CENTS.sub(_euro_cents_repl, text)
+    while True:
+        expanded = _TIMES.sub(r"\1 vezes ", text)
+        if expanded == text:
+            return text
+        text = expanded
 
 
 # ---------------------------------------------------------------------------
@@ -133,10 +181,21 @@ def _name_gender(word: str) -> str:
 #   "art.", "fig.", "cap.", "séc.") and place-name abbreviations ("Av.",
 #   "R.", "Lx.", "n.º"/"nº") that stand for the same word whether followed
 #   by a capitalised name, a lowercase word, or end of sentence.
-# * PERSONAL HONORIFICS: only expanded right before a capitalised word (the
-#   name they introduce), since standalone "Dr." or "Sr." at a sentence's
-#   end is more often the plain abbreviation than a title. "D." reads
-#   "Dona" before a feminine given name ("D. Maria") and "Dom" otherwise.
+# * NAME-INTRODUCING: "D." is expanded only right before a capitalised word
+#   (the name it introduces): alone it is as often an initial or a letter.
+#   It reads "Dona" before a feminine given name ("D. Maria") and "Dom"
+#   otherwise: "D." is the abbreviation "de dom e de dona" (Priberam).
+#   The personal titles "Sr.", "Dr.", "Eng.", "Prof." and their feminine and
+#   plural forms stand for one word wherever they appear ("o Sr. presidente",
+#   "os Srs. deputados", "falei com o Dr."), so they are unconditional.
+#
+# Forms with a superscript ending ("Sr.ª", "Sr.as", "n.os", "Ex.mo") match no
+# ordinary word, so they are unconditional. The expansions follow the
+# Vocabulário Ortográfico of the Academia das Ciências de Lisboa ("Sr.ª"
+# senhora, "V. Ex.ª" Vossa Excelência, "S. Ex.ª" Sua Excelência, "Ex.mo"
+# Excelentíssimo, "Dr.ª" Doutora, "Eng.ª" Engenheira, "prof.ª" professora)
+# and the vocabularies quoted by Ciberdúvidas: 33650 ("Srs.", "Sr.as",
+# "VV. Ex.as", "V. Exas.", "Exmos.") and 15826 ("n.os", "Ex.as").
 # ---------------------------------------------------------------------------
 _UNCONDITIONAL_ABBREVIATIONS = {
     "vs.": "versus",
@@ -154,16 +213,56 @@ _UNCONDITIONAL_ABBREVIATIONS = {
     "nº": "número",
     "N.º": "número",
     "Nº": "número",
+    "n.os": "números",
+    "N.os": "números",
+    "Sr.ª": "Senhora",
+    "Sr.as": "Senhoras",
+    "Dr.ª": "Doutora",
+    "Eng.ª": "Engenheira",
+    "Prof.ª": "Professora",
+    "Ex.ª": "Excelência",
+    "Ex.as": "Excelências",
+    "Exa.": "Excelência",
+    "Exas.": "Excelências",
+    "Ex.mo": "Excelentíssimo",
+    "Ex.ma": "Excelentíssima",
+    "Ex.mos": "Excelentíssimos",
+    "Ex.mas": "Excelentíssimas",
+    "Exmo.": "Excelentíssimo",
+    "Exma.": "Excelentíssima",
+    "Exmos.": "Excelentíssimos",
+    "Exmas.": "Excelentíssimas",
 }
-_HONORIFIC_ABBREVIATIONS = {
-    "D.": "Dom",
+_UNCONDITIONAL_ABBREVIATIONS.update({
     "Sr.": "Senhor",
     "Sra.": "Senhora",
+    "Srs.": "Senhores",
+    "Sras.": "Senhoras",
     "Dr.": "Doutor",
     "Dra.": "Doutora",
     "Eng.": "Engenheiro",
     "Prof.": "Professor",
+})
+_HONORIFIC_ABBREVIATIONS = {
+    "D.": "Dom",
 }
+# Nouns a capital letter labels ("a vitamina D.", "a alínea D."): after them
+# "D." is the letter, whatever word follows.
+_LETTER_LABEL_NOUNS = frozenset({
+    "vitamina", "letra", "alínea", "classe", "grupo", "tipo", "plano",
+})
+
+# "V." and "S." are the possessive of a following "Excelência" form only:
+# alone, "V." is a letter or a Roman numeral and "S." is "São".
+_POSSESSIVES = {
+    "V.": ("Vossa", "Vossas"),
+    "VV.": ("Vossas", "Vossas"),
+    "Vv.": ("Vossas", "Vossas"),
+    "S.": ("Sua", "Suas"),
+}
+_EXCELENCIA_PLURAL = {"Ex.as": True, "Exas.": True, "Ex.ª": False, "Exa.": False}
+# Punctuation after an abbreviation's own period ("V. Ex.ª, obrigado").
+_ABBREVIATION_TRAIL = ",;:!?)\"”"
 
 _LEAD_PUNCT = "(“\"'¿¡"
 
@@ -179,17 +278,26 @@ def expand_abbreviations(text: str) -> str:
     or a bare "R." at sentence end both -> "Avenida"/"Rua" regardless of
     capitalisation, since these stand for the same word either way."""
     words = text.split()
+    cores = [w.rstrip(_ABBREVIATION_TRAIL) for w in words]
     out = []
     for i, w in enumerate(words):
-        expansion = _UNCONDITIONAL_ABBREVIATIONS.get(w)
-        if expansion is not None:
-            out.append(expansion)
+        core, trail = cores[i], w[len(cores[i]):]
+        following = cores[i + 1] if i + 1 < len(words) else None
+        possessive = _POSSESSIVES.get(core)
+        if possessive is not None and following in _EXCELENCIA_PLURAL:
+            out.append(possessive[_EXCELENCIA_PLURAL[following]] + trail)
             continue
-        expansion = _HONORIFIC_ABBREVIATIONS.get(w)
-        if expansion is not None and i + 1 < len(words) and _is_capitalised(words[i + 1]):
-            if w == "D." and _name_gender(_split_edges(words[i + 1])[1]) == "feminine":
+        expansion = _UNCONDITIONAL_ABBREVIATIONS.get(core)
+        if expansion is not None:
+            out.append(expansion + trail)
+            continue
+        expansion = _HONORIFIC_ABBREVIATIONS.get(core)
+        after_label = i > 0 and cores[i - 1].lower() in _LETTER_LABEL_NOUNS
+        if (expansion is not None and following is not None
+                and _is_capitalised(words[i + 1]) and not after_label):
+            if _name_gender(_split_edges(following)[1]) == "feminine":
                 expansion = "Dona"
-            out.append(expansion)
+            out.append(expansion + trail)
             continue
         out.append(w)
     return " ".join(out)
@@ -434,8 +542,10 @@ def expand_letter_digit_codes(text: str, lang: str = "pt-PT") -> str:
 
 def normalize_orthography(text: str, lang: str = "pt-PT") -> str:
     """Apply every rule above, in the order that keeps them from interfering:
+    unit symbols first (the euro-cents rule needs the decimal comma), then
     separators and ranges (digit-only), then clock times (also digit-only),
     then abbreviations, regnal numerals and acronyms (word-token rules)."""
+    text = separate_unit_symbols(text)
     text = normalize_number_separators(text)
     text = split_number_ranges(text)
     text = expand_clock_times(text)

@@ -157,8 +157,8 @@ class TestAbbreviations:
         assert expand_abbreviations("apartamento nº 4") == "apartamento número 4"
 
     def test_not_followed_by_capital_untouched(self):
-        # "Dr." not followed by a name-like capitalised word: left alone.
-        assert expand_abbreviations("Dr. disse que sim") == "Dr. disse que sim"
+        # "Dr." stands for "Doutor" wherever it appears.
+        assert expand_abbreviations("Dr. disse que sim") == "Doutor disse que sim"
         assert expand_abbreviations("ele é dr.") == "ele é dr."
 
     def test_unconditional_reference_markers(self):

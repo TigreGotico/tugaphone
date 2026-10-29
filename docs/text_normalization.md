@@ -1,6 +1,6 @@
 # Text normalization
 
-Written text contains conventions that the phoneme rules cannot read: number ranges, clock times, European thousands and decimal separators, honorific abbreviations, regnal Roman numerals and acronyms. `tugaphone.text_normalization` rewrites them into plain words or plain digit tokens so that [`normalize_numbers`](numbers.md) can read the result. It runs on the text before any lattice or phoneme work, in the engine's `normalize` stage, ahead of `normalize_numbers`. Number words follow standard European Portuguese ("vinte e cinco").
+Written text contains conventions that the phoneme rules cannot read: unit symbols, number ranges, clock times, European thousands and decimal separators, honorific abbreviations, regnal Roman numerals and acronyms. `tugaphone.text_normalization` rewrites them into plain words or plain digit tokens so that [`normalize_numbers`](numbers.md) can read the result. It runs on the text before any lattice or phoneme work, in the engine's `normalize` stage, ahead of `normalize_numbers`. Number words follow standard European Portuguese ("vinte e cinco").
 
 ```python
 from tugaphone.text_normalization import normalize_orthography
@@ -17,6 +17,29 @@ normalize_numbers(normalize_orthography(text), "pt-PT")
 they don't interfere with each other.
 
 ---
+
+## Unit symbols, percent, euros and multiplication
+
+The SI puts a space between a number and its unit symbol, and between a
+number and `%`. A symbol glued to the digits (`7kg`, `20%`) gets that space
+back, and a leading euro sign moves after the number (`€20` → `20 €`), so
+that `normalize_numbers` reads the unit name with number agreement (see
+[Units, percent and euros](numbers.md#units-percent-and-euros)). A symbol
+counts only right after digits, so the letter `m` in running text is left
+alone. An amount in euros with one or two decimals is read as euros and
+cents. A `x` or `×` between two numbers is read *vezes*; a hex literal such
+as `0x1F` and the word in "o x da questão" are left alone.
+
+```python
+from tugaphone.text_normalization import separate_unit_symbols
+
+separate_unit_symbols("Pesa 7kg e custa €20.")
+# 'Pesa 7 kg e custa 20 €.'
+separate_unit_symbols("Custa 2,50 €.")
+# 'Custa 2 € e 50 cêntimos.'
+separate_unit_symbols("15x8")
+# '15 vezes 8'
+```
 
 ## Number ranges
 
@@ -91,9 +114,24 @@ a feminine given name and "Dom" before any other name, so "D. Maria" is
 "Dona Maria" and "D. Sebastião" is "Dom Sebastião". A name of both genders,
 or one that is not in the given-name list, reads "Dom".
 
+Forms with a superscript ending match no ordinary word, so they expand
+unconditionally: `Sr.ª`, `Sr.as`, `Dr.ª`, `Eng.ª`, `Prof.ª`, `n.os`/`N.os`
+("números"), `Ex.mo`/`Ex.ma` and their plurals, and the "Excelência" forms
+`Ex.ª`, `Ex.as`, `Exa.`, `Exas.`. Before an "Excelência" form, `V.` reads
+"Vossa", `VV.` or `Vv.` reads "Vossas" and `S.` reads "Sua"; alone, `V.` and
+`S.` are left for the other rules. The plurals `Srs.` and `Sras.` follow the
+personal-honorific rule. The expansions follow the *Vocabulário Ortográfico*
+of the Academia das Ciências de Lisboa and the vocabularies quoted by
+Ciberdúvidas (answers 33650 and 15826). A comma, colon or similar mark after
+the abbreviation's own period stays in place.
+
 ```python
 from tugaphone.text_normalization import expand_abbreviations
 
+expand_abbreviations("Obrigado, V. Ex.ª, pela visita.")
+# 'Obrigado, Vossa Excelência, pela visita.'
+expand_abbreviations("Vv. Ex.as sabem que a Sr.ª Ana chegou.")
+# 'Vossas Excelências sabem que a Senhora Ana chegou.'
 expand_abbreviations("O Sr. Silva chegou.")
 # 'O Senhor Silva chegou.'
 expand_abbreviations("Isto é o n.º 4 da lista.")
