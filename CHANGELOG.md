@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.2a2](https://github.com/TigreGotico/tugaphone/tree/1.4.2a2) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.2a1...1.4.2a2)
+
+**Merged pull requests:**
+
+- Update dependency python to 3.15 [\#132](https://github.com/TigreGotico/tugaphone/pull/132) ([renovate[bot]](https://github.com/apps/renovate))
+- Update actions/checkout action to v7 [\#128](https://github.com/TigreGotico/tugaphone/pull/128) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [1.4.2a1](https://github.com/TigreGotico/tugaphone/tree/1.4.2a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.1a2...1.4.2a1)
@@ -379,25 +388,13 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.3.1a1...0.4.0a1)
 
-**Merged pull requests:**
-
-- feat: dialect-quality pass across the lusophone inventories [\#27](https://github.com/TigreGotico/tugaphone/pull/27) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.3.1a1](https://github.com/TigreGotico/tugaphone/tree/0.3.1a1) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.3.0a1...0.3.1a1)
 
-**Merged pull requests:**
-
-- fix: positional r/s realisation, prevocalic glides and coda palatalization in the rule cascade [\#26](https://github.com/TigreGotico/tugaphone/pull/26) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.3.0a1](https://github.com/TigreGotico/tugaphone/tree/0.3.0a1) (2026-06-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.2a2...0.3.0a1)
-
-**Merged pull requests:**
-
-- feat: source stress rules from orthography2ipa and ship its pt syllabifier [\#25](https://github.com/TigreGotico/tugaphone/pull/25) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.2.2a2](https://github.com/TigreGotico/tugaphone/tree/0.2.2a2) (2026-05-29)
 
