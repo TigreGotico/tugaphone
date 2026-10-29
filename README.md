@@ -199,6 +199,8 @@ from tugaphone.number_utils import normalize_numbers
 normalize_numbers("vou comprar 1 casa")   # 'vou comprar uma casa'
 normalize_numbers("vou adotar 1 cão")     # 'vou adotar um cão'
 normalize_numbers("comprei 2 casas")      # 'comprei duas casas'
+normalize_numbers("aprovou 1 lei")        # 'aprovou uma lei'
+normalize_numbers("passou 1 dia")         # 'passou um dia'
 ```
 
 ### Text normalization
@@ -320,4 +322,8 @@ pronunciation actually spoken.
 
 ## License
 
-Apache License 2.0. See [LICENSE](LICENSE).
+The code is licensed under the Apache License 2.0. See [LICENSE](LICENSE).
+
+The noun-gender list `tugaphone/data/noun_gender/noun_gender.tsv.gz` is
+derived from the English Wiktionary and is licensed under CC BY-SA 4.0. See
+[tugaphone/data/noun_gender/README.md](tugaphone/data/noun_gender/README.md).

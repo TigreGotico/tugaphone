@@ -113,6 +113,78 @@ class TestLabelNumeralGender:
         assert normalize_numbers(text) == expected
 
 
+class TestCountedNounGender:
+    """A cardinal agrees with the gender of the noun it counts.
+
+    The expected genders do not come from tugaphone. Each noun has the same
+    gender in MorphoBr (LR-POR/MorphoBr, nouns/*.dict, +F or +M) and, for
+    "tarde" and "planeta", which MorphoBr lists without a gender, in the
+    Gender feature of the UD Portuguese-Bosque treebank. "um"/"uma",
+    "dois"/"duas" and the hundreds take the gender of the noun.
+    """
+
+    @pytest.mark.parametrize("text,expected", [
+        # feminine nouns that do not end in -a
+        ("1 lei", "uma lei"),
+        ("2 leis", "duas leis"),
+        ("um número 2 vezes maior", "um número duas vezes maior"),
+        ("1 vez", "uma vez"),
+        ("200 vezes", "duzentas vezes"),
+        ("1 mãe", "uma mãe"),
+        ("1 flor", "uma flor"),
+        ("1 cor", "uma cor"),
+        ("1 luz", "uma luz"),
+        ("1 nação", "uma nação"),
+        ("2 nações", "duas nações"),
+        ("1 ponte", "uma ponte"),
+        ("1 tarde", "uma tarde"),
+        ("1 lei.", "uma lei."),
+        # masculine nouns that end in -a
+        ("1 dia", "um dia"),
+        ("2 dias", "dois dias"),
+        ("1 mapa", "um mapa"),
+        ("1 problema", "um problema"),
+        ("2 problemas", "dois problemas"),
+        ("2 sistemas", "dois sistemas"),
+        ("1 clima", "um clima"),
+        ("1 programa", "um programa"),
+        ("1 planeta", "um planeta"),
+        # a masculine article decides for a noun of both genders
+        ("os 2 artistas", "os dois artistas"),
+        # "a" before a masculine noun is the preposition, not the article
+        ("estamos a 2 dias do fim", "estamos a dois dias do fim"),
+    ])
+    def test_listed_gender(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        ("2 casas", "duas casas"),
+        ("1 imagem", "uma imagem"),
+        ("1 hora", "uma hora"),
+        ("2 cães", "dois cães"),
+        ("o artigo 1 da lei", "o artigo um da lei"),
+        ("a 1.ª vez", "a primeira vez"),
+        ("a 1ª vez", "a primeira vez"),
+        ("o 1º dia", "o primeiro dia"),
+        ("as 2 artistas", "as duas artistas"),
+        ("são 2 da tarde", "são duas da tarde"),
+        # "vezes" between two numbers is the multiplication sign
+        ("2 vezes 2 são 4", "dois vezes dois são quatro"),
+    ])
+    def test_unchanged_rows(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("word,gender", [
+        ("lei", "f"), ("leis", "f"), ("vezes", "f"), ("dia", "m"), ("problemas", "m"),
+        # common-gender and gender-by-meaning nouns are listed as both
+        ("artista", "mf"), ("estudante", "mf"), ("capital", "mf"), ("rádio", "mf"),
+        # function words are not listed, whatever their noun senses
+        ("a", None), ("os", None), ("da", None), ("ou", None),
+    ])
+    def test_list_entries(self, word, gender):
+        assert NumberParser.noun_gender(word) == gender
+
+
 class TestNumberParserPronounce:
     def test_cardinal_masculine_default(self):
         result = NumberParser.pronounce_number_word("1", gender="masculine")

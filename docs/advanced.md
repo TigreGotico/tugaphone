@@ -81,8 +81,10 @@ normalize_numbers("897654356789098", "pt-PT")  # long scale (biliões)
 normalize_numbers("897654356789098", "pt-BR")  # short scale (trilhões)
 ```
 
-Gender is inferred from preceding articles (`a`, `as`, `da`, `das`) and from the
-shape of the following noun (`-a`, `-dade`, `-agem` endings lean feminine). Pass
+Gender is inferred from preceding articles (`a`, `as`, `o`, `os` and their
+contractions with `de`), from the gender of the following noun in the bundled
+noun list, and for a word not in the list from its ending (`-a`, `-dade`,
+`-agem` endings lean feminine). Pass
 `strict=False` to leave unparseable tokens in place instead of raising. Inside
 the pipeline this runs as the engine's `normalize` stage, so a bare digit in the
 input sentence is verbalized before the lattice transcribes it.
