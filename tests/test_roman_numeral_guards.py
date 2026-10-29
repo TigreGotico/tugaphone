@@ -27,7 +27,6 @@ from tugaphone.number_utils import normalize_numbers
 from tugaphone.text_normalization import (
     expand_abbreviations,
     expand_regnal_numerals,
-    given_name_gender,
     normalize_orthography,
 )
 
@@ -115,28 +114,20 @@ class TestUnchanged:
         assert "quint" not in reading and "cinquenta" not in reading
 
 
-class TestDataFiles:
-    def test_given_names_record_source_and_licence(self):
-        about = json.loads((DATA / "given_names.json").read_text(encoding="utf-8"))["about"]
-        wikidata, ibge = about["sources"]
-        assert "Wikidata" in wikidata and "CC0" in wikidata
-        assert "IBGE" in ibge and "PDDL" in ibge
-        assert about["build_script"] == "scripts/build_given_names.py"
-        assert about["retrieved"]
+class TestGivenNameGender:
+    """Name genders come from tugalex. Simone and Elisabete are feminine and
+    Rui masculine in Portuguese: tugalex corrects their Wikidata genders in
+    scripts/given_name_overrides.csv."""
 
-    def test_given_names_genders(self):
-        for name in ("Maria", "Isabel", "Beatriz", "Catarina", "Leonor", "Urraca"):
-            assert given_name_gender(name) == "feminine"
-        for name in ("Afonso", "Pedro", "Sebastião", "Clemente", "Pio", "Malcolm"):
-            assert given_name_gender(name) == "masculine"
-        for word in ("Raio", "Geração", "Sala", "Anexo", "século"):
-            assert given_name_gender(word) is None
-
-    def test_given_names_compact(self):
-        data = json.loads((DATA / "given_names.json").read_text(encoding="utf-8"))
-        names = data["masculine"] + data["feminine"] + data["both"]
-        assert len(names) == len(set(names))
-        assert all(len(name) >= 3 and name[0].isupper() for name in names)
+    @pytest.mark.parametrize("text,expected", [
+        ("D. Maria", "Dona Maria"),
+        ("D. Simone", "Dona Simone"),
+        ("D. Elisabete", "Dona Elisabete"),
+        ("D. Rui", "Dom Rui"),
+        ("D. Afonso", "Dom Afonso"),
+    ])
+    def test_title_follows_the_name(self, text, expected):
+        assert expand_abbreviations(text) == expected
 
     def test_letter_expressions_are_word_and_capital(self):
         data = json.loads((DATA / "letter_expressions.json").read_text(encoding="utf-8"))

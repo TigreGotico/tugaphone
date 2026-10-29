@@ -178,16 +178,10 @@ These rules decide when a capital letter is a numeral:
 tugaphone converts only tokens written wholly in capitals, so lowercase
 words such as "vi", "li" and "mix" are never numerals.
 
-The given-name list `tugaphone/data/given_names.json` holds the names that
-can stand before a Roman numeral or after `D.`, with their gender. It has
-three sources. The first is the popes and monarchs on Wikidata: the word
-before the numeral in each Portuguese label, with the person's sex. The
-second is the first names of the IBGE 2010 census, matched to Wikidata
-given names. The third is the Wikidata given names marked as Portuguese. A
-name borne by both genders is marked "both" and reads as masculine. The
-file records its sources, their licences and the build date, and
-`scripts/build_given_names.py` rebuilds it. The rules read the list only
-through `given_name_gender(word)`.
+The rules take a given name and its gender from tugalex
+(`TugaLexicon.get_given_name_gender`). A name before a Roman numeral reads the
+numeral as regnal, and a feminine name after `D.` reads `Dona`. A name borne by
+both genders, or a word that is not a name, reads as masculine.
 
 ```python
 from tugaphone.text_normalization import expand_regnal_numerals
