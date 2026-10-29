@@ -105,18 +105,54 @@ penalised for the variants it did not choose). Reported per dialect:
 
 - **PER**: summed edit distance divided by summed reference length.
 - **word accuracy**: exact matches after normalization.
+- **stress accuracy** (`stress_acc`, with its word count `n_stress`): the share
+  of stress-eligible gold words whose primary stress lands on the gold's
+  syllable. See [Stress accuracy](#stress-accuracy).
 - the top-20 phone-confusion pairs (in `benchmarks/results.json`), which drive
   the accuracy campaign: fix the biggest confusion with a cited rule, re-run,
   repeat.
 
 The PER routine is adapted from orthography2ipa's benchmark harness.
 
+## Stress accuracy
+
+PER strips the stress marks, so a transcription with every segment right and
+the stress on the wrong syllable scores a perfect PER. Stress accuracy measures
+that one choice. orthography2ipa's board reports the same column with the same
+definition, so the two numbers compare.
+
+A gold word is eligible when it is one word, its transcription carries exactly
+one primary stress mark `ˈ` (an ASCII apostrophe in the gold counts as `ˈ`), and
+it has two syllables or more. `n_stress` counts the eligible words. Below 20
+eligible words `stress_acc` is null. A word with several gold variants scores a
+hit when the hypothesis matches any eligible variant.
+
+The hypothesis misses when it has no primary mark, more than one, or its mark
+on another syllable. To find the syllable, the harness aligns the two
+stress-stripped segment strings with the edit-distance alignment PER uses. A
+segment is a character with its diacritics, and a tie bar joins the two
+characters it links (`t͡ʃ`, `e͡ɪ`) into one segment.
+When several alignments have the same minimum cost, the harness takes the one
+that pairs the fewest nuclei with non-nuclei. The hit condition is that the gold's stressed nucleus aligns with the hypothesis's
+stressed nucleus. A nucleus is a vowel that is not marked non-syllabic (`◌̯`)
+and is not a glide letter (`j w ɥ ɰ`). A syllabic consonant (`◌̩`) is also a
+nucleus. The stressed nucleus is the first nucleus after the primary mark.
+Secondary marks `ˌ` are ignored.
+
+The alignment keeps the two failure modes apart. `saída` with gold `sɐˈidɐ`
+and hypothesis `ˈsajdɐ` is a miss: the hiatus became a diphthong and the stress
+moved to `a`. Counting nuclei from the end of the word would call it a hit.
+`texto` with gold `ˈtɐjʃtu` and hypothesis `ˈtɐʃtu` is a hit: the lost glide is
+a segment error, and PER already counts it.
+
 ## Regression gate
 
 `scripts/check_benchmark_regression.py` re-scores every dialect from
 the committed fixtures and compares against the committed baseline
-(`benchmarks/results.json`), failing CI when any dialect's PER worsens
-by more than 0.005 absolute. Improvements never fail, commit the
+(`benchmarks/results.json`), failing CI when any dialect's PER rises or
+its stress accuracy falls by more than 0.005 absolute. A dialect whose
+baseline has a stress accuracy and whose new score has none also fails.
+Improvements never fail, commit the
 regenerated baseline with the improving change so the new level becomes
 the floor. The gate fails closed when fewer rows than registered
 dialects are scored, so a broken fixture cannot produce a silent green.
