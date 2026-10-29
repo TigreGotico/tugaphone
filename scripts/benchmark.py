@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gold-benchmark harness: rules-only PER per dialect, offline in CI.
+"""Gold-benchmark harness: rules-only PER and stress accuracy per dialect.
 
 Scores tugaphone's RULES-ONLY mode (the lexicon exception path emptied)
 against the unified Portuguese pronunciation gold, one region per
@@ -134,6 +134,145 @@ def score_word(hyp: str, golds: List[str]) -> Tuple[int, int]:
     return best
 
 
+# ─── stress accuracy ────────────────────────────────────────────────────────
+# PER strips stress marks, so a transcription with every segment right and
+# the primary stress on the wrong syllable scores perfect. stress_acc scores
+# that syllable choice alone. The definition is shared with orthography2ipa's
+# board (knowledge/wiki/audits/pt-stress/stress-metric.md): the stressed
+# nucleus of the gold must align, under the edit-distance alignment of the
+# stress-stripped segment strings, with the stressed nucleus of the hypothesis.
+
+_PRIMARY = "ˈ"
+_SECONDARY = "ˌ"
+_TIES = "\u0361\u035c"
+_VOWELS = frozenset("iyɨʉɯuɪʏʊeøɘɵɤoəɛœɜɞʌɔæɐaɶɑɒɚɝ")
+_NON_SYLLABIC = "\u032f"
+_SYLLABIC = ("\u0329", "\u030d")
+
+#: Fewer eligible gold words than this report stress_acc as null.
+STRESS_MIN_WORDS = 20
+
+
+def _fold_stress(ipa: str) -> str:
+    """NFD, with the ASCII apostrophe some golds write for ˈ folded to ˈ."""
+    return unicodedata.normalize("NFD", ipa).replace("'", _PRIMARY)
+
+
+def _segments(ipa: str) -> Tuple[List[str], Optional[int], int]:
+    """Split a folded transcription into segments for stress scoring.
+
+    A segment is a base character with its combining marks; a tie bar
+    also takes in the character after it (``t͡ʃ``, ``e͡ɪ``). Returns the
+    segments with every stress mark, syllable boundary and space removed,
+    the index of the stressed nucleus, and the number of primary marks.
+    The stressed nucleus is the first nucleus after the primary mark: the
+    mark opens its syllable, so a written boundary cannot move it. It is
+    ``None`` when the word has no primary mark or more than one.
+    """
+    segs: List[str] = []
+    marks = 0
+    stress_from = 0
+    for ch in ipa:
+        if unicodedata.combining(ch) or (segs and segs[-1][-1] in _TIES):
+            if segs:
+                segs[-1] += ch
+        elif ch == _PRIMARY:
+            marks += 1
+            stress_from = len(segs)
+        elif ch not in _SECONDARY + _JOINERS and not ch.isspace():
+            segs.append(ch)
+    if marks != 1:
+        return segs, None, marks
+    stressed = next((i for i in range(stress_from, len(segs))
+                     if _is_nucleus(segs[i])), None)
+    return segs, stressed, marks
+
+
+def _is_nucleus(seg: str) -> bool:
+    if any(mark in seg for mark in _SYLLABIC):
+        return True
+    return seg[0] in _VOWELS and _NON_SYLLABIC not in seg
+
+
+def stress_eligible(gold: str) -> bool:
+    """One word, exactly one primary mark, at least two syllables."""
+    folded = _fold_stress(gold.strip())
+    if any(ch.isspace() for ch in folded):
+        return False
+    segs, stressed, marks = _segments(folded)
+    return (marks == 1 and stressed is not None
+            and sum(map(_is_nucleus, segs)) >= 2)
+
+
+def _align(ref: List[str], hyp: List[str]) -> Dict[int, int]:
+    """ref index → hyp index for every matched or substituted segment.
+
+    The cost is the unit-cost Levenshtein distance PER takes, so every
+    alignment returned is one of PER's optimal alignments. Among those,
+    ties go to the alignment that pairs the fewest nuclei with non-nuclei:
+    ``meˈʎɒɹ`` against ``meˈʎɔ`` must pair ɒ with ɔ, not ɔ with ɹ.
+    """
+    def sub(a: str, b: str) -> Tuple[int, int]:
+        return int(a != b), int(_is_nucleus(a) != _is_nucleus(b))
+
+    def add(c: Tuple[int, int], d: Tuple[int, int]) -> Tuple[int, int]:
+        return c[0] + d[0], c[1] + d[1]
+
+    gap = (1, 0)
+    n, m = len(ref), len(hyp)
+    dp = [[(0, 0)] * (m + 1) for _ in range(n + 1)]
+    for i in range(1, n + 1):
+        dp[i][0] = (i, 0)
+    for j in range(1, m + 1):
+        dp[0][j] = (j, 0)
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            dp[i][j] = min(add(dp[i - 1][j], gap), add(dp[i][j - 1], gap),
+                           add(dp[i - 1][j - 1], sub(ref[i - 1], hyp[j - 1])))
+    pairs: Dict[int, int] = {}
+    i, j = n, m
+    while i and j:
+        if dp[i][j] == add(dp[i - 1][j - 1], sub(ref[i - 1], hyp[j - 1])):
+            pairs[i - 1] = j - 1
+            i, j = i - 1, j - 1
+        elif dp[i][j] == add(dp[i - 1][j], gap):
+            i -= 1
+        else:
+            j -= 1
+    return pairs
+
+
+def stress_hit(hyp: str, gold: str) -> bool:
+    """True when *hyp* puts the primary stress on the gold's syllable.
+
+    A hypothesis with no primary mark, or with more than one, misses.
+    """
+    ref, ref_nucleus, _ = _segments(_fold_stress(gold.strip()))
+    out, out_nucleus, _ = _segments(_fold_stress(hyp.strip()))
+    if ref_nucleus is None or out_nucleus is None:
+        return False
+    return _align(ref, out).get(ref_nucleus) == out_nucleus
+
+
+def score_stress(word: str, hyp: str, golds: List[str]) -> Optional[bool]:
+    """Stress hit against any eligible variant; None if none is eligible.
+
+    A multi-word entry is never eligible, even when its gold is written
+    without a space.
+    """
+    eligible = [g for g in golds if stress_eligible(g)]
+    if not eligible or any(ch.isspace() for ch in word.strip()):
+        return None
+    return any(stress_hit(hyp, g) for g in eligible)
+
+
+def stress_accuracy(hits: int, n_stress: int) -> Optional[float]:
+    """The reported stress_acc: null below the eligible-word floor."""
+    if n_stress < STRESS_MIN_WORDS:
+        return None
+    return round(hits / n_stress, 4)
+
+
 # ─── rules-only phonemization ───────────────────────────────────────────────
 
 def rules_only_ipa(word: str, dialect_code: str) -> str:
@@ -237,7 +376,7 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
     words = sorted(golds)
     if limit is not None:
         words = words[:limit]
-    err = tot = exact = failed = 0
+    err = tot = exact = failed = n_stress = stress_hits = 0
     confusion: Dict[Tuple[str, str], int] = {}
     for word in words:
         try:
@@ -245,6 +384,10 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         except Exception:
             failed += 1
             continue
+        hit = score_stress(word, hyp, golds[word])
+        if hit is not None:
+            n_stress += 1
+            stress_hits += hit
         d, n = score_word(hyp, golds[word])
         err += d
         tot += n
@@ -261,6 +404,8 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         "failed": failed,
         "per": round(err / tot, 4) if tot else None,
         "word_accuracy": round(exact / len(words), 4) if words else None,
+        "stress_acc": stress_accuracy(stress_hits, n_stress),
+        "n_stress": n_stress,
         "top_confusions": [
             {"got": a, "expected": b, "count": c}
             for (a, b), c in top_confusions
@@ -293,7 +438,7 @@ def write_reports(rows: List[dict]) -> None:
         fh.write("\n")
 
     lines = [
-        "# Scoreboard — rules-only PER per dialect",
+        "# Scoreboard — rules-only PER and stress accuracy per dialect",
         "",
         "Generated by `python scripts/benchmark.py` from the committed gold",
         "fixtures (`tests/data/gold/`), which are fixed-seed samples of",
@@ -304,13 +449,21 @@ def write_reports(rows: List[dict]) -> None:
         "measures grapheme-rule quality, not lexicon lookup coverage — see",
         "[benchmarking.md](benchmarking.md).",
         "",
-        "| Dialect | Gold region | Words | PER | Word accuracy |",
-        "|---|---|---|---|---|",
+        "Stress accuracy is the share of the stress-eligible gold words",
+        "(one word, one primary mark, two syllables or more) whose primary",
+        "stress lands on the gold's syllable. PER cannot see that choice.",
+        "",
+        "| Dialect | Gold region | Words | PER | Word accuracy "
+        "| Stress words | Stress accuracy |",
+        "|---|---|---|---|---|---|---|",
     ]
     for r in rows:
+        stress = ("—" if r.get("stress_acc") is None
+                  else f"{r['stress_acc']:.4f}")
         lines.append(
             f"| {r['dialect']} | {r['region']} | {r['n']} "
-            f"| {r['per']:.4f} | {r['word_accuracy']:.4f} |")
+            f"| {r['per']:.4f} | {r['word_accuracy']:.4f} "
+            f"| {r.get('n_stress', 0)} | {stress} |")
     lines.append("")
     with open(SCOREBOARD_MD, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines))
@@ -334,8 +487,11 @@ def main() -> None:
     rows = []
     for dialect in dialects:
         row = score_dialect(dialect, args.limit)
+        stress = ("-" if row["stress_acc"] is None
+                  else f"{row['stress_acc']:.4f}")
         print(f"{dialect:22} n={row['n']:5} PER={row['per']:.4f} "
-              f"acc={row['word_accuracy']:.4f}")
+              f"acc={row['word_accuracy']:.4f} "
+              f"stress={stress} (n={row['n_stress']})")
         rows.append(row)
     if not args.dialect and args.limit is None:
         write_reports(rows)

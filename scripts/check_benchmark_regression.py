@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""Fail CI when a change worsens any dialect's rules-only PER.
+"""Fail CI when a change worsens any dialect's rules-only PER or stress.
 
 Re-scores every dialect from the committed gold fixtures (offline —
-CI never touches the network) and compares each row's PER against the
+CI never touches the network) and compares each row against the
 committed baseline (``benchmarks/results.json``). A row regresses when
-its PER worsens by more than an absolute epsilon (default ``0.005`` —
-small enough to catch a real rule regression, large enough to absorb
-float noise). Improvements are reported and never fail; commit the
-regenerated baseline alongside the improving change so the new level
-becomes the floor.
+its PER rises, or its stress accuracy falls, by more than an absolute
+epsilon (default ``0.005`` — small enough to catch a real rule
+regression, large enough to absorb float noise). A row whose baseline
+has a stress accuracy and whose new score has none also regresses: the
+stress-eligible words vanished. Improvements are reported and never
+fail; commit the regenerated baseline alongside the improving change so
+the new level becomes the floor.
 
 Usage::
 
@@ -55,31 +57,60 @@ def main() -> None:
         sys.exit(f"only {len(rows)} rows scored "
                  f"(expected {MIN_SCORED_ROWS}) — failing closed.")
 
-    header = f"{'dialect':<24}{'baseline':>10}{'new':>10}{'delta':>10}  status"
+    regressed = []
+    for metric, worse in (("per", 1), ("stress_acc", -1)):
+        regressed += _compare(metric, worse, rows, baseline, args.epsilon)
+
+    if regressed:
+        print(f"\n{len(regressed)} row(s) regressed beyond "
+              f"epsilon={args.epsilon}:")
+        for dialect, metric, old, new in regressed:
+            print(f"  {dialect} {metric}: {_fmt(old)} -> {_fmt(new)}")
+        sys.exit(1)
+    print("\nno regressions detected")
+
+
+def regression(old, new, worse: int, epsilon: float) -> bool:
+    """True when *new* is worse than *old* by more than *epsilon*.
+
+    *worse* is +1 for a metric where higher is worse (PER) and -1 for one
+    where lower is worse (stress accuracy). A score that disappears
+    against a baseline that had one regresses; a baseline with no score
+    has nothing to hold.
+    """
+    if old is None:
+        return False
+    if new is None:
+        return True
+    return (new - old) * worse > epsilon
+
+
+def _compare(metric: str, worse: int, rows, baseline, epsilon: float):
+    header = (f"{metric:<24}{'baseline':>10}{'new':>10}{'delta':>10}"
+              "  status")
     print(header)
     print("-" * len(header))
     regressed = []
     for row in rows:
-        base = baseline.get(row["dialect"])
-        if base is None:
-            print(f"{row['dialect']:<24}{'-':>10}{row['per']:>10.4f}"
+        new = row[metric]
+        base = baseline.get(row["dialect"], {})
+        if metric not in base:
+            print(f"{row['dialect']:<24}{'-':>10}{_fmt(new):>10}"
                   f"{'-':>10}  new")
             continue
-        delta = row["per"] - base["per"]
-        status = "regressed" if delta > args.epsilon else "ok"
-        print(f"{row['dialect']:<24}{base['per']:>10.4f}{row['per']:>10.4f}"
-              f"{delta:>+10.4f}  {status}")
-        if status == "regressed":
-            regressed.append((row["dialect"], base["per"], row["per"]))
+        old = base[metric]
+        bad = regression(old, new, worse, epsilon)
+        delta = "-" if old is None or new is None else f"{new - old:+.4f}"
+        print(f"{row['dialect']:<24}{_fmt(old):>10}{_fmt(new):>10}"
+              f"{delta:>10}  {'regressed' if bad else 'ok'}")
+        if bad:
+            regressed.append((row["dialect"], metric, old, new))
     print("-" * len(header))
+    return regressed
 
-    if regressed:
-        print(f"\n{len(regressed)} dialect(s) regressed beyond "
-              f"epsilon={args.epsilon}:")
-        for dialect, old, new in regressed:
-            print(f"  {dialect}: {old:.4f} -> {new:.4f}")
-        sys.exit(1)
-    print("\nno regressions detected")
+
+def _fmt(value) -> str:
+    return "-" if value is None else f"{value:.4f}"
 
 
 if __name__ == "__main__":

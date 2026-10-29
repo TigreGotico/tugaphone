@@ -3,6 +3,7 @@ from typing import Optional
 
 from ovos_number_parser import pronounce_number
 from ovos_number_parser.util import GrammaticalGender
+from tugalex import TugaLexicon
 
 
 class NumberParser:
@@ -60,6 +61,82 @@ class NumberParser:
     PLURAL_FUNCTION_WORDS = frozenset({
         "as", "os", "das", "dos", "nas", "nos", "às", "aos", "pelas", "pelos",
     })
+    # Articles, alone or contracted with "de", that set the gender of a
+    # number when a word follows the number ("as 2 artistas", "os 2 artistas").
+    FEMININE_DETERMINERS = frozenset({"a", "as", "da", "das"})
+    MASCULINE_DETERMINERS = frozenset({"o", "os", "do", "dos"})
+    # Function words that can follow a number ("os 2 da equipa", "uma das
+    # casas"). They are not the counted noun, so the noun gender of their
+    # spelling does not decide.
+    FUNCTION_WORDS = frozenset({
+        "a", "as", "o", "os", "da", "das", "do", "dos", "na", "nas", "no", "nos",
+        "à", "às", "ao", "aos", "pela", "pelas", "pelo", "pelos", "de", "em",
+        "e", "ou", "que", "para", "por", "com", "sem",
+    })
+    # Words that join the two numbers of a range ("de 1 a 2 dias", "das 2 às
+    # 3 horas"); "e" joins them after "entre" ("entre 1 e 2 semanas").
+    RANGE_LINKS = frozenset({"a", "à", "às", "ao", "aos"})
+
+    # Unit symbols read after a number, as (singular, plural) names. Symbols
+    # and names follow the SI brochure ("Tradução luso-brasileira de 2021 do
+    # SI", IPQ/Inmetro, §5.2-5.3): the symbol is invariable, "l" and "L" are
+    # both the litre, "%" reads "por cento". The names are the dictionary
+    # forms ("quilómetro", "quilograma"); pt-BR writes "quilômetro". Every
+    # name is masculine -- "o grama", "duzentos gramas" (Inmetro, "Unidades
+    # Legais de Medida") -- so the number before a symbol is masculine.
+    UNIT_NAMES = {
+        "%": ("por cento", "por cento"),
+        "€": ("euro", "euros"),
+        "mm": ("milímetro", "milímetros"),
+        "cm": ("centímetro", "centímetros"),
+        "m": ("metro", "metros"),
+        "km": ("quilómetro", "quilómetros"),
+        "km/h": ("quilómetro por hora", "quilómetros por hora"),
+        "cm2": ("centímetro quadrado", "centímetros quadrados"),
+        "cm²": ("centímetro quadrado", "centímetros quadrados"),
+        "m2": ("metro quadrado", "metros quadrados"),
+        "m²": ("metro quadrado", "metros quadrados"),
+        "km2": ("quilómetro quadrado", "quilómetros quadrados"),
+        "km²": ("quilómetro quadrado", "quilómetros quadrados"),
+        "cm3": ("centímetro cúbico", "centímetros cúbicos"),
+        "cm³": ("centímetro cúbico", "centímetros cúbicos"),
+        "m3": ("metro cúbico", "metros cúbicos"),
+        "m³": ("metro cúbico", "metros cúbicos"),
+        "mg": ("miligrama", "miligramas"),
+        "g": ("grama", "gramas"),
+        "kg": ("quilograma", "quilogramas"),
+        "ml": ("mililitro", "mililitros"),
+        "mL": ("mililitro", "mililitros"),
+        "cl": ("centilitro", "centilitros"),
+        "cL": ("centilitro", "centilitros"),
+        "dl": ("decilitro", "decilitros"),
+        "dL": ("decilitro", "decilitros"),
+        "l": ("litro", "litros"),
+        "L": ("litro", "litros"),
+    }
+
+    @classmethod
+    def unit_name(cls, symbol: str, plural: bool, is_brazilian=False) -> str:
+        """The spoken name of a unit symbol, in the singular or the plural."""
+        name = cls.UNIT_NAMES[symbol][plural]
+        return name.replace("quilómetro", "quilômetro") if is_brazilian else name
+
+    @classmethod
+    def unit_takes_plural(cls, value: float, is_decimal: bool, is_brazilian=False) -> bool:
+        """Whether a unit name after the quantity ``value`` is plural.
+
+        European Portuguese uses the plural after every cardinal except
+        um/uma, zero included (Gramática do Português, Gulbenkian, as quoted
+        by Ciberdúvidas, "Zero: com (ou sem) plural"), and after any decimal:
+        "zero vírgula vinte e cinco moles", "um vírgula dois litros" (Peres &
+        Móia, Áreas Críticas da Língua Portuguesa, pp. 512-517, as quoted by
+        FLiP, "concordâncias com unidades (II)"). Brazilian usage keeps the
+        singular up to one: "zero grau", "zero vírgula vinte e cinco mol"
+        (same sources).
+        """
+        if is_brazilian:
+            return value > 1
+        return is_decimal or value != 1
 
     @classmethod
     def pronounce_number_word(cls, word: str,
@@ -315,15 +392,31 @@ class NumberParser:
             if not counts_next_word:
                 return "masculine"
 
-        # Rule B: Check preceding articles (a, as, da, das are feminine) -- but only
-        # when a noun actually follows the number ("a 1 casa"). Without a following
-        # noun, a bare "a"/"as" before the number is the preposition "to" (as in a
-        # score/range reading, "3 a 2"), not the feminine article, and must not
-        # force a feminine reading (Rule C already catches feminine nouns on its own).
-        if prev_word and prev_word in ["a", "as", "da", "das"] and next_word and next_word.isalpha():
-            return "feminine"
+        noun = cls.split_trailing_punctuation(next_word or "")[0].lower()
+        is_word = noun.replace("-", "").isalpha()
+        listed = (TugaLexicon.get_noun_gender(noun)
+                  if is_word and noun not in cls.FUNCTION_WORDS else None)
 
-        # Rule C: Check the following noun (the object being counted)
+        # Rule N: the counted noun's gender in tugalex, from its exceptions
+        # list or its suffix rules ("1 lei" -> "uma lei", "1 dia" -> "um
+        # dia"). A single gender decides even against an article, which then
+        # belongs to a later noun ("o 2 vezes campeão" -> "duas"). A noun of
+        # both genders ("artista", "capital") falls through.
+        if listed in ("m", "f"):
+            return "feminine" if listed == "f" else "masculine"
+
+        # Rule B: an article before the number sets its gender ("as 2
+        # artistas", "os 2 artistas") -- but only when a word follows the
+        # number. Without one, a bare "a"/"as" before the number is the
+        # preposition "to", as in a score or range reading ("3 a 2").
+        if prev_word and is_word:
+            if prev_word in cls.FEMININE_DETERMINERS:
+                return "feminine"
+            if prev_word in cls.MASCULINE_DETERMINERS:
+                return "masculine"
+
+        # Rule C: the ending of the following word, for a function word, a
+        # noun of both genders or a word that tugalex does not know
         if next_word:
             # Simple check: Words ending in 'a' are usually feminine (e.g., 'casa')
             # We strip 's' to account for plural nouns.
@@ -336,7 +429,6 @@ class NumberParser:
             # Words ending in -dade, -age, or -agem are consistently feminine.
             elif next_word.rstrip("sm").lower().endswith("e"):
                 # words ending with "e" may be either male, female or both
-                # a wordlist is needed to be sure
                 # 1 ponte (bridge) -> uma ponte  (female)
                 # 1 dente (tooth) -> um dente  (male)
                 # 1 cliente -> um(a) cliente
@@ -375,28 +467,89 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
     words = text.replace(" º", "º").replace(" ª", "ª").split()
     normalized_words = []
 
+    def is_number(token: Optional[str]) -> bool:
+        if token is None:
+            return False
+        token = NumberParser.split_trailing_punctuation(token)[0]
+        return NumberParser.is_int(token) or NumberParser.is_float(token)
+
+    def unit_symbol(token: Optional[str]) -> Optional[str]:
+        if token is None:
+            return None
+        symbol = NumberParser.split_trailing_punctuation(token)[0]
+        return symbol if symbol in NumberParser.UNIT_NAMES else None
+
+    skip_unit = False
     for idx, word in enumerate(words):
+        if skip_unit:
+            skip_unit = False
+            continue
         # A numeric token may carry trailing punctuation glued to it
         # ("54.", "05,", "5!") -- split it off so is_int/is_float see a
         # clean number, then glue it back onto the spelled-out word so the
         # caller never has to detach it with a space (see #116).
         core, trail = NumberParser.split_trailing_punctuation(word)
-        is_num = NumberParser.is_int(core) or NumberParser.is_float(core)
-        if is_num:
-            # Lookahead and Lookbehind for grammatical context
-            next_word = words[idx + 1] if idx + 1 < len(words) else None
-            prev_word = words[idx - 1] if idx - 1 >= 0 else None
-            # spell out the number
-            try:
-                spelled = NumberParser.pronounce_number_word(
-                    core, prev_word, next_word, is_brazilian=is_brazilian, scale=scale
-                )
-                normalized_words.append(spelled + trail)
-            except Exception as e:
-                if strict:
-                    raise e
-                normalized_words.append(word)
-        else:
+        if not is_number(core):
+            normalized_words.append(word)
+            continue
+        # Lookahead and Lookbehind for grammatical context
+        next_word = words[idx + 1] if idx + 1 < len(words) else None
+        prev_word = words[idx - 1] if idx - 1 >= 0 else None
+        unit = None if trail else unit_symbol(next_word)
+        # The digits after "vírgula" are the fractional part of a decimal
+        # ("0,02" -> "0 vírgula 02"); their leading zeros are read one by one.
+        is_fraction = prev_word == "vírgula" and is_number(words[idx - 2] if idx >= 2 else None)
+
+        gender = None
+        if unit:
+            gender = "masculine"
+        elif next_word == "vírgula" and is_number(words[idx + 2] if idx + 2 < len(words) else None):
+            # The integer part of a decimal agrees with the noun after the
+            # whole decimal, not with the word "vírgula".
+            after = words[idx + 3] if idx + 3 < len(words) else None
+            gender = ("masculine" if unit_symbol(after)
+                      else NumberParser.get_number_gender(core, prev_word, after))
+        elif next_word == "vezes" and is_number(words[idx + 2] if idx + 2 < len(words) else None):
+            # "vezes" between two numbers is the multiplication sign, not the
+            # plural of the feminine noun "vez": "dois vezes dois são quatro"
+            # (Priberam DLPO, "vezes", as cited in
+            # tests/test_measure_normalization.py).
+            gender = "masculine"
+        elif ((next_word in NumberParser.RANGE_LINKS or (next_word == "e" and prev_word == "entre"))
+              and is_number(words[idx + 2] if idx + 2 < len(words) else None)
+              and not NumberParser.is_ordinal(core, next_word)):
+            # Both numbers of a range agree with the noun after the second
+            # one ("de 1 a 2 dias" -> "de um a dois dias").
+            second, second_trail = NumberParser.split_trailing_punctuation(words[idx + 2])
+            after = None if second_trail or idx + 3 >= len(words) else words[idx + 3]
+            gender = ("masculine" if unit_symbol(after)
+                      else NumberParser.get_number_gender(second, next_word, after))
+        try:
+            spelled = []
+            if is_fraction and core.isdigit():
+                digits = core.lstrip("0")
+                spelled = ["zero"] * (len(core) - len(digits))
+                core = digits
+            if core:
+                spelled.append(NumberParser.pronounce_number_word(
+                    core, prev_word, next_word, gender=gender,
+                    is_brazilian=is_brazilian, scale=scale))
+            if unit:
+                if is_fraction:
+                    value = float(f"{words[idx - 2]}.{core or 0}")
+                else:
+                    value = NumberParser.to_float(core)
+                plural = NumberParser.unit_takes_plural(value, is_fraction, is_brazilian)
+                if unit != "%" and spelled[-1].endswith(("ão", "ões")):
+                    # "um milhão de euros" (Ciberdúvidas 25561: "2,5 milhões de euros")
+                    spelled.append("de")
+                spelled.append(NumberParser.unit_name(unit, plural, is_brazilian))
+                trail = NumberParser.split_trailing_punctuation(next_word)[1]
+                skip_unit = True
+            normalized_words.append(" ".join(spelled) + trail)
+        except Exception as e:
+            if strict:
+                raise e
             normalized_words.append(word)
 
     return " ".join(normalized_words)

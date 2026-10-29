@@ -1,5 +1,74 @@
 # Changelog
 
+## [1.4.8a1](https://github.com/TigreGotico/tugaphone/tree/1.4.8a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.7a1...1.4.8a1)
+
+**Merged pull requests:**
+
+- fix: find orthography2ipa's benchmark module from a PyPI install [\#152](https://github.com/TigreGotico/tugaphone/pull/152) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.7a1](https://github.com/TigreGotico/tugaphone/tree/1.4.7a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.6a1...1.4.7a1)
+
+**Merged pull requests:**
+
+- fix: mark one primary stress per hyphenated compound [\#149](https://github.com/TigreGotico/tugaphone/pull/149) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.6a1](https://github.com/TigreGotico/tugaphone/tree/1.4.6a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.5a1...1.4.6a1)
+
+**Merged pull requests:**
+
+- fix: read a number's gender from a Portuguese noun-gender list [\#145](https://github.com/TigreGotico/tugaphone/pull/145) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.5a1](https://github.com/TigreGotico/tugaphone/tree/1.4.5a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.4a2...1.4.5a1)
+
+**Merged pull requests:**
+
+- fix: read Roman numerals by grammar and guard capitals, letter-digit codes [\#144](https://github.com/TigreGotico/tugaphone/pull/144) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.4a2](https://github.com/TigreGotico/tugaphone/tree/1.4.4a2) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.4a1...1.4.4a2)
+
+**Merged pull requests:**
+
+- test\(bench\): score stress accuracy next to PER per dialect [\#143](https://github.com/TigreGotico/tugaphone/pull/143) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.4a1](https://github.com/TigreGotico/tugaphone/tree/1.4.4a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.3a1...1.4.4a1)
+
+**Merged pull requests:**
+
+- fix: read feminine and plural honorifics and Excelência forms [\#141](https://github.com/TigreGotico/tugaphone/pull/141) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.3a1](https://github.com/TigreGotico/tugaphone/tree/1.4.3a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.2a3...1.4.3a1)
+
+**Merged pull requests:**
+
+- fix: read percent, unit symbols, euros and multiplication [\#140](https://github.com/TigreGotico/tugaphone/pull/140) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.2a3](https://github.com/TigreGotico/tugaphone/tree/1.4.2a3) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.2a2...1.4.2a3)
+
+## [1.4.2a2](https://github.com/TigreGotico/tugaphone/tree/1.4.2a2) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.2a1...1.4.2a2)
+
+**Merged pull requests:**
+
+- Update dependency python to 3.15 [\#132](https://github.com/TigreGotico/tugaphone/pull/132) ([renovate[bot]](https://github.com/apps/renovate))
+- Update actions/checkout action to v7 [\#128](https://github.com/TigreGotico/tugaphone/pull/128) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [1.4.2a1](https://github.com/TigreGotico/tugaphone/tree/1.4.2a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.1a2...1.4.2a1)
@@ -331,49 +400,25 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a2...0.5.1a3)
 
-**Merged pull requests:**
-
-- docs: tighten sede row wording in homographs table [\#40](https://github.com/TigreGotico/tugaphone/pull/40) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.5.1a2](https://github.com/TigreGotico/tugaphone/tree/0.5.1a2) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a1...0.5.1a2)
-
-**Merged pull requests:**
-
-- docs: correct sede vowel mapping and POS-table row in homographs page [\#37](https://github.com/TigreGotico/tugaphone/pull/37) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.5.1a1](https://github.com/TigreGotico/tugaphone/tree/0.5.1a1) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a2...0.5.1a1)
 
-**Merged pull requests:**
-
-- fix: restore final vowel in gosto VERB homograph IPA [\#38](https://github.com/TigreGotico/tugaphone/pull/38) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.5.0a2](https://github.com/TigreGotico/tugaphone/tree/0.5.0a2) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a1...0.5.0a2)
-
-**Merged pull requests:**
-
-- docs: refresh README, docs, examples and tests [\#35](https://github.com/TigreGotico/tugaphone/pull/35) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.5.0a1](https://github.com/TigreGotico/tugaphone/tree/0.5.0a1) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.4.0a2...0.5.0a1)
 
-**Merged pull requests:**
-
-- feat: disambiguate heterophonic homographs with bifonia [\#33](https://github.com/TigreGotico/tugaphone/pull/33) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.4.0a2](https://github.com/TigreGotico/tugaphone/tree/0.4.0a2) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.4.0a1...0.4.0a2)
-
-**Merged pull requests:**
-
-- refactor: grounded regional transform layer [\#29](https://github.com/TigreGotico/tugaphone/pull/29) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.4.0a1](https://github.com/TigreGotico/tugaphone/tree/0.4.0a1) (2026-06-12)
 
