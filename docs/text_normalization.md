@@ -1,6 +1,6 @@
 # Text normalization
 
-Written text contains conventions that the phoneme rules cannot read: number ranges, clock times, European thousands and decimal separators, honorific abbreviations, regnal Roman numerals and acronyms. `tugaphone.text_normalization` rewrites them into plain words or plain digit tokens so that [`normalize_numbers`](numbers.md) can read the result. It runs on the text before any lattice or phoneme work, in the engine's `normalize` stage, ahead of `normalize_numbers`. Number words follow standard European Portuguese ("vinte e cinco").
+Written text contains conventions that the phoneme rules cannot read: unit symbols, number ranges, clock times, European thousands and decimal separators, honorific abbreviations, regnal Roman numerals and acronyms. `tugaphone.text_normalization` rewrites them into plain words or plain digit tokens so that [`normalize_numbers`](numbers.md) can read the result. It runs on the text before any lattice or phoneme work, in the engine's `normalize` stage, ahead of `normalize_numbers`. Number words follow standard European Portuguese ("vinte e cinco").
 
 ```python
 from tugaphone.text_normalization import normalize_orthography
@@ -17,6 +17,29 @@ normalize_numbers(normalize_orthography(text), "pt-PT")
 they don't interfere with each other.
 
 ---
+
+## Unit symbols, percent, euros and multiplication
+
+The SI puts a space between a number and its unit symbol, and between a
+number and `%`. A symbol glued to the digits (`7kg`, `20%`) gets that space
+back, and a leading euro sign moves after the number (`€20` → `20 €`), so
+that `normalize_numbers` reads the unit name with number agreement (see
+[Units, percent and euros](numbers.md#units-percent-and-euros)). A symbol
+counts only right after digits, so the letter `m` in running text is left
+alone. An amount in euros with one or two decimals is read as euros and
+cents. A `x` or `×` between two numbers is read *vezes*; a hex literal such
+as `0x1F` and the word in "o x da questão" are left alone.
+
+```python
+from tugaphone.text_normalization import separate_unit_symbols
+
+separate_unit_symbols("Pesa 7kg e custa €20.")
+# 'Pesa 7 kg e custa 20 €.'
+separate_unit_symbols("Custa 2,50 €.")
+# 'Custa 2 € e 50 cêntimos.'
+separate_unit_symbols("15x8")
+# '15 vezes 8'
+```
 
 ## Number ranges
 
