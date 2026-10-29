@@ -6,6 +6,8 @@
     "failed": 0,
     "per": 0.2495,
     "word_accuracy": 0.07,
+    "stress_acc": 0.9698,
+    "n_stress": 993,
     "top_confusions": [
       {
         "got": "a",
@@ -117,6 +119,8 @@
     "failed": 0,
     "per": 0.2448,
     "word_accuracy": 0.08,
+    "stress_acc": 0.9518,
+    "n_stress": 893,
     "top_confusions": [
       {
         "got": "a",
@@ -228,6 +232,8 @@
     "failed": 0,
     "per": 0.1543,
     "word_accuracy": 0.2,
+    "stress_acc": 0.9778,
+    "n_stress": 992,
     "top_confusions": [
       {
         "got": "a",
@@ -339,6 +345,8 @@
     "failed": 0,
     "per": 0.1577,
     "word_accuracy": 0.196,
+    "stress_acc": 0.9748,
+    "n_stress": 992,
     "top_confusions": [
       {
         "got": "a",
@@ -450,6 +458,8 @@
     "failed": 0,
     "per": 0.2246,
     "word_accuracy": 0.164,
+    "stress_acc": 0.9778,
+    "n_stress": 992,
     "top_confusions": [
       {
         "got": "ɾ",
@@ -561,6 +571,8 @@
     "failed": 0,
     "per": 0.2295,
     "word_accuracy": 0.154,
+    "stress_acc": 0.8999,
+    "n_stress": 979,
     "top_confusions": [
       {
         "got": "ɾ",
@@ -672,6 +684,8 @@
     "failed": 0,
     "per": 0.0902,
     "word_accuracy": 0.486,
+    "stress_acc": 0.9608,
+    "n_stress": 994,
     "top_confusions": [
       {
         "got": "ʁ",
@@ -783,6 +797,8 @@
     "failed": 0,
     "per": 0.2385,
     "word_accuracy": 0.124,
+    "stress_acc": 0.9777,
+    "n_stress": 985,
     "top_confusions": [
       {
         "got": "e",
