@@ -1945,9 +1945,11 @@ class GraphemeToken:
             if s[0] in "qg" and s[1] == "u":
                 # que/qui/gue/gui: the u is silent or [w]. The table holds
                 # the unstressed vowel; a stressed one keeps its full
-                # quality, as any other stressed vowel does
+                # quality, as any other stressed vowel does. A function
+                # word (que) is atonic and keeps the reduced vowel
                 onset = "".join(c.ipa for c in self.characters[:2])
-                if self.has_primary_stress or self.has_secondary_stress:
+                stressed = self.has_primary_stress or self.has_secondary_stress
+                if stressed and not self.parent_word.is_function_word:
                     return onset + self.characters[2].ipa
                 return onset + ipa[1:]
             return ipa
@@ -2319,6 +2321,16 @@ class WordToken:
             return [self]
         return [w for w in self.parent_sentence.words
                 if w.chunk_idx == self.chunk_idx]
+
+    @cached_property
+    def is_function_word(self) -> bool:
+        """An atonic monosyllable: a pronoun, article, preposition or
+        conjunction such as *que*, *se* or *de*. The forms are the spec's
+        ``stress.cliticless_words``."""
+        if self.n_syllables != 1:
+            return False
+        rules = _spec_stress_rules(self.dialect.dialect_code)
+        return rules is not None and self.normalized in rules.cliticless_words
 
     @cached_property
     def is_hyphen_clitic(self) -> bool:

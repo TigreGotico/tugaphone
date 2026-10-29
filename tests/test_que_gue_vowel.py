@@ -56,3 +56,35 @@ ROWS = [
 def test_que_gue_vowel(dialect, word, gold, onset, allowed, inventories):
     vowel, ipa = vowel_after(word, onset, inventories[dialect])
     assert vowel in allowed, ipa
+
+
+# The function word *que* is atonic and keeps [ɨ]; only *quê* is stressed.
+# Infopédia: que "kə", quê "ˈke", quer "ˈkɛr" (its ə is the [ɨ] written
+# elsewhere in this file). Each row lists the vowel after [k] in every word
+# of the sentence that starts with ⟨qu⟩, in order.
+SENTENCE_ROWS = [
+    ("que", [REDUCED]),
+    ("quê", [FULL]),
+    ("eu sei que vens", [REDUCED]),
+    ("o que é que queres", [REDUCED, REDUCED, FULL]),
+]
+
+
+@pytest.mark.parametrize("sentence,classes", SENTENCE_ROWS)
+def test_function_word_que_keeps_the_reduced_vowel(sentence, classes, inventories):
+    ipa = Sentence(sentence, dialect=inventories["pt-PT"]).ipa.strip()
+    words = [w for w in sentence.split() if w.startswith("qu")]
+    spoken = [w.strip("ˈˌ").replace("·", "")
+              for w, o in zip(ipa.split(), sentence.split()) if o.startswith("qu")]
+    assert len(spoken) == len(words) == len(classes), ipa
+    for word, allowed in zip(spoken, classes):
+        assert word[1] in allowed, ipa
+
+
+# The other atonic monosyllables of ``stress.cliticless_words`` keep [ɨ] too.
+# Infopédia: se "sə", me "mə", te "tə", lhe "ʎə", de "də".
+@pytest.mark.parametrize("word,onset", [
+    ("se", "s"), ("me", "m"), ("te", "t"), ("lhe", "ʎ"), ("de", "d")])
+def test_clitic_keeps_the_reduced_vowel(word, onset, inventories):
+    vowel, ipa = vowel_after(word, onset, inventories["pt-PT"])
+    assert vowel in REDUCED, ipa
