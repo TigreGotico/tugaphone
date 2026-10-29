@@ -13,11 +13,11 @@ stress lands on the gold's syllable. PER cannot see that choice.
 
 | Dialect | Gold region | Words | PER | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|
-| pt-AO | pt-AO | 1000 | 0.2495 | 0.0700 | 993 | 0.9930 |
-| pt-BR | pt-BR | 1000 | 0.2448 | 0.0800 | 893 | 0.9675 |
-| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1543 | 0.2000 | 992 | 0.9990 |
-| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1577 | 0.1960 | 992 | 0.9960 |
-| pt-MZ | pt-MZ-x-maputo | 1000 | 0.2246 | 0.1640 | 992 | 0.9990 |
-| pt-PT | pt-PT | 1000 | 0.2295 | 0.1540 | 979 | 0.9847 |
-| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0902 | 0.4860 | 994 | 0.9930 |
-| pt-TL | pt-TL-x-dili | 1000 | 0.2385 | 0.1240 | 985 | 0.9990 |
+| pt-AO | pt-AO | 1000 | 0.2495 | 0.0700 | 993 | 0.9950 |
+| pt-BR | pt-BR | 1000 | 0.2448 | 0.0800 | 893 | 0.9754 |
+| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1543 | 0.2000 | 992 | 1.0000 |
+| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1577 | 0.1960 | 992 | 0.9970 |
+| pt-MZ | pt-MZ-x-maputo | 1000 | 0.2246 | 0.1640 | 992 | 1.0000 |
+| pt-PT | pt-PT | 1000 | 0.2295 | 0.1540 | 979 | 0.9867 |
+| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0902 | 0.4860 | 994 | 0.9980 |
+| pt-TL | pt-TL-x-dili | 1000 | 0.2385 | 0.1240 | 985 | 1.0000 |

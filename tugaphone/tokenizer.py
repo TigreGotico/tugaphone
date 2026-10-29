@@ -181,6 +181,20 @@ def detect_stress_position(word: str, syllables: List[str], dialect: DialectInve
     return n_syllables - 2 if n_syllables >= 2 else 0
 
 
+#: Words whose ⟨qu⟩/⟨gu⟩ before ⟨e i⟩ pronounce the u as [w]. Nothing in
+#: the spelling marks them since the trema was dropped; the Acordo
+#: Ortográfico 1990 (Base XIV, 1.º) lists aguentar, anguiforme, arguir,
+#: lingueta, linguista, linguístico, cinquenta, equestre, frequentar,
+#: tranquilo and ubiquidade. bilíngue/bilingue, on the same list, are left
+#: out: Infopédia and the Portal transcribe bilingue with a silent u.
+PRONOUNCED_QU_GU_U = frozenset({
+    "aguentar", "anguiforme", "antiguidade", "arguir", "cinquenta",
+    "equestre", "equino", "frequentar", "frequente", "frequentemente",
+    "lingueta", "linguiça", "linguista", "linguístico", "pinguim",
+    "tranquilo", "ubiquidade",
+})
+
+
 def is_grapheme_silent(grapheme: str, context_before: str, context_after: str,
                        word: str, dialect: DialectInventory) -> bool:
     """
@@ -223,15 +237,10 @@ def is_grapheme_silent(grapheme: str, context_before: str, context_after: str,
     if g == "h":
         return True
 
-    # U after Q or G before E or I (modern orthography default: silent)
-    # Historical note: Trema (ü) used to mark pronounced u
-    # Modern: Requires etymology/word list to determine
-    if g == "u" and before in ["q", "g"] and after and after[0] in "ei":
-        # Check word list for know exceptions
-        if word.lower() in ["equino", "antiguidade, linguiça", "pinguim", "frequente", "frequentemente"]:
-            return False
-        # assume silent (most common)
-        return True
+    # U after Q or G before E or I, written accent or not: silent, except in
+    # the words that pronounce it (the trema that marked them is gone)
+    if g == "u" and before[-1:] in ("q", "g") and after and after[0] in "eiéêí":
+        return word.lower() not in PRONOUNCED_QU_GU_U
 
     # Archaic silent P in mpc/mpç/mpt
     if g == "p" and before == "m" and after and after[0] in "cç":
@@ -893,6 +902,12 @@ class CharToken:
             IPA string for this vowel
         """
         s = self.normalized
+
+        # The u of qu/gu that is not silent is the glide [w], never a
+        # nucleus of its own: quando [ˈkwɐ̃du], guarda [ˈɡwaɾdɐ]
+        if (s == "u" and self._prev_letter in ("q", "g")
+                and self._next_letter in self.dialect.ALL_VOWEL_CHARS | self.dialect.TILDE_VOWEL_CHARS):
+            return "w"
 
         # Explicit diacritical marking
         if s in self.dialect.DEFAULT_CHAR2PHONEMES:
@@ -1898,7 +1913,12 @@ class GraphemeToken:
             return self.dialect.TETRAGRAM2IPA[s]
 
         if s in self.dialect.TRIGRAM2IPA:
-            return self.dialect.TRIGRAM2IPA[s]
+            ipa = self.dialect.TRIGRAM2IPA[s]
+            if s[0] in "qg" and s[1] == "u" and not is_grapheme_silent(
+                    "u", s[0], s[2:], word, self.dialect):
+                # que/qui/gue/gui of a word that pronounces the u
+                return ipa[0] + "w" + ipa[1:]
+            return ipa
 
         if s in self.dialect.NASAL_DIGRAPHS:
             return self.dialect.NASAL_DIGRAPHS[s]
