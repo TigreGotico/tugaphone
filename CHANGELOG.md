@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.12a1](https://github.com/TigreGotico/tugaphone/tree/1.4.12a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.11a1...1.4.12a1)
+
+**Merged pull requests:**
+
+- fix: read the u of qu/gu as silent before e/i and as \[w\] before a/o [\#150](https://github.com/TigreGotico/tugaphone/pull/150) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.11a1](https://github.com/TigreGotico/tugaphone/tree/1.4.11a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.10a1...1.4.11a1)
@@ -387,10 +395,6 @@
 ## [0.6.1a3](https://github.com/TigreGotico/tugaphone/tree/0.6.1a3) (2026-07-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a2...0.6.1a3)
-
-**Merged pull requests:**
-
-- refactor: rely on o2i 1.64 ẽĩũ orthographic vowels, drop private fallback [\#55](https://github.com/TigreGotico/tugaphone/pull/55) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.6.1a2](https://github.com/TigreGotico/tugaphone/tree/0.6.1a2) (2026-07-11)
 
