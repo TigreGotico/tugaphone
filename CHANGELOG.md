@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.4a1](https://github.com/TigreGotico/tugaphone/tree/1.4.4a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.3a1...1.4.4a1)
+
+**Merged pull requests:**
+
+- fix: read feminine and plural honorifics and Excelência forms [\#141](https://github.com/TigreGotico/tugaphone/pull/141) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.3a1](https://github.com/TigreGotico/tugaphone/tree/1.4.3a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.2a3...1.4.3a1)
