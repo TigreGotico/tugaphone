@@ -211,7 +211,7 @@ European number separators are kept. The dot in "92.073" groups thousands and is
 
 Abbreviations expand in two ways. Common ones such as "vs.", "pág." and "Av." always expand, so "vs." reads as "versus". Honorifics such as "Sr." and "Dr." expand only before a capitalised name, so "Sr. Silva" reads as "Senhor Silva" and a lone "Sr." at the end of a sentence stays as it is.
 
-A Roman numeral after a name becomes an ordinal: "Afonso I" reads as "Afonso Primeiro". Acronyms are spelled with Portuguese letter names, so "IA" reads as "i á", while lowercase words such as "ia" are left alone.
+A Roman numeral after a name or a century reads as an ordinal up to ten and as a cardinal above ten: "Afonso I" reads as "Afonso Primeiro" and "o século XIX" as "o século dezanove". The ordinal takes the gender of the name, so "D. Maria II" reads as "Dona Maria Segunda". A capital in a fixed expression such as "raio X" or "vitamina C" stays a letter. A letter-digit code reads as its letters and a number, so "T2" reads as "tê dois". Acronyms are spelled with Portuguese letter names, so "IA" reads as "i á", while lowercase words such as "ia" are left alone.
 
 The numbers themselves are then spelled out by `normalize_numbers` in standard European Portuguese, for example "vinte e cinco". The full rule list with examples is in [docs/text_normalization.md](docs/text_normalization.md).
 
@@ -291,7 +291,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 - [docs/homographs.md](docs/homographs.md), meaning-based disambiguation
 - [docs/codeswitch.md](docs/codeswitch.md), embedded es/fr/en detection and nativization
 - [docs/numbers.md](docs/numbers.md), number normalization and gender agreement
-- [docs/text_normalization.md](docs/text_normalization.md), ranges, clock times, separators, abbreviations, regnal numerals, acronyms
+- [docs/text_normalization.md](docs/text_normalization.md), ranges, clock times, separators, abbreviations, Roman numerals, acronyms, letter-digit codes
 - [docs/api.md](docs/api.md), full class and function reference
 - [docs/tokenizer.md](docs/tokenizer.md), the token-tree feature model
 - [docs/advanced.md](docs/advanced.md), the pipeline internals and integration
