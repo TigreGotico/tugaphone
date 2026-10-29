@@ -102,9 +102,11 @@ def expand_clock_times(text: str) -> str:
 #   "art.", "fig.", "cap.", "séc.") and place-name abbreviations ("Av.",
 #   "R.", "Lx.", "n.º"/"nº") that stand for the same word whether followed
 #   by a capitalised name, a lowercase word, or end of sentence.
-# * PERSONAL HONORIFICS: only expanded right before a capitalised word (the
-#   name they introduce), since standalone "Dr." or "Sr." at a sentence's
-#   end is more often the plain abbreviation than a title.
+# * NAME-INTRODUCING: "D." is expanded only right before a capitalised word
+#   (the name it introduces): alone it is as often an initial or a letter.
+#   The personal titles "Sr.", "Dr.", "Eng.", "Prof." and their feminine and
+#   plural forms stand for one word wherever they appear ("o Sr. presidente",
+#   "os Srs. deputados", "falei com o Dr."), so they are unconditional.
 #
 # Forms with a superscript ending ("Sr.ª", "Sr.as", "n.os", "Ex.mo") match no
 # ordinary word, so they are unconditional. The expansions follow the
@@ -150,8 +152,7 @@ _UNCONDITIONAL_ABBREVIATIONS = {
     "Exmos.": "Excelentíssimos",
     "Exmas.": "Excelentíssimas",
 }
-_HONORIFIC_ABBREVIATIONS = {
-    "D.": "Dom",
+_UNCONDITIONAL_ABBREVIATIONS.update({
     "Sr.": "Senhor",
     "Sra.": "Senhora",
     "Srs.": "Senhores",
@@ -160,7 +161,15 @@ _HONORIFIC_ABBREVIATIONS = {
     "Dra.": "Doutora",
     "Eng.": "Engenheiro",
     "Prof.": "Professor",
+})
+_HONORIFIC_ABBREVIATIONS = {
+    "D.": "Dom",
 }
+# Nouns a capital letter labels ("a vitamina D.", "a alínea D."): after them
+# "D." is the letter, whatever word follows.
+_LETTER_LABEL_NOUNS = frozenset({
+    "vitamina", "letra", "alínea", "classe", "grupo", "tipo", "plano",
+})
 
 # "V." and "S." are the possessive of a following "Excelência" form only:
 # alone, "V." is a letter or a Roman numeral and "S." is "São".
@@ -201,7 +210,9 @@ def expand_abbreviations(text: str) -> str:
             out.append(expansion + trail)
             continue
         expansion = _HONORIFIC_ABBREVIATIONS.get(core)
-        if expansion is not None and following is not None and _is_capitalised(words[i + 1]):
+        after_label = i > 0 and cores[i - 1].lower() in _LETTER_LABEL_NOUNS
+        if (expansion is not None and following is not None
+                and _is_capitalised(words[i + 1]) and not after_label):
             out.append(expansion + trail)
             continue
         out.append(w)

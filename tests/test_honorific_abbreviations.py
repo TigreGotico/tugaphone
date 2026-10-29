@@ -36,6 +36,14 @@ from tugaphone.text_normalization import expand_abbreviations, normalize_orthogr
     ("a Prof.ª Inês", "a Professora Inês"),
     ("os n.os 3 e 4", "os números 3 e 4"),
     ("os N.os 3 e 4", "os números 3 e 4"),
+    # personal titles read the same before a lowercase word or at the end
+    ("os Srs. deputados", "os Senhores deputados"),
+    ("o Sr. presidente da câmara", "o Senhor presidente da câmara"),
+    ("Caros Srs.,", "Caros Senhores,"),
+    ("falei com o Dr.", "falei com o Doutor"),
+    ("o Dr. disse que sim", "o Doutor disse que sim"),
+    ("a Sra. diretora", "a Senhora diretora"),
+    ("o Eng. responsável", "o Engenheiro responsável"),
     # trailing punctuation other than the abbreviation's own period
     ("Obrigado, V. Ex.ª, pela visita", "Obrigado, Vossa Excelência, pela visita"),
 ])
@@ -51,10 +59,11 @@ def test_full_pipeline_numbers_after_plural_numero():
 @pytest.mark.parametrize("text,expected", [
     # rows these rules must leave as they were
     ("Sr. Silva chegou", "Senhor Silva chegou"),
-    ("Dr. disse que sim", "Dr. disse que sim"),
     ("D. Afonso", "Dom Afonso"),
+    ("a vitamina D. Depois", "a vitamina D. Depois"),
+    ("a alínea D. Seguem", "a alínea D. Seguem"),
+    ("o D. disse", "o D. disse"),
     ("nos dias de hoje", "nos dias de hoje"),
-    ("os Srs. deputados", "os Srs. deputados"),
     ("a letra V. Depois", "a letra V. Depois"),
     ("o S. Pedro", "o S. Pedro"),
 ])
