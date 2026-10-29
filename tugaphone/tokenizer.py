@@ -74,7 +74,7 @@ import dataclasses
 import string
 import unicodedata
 from functools import cached_property, lru_cache
-from typing import List, Optional, Dict, Tuple
+from typing import List, Optional, Dict, Set, Tuple
 
 from orthography2ipa.phonetok import PhonetokTokenizer, TokenKind
 from orthography2ipa.types import LanguageSpec
@@ -195,6 +195,34 @@ PRONOUNCED_QU_GU_U = frozenset({
 })
 
 
+def _inflections(entry: str) -> Set[str]:
+    """The plural and gender forms of a non-verb entry."""
+    if entry.endswith("mente"):  # an adverb does not inflect
+        return {entry}
+    if entry.endswith("o"):
+        return {entry[:-1] + end for end in ("o", "a", "os", "as")}
+    if entry.endswith("im"):
+        return {entry, entry[:-1] + "ns"}
+    if entry.endswith(("a", "e")):
+        return {entry, entry + "s"}
+    return {entry}
+
+
+#: A verb whose stem ends in a consonant keeps the [w] in every form built
+#: on that stem: aguentou, aguentamos, frequentes, frequentemente.
+_PRONOUNCED_VERB_STEMS = tuple(
+    entry[:-2] for entry in PRONOUNCED_QU_GU_U
+    if entry.endswith(("ar", "er", "ir")) and entry[-3] not in "aeiou")
+_PRONOUNCED_FORMS = frozenset().union(*(
+    _inflections(entry) for entry in PRONOUNCED_QU_GU_U))
+
+
+def pronounces_qu_gu_u(word: str) -> bool:
+    """Whether *word* is a form of a word that pronounces the u of qu/gu."""
+    w = word.lower()
+    return w in _PRONOUNCED_FORMS or w.startswith(_PRONOUNCED_VERB_STEMS)
+
+
 def is_grapheme_silent(grapheme: str, context_before: str, context_after: str,
                        word: str, dialect: DialectInventory) -> bool:
     """
@@ -240,7 +268,7 @@ def is_grapheme_silent(grapheme: str, context_before: str, context_after: str,
     # U after Q or G before E or I, written accent or not: silent, except in
     # the words that pronounce it (the trema that marked them is gone)
     if g == "u" and before[-1:] in ("q", "g") and after and after[0] in "eiéêí":
-        return word.lower() not in PRONOUNCED_QU_GU_U
+        return not pronounces_qu_gu_u(word)
 
     # Archaic silent P in mpc/mpç/mpt
     if g == "p" and before == "m" and after and after[0] in "cç":
