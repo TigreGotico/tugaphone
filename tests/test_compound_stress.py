@@ -23,6 +23,7 @@ syllable of that element it stands before, and ``None`` means no mark.
 """
 import pytest
 
+from tugaphone import TugaPhonemizer
 from tugaphone.registry import get_dialect_inventory
 from tugaphone.tokenizer import Sentence
 
@@ -112,3 +113,26 @@ def test_compound_inside_a_sentence(inventories):
     """The compound rule stops at the whitespace around the compound."""
     ipa = Sentence("guarda-chuva amarelo", dialect=inventories["pt-PT"]).ipa
     assert element_marks(ipa) == [(S, 0), (P, 0), (P, 2)], ipa
+
+
+@pytest.fixture(scope="module")
+def phonemizer():
+    return TugaPhonemizer()
+
+
+def mark_kinds(expected):
+    return [entry[0] if entry else None for entry in expected]
+
+
+@pytest.mark.parametrize("lang,word,expected",
+                         [("pt-PT", w, e) for w, e in PT_PT] + [("pt-BR", w, e) for w, e in PT_BR])
+def test_pipeline_compound_marks(lang, word, expected, phonemizer):
+    """The pipeline goes through orthography2ipa, which gives a hyphen-joined
+    group one primary on its last stressed element."""
+    ipa = phonemizer.phonemize_sentence(word, lang)
+    assert [m[0] if m else None for m in element_marks(ipa)] == mark_kinds(expected), ipa
+
+
+def test_pipeline_space_separated_words_keep_their_own_primary(phonemizer):
+    ipa = phonemizer.phonemize_sentence("guarda chuva", "pt-PT")
+    assert [m[0] if m else None for m in element_marks(ipa)] == [P, P], ipa
