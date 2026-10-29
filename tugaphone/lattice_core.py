@@ -168,7 +168,7 @@ def _normalizer(lect: str):
     """
 
     def normalize(text: str) -> str:
-        return _mark_heterophones(normalize_numbers(normalize_orthography(text), lect))
+        return _mark_heterophones(normalize_numbers(normalize_orthography(text, lect), lect))
 
     return normalize
 

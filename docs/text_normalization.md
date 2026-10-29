@@ -98,21 +98,55 @@ expand_abbreviations("Ver o vs. anterior.")
 # 'Ver o versus anterior.'
 ```
 
-## Regnal Roman numerals
+## Roman numerals
 
-A multi-letter regnal numeral (`II`..`XX`) always converts to its masculine
-ordinal. A single `I`, `V` or `X` converts only right after a capitalised
-name-like word, so "eu vi X pessoas" is left alone.
+A Roman numeral after a century, a ruler, a pope or a part of a work reads
+as an ordinal up to ten and as a cardinal above ten: "D. João V" is "Dom
+João Quinto", "o século XIX" is "o século dezanove", "Pio XII" is "Pio
+Doze". A numeral before its noun keeps the ordinal, with the gender of the
+article: "a II Guerra Mundial" is "a Segunda Guerra Mundial". The rule is
+Cunha & Cintra's, as quoted by Ciberdúvidas (answers 14284, 14167 and
+11716). The numeral takes the case of the name it belongs to and is
+lowercase after a common noun such as "século". The cardinals follow `lang`
+("dezanove" in pt-PT, "dezenove" in pt-BR).
+
+A multi-letter numeral of `I`, `V` and `X` always converts. A single `I`,
+`V` or `X` converts only after a capitalised name-like word or a
+part-of-work noun (`século`, `capítulo`, `livro`, ...), so "eu vi X pessoas"
+is left alone. A numeral with `L` or `C` converts only after a part-of-work
+noun, so "Pizza Grande XL" is left alone.
 
 ```python
 from tugaphone.text_normalization import expand_regnal_numerals
 
 expand_regnal_numerals("D. Afonso I fundou o reino.")
 # 'D. Afonso Primeiro fundou o reino.'
-expand_regnal_numerals("D. João VI regressou.")
-# 'D. João Sexto regressou.'
+expand_regnal_numerals("No século XIX, Luís XIV já era história.")
+# 'No século dezanove, Luís Catorze já era história.'
+expand_regnal_numerals("o século XIX", lang="pt-BR")
+# 'o século dezenove'
 expand_regnal_numerals("Eu vi X pessoas.")
 # 'Eu vi X pessoas.'
+```
+
+## Letter-digit codes
+
+`normalize_orthography(text, lang)` passes `lang` to the Roman-numeral and
+letter-digit rules, so the numbers they read follow pt-PT or pt-BR spelling.
+
+A code of one to three capitals or one or two lowercase letters followed by
+digits reads as the letter names and then the number as a masculine
+cardinal: "T2" is "tê dois", "A3" is "á três", "RTP2" is "érre tê pê dois",
+"mp3" is "éme pê três". A number that labels something is invariable, so
+"o T2 na cidade" reads "tê dois", not "duas". The reading does not depend on
+what the code stands for, so no context is needed. Right after a number the
+letters are a unit symbol, so "10 m2" is left alone.
+
+```python
+from tugaphone.text_normalization import expand_letter_digit_codes
+
+expand_letter_digit_codes("Vendo um T2 perto da A3.")
+# 'Vendo um tê dois perto da á três.'
 ```
 
 ## Acronyms

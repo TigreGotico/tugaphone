@@ -21,6 +21,8 @@ from __future__ import annotations
 
 import re
 
+from tugaphone.number_utils import NumberParser
+
 # ---------------------------------------------------------------------------
 # Number ranges: a dash BETWEEN two digits is a numeric range, read " a ".
 # Word hyphens ("chamo-me", "guarda-chuva") have letters on at least one side
@@ -161,17 +163,39 @@ def expand_abbreviations(text: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Regnal Roman numerals -> masculine ordinals. Multi-letter numerals (II..XX)
-# always convert; a single I/V/X converts only right after a capitalised
-# name-like word (length > 1), so "eu vi X" stays untouched.
+# Roman numerals after centuries, rulers, popes and parts of a work. After
+# its noun, a numeral up to ten reads as an ordinal and above ten as a
+# cardinal: "até 10 (Celso Cunha e Lindley Cintra) inclusive, usam-se os
+# ordinais e depois os cardinais, sempre que o numeral vier depois do
+# substantivo" (Ciberdúvidas 14284) -- "D. João V (quinto)", "Luís XIV é
+# «catorze»", "o século XV é o século «quinze»" (Ciberdúvidas 14167). The
+# Nova Gramática applies the rule to every part of a work, and a numeral
+# before its noun keeps the ordinal above ten (Ciberdúvidas 11716).
+#
+# A multi-letter numeral of I, V and X always converts. A single I, V or X
+# converts only after a capitalised name-like word or a part-of-work noun,
+# so "eu vi X" stays untouched. A numeral with L or C converts only after a
+# part-of-work noun ("capítulo XLII"), so "Grande XL" stays untouched.
 # ---------------------------------------------------------------------------
-_ROMAN_ORDINAL_M = {
-    "I": "Primeiro", "II": "Segundo", "III": "Terceiro", "IV": "Quarto", "V": "Quinto",
-    "VI": "Sexto", "VII": "Sétimo", "VIII": "Oitavo", "IX": "Nono", "X": "Décimo",
-    "XI": "Décimo Primeiro", "XII": "Décimo Segundo", "XIII": "Décimo Terceiro",
-    "XIV": "Décimo Quarto", "XV": "Décimo Quinto", "XVI": "Décimo Sexto",
-    "XVII": "Décimo Sétimo", "XVIII": "Décimo Oitavo", "XIX": "Décimo Nono",
-    "XX": "Vigésimo",
+_ROMAN = re.compile(r"C{0,3}(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
+_ROMAN_VALUES = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100}
+_ORDINALS_TO_TEN = (
+    "primeiro", "segundo", "terceiro", "quarto", "quinto",
+    "sexto", "sétimo", "oitavo", "nono", "décimo",
+)
+_WORK_PARTS = frozenset({
+    "século", "capítulo", "tomo", "volume", "livro", "parte", "canto", "ato",
+    "título", "secção", "seção",
+})
+# Articles and contractions before a numeral that precedes its noun, and the
+# gender of the noun they announce.
+_PRENOMINAL = {
+    "o": "masculine", "os": "masculine", "do": "masculine", "dos": "masculine",
+    "no": "masculine", "nos": "masculine", "ao": "masculine", "aos": "masculine",
+    "pelo": "masculine", "pelos": "masculine",
+    "a": "feminine", "as": "feminine", "da": "feminine", "das": "feminine",
+    "na": "feminine", "nas": "feminine", "à": "feminine", "às": "feminine",
+    "pela": "feminine", "pelas": "feminine",
 }
 _TRAIL_PUNCT = ".,;:!?)\"”"
 
@@ -183,22 +207,61 @@ def _split_trailing_punct(w: str) -> tuple[str, str]:
     return w[:i], w[i:]
 
 
-def expand_regnal_numerals(text: str) -> str:
-    """"Afonso I" -> "Afonso Primeiro"; "eu vi X" is untouched."""
+def _is_brazilian(lang: str) -> bool:
+    return "pt-br" in lang.lower()
+
+
+def _roman_value(numeral: str) -> int | None:
+    if not numeral or not _ROMAN.fullmatch(numeral):
+        return None
+    values = [_ROMAN_VALUES[c] for c in numeral]
+    return sum(-v if v < nxt else v for v, nxt in zip(values, values[1:] + [0]))
+
+
+def _read_roman(value: int, prev_word: str | None, lang: str) -> str:
+    gender = _PRENOMINAL.get(prev_word.lower()) if prev_word else "masculine"
+    if gender is not None:
+        return NumberParser.pronounce_number_word(
+            str(value), gender=gender, as_ordinal=True, is_brazilian=_is_brazilian(lang))
+    if value <= 10:
+        return _ORDINALS_TO_TEN[value - 1]
+    return NumberParser.pronounce_number_word(
+        str(value), gender="masculine", as_ordinal=False, is_brazilian=_is_brazilian(lang))
+
+
+def _title(reading: str) -> str:
+    return " ".join(w if w == "e" else w.capitalize() for w in reading.split())
+
+
+def expand_regnal_numerals(text: str, lang: str = "pt-PT") -> str:
+    """"Afonso I" -> "Afonso Primeiro"; "o século XIX" -> "o século
+    dezanove"; "a II Guerra Mundial" -> "a Segunda Guerra Mundial";
+    "eu vi X" is untouched."""
     words = text.split()
     out = []
     for i, w in enumerate(words):
         core, trail = _split_trailing_punct(w)
-        ordinal = _ROMAN_ORDINAL_M.get(core)
-        if ordinal is not None:
-            if len(core) >= 2:
-                out.append(ordinal + trail)
+        value = _roman_value(core)
+        prev_core = _split_trailing_punct(words[i - 1])[0] if i > 0 else None
+        if value is not None:
+            after_part = prev_core is not None and prev_core.lower() in _WORK_PARTS
+            after_name = (prev_core is not None and prev_core.isalpha()
+                          and prev_core[:1].isupper() and len(prev_core) > 1)
+            if after_part or (set(core) <= set("IVX")
+                              and (len(core) >= 2 or after_name)):
+                reading = _read_roman(value, prev_core, lang)
+                # The numeral takes the case of the name it belongs to: the
+                # name before it ("Pio Doze") or, before its noun, the name
+                # after it ("a Segunda Guerra Mundial"). After a common noun
+                # it is lowercase ("o século dezanove").
+                prenominal = prev_core is None or prev_core.lower() in _PRENOMINAL
+                if prenominal:
+                    name = words[i + 1] if i + 1 < len(words) else None
+                    capitalised = name is None or _is_capitalised(name)
+                else:
+                    capitalised = prev_core[:1].isupper()
+                out.append((_title(reading) if capitalised else reading) + trail)
                 continue
-            if i > 0:
-                prev_core, _ = _split_trailing_punct(words[i - 1])
-                if prev_core.isalpha() and prev_core[:1].isupper() and len(prev_core) > 1:
-                    out.append(ordinal + trail)
-                    continue
         out.append(w)
     return " ".join(out)
 
@@ -262,7 +325,40 @@ def expand_acronyms(text: str) -> str:
     return " ".join(out)
 
 
-def normalize_orthography(text: str) -> str:
+# ---------------------------------------------------------------------------
+# Letter-digit codes ("T2" housing typology, "A3" motorway, "RTP2", "mp3"):
+# the letters by their names, then the number as a cardinal. A number that
+# labels something is invariable, "sente-se a omissão da palavra número"
+# (Cunha & Cintra, quoted by Ciberdúvidas 33468), so it is masculine even
+# before a feminine word ("o T2 na cidade" -> "tê dois"). The reading is the
+# same whatever the code stands for, so no context is needed. Codes take
+# one to three capitals or one or two lowercase letters, so longer
+# capitalised words ("COVID19") and ordinary lowercase words are left alone.
+# Right after a number the letters are a unit symbol ("10 m2"), not a code.
+# ---------------------------------------------------------------------------
+_LETTER_DIGIT_CODE = re.compile(r"([A-Z]{1,3}|[a-z]{1,2})(\d+)")
+
+
+def expand_letter_digit_codes(text: str, lang: str = "pt-PT") -> str:
+    """"T2" -> "tê dois"; "RTP2" -> "érre tê pê dois"; "10 m2" is untouched."""
+    words = text.split()
+    out = []
+    for i, w in enumerate(words):
+        lead, core, trail = _split_edges(w)
+        match = _LETTER_DIGIT_CODE.fullmatch(core)
+        after_number = i > 0 and _split_edges(words[i - 1])[1].isdigit()
+        if match is None or after_number:
+            out.append(w)
+            continue
+        letters, digits = match.groups()
+        number = NumberParser.pronounce_number_word(
+            digits, gender="masculine", as_ordinal=False,
+            is_brazilian=_is_brazilian(lang))
+        out.append(f"{lead}{_spell_letters(letters.upper())} {number}{trail}")
+    return " ".join(out)
+
+
+def normalize_orthography(text: str, lang: str = "pt-PT") -> str:
     """Apply every rule above, in the order that keeps them from interfering:
     separators and ranges (digit-only), then clock times (also digit-only),
     then abbreviations, regnal numerals and acronyms (word-token rules)."""
@@ -270,6 +366,7 @@ def normalize_orthography(text: str) -> str:
     text = split_number_ranges(text)
     text = expand_clock_times(text)
     text = expand_abbreviations(text)
-    text = expand_regnal_numerals(text)
+    text = expand_regnal_numerals(text, lang)
     text = expand_acronyms(text)
+    text = expand_letter_digit_codes(text, lang)
     return text
