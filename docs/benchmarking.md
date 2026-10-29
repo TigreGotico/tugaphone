@@ -15,7 +15,12 @@ in orthography2ipa), authored in the broad IPA tradition the lect specs are
 written to. `scripts/tts_gold_benchmark.py` scores it end to end, reusing
 orthography2ipa's own character-level PER and IPA normalization:
 
+The PER and normalization code is in orthography2ipa's source tree, not in its
+wheel. Install orthography2ipa editable, or set `O2I_ROOT` to an orthography2ipa
+checkout:
+
 ```bash
+export O2I_ROOT=~/src/orthography2ipa
 python scripts/tts_gold_benchmark.py            # every pt-family lect
 python scripts/tts_gold_benchmark.py pt-PT pt-BR
 ```
