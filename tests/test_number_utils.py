@@ -45,9 +45,8 @@ class TestNormalizeNumbers:
         assert normalize_numbers("custa 25.") == "custa vinte e cinco."
 
     def test_trailing_comma_glued(self):
-        # "porta" (fem.) as next_word makes "2" feminine, per the existing
-        # gender heuristic -- this test is about the comma staying glued.
-        assert normalize_numbers("sala 2, porta 4") == "sala duas, porta quatro"
+        # "sala 2" is a label numeral, so it stays "dois" whatever follows.
+        assert normalize_numbers("sala 2, porta 4") == "sala dois, porta quatro"
 
     def test_trailing_exclamation_glued(self):
         assert normalize_numbers("ganhei 5!") == "ganhei cinco!"
@@ -59,6 +58,59 @@ class TestNormalizeNumbers:
             normalize_orthography("Reunião às 9:05, sala 2."), "pt-PT"
         )
         assert result == "Reunião às nove e cinco, sala dois."
+
+
+class TestLabelNumeralGender:
+    """A cardinal after a singular head noun is a label and is invariable.
+
+    Source: NumberParser.LABEL_HEADS. A cardinal that quantifies a noun still
+    agrees with it.
+    """
+
+    @pytest.mark.parametrize("text,expected", [
+        # rows from issue #133
+        ("o artigo 1 da lei", "o artigo um da lei"),
+        ("o número 1 da alínea", "o número um da alínea"),
+        ("o número 2 da lista", "o número dois da lista"),
+        # feminine heads: "na página dois", "página duzentos e um"
+        ("na página 2 da revista", "na página dois da revista"),
+        ("a página 201 da obra", "a página duzentos e um da obra"),
+        ("na folha 2 da ata", "na folha dois da ata"),
+        ("o capítulo 2 da obra", "o capítulo dois da obra"),
+        ("o artigo 22 da lei", "o artigo vinte e dois da lei"),
+        ("o artigo 200 da lei", "o artigo duzentos da lei"),
+        ("o artigo 2 das disposições", "o artigo dois das disposições"),
+        ("o n.º 2 da lista", "o n.º dois da lista"),
+        ("Artigo 1 da lei", "Artigo um da lei"),
+    ])
+    def test_label_numeral_is_invariable(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        # º spells the masculine ending: "1.º" is "primeiro"
+        ("o artigo 1º da lei", "o artigo primeiro da lei"),
+        ("o 2º da lista", "o segundo da lista"),
+    ])
+    def test_masculine_ordinal_marker(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        # a quantifying cardinal agrees with the noun it counts
+        ("vou comprar 2 casas", "vou comprar duas casas"),
+        ("comprei 1 casa", "comprei uma casa"),
+        ("tenho 2 cães", "tenho dois cães"),
+        ("na sala 2 pessoas esperam", "na sala duas pessoas esperam"),
+        # with a plural head the cardinal agrees: "a páginas vinte e uma"
+        ("a páginas 21 da obra", "a páginas vinte e uma da obra"),
+        # ordinals inflect: "página primeira"
+        ("na página 1ª do livro", "na página primeira do livro"),
+        ("a 1ª página", "a primeira página"),
+        ("a página 1 do livro", "a página um do livro"),
+        ("são 2 da tarde", "são duas da tarde"),
+        ("custa 25.", "custa vinte e cinco."),
+    ])
+    def test_unaffected_rows(self, text, expected):
+        assert normalize_numbers(text) == expected
 
 
 class TestNumberParserPronounce:
