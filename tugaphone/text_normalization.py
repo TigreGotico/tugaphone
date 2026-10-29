@@ -19,9 +19,14 @@ conjunction, so tugaphone always reads "vinte e cinco".
 """
 from __future__ import annotations
 
+import functools
+import json
 import re
+from pathlib import Path
 
 from tugaphone.number_utils import NumberParser
+
+_DATA = Path(__file__).parent / "data"
 
 # ---------------------------------------------------------------------------
 # Number ranges: a dash BETWEEN two digits is a numeric range, read " a ".
@@ -97,6 +102,30 @@ def expand_clock_times(text: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Given names and their grammatical gender, built by
+# scripts/build_given_names.py into data/given_names.json. The rules below
+# read the list only through given_name_gender().
+# ---------------------------------------------------------------------------
+@functools.lru_cache(maxsize=1)
+def _given_names() -> dict[str, str]:
+    data = json.loads((_DATA / "given_names.json").read_text(encoding="utf-8"))
+    return {name: gender for gender in ("masculine", "feminine", "both")
+            for name in data[gender]}
+
+
+def given_name_gender(word: str) -> str | None:
+    """"masculine", "feminine" or "both" for a given name written as in
+    running text ("Isabel"), None for any other word."""
+    return _given_names().get(word)
+
+
+def _name_gender(word: str) -> str:
+    """The gender a name gives a title or an ordinal: a name of both genders,
+    or a word that is not a name, gives masculine."""
+    return "feminine" if given_name_gender(word) == "feminine" else "masculine"
+
+
+# ---------------------------------------------------------------------------
 # Abbreviations. Two groups:
 #
 # * UNCONDITIONAL: expanded wherever they appear, with no regard to what
@@ -106,7 +135,8 @@ def expand_clock_times(text: str) -> str:
 #   by a capitalised name, a lowercase word, or end of sentence.
 # * PERSONAL HONORIFICS: only expanded right before a capitalised word (the
 #   name they introduce), since standalone "Dr." or "Sr." at a sentence's
-#   end is more often the plain abbreviation than a title.
+#   end is more often the plain abbreviation than a title. "D." reads
+#   "Dona" before a feminine given name ("D. Maria") and "Dom" otherwise.
 # ---------------------------------------------------------------------------
 _UNCONDITIONAL_ABBREVIATIONS = {
     "vs.": "versus",
@@ -144,7 +174,8 @@ def _is_capitalised(word: str) -> bool:
 
 
 def expand_abbreviations(text: str) -> str:
-    """"Sr. Silva" -> "Senhor Silva"; "n.º 4" -> "número 4"; "Av. Liberdade"
+    """"Sr. Silva" -> "Senhor Silva"; "D. Maria" -> "Dona Maria"; "n.º 4" ->
+    "número 4"; "Av. Liberdade"
     or a bare "R." at sentence end both -> "Avenida"/"Rua" regardless of
     capitalisation, since these stand for the same word either way."""
     words = text.split()
@@ -156,6 +187,8 @@ def expand_abbreviations(text: str) -> str:
             continue
         expansion = _HONORIFIC_ABBREVIATIONS.get(w)
         if expansion is not None and i + 1 < len(words) and _is_capitalised(words[i + 1]):
+            if w == "D." and _name_gender(_split_edges(words[i + 1])[1]) == "feminine":
+                expansion = "Dona"
             out.append(expansion)
             continue
         out.append(w)
@@ -172,21 +205,29 @@ def expand_abbreviations(text: str) -> str:
 # Nova Gramática applies the rule to every part of a work, and a numeral
 # before its noun keeps the ordinal above ten (Ciberdúvidas 11716).
 #
-# A multi-letter numeral of I, V and X always converts. A single I, V or X
-# converts only after a capitalised name-like word or a part-of-work noun,
-# so "eu vi X" stays untouched. A numeral with L or C converts only after a
-# part-of-work noun ("capítulo XLII"), so "Grande XL" stays untouched.
+# An ordinal agrees with its noun or name: "D. Maria II" is "Dona Maria
+# Segunda", "a parte V" is "a parte quinta". A cardinal above ten is a label
+# and stays masculine, "sente-se a omissão da palavra número" (Cunha &
+# Cintra, quoted by Ciberdúvidas 33468).
+#
+# When a numeral converts:
+# * after a part-of-work noun, matched case-insensitively ("O SÉCULO XIX");
+# * never inside a run of all-caps words ("EU VI O FILME"), or after the
+#   word of a fixed expression in data/letter_expressions.json ("raio X");
+# * a multi-letter numeral of I, V and X converts anywhere else;
+# * a single I, V or X converts only after a given name ("Isabel I"), so
+#   "eu vi X" and "Raio X" stay untouched;
+# * a numeral with L, C, D or M converts only after a part-of-work noun, so
+#   "tamanho XL" and "o CD" stay untouched.
 # ---------------------------------------------------------------------------
-_ROMAN = re.compile(r"C{0,3}(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
-_ROMAN_VALUES = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100}
-_ORDINALS_TO_TEN = (
-    "primeiro", "segundo", "terceiro", "quarto", "quinto",
-    "sexto", "sétimo", "oitavo", "nono", "décimo",
-)
-_WORK_PARTS = frozenset({
-    "século", "capítulo", "tomo", "volume", "livro", "parte", "canto", "ato",
-    "título", "secção", "seção",
-})
+_ROMAN = re.compile(r"M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
+_ROMAN_VALUES = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
+_WORK_PARTS = {
+    "século": "masculine", "capítulo": "masculine", "tomo": "masculine",
+    "volume": "masculine", "livro": "masculine", "canto": "masculine",
+    "ato": "masculine", "título": "masculine",
+    "parte": "feminine", "secção": "feminine", "seção": "feminine",
+}
 # Articles and contractions before a numeral that precedes its noun, and the
 # gender of the noun they announce.
 _PRENOMINAL = {
@@ -198,6 +239,14 @@ _PRENOMINAL = {
     "pela": "feminine", "pelas": "feminine",
 }
 _TRAIL_PUNCT = ".,;:!?)\"”"
+
+
+@functools.lru_cache(maxsize=1)
+def _letter_expressions() -> frozenset[tuple[str, str]]:
+    """(lowercase word, letter) pairs of data/letter_expressions.json."""
+    data = json.loads((_DATA / "letter_expressions.json").read_text(encoding="utf-8"))
+    pairs = (phrase.rsplit(" ", 1) for phrase in data["expressions"])
+    return frozenset((word.lower(), letter) for word, letter in pairs)
 
 
 def _split_trailing_punct(w: str) -> tuple[str, str]:
@@ -218,15 +267,44 @@ def _roman_value(numeral: str) -> int | None:
     return sum(-v if v < nxt else v for v, nxt in zip(values, values[1:] + [0]))
 
 
+def _is_caps_word(core: str) -> bool:
+    return any(c.isalpha() for c in core) and core == core.upper()
+
+
+def _in_caps_run(cores: list[str], i: int) -> bool:
+    """Whether cores[i] stands in a run of all-caps words that holds a word
+    of two or more letters other than a Roman numeral ("EU VI O FILME").
+    "O XIX Congresso" is not such a run."""
+    start, end = i, i
+    while start > 0 and _is_caps_word(cores[start - 1]):
+        start -= 1
+    while end + 1 < len(cores) and _is_caps_word(cores[end + 1]):
+        end += 1
+    return any(sum(c.isalpha() for c in w) >= 2 and _roman_value(w) is None
+               for w in cores[start:end + 1])
+
+
+def _converts(numeral: str, prev_word: str | None, cores: list[str], i: int) -> bool:
+    if prev_word is not None and (prev_word.lower(), numeral) in _letter_expressions():
+        return False
+    if prev_word is not None and prev_word.lower() in _WORK_PARTS:
+        return True
+    if _in_caps_run(cores, i) or not set(numeral) <= set("IVX"):
+        return False
+    return len(numeral) >= 2 or (prev_word is not None and given_name_gender(prev_word) is not None)
+
+
 def _read_roman(value: int, prev_word: str | None, lang: str) -> str:
-    gender = _PRENOMINAL.get(prev_word.lower()) if prev_word else "masculine"
-    if gender is not None:
-        return NumberParser.pronounce_number_word(
-            str(value), gender=gender, as_ordinal=True, is_brazilian=_is_brazilian(lang))
-    if value <= 10:
-        return _ORDINALS_TO_TEN[value - 1]
+    article = _PRENOMINAL.get(prev_word.lower()) if prev_word else "masculine"
+    if article is not None:
+        gender, as_ordinal = article, True
+    elif value <= 10:
+        gender = _WORK_PARTS.get(prev_word.lower()) or _name_gender(prev_word)
+        as_ordinal = True
+    else:
+        gender, as_ordinal = "masculine", False
     return NumberParser.pronounce_number_word(
-        str(value), gender="masculine", as_ordinal=False, is_brazilian=_is_brazilian(lang))
+        str(value), gender=gender, as_ordinal=as_ordinal, is_brazilian=_is_brazilian(lang))
 
 
 def _title(reading: str) -> str:
@@ -234,35 +312,31 @@ def _title(reading: str) -> str:
 
 
 def expand_regnal_numerals(text: str, lang: str = "pt-PT") -> str:
-    """"Afonso I" -> "Afonso Primeiro"; "o século XIX" -> "o século
-    dezanove"; "a II Guerra Mundial" -> "a Segunda Guerra Mundial";
-    "eu vi X" is untouched."""
+    """"Afonso I" -> "Afonso Primeiro"; "Isabel II" -> "Isabel Segunda";
+    "o século XIX" -> "o século dezanove"; "a II Guerra Mundial" -> "a
+    Segunda Guerra Mundial"; "eu vi X", "Raio X" and "EU VI O FILME" are
+    untouched."""
     words = text.split()
+    cores = [_split_edges(w)[1] for w in words]
     out = []
     for i, w in enumerate(words):
         core, trail = _split_trailing_punct(w)
         value = _roman_value(core)
         prev_core = _split_trailing_punct(words[i - 1])[0] if i > 0 else None
-        if value is not None:
-            after_part = prev_core is not None and prev_core.lower() in _WORK_PARTS
-            after_name = (prev_core is not None and prev_core.isalpha()
-                          and prev_core[:1].isupper() and len(prev_core) > 1)
-            if after_part or (set(core) <= set("IVX")
-                              and (len(core) >= 2 or after_name)):
-                reading = _read_roman(value, prev_core, lang)
-                # The numeral takes the case of the name it belongs to: the
-                # name before it ("Pio Doze") or, before its noun, the name
-                # after it ("a Segunda Guerra Mundial"). After a common noun
-                # it is lowercase ("o século dezanove").
-                prenominal = prev_core is None or prev_core.lower() in _PRENOMINAL
-                if prenominal:
-                    name = words[i + 1] if i + 1 < len(words) else None
-                    capitalised = name is None or _is_capitalised(name)
-                else:
-                    capitalised = prev_core[:1].isupper()
-                out.append((_title(reading) if capitalised else reading) + trail)
-                continue
-        out.append(w)
+        if value is None or not _converts(core, prev_core, cores, i):
+            out.append(w)
+            continue
+        reading = _read_roman(value, prev_core, lang)
+        # The numeral takes the case of the name it belongs to: the name
+        # before it ("Pio Doze") or, before its noun, the name after it ("a
+        # Segunda Guerra Mundial"). After a common noun it is lowercase ("o
+        # século dezanove").
+        if prev_core is None or prev_core.lower() in _PRENOMINAL:
+            name = words[i + 1] if i + 1 < len(words) else None
+            capitalised = name is None or _is_capitalised(name)
+        else:
+            capitalised = prev_core[:1].isupper()
+        out.append((_title(reading) if capitalised else reading) + trail)
     return " ".join(out)
 
 
