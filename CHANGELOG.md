@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.7a1](https://github.com/TigreGotico/tugaphone/tree/1.4.7a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.6a1...1.4.7a1)
+
+**Merged pull requests:**
+
+- fix: mark one primary stress per hyphenated compound [\#149](https://github.com/TigreGotico/tugaphone/pull/149) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.6a1](https://github.com/TigreGotico/tugaphone/tree/1.4.6a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.5a1...1.4.6a1)
@@ -383,10 +391,6 @@
 ## [0.5.1a3](https://github.com/TigreGotico/tugaphone/tree/0.5.1a3) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a2...0.5.1a3)
-
-**Merged pull requests:**
-
-- docs: tighten sede row wording in homographs table [\#40](https://github.com/TigreGotico/tugaphone/pull/40) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.5.1a2](https://github.com/TigreGotico/tugaphone/tree/0.5.1a2) (2026-06-12)
 
