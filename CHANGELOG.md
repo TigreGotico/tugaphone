@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.14a1](https://github.com/TigreGotico/tugaphone/tree/1.4.14a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.13a1...1.4.14a1)
+
+**Merged pull requests:**
+
+- fix: keep the full vowel of a stressed que/gue [\#162](https://github.com/TigreGotico/tugaphone/pull/162) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.13a1](https://github.com/TigreGotico/tugaphone/tree/1.4.13a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.12a1...1.4.13a1)
@@ -387,10 +395,6 @@
 ## [0.6.2a1](https://github.com/TigreGotico/tugaphone/tree/0.6.2a1) (2026-07-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a4...0.6.2a1)
-
-**Merged pull requests:**
-
-- fix: correct accent-transform primitives to cited forms \(keep framework\) [\#59](https://github.com/TigreGotico/tugaphone/pull/59) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.6.1a4](https://github.com/TigreGotico/tugaphone/tree/0.6.1a4) (2026-07-11)
 
