@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.11a1](https://github.com/TigreGotico/tugaphone/tree/1.4.11a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.10a1...1.4.11a1)
+
+**Merged pull requests:**
+
+- fix: require orthography2ipa 7.111.1a1 for one primary per compound [\#159](https://github.com/TigreGotico/tugaphone/pull/159) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.4.10a1](https://github.com/TigreGotico/tugaphone/tree/1.4.10a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.9a1...1.4.10a1)
@@ -387,10 +395,6 @@
 ## [0.6.1a2](https://github.com/TigreGotico/tugaphone/tree/0.6.1a2) (2026-07-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a1...0.6.1a2)
-
-**Merged pull requests:**
-
-- refactor: build grapheme tokenization on the orthography2ipa shared trie [\#53](https://github.com/TigreGotico/tugaphone/pull/53) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.6.1a1](https://github.com/TigreGotico/tugaphone/tree/0.6.1a1) (2026-06-20)
 
