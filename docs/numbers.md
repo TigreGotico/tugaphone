@@ -151,6 +151,14 @@ NumberParser.get_number_gender("1", next_word="casa")         # 'feminine'
 ## Gender inference
 
 Gender is inferred from:
+- An ordinal marker on the number: `º` is masculine, `ª` is feminine.
+- A singular label head before the number (`artigo`, `número`, `página`,
+  `capítulo`, `alínea` and others in `NumberParser.LABEL_HEADS`). A cardinal
+  that labels a noun is invariable, so it takes the masculine form:
+  `"o artigo 1 da lei"` → `"o artigo um da lei"`, `"na página 2"` →
+  `"na página dois"`. A plural word after the number other than `das`/`dos`
+  and similar is the noun it counts, and the rules below apply
+  (`"na sala 2 pessoas"` → `"duas pessoas"`).
 - The preceding word, when it is the feminine article `a`/`as`/`da`/`das`
   AND a noun follows the number (`"a 1 casa"` → feminine). A bare `a` with
   nothing after the number is the preposition "to", not the article -- as in
