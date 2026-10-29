@@ -110,9 +110,24 @@ word, or the end of a sentence. Personal honorifics (`D.`, `Sr.`, `Sra.`,
 word — the name they introduce — since a standalone "Dr." or "Sr." at a
 sentence's end is more often the plain abbreviation than a title.
 
+Forms with a superscript ending match no ordinary word, so they expand
+unconditionally: `Sr.ª`, `Sr.as`, `Dr.ª`, `Eng.ª`, `Prof.ª`, `n.os`/`N.os`
+("números"), `Ex.mo`/`Ex.ma` and their plurals, and the "Excelência" forms
+`Ex.ª`, `Ex.as`, `Exa.`, `Exas.`. Before an "Excelência" form, `V.` reads
+"Vossa", `VV.` or `Vv.` reads "Vossas" and `S.` reads "Sua"; alone, `V.` and
+`S.` are left for the other rules. The plurals `Srs.` and `Sras.` follow the
+personal-honorific rule. The expansions follow the *Vocabulário Ortográfico*
+of the Academia das Ciências de Lisboa and the vocabularies quoted by
+Ciberdúvidas (answers 33650 and 15826). A comma, colon or similar mark after
+the abbreviation's own period stays in place.
+
 ```python
 from tugaphone.text_normalization import expand_abbreviations
 
+expand_abbreviations("Obrigado, V. Ex.ª, pela visita.")
+# 'Obrigado, Vossa Excelência, pela visita.'
+expand_abbreviations("Vv. Ex.as sabem que a Sr.ª Ana chegou.")
+# 'Vossas Excelências sabem que a Senhora Ana chegou.'
 expand_abbreviations("O Sr. Silva chegou.")
 # 'O Senhor Silva chegou.'
 expand_abbreviations("Isto é o n.º 4 da lista.")
