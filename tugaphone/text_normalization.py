@@ -24,6 +24,8 @@ import json
 import re
 from pathlib import Path
 
+from tugalex import TugaLexicon
+
 from tugaphone.number_utils import NumberParser
 
 _DATA = Path(__file__).parent / "data"
@@ -148,27 +150,13 @@ def expand_clock_times(text: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Given names and their grammatical gender, built by
-# scripts/build_given_names.py into data/given_names.json. The rules below
-# read the list only through given_name_gender().
+# Given names and their grammatical gender come from tugalex:
+# TugaLexicon.get_given_name_gender gives "m", "f", "mf" or None.
 # ---------------------------------------------------------------------------
-@functools.lru_cache(maxsize=1)
-def _given_names() -> dict[str, str]:
-    data = json.loads((_DATA / "given_names.json").read_text(encoding="utf-8"))
-    return {name: gender for gender in ("masculine", "feminine", "both")
-            for name in data[gender]}
-
-
-def given_name_gender(word: str) -> str | None:
-    """"masculine", "feminine" or "both" for a given name written as in
-    running text ("Isabel"), None for any other word."""
-    return _given_names().get(word)
-
-
 def _name_gender(word: str) -> str:
     """The gender a name gives a title or an ordinal: a name of both genders,
     or a word that is not a name, gives masculine."""
-    return "feminine" if given_name_gender(word) == "feminine" else "masculine"
+    return "feminine" if TugaLexicon.get_given_name_gender(word) == "f" else "masculine"
 
 
 # ---------------------------------------------------------------------------
@@ -397,7 +385,7 @@ def _converts(numeral: str, prev_word: str | None, cores: list[str], i: int) -> 
         return True
     if _in_caps_run(cores, i) or not set(numeral) <= set("IVX"):
         return False
-    return len(numeral) >= 2 or (prev_word is not None and given_name_gender(prev_word) is not None)
+    return len(numeral) >= 2 or (prev_word is not None and TugaLexicon.get_given_name_gender(prev_word) is not None)
 
 
 def _read_roman(value: int, prev_word: str | None, lang: str) -> str:
