@@ -29,7 +29,7 @@ classifiers = [
 dependencies = [
     "ovos-number-parser>=0.19.13",
     "silabificador>=2.1.0a1",
-    "tugalex>=2.0.2a1",
+    "tugalex>=2.1.0a1",
     "bifonia>=0.1.1",
     "orthography2ipa[portuguese]>=7.44.0a4",
 ]
@@ -57,7 +57,7 @@ Repository = "https://github.com/TigreGotico/tugaphone"
 packages = ["tugaphone"]
 
 [tool.setuptools.package-data]
-tugaphone = ["data/langdetect/*.json.gz", "data/loanwords.json"]
+tugaphone = ["data/langdetect/*.json.gz", "data/loanwords.json", "data/given_names.json", "data/letter_expressions.json"]
 
 [tool.setuptools.dynamic]
 version = {attr = "tugaphone.version.__version__"}

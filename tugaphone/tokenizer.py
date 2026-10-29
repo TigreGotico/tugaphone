@@ -2045,6 +2045,9 @@ class WordToken:
     syllables: List[str] = dataclasses.field(default_factory=list)
     parent_sentence: Optional["Sentence"] = None
     dialect: DialectInventory = dataclasses.field(default_factory=EuropeanPortuguese)
+    #: Index of the whitespace-delimited chunk this word came from. Words
+    #: that share it were joined by hyphens: one compound or clitic group.
+    chunk_idx: Optional[int] = None
 
     # Precomputed index
     _idx_in_sentence: int = -1
@@ -2278,6 +2281,44 @@ class WordToken:
         )
 
     @cached_property
+    def hyphen_group(self) -> List["WordToken"]:
+        """The words joined to this one by hyphens, this word included."""
+        if self.chunk_idx is None or self.parent_sentence is None:
+            return [self]
+        return [w for w in self.parent_sentence.words
+                if w.chunk_idx == self.chunk_idx]
+
+    @cached_property
+    def is_hyphen_clitic(self) -> bool:
+        """A hyphen-joined clitic: a pronoun, article or preposition.
+
+        It leans on its host and has no stress of its own (*chamo-me*,
+        *dá-lo*, *pé-de-meia*). The forms are the spec's
+        ``stress.cliticless_words``.
+        """
+        if len(self.hyphen_group) == 1:
+            return False
+        rules = _spec_stress_rules(self.dialect.dialect_code)
+        return rules is not None and self.normalized in rules.cliticless_words
+
+    @cached_property
+    def stress_token(self) -> str:
+        """The mark written before the stressed syllable, or "".
+
+        A hyphenated compound is one prosodic word: each element keeps its
+        own stress and the last is the strongest (Bechara, *Moderna
+        Gramática Portuguesa*, p. 340). The last element that is not a
+        clitic takes the primary mark, every earlier one the secondary
+        mark, and a clitic none.
+        """
+        if self.is_hyphen_clitic:
+            return ""
+        stressed = [w for w in self.hyphen_group if not w.is_hyphen_clitic]
+        if stressed[-1] is self:
+            return self.dialect.PRIMARY_STRESS_TOKEN
+        return self.dialect.SECONDARY_STRESS_TOKEN
+
+    @cached_property
     def stress_pattern(self) -> str:
         """Stress classification by stressed-syllable position.
 
@@ -2392,7 +2433,8 @@ class WordToken:
         """
         # Check irregular words first
         if self.normalized in self.dialect.IRREGULAR_WORDS:
-            return self.dialect.IRREGULAR_WORDS[self.normalized]
+            return self.dialect.IRREGULAR_WORDS[self.normalized].replace(
+                self.dialect.PRIMARY_STRESS_TOKEN, self.stress_token)
 
         # Generate grapheme IPAs grouped by syllable
         syllable_ipas = [[] for _ in self.syllables]
@@ -2411,7 +2453,7 @@ class WordToken:
         stressed_idx = self.stressed_syllable_idx
         if 0 <= stressed_idx < len(syllable_strings):
             syllable_strings[stressed_idx] = (
-                    self.dialect.PRIMARY_STRESS_TOKEN + syllable_strings[stressed_idx]
+                    self.stress_token + syllable_strings[stressed_idx]
             )
 
         # Join syllables with hiatus marker
@@ -2520,12 +2562,15 @@ class Sentence:
         - Punctuation separation
         """
         if not self.words:
-            # Tokenize on whitespace and hyphen
-            word_surfaces = self.normalized.replace('-', ' ').split()
+            # Tokenize on whitespace and hyphen; the words of one
+            # hyphenated chunk share its chunk index
+            word_surfaces = [(element, chunk_idx)
+                             for chunk_idx, chunk in enumerate(self.normalized.split())
+                             for element in chunk.split('-') if element]
 
             # Compute word positions in sentence
             char_position = 0
-            for idx, word_surface in enumerate(word_surfaces):
+            for idx, (word_surface, chunk_idx) in enumerate(word_surfaces):
                 word_start = self.normalized.find(word_surface, char_position)
 
                 # Create word token
@@ -2533,7 +2578,8 @@ class Sentence:
                     surface=word_surface,
                     word_idx=idx,
                     parent_sentence=self,
-                    dialect=self.dialect
+                    dialect=self.dialect,
+                    chunk_idx=chunk_idx,
                 )
                 word_token._idx_in_sentence = word_start
 

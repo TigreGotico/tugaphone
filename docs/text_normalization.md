@@ -60,7 +60,7 @@ split_number_ranges("As páginas 1139-1185 falam disso.")
 `normalize_numbers`, which already picks the feminine form ("uma", "duas",
 "vinte e uma", …) from the following noun. Any other `HH:MM` is read "H e MM"
 — the leading zero of the minutes is dropped, so "9:05" reads "9 e 5", not
-"9 e 05". Whole hours additionally accept `24:00` ("24 horas"); non-whole
+"9 e 05". Whole hours also accept `24:00` ("24 horas"); non-whole
 times keep the ordinary 0-23 hour range.
 
 ```python
@@ -108,7 +108,11 @@ stand for the same word whether followed by a capitalised name, a lowercase
 word, or the end of a sentence. Personal honorifics (`D.`, `Sr.`, `Sra.`,
 `Dr.`, `Dra.`, `Eng.`, `Prof.`) expand only when followed by a capitalised
 word — the name they introduce — since a standalone "Dr." or "Sr." at a
-sentence's end is more often the plain abbreviation than a title.
+sentence's end is more often the plain abbreviation than a title. `D.` is
+the abbreviation of both "Dom" and "Dona" (Priberam): it reads "Dona" before
+a feminine given name and "Dom" before any other name, so "D. Maria" is
+"Dona Maria" and "D. Sebastião" is "Dom Sebastião". A name of both genders,
+or one that is not in the given-name list, reads "Dom".
 
 Forms with a superscript ending match no ordinary word, so they expand
 unconditionally: `Sr.ª`, `Sr.as`, `Dr.ª`, `Eng.ª`, `Prof.ª`, `n.os`/`N.os`
@@ -134,23 +138,92 @@ expand_abbreviations("Isto é o n.º 4 da lista.")
 # 'Isto é o número 4 da lista.'
 expand_abbreviations("Ver o vs. anterior.")
 # 'Ver o versus anterior.'
+expand_abbreviations("D. Maria I")
+# 'Dona Maria I'
 ```
 
-## Regnal Roman numerals
+## Roman numerals
 
-A multi-letter regnal numeral (`II`..`XX`) always converts to its masculine
-ordinal. A single `I`, `V` or `X` converts only right after a capitalised
-name-like word, so "eu vi X pessoas" is left alone.
+A Roman numeral after a century, a ruler, a pope or a part of a work reads
+as an ordinal up to ten and as a cardinal above ten: "D. João V" is "Dom
+João Quinto", "o século XIX" is "o século dezanove", "Pio XII" is "Pio
+Doze". A numeral before its noun keeps the ordinal, with the gender of the
+article: "a II Guerra Mundial" is "a Segunda Guerra Mundial". The rule is
+Cunha & Cintra's, as quoted by Ciberdúvidas (answers 14284, 14167 and
+11716). The numeral takes the case of the name it belongs to and is
+lowercase after a common noun such as "século". The cardinals follow `lang`
+("dezanove" in pt-PT, "dezenove" in pt-BR).
+
+An ordinal agrees in gender with its name or noun: "Isabel II" is "Isabel
+Segunda", "D. Maria I" is "Dona Maria Primeira", "a parte V" is "a parte
+quinta". A cardinal above ten is a label and stays masculine. A name of both
+genders, or one that is not in the given-name list, reads as masculine.
+
+These rules decide when a capital letter is a numeral:
+
+- After a part-of-work noun (`século`, `capítulo`, `livro`, `parte`, ...),
+  matched case-insensitively, a numeral always converts: "O SÉCULO XIX"
+  converts.
+- Inside a run of all-caps words, as in a headline, a numeral does not
+  convert: in "EU VI O FILME", "VI" is the verb.
+- After the word of a fixed expression in `tugaphone/data/letter_expressions.json`,
+  the letter stays: "Raio X", "Geração X", "Malcolm X", "vitamina C".
+  The word is matched case-insensitively.
+- A multi-letter numeral of `I`, `V` and `X` converts anywhere else.
+- A single `I`, `V` or `X` converts only after a given name, so "eu vi X
+  pessoas", "a Sala V" and "o Anexo I" are left alone.
+- A numeral with `L`, `C`, `D` or `M` converts only after a part-of-work
+  noun, so "tamanho XL", "o CD" and "o MDC" are left alone.
+
+tugaphone converts only tokens written wholly in capitals, so lowercase
+words such as "vi", "li" and "mix" are never numerals.
+
+The given-name list `tugaphone/data/given_names.json` holds the names that
+can stand before a Roman numeral or after `D.`, with their gender. It has
+three sources. The first is the popes and monarchs on Wikidata: the word
+before the numeral in each Portuguese label, with the person's sex. The
+second is the first names of the IBGE 2010 census, matched to Wikidata
+given names. The third is the Wikidata given names marked as Portuguese. A
+name borne by both genders is marked "both" and reads as masculine. The
+file records its sources, their licences and the build date, and
+`scripts/build_given_names.py` rebuilds it. The rules read the list only
+through `given_name_gender(word)`.
 
 ```python
 from tugaphone.text_normalization import expand_regnal_numerals
 
 expand_regnal_numerals("D. Afonso I fundou o reino.")
 # 'D. Afonso Primeiro fundou o reino.'
-expand_regnal_numerals("D. João VI regressou.")
-# 'D. João Sexto regressou.'
+expand_regnal_numerals("No século XIX, Luís XIV já era história.")
+# 'No século dezanove, Luís Catorze já era história.'
+expand_regnal_numerals("o século XIX", lang="pt-BR")
+# 'o século dezenove'
+expand_regnal_numerals("Isabel II")
+# 'Isabel Segunda'
 expand_regnal_numerals("Eu vi X pessoas.")
 # 'Eu vi X pessoas.'
+expand_regnal_numerals("Fez um raio X.")
+# 'Fez um raio X.'
+```
+
+## Letter-digit codes
+
+`normalize_orthography(text, lang)` passes `lang` to the Roman-numeral and
+letter-digit rules, so the numbers they read follow pt-PT or pt-BR spelling.
+
+A code of one to three capitals or one or two lowercase letters followed by
+digits reads as the letter names and then the number as a masculine
+cardinal: "T2" is "tê dois", "A3" is "á três", "RTP2" is "érre tê pê dois",
+"mp3" is "éme pê três". A number that labels something is invariable, so
+"o T2 na cidade" reads "tê dois", not "duas". The reading does not depend on
+what the code stands for, so no context is needed. Right after a number the
+letters are a unit symbol, so "10 m2" is left alone.
+
+```python
+from tugaphone.text_normalization import expand_letter_digit_codes
+
+expand_letter_digit_codes("Vendo um T2 perto da A3.")
+# 'Vendo um tê dois perto da á três.'
 ```
 
 ## Acronyms

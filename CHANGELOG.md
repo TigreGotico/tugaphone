@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.4.6a1](https://github.com/TigreGotico/tugaphone/tree/1.4.6a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.5a1...1.4.6a1)
+
+**Merged pull requests:**
+
+- fix: read a number's gender from a Portuguese noun-gender list [\#145](https://github.com/TigreGotico/tugaphone/pull/145) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.5a1](https://github.com/TigreGotico/tugaphone/tree/1.4.5a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.4a2...1.4.5a1)
+
+**Merged pull requests:**
+
+- fix: read Roman numerals by grammar and guard capitals, letter-digit codes [\#144](https://github.com/TigreGotico/tugaphone/pull/144) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.4a2](https://github.com/TigreGotico/tugaphone/tree/1.4.4a2) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.4a1...1.4.4a2)
@@ -376,25 +392,13 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a1...0.5.1a2)
 
-**Merged pull requests:**
-
-- docs: correct sede vowel mapping and POS-table row in homographs page [\#37](https://github.com/TigreGotico/tugaphone/pull/37) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.5.1a1](https://github.com/TigreGotico/tugaphone/tree/0.5.1a1) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a2...0.5.1a1)
 
-**Merged pull requests:**
-
-- fix: restore final vowel in gosto VERB homograph IPA [\#38](https://github.com/TigreGotico/tugaphone/pull/38) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.5.0a2](https://github.com/TigreGotico/tugaphone/tree/0.5.0a2) (2026-06-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a1...0.5.0a2)
-
-**Merged pull requests:**
-
-- docs: refresh README, docs, examples and tests [\#35](https://github.com/TigreGotico/tugaphone/pull/35) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.5.0a1](https://github.com/TigreGotico/tugaphone/tree/0.5.0a1) (2026-06-12)
 

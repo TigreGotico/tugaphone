@@ -3,6 +3,7 @@ from typing import Optional
 
 from ovos_number_parser import pronounce_number
 from ovos_number_parser.util import GrammaticalGender
+from tugalex import TugaLexicon
 
 
 class NumberParser:
@@ -60,6 +61,21 @@ class NumberParser:
     PLURAL_FUNCTION_WORDS = frozenset({
         "as", "os", "das", "dos", "nas", "nos", "às", "aos", "pelas", "pelos",
     })
+    # Articles, alone or contracted with "de", that set the gender of a
+    # number when a word follows the number ("as 2 artistas", "os 2 artistas").
+    FEMININE_DETERMINERS = frozenset({"a", "as", "da", "das"})
+    MASCULINE_DETERMINERS = frozenset({"o", "os", "do", "dos"})
+    # Function words that can follow a number ("os 2 da equipa", "uma das
+    # casas"). They are not the counted noun, so the noun gender of their
+    # spelling does not decide.
+    FUNCTION_WORDS = frozenset({
+        "a", "as", "o", "os", "da", "das", "do", "dos", "na", "nas", "no", "nos",
+        "à", "às", "ao", "aos", "pela", "pelas", "pelo", "pelos", "de", "em",
+        "e", "ou", "que", "para", "por", "com", "sem",
+    })
+    # Words that join the two numbers of a range ("de 1 a 2 dias", "das 2 às
+    # 3 horas"); "e" joins them after "entre" ("entre 1 e 2 semanas").
+    RANGE_LINKS = frozenset({"a", "à", "às", "ao", "aos"})
 
     # Unit symbols read after a number, as (singular, plural) names. Symbols
     # and names follow the SI brochure ("Tradução luso-brasileira de 2021 do
@@ -376,15 +392,31 @@ class NumberParser:
             if not counts_next_word:
                 return "masculine"
 
-        # Rule B: Check preceding articles (a, as, da, das are feminine) -- but only
-        # when a noun actually follows the number ("a 1 casa"). Without a following
-        # noun, a bare "a"/"as" before the number is the preposition "to" (as in a
-        # score/range reading, "3 a 2"), not the feminine article, and must not
-        # force a feminine reading (Rule C already catches feminine nouns on its own).
-        if prev_word and prev_word in ["a", "as", "da", "das"] and next_word and next_word.isalpha():
-            return "feminine"
+        noun = cls.split_trailing_punctuation(next_word or "")[0].lower()
+        is_word = noun.replace("-", "").isalpha()
+        listed = (TugaLexicon.get_noun_gender(noun)
+                  if is_word and noun not in cls.FUNCTION_WORDS else None)
 
-        # Rule C: Check the following noun (the object being counted)
+        # Rule N: the counted noun's gender in tugalex, from its exceptions
+        # list or its suffix rules ("1 lei" -> "uma lei", "1 dia" -> "um
+        # dia"). A single gender decides even against an article, which then
+        # belongs to a later noun ("o 2 vezes campeão" -> "duas"). A noun of
+        # both genders ("artista", "capital") falls through.
+        if listed in ("m", "f"):
+            return "feminine" if listed == "f" else "masculine"
+
+        # Rule B: an article before the number sets its gender ("as 2
+        # artistas", "os 2 artistas") -- but only when a word follows the
+        # number. Without one, a bare "a"/"as" before the number is the
+        # preposition "to", as in a score or range reading ("3 a 2").
+        if prev_word and is_word:
+            if prev_word in cls.FEMININE_DETERMINERS:
+                return "feminine"
+            if prev_word in cls.MASCULINE_DETERMINERS:
+                return "masculine"
+
+        # Rule C: the ending of the following word, for a function word, a
+        # noun of both genders or a word that tugalex does not know
         if next_word:
             # Simple check: Words ending in 'a' are usually feminine (e.g., 'casa')
             # We strip 's' to account for plural nouns.
@@ -397,7 +429,6 @@ class NumberParser:
             # Words ending in -dade, -age, or -agem are consistently feminine.
             elif next_word.rstrip("sm").lower().endswith("e"):
                 # words ending with "e" may be either male, female or both
-                # a wordlist is needed to be sure
                 # 1 ponte (bridge) -> uma ponte  (female)
                 # 1 dente (tooth) -> um dente  (male)
                 # 1 cliente -> um(a) cliente
@@ -478,6 +509,21 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
             after = words[idx + 3] if idx + 3 < len(words) else None
             gender = ("masculine" if unit_symbol(after)
                       else NumberParser.get_number_gender(core, prev_word, after))
+        elif next_word == "vezes" and is_number(words[idx + 2] if idx + 2 < len(words) else None):
+            # "vezes" between two numbers is the multiplication sign, not the
+            # plural of the feminine noun "vez": "dois vezes dois são quatro"
+            # (Priberam DLPO, "vezes", as cited in
+            # tests/test_measure_normalization.py).
+            gender = "masculine"
+        elif ((next_word in NumberParser.RANGE_LINKS or (next_word == "e" and prev_word == "entre"))
+              and is_number(words[idx + 2] if idx + 2 < len(words) else None)
+              and not NumberParser.is_ordinal(core, next_word)):
+            # Both numbers of a range agree with the noun after the second
+            # one ("de 1 a 2 dias" -> "de um a dois dias").
+            second, second_trail = NumberParser.split_trailing_punctuation(words[idx + 2])
+            after = None if second_trail or idx + 3 >= len(words) else words[idx + 3]
+            gender = ("masculine" if unit_symbol(after)
+                      else NumberParser.get_number_gender(second, next_word, after))
         try:
             spelled = []
             if is_fraction and core.isdigit():
