@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.16a1](https://github.com/TigreGotico/tugaphone/tree/1.4.16a1) (2026-10-30)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.15a1...1.4.16a1)
+
+**Merged pull requests:**
+
+- fix: require orthography2ipa 7.111.2a1 for paroxytone -ens [\#168](https://github.com/TigreGotico/tugaphone/pull/168) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.4.15a1](https://github.com/TigreGotico/tugaphone/tree/1.4.15a1) (2026-10-30)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.14a1...1.4.15a1)
@@ -387,10 +395,6 @@
 ## [0.7.0a1](https://github.com/TigreGotico/tugaphone/tree/0.7.0a1) (2026-07-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.2a2...0.7.0a1)
-
-**Merged pull requests:**
-
-- feat: require bifonia and always run its homograph disambiguation [\#63](https://github.com/TigreGotico/tugaphone/pull/63) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.6.2a2](https://github.com/TigreGotico/tugaphone/tree/0.6.2a2) (2026-07-11)
 
