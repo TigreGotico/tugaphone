@@ -296,21 +296,21 @@ GUARD = [
     # Pinned from dev, so the assertion below means what it says: adding the
     # feature layer changes no transcription. Re-pin from dev, never from this
     # branch — pinning from the branch would make the test assert nothing.
-    ("pt-PT", "O gato dorme.", "ˈu ɡˈa·tu ˈdoɾ·mɨ"),
-    ("pt-BR", "O gato dorme.", "ˈu ɡˈa·tʊ ˈdoɾ·mɪ"),
-    ("pt-AO", "O gato dorme.", "ˈu ɡˈa·tʊ ˈdoɾ·me"),
-    ("pt-MZ", "O gato dorme.", "ˈu ɡˈa·tu ˈdoɾ·me"),
-    ("pt-TL", "O gato dorme.", "ˈu ɡˈa·tʊ ˈdoɾ·me"),
-    ("pt-PT", "A menina comeu o pão todo.", "ɐ mɨ·nˈi·nɐ ku·ˈmew ˈu pˈɐ̃w tˈo·du"),
-    ("pt-BR", "A menina comeu o pão todo.", "a mẽ·nˈĩ·nɐ ko·ˈmew ˈu pˈɐ̃w tˈo·dɐ"),
-    ("pt-AO", "A menina comeu o pão todo.", "a me·nˈi·nɐ ko·ˈmew ˈu pˈɐ̃w tˈo·dɐ"),
-    ("pt-MZ", "A menina comeu o pão todo.", "ɐ me·nˈi·nɐ ku·ˈmew ˈu pˈãw tˈo·du"),
-    ("pt-TL", "A menina comeu o pão todo.", "ə mɨ·nˈi·nə ko·ˈmew ˈu pˈə̃w tˈo·də"),
-    ("pt-PT", "Choveu muito ontem à noite.", "ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j ˈa nˈojt"),
-    ("pt-BR", "Choveu muito ontem à noite.", "ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj ˈa nˈoj·tʃɪ"),
-    ("pt-AO", "Choveu muito ontem à noite.", "ʃo·ˈvew mˈũjn·tʊ ˈõn·tẽj ˈa nˈoj·tɨ"),
-    ("pt-MZ", "Choveu muito ontem à noite.", "ʃu·ˈvew mˈũj·tu ˈõ·tẽj ˈa nˈɔj·tɨ"),
-    ("pt-TL", "Choveu muito ontem à noite.", "ʃo·ˈvew mˈuj·tʊ ˈõn·tɐ̃j ˈa nˈojtʰ"),
+    ("pt-PT", "O gato dorme.", "u ɡˈa·tu ˈdoɾ·mɨ"),
+    ("pt-BR", "O gato dorme.", "u ɡˈa·tʊ ˈdoɾ·mɪ"),
+    ("pt-AO", "O gato dorme.", "u ɡˈa·tʊ ˈdoɾ·me"),
+    ("pt-MZ", "O gato dorme.", "u ɡˈa·tu ˈdoɾ·me"),
+    ("pt-TL", "O gato dorme.", "u ɡˈa·tʊ ˈdoɾ·me"),
+    ("pt-PT", "A menina comeu o pão todo.", "ɐ mɨ·nˈi·nɐ ku·ˈmew u pˈɐ̃w tˈo·du"),
+    ("pt-BR", "A menina comeu o pão todo.", "a mẽ·nˈĩ·nɐ ko·ˈmew u pˈɐ̃w tˈo·dɐ"),
+    ("pt-AO", "A menina comeu o pão todo.", "a me·nˈi·nɐ ko·ˈmew u pˈɐ̃w tˈo·dɐ"),
+    ("pt-MZ", "A menina comeu o pão todo.", "ɐ me·nˈi·nɐ ku·ˈmew u pˈãw tˈo·du"),
+    ("pt-TL", "A menina comeu o pão todo.", "ə mɨ·nˈi·nə ko·ˈmew u pˈə̃w tˈo·də"),
+    ("pt-PT", "Choveu muito ontem à noite.", "ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j a nˈojt"),
+    ("pt-BR", "Choveu muito ontem à noite.", "ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj a nˈoj·tʃɪ"),
+    ("pt-AO", "Choveu muito ontem à noite.", "ʃo·ˈvew mˈũjn·tʊ ˈõn·tẽj a nˈoj·tɨ"),
+    ("pt-MZ", "Choveu muito ontem à noite.", "ʃu·ˈvew mˈũj·tu ˈõ·tẽj a nˈɔj·tɨ"),
+    ("pt-TL", "Choveu muito ontem à noite.", "ʃo·ˈvew mˈuj·tʊ ˈõn·tɐ̃j a nˈojtʰ"),
 ]
 
 

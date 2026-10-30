@@ -2353,9 +2353,10 @@ class WordToken:
         own stress and the last is the strongest (Bechara, *Moderna
         Gramática Portuguesa*, p. 340). The last element that is not a
         clitic takes the primary mark, every earlier one the secondary
-        mark, and a clitic none.
+        mark, and a clitic none. A standalone function word (*que*, *de*,
+        *o*) is atonic and has no mark either.
         """
-        if self.is_hyphen_clitic:
+        if self.is_hyphen_clitic or self.is_function_word:
             return ""
         stressed = [w for w in self.hyphen_group if not w.is_hyphen_clitic]
         if stressed[-1] is self:
