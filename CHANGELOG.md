@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.15a1](https://github.com/TigreGotico/tugaphone/tree/1.4.15a1) (2026-10-30)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.14a1...1.4.15a1)
+
+**Merged pull requests:**
+
+- fix: write no stress mark on an atonic function word [\#166](https://github.com/TigreGotico/tugaphone/pull/166) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.14a1](https://github.com/TigreGotico/tugaphone/tree/1.4.14a1) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.13a1...1.4.14a1)
@@ -387,10 +395,6 @@
 ## [0.6.2a2](https://github.com/TigreGotico/tugaphone/tree/0.6.2a2) (2026-07-11)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.2a1...0.6.2a2)
-
-**Merged pull requests:**
-
-- refactor: route base phonemization through o2i ipa\_lattice \(B6 stage-2\) [\#61](https://github.com/TigreGotico/tugaphone/pull/61) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.6.2a1](https://github.com/TigreGotico/tugaphone/tree/0.6.2a1) (2026-07-11)
 
