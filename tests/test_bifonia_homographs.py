@@ -7,7 +7,7 @@ both readings share a part of speech (sede thirst/seat are both nouns).
 """
 import pytest
 
-from tugaphone import TugaPhonemizer
+from tugaphone import TugaPhonemizer, list_dialects, phonemize
 
 
 @pytest.fixture(scope="module")
@@ -45,3 +45,31 @@ def test_gosto_noun_is_closed_verb_is_open(ph):
     noun = _clean(ph.phonemize_sentence("O gosto é amargo."))
     assert "ɡɔʃ" in verb         # open ɔ — I like (verb)
     assert "ɡoʃ" in noun         # closed o — taste (noun)
+
+
+# Brazilian Portuguese has a closed stressed mid vowel in every sense of these
+# words (Wiktionary, Brazil: soma /ˈsõ.mɐ/, aceno /aˈsẽ.nu/, abono /aˈbõ.nu/),
+# where European Portuguese opens it in the verb (soma /ˈsɔ.mɐ/, aceno
+# /ɐˈsɛ.nu/). bifonia carries these as pt-BR lect overrides, so they reach the
+# engine only when the lect is passed through.
+_BRAZILIAN_LECTS = [code for code in list_dialects() if code.startswith("pt-BR")]
+
+
+@pytest.mark.parametrize("lect", _BRAZILIAN_LECTS)
+@pytest.mark.parametrize("sentence, closed, open_", [
+    ("Ele soma os números.", ("ˈsom", "ˈsõm"), "ˈsɔm"),
+    ("Eu aceno da janela.", ("ˈsen", "ˈsẽn"), "ˈsɛn"),
+    ("O abono chegou.", ("ˈbon", "ˈbõn"), "ˈbɔn"),
+])
+def test_brazilian_lects_keep_the_stressed_vowel_closed(lect, sentence, closed, open_):
+    ipa = phonemize(sentence, lect).replace("·", "")
+    assert open_ not in ipa
+    assert any(form in ipa for form in closed), ipa
+
+
+@pytest.mark.parametrize("sentence, open_", [
+    ("Ele soma os números.", "ˈsɔm"),
+    ("Eu aceno da janela.", "ˈsɛn"),
+])
+def test_european_verb_reading_stays_open(sentence, open_):
+    assert open_ in phonemize(sentence, "pt-PT").replace("·", "")
