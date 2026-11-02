@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.17a1](https://github.com/TigreGotico/tugaphone/tree/1.4.17a1) (2026-11-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.16a2...1.4.17a1)
+
+**Merged pull requests:**
+
+- fix: pass the lect to bifonia homograph marking [\#170](https://github.com/TigreGotico/tugaphone/pull/170) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.16a2](https://github.com/TigreGotico/tugaphone/tree/1.4.16a2) (2026-11-02)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.16a1...1.4.16a2)
@@ -387,10 +395,6 @@
 ## [0.8.0a1](https://github.com/TigreGotico/tugaphone/tree/0.8.0a1) (2026-07-13)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.7.0a2...0.8.0a1)
-
-**Merged pull requests:**
-
-- feat\(bench\): in-repo gold benchmark harness — rules-only PER per dialect, offline in CI [\#67](https://github.com/TigreGotico/tugaphone/pull/67) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.7.0a2](https://github.com/TigreGotico/tugaphone/tree/0.7.0a2) (2026-07-13)
 
