@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.16a2](https://github.com/TigreGotico/tugaphone/tree/1.4.16a2) (2026-11-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.16a1...1.4.16a2)
+
+**Merged pull requests:**
+
+- test: expect the close-mid -em nucleus in the Porto dialect output [\#171](https://github.com/TigreGotico/tugaphone/pull/171) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.16a1](https://github.com/TigreGotico/tugaphone/tree/1.4.16a1) (2026-10-30)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.15a1...1.4.16a1)
@@ -387,10 +395,6 @@
 ## [0.7.0a2](https://github.com/TigreGotico/tugaphone/tree/0.7.0a2) (2026-07-13)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.7.0a1...0.7.0a2)
-
-**Merged pull requests:**
-
-- refactor: drop POS tagging; bifonia handles homograph disambiguation [\#65](https://github.com/TigreGotico/tugaphone/pull/65) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.7.0a1](https://github.com/TigreGotico/tugaphone/tree/0.7.0a1) (2026-07-11)
 
