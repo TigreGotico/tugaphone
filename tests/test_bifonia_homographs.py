@@ -48,10 +48,12 @@ def test_gosto_noun_is_closed_verb_is_open(ph):
 
 
 # Brazilian Portuguese has a closed stressed mid vowel in every sense of these
-# words (Wiktionary, Brazil: soma /ˈsõ.mɐ/, aceno /aˈsẽ.nu/, abono /aˈbõ.nu/),
-# where European Portuguese opens it in the verb (soma /ˈsɔ.mɐ/, aceno
-# /ɐˈsɛ.nu/). bifonia carries these as pt-BR lect overrides, so they reach the
-# engine only when the lect is passed through.
+# words (Wiktionary, Brazil: soma /ˈsõ.mɐ/, aceno /aˈsẽ.nu/, abono /aˈbõ.nu/,
+# domo /ˈdõ.mu/), where European Portuguese opens it in the verb (soma
+# /ˈsɔ.mɐ/, aceno /ɐˈsɛ.nu/, abono /ɐˈbɔ.nu/, domo /ˈdɔ.mu/). Wiktionary has no
+# entry for empeno or desempeno; they follow the other -enar verbs (condeno,
+# Brazil /kõˈdẽ.nu/, Portugal /kõˈdɛ.nu/). bifonia carries these as pt-BR lect
+# overrides, so they reach the engine only when the lect is passed through.
 _BRAZILIAN_LECTS = [code for code in list_dialects() if code.startswith("pt-BR")]
 
 
@@ -59,7 +61,10 @@ _BRAZILIAN_LECTS = [code for code in list_dialects() if code.startswith("pt-BR")
 @pytest.mark.parametrize("sentence, closed, open_", [
     ("Ele soma os números.", ("ˈsom", "ˈsõm"), "ˈsɔm"),
     ("Eu aceno da janela.", ("ˈsen", "ˈsẽn"), "ˈsɛn"),
-    ("O abono chegou.", ("ˈbon", "ˈbõn"), "ˈbɔn"),
+    ("Eu abono a falta.", ("ˈbon", "ˈbõn"), "ˈbɔn"),
+    ("Eu domo o cavalo.", ("ˈdom", "ˈdõm"), "ˈdɔm"),
+    ("Eu empeno a madeira.", ("ˈpen", "ˈpẽn"), "ˈpɛn"),
+    ("Eu desempeno a barra.", ("ˈpen", "ˈpẽn"), "ˈpɛn"),
 ])
 def test_brazilian_lects_keep_the_stressed_vowel_closed(lect, sentence, closed, open_):
     ipa = phonemize(sentence, lect).replace("·", "")
@@ -70,6 +75,10 @@ def test_brazilian_lects_keep_the_stressed_vowel_closed(lect, sentence, closed, 
 @pytest.mark.parametrize("sentence, open_", [
     ("Ele soma os números.", "ˈsɔm"),
     ("Eu aceno da janela.", "ˈsɛn"),
+    ("Eu abono a falta.", "ˈbɔn"),
+    ("Eu domo o cavalo.", "ˈdɔm"),
+    ("Eu empeno a madeira.", "ˈpɛn"),
+    ("Eu desempeno a barra.", "ˈpɛn"),
 ])
 def test_european_verb_reading_stays_open(sentence, open_):
     assert open_ in phonemize(sentence, "pt-PT").replace("·", "")
