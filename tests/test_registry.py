@@ -115,8 +115,8 @@ class TestPhonemizerIntegration:
         ("pt-AO", "ʃoˈvew ˈmũjntʊ ˈõntẽj a ˈnojtɨ"),
         ("pt-MZ", "ʃoˈvew ˈmũjtu ˈõtẽj a ˈnɔjtɨ"),
         ("pt-TL", "ʃoˈvew ˈmujtʊ ˈõntɐ̃j a ˈnojtʰ"),
-        # Porto "ontem" carries the nasal -em diphthong [ɐ̃j̃].
-        ("pt-PT-x-porto", "ʃuˈbew ˈmujtu ˈwõtɐ̃j̃ a ˈnojtɨ"),
+        # Porto "ontem" keeps the close-mid nucleus of the nasal -em diphthong [ẽj̃].
+        ("pt-PT-x-porto", "ʃuˈbew ˈmujtu ˈwõtẽj̃ a ˈnojtɨ"),
     ])
     def test_dialect_output(self, pho, code, expected):
         import unicodedata
