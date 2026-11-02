@@ -14,6 +14,11 @@ performs context-sensitive sense disambiguation and inserts the open/closed
 vowel diacritic directly into the orthography, so the grapheme rules that
 follow produce the correct vowel quality without any special casing.
 
+bifonia receives the lect code. Every `pt-BR` lect takes the Brazilian marks:
+Brazilian Portuguese keeps the stressed vowel closed in every sense of *soma*,
+*aceno*, *abono*, *domo*, *empeno* and *desempeno*. Every other lect takes the
+European marks.
+
 ```python
 from tugaphone import TugaPhonemizer
 

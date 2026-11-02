@@ -54,7 +54,7 @@ _VALID_CONTACT = ("auto", "es", "fr", "en", "none")
 try:  # bifonia is a hard dependency, but keep the import failure legible
     from bifonia import add_extra_diacritics as _mark_heterophones
 except Exception:  # pragma: no cover - exercised only on a broken install
-    def _mark_heterophones(sentence: str) -> str:
+    def _mark_heterophones(sentence: str, lang: str = "pt-PT") -> str:
         return sentence
 
 
@@ -164,11 +164,14 @@ def _normalizer(lect: str):
     they produce the digit tokens and words number verbalization then reads;
     numbers and ordinals are verbalized next (so their spelled-out words are
     then available to homograph marking); heterophonic homographs are marked
-    last. All three stages are orthographic, pre-lattice transformations.
+    last, with ``lect`` selecting bifonia's per-lect marks (every ``pt-BR``
+    sub-lect takes the Brazilian ones). All three stages are orthographic,
+    pre-lattice transformations.
     """
 
     def normalize(text: str) -> str:
-        return _mark_heterophones(normalize_numbers(normalize_orthography(text, lect), lect))
+        text = normalize_numbers(normalize_orthography(text, lect), lect)
+        return _mark_heterophones(text, lect)
 
     return normalize
 
