@@ -127,14 +127,15 @@ def _is_stale(path: Path) -> bool:
     True when the file is missing, empty (a previous write got interrupted),
     or was materialised from a different tugalex version than is installed
     now — the case that otherwise lets a tugalex data fix never reach an
-    installation that already has the TSV.
+    installation that already has the TSV. A stamp that cannot be read or is
+    not UTF-8 is stale too, so the rewrite replaces it.
     """
     if not path.exists() or path.stat().st_size == 0:
         return True
     stamp = _stamp_path(path)
     try:
         return stamp.read_text(encoding="utf-8").strip() != _tugalex_version()
-    except OSError:
+    except (OSError, UnicodeDecodeError):
         return True
 
 

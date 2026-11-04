@@ -58,3 +58,18 @@ def test_matching_version_stamp_is_reused(scratch_cache, monkeypatch):
     lattice_core._registered.discard(lect)
     lattice_core._ensure_lexicon(lect)
     assert calls == [tmp_path / f"{lect}.tsv"], "matching stamp must be reused, not rewritten"
+
+
+def test_stamp_that_is_not_utf8_triggers_rewrite(scratch_cache, monkeypatch):
+    tmp_path, calls = scratch_cache
+    lect = "pt-PT"
+    path = tmp_path / f"{lect}.tsv"
+    path.write_text("bogus\tˈbɔgʊʃ\n", encoding="utf-8")
+    lattice_core._stamp_path(path).write_bytes(b"1.2.3\xff")
+
+    monkeypatch.setattr(lattice_core, "_tugalex_version", lambda: "1.2.3")
+    lattice_core._ensure_lexicon(lect)
+
+    assert calls == [path], "a stamp that is not UTF-8 must trigger a rewrite"
+    assert lattice_core._stamp_path(path).read_text(encoding="utf-8") == "1.2.3"
+    assert "bogus\tˈbɔgʊʃ" not in path.read_text(encoding="utf-8")
