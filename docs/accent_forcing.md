@@ -32,7 +32,7 @@ target lect. This is a thin wrapper over `phonemize`.
 from tugaphone import force_accent
 
 force_accent("o vinho verde", "pt-PT-x-porto", mode="ipa")
-# 'o ˈbiɲu ˈbjɛɾd'   ← Northern betacism, [v]→[b], from the lect spec
+# 'o ˈbiɲu ˈbjɛɾdɨ'   ← Northern betacism, [v]→[b], from the lect spec
 ```
 
 Feed the returned string straight to a phoneme-input voice.
@@ -46,7 +46,7 @@ betacism of `vinho`.
 
 ```python
 force_accent("o vinho verde", "pt-PT-x-porto", mode="respell", base_lect="pt-PT")
-# 'o binho berde'    ← a pt-PT voice now says [ˈbiɲu ˈbɛɾd]
+# 'o binho berde'    ← a pt-PT voice reads this as [ˈbiɲu ˈbɛɾdɨ]
 ```
 
 `base_lect` is the accent your grapheme voice actually speaks. Respelling only
@@ -92,15 +92,20 @@ list order, only those whose `stage` matches the mode fire.
 ### 4. Synthetic training corpus
 
 `examples/12_synthetic_corpus.py` emits a parallel corpus, `(sentence, lect,
-ipa, respelled_text)`, over the sentence-level Portuguese TTS gold across all 41
-pt-family lects. Point a phoneme-input voice at the `ipa` column, or a fixed
-pt-PT grapheme voice at the `respelled_text` column, to teach it the target
-accent.
+ipa, respelled_text)`. With `--full` it covers the sentence-level Portuguese TTS
+gold of every pt-family lect that has gold. Point a phoneme-input voice at the
+`ipa` column, or a fixed pt-PT grapheme voice at the `respelled_text` column,
+to teach it the target accent.
 
 ```bash
 python examples/12_synthetic_corpus.py                 # quick demo to stdout
 python examples/12_synthetic_corpus.py --full out.tsv  # full corpus
 ```
+
+`--full` reads the gold from orthography2ipa's source tree, so it needs an
+editable orthography2ipa install. With the virtual environment inside the
+tugaphone checkout it loads the wrong module and fails
+([#179](https://github.com/TigreGotico/tugaphone/issues/179)).
 
 ---
 
@@ -124,12 +129,13 @@ accent the grapheme voice it drives speaks.
 
 ## How respelling works, and its ceiling
 
-The respeller is **verification-gated**, which is what makes it trustworthy. For
-each word it:
+The respeller is **verification-gated**. For each word it:
 
-1. transcribes the word with the **target** lect (the sound we want), 2. hill-climbs orthographic edits from a rule table
+1. transcribes the word with the **target** lect (the sound we want),
+2. hill-climbs orthographic edits from a rule table
    (`DEFAULT_RESPELL_RULES`, betacism, dental palatalisation, coda-`l`
-   vocalisation, diphthong monophthongisation), 3. keeps an edit **only if** re-transcribing the candidate with the **base** lect
+   vocalisation, diphthong monophthongisation),
+3. keeps an edit **only if** re-transcribing the candidate with the **base** lect
    moves it measurably closer to the target IPA.
 
 Two consequences follow directly:
@@ -145,18 +151,23 @@ Two consequences follow directly:
   is the **ceiling**: respelling closes the *spellable* part of the accent gap
   and no more.
 
-Measured honestly on the gold (`scripts/roundtrip_eval.py`), respelling closes a
-large share of the gap for accents whose phenomena are orthographic, Northern
-betacism (Alfena, Braga, Porto, Viana) and Brazilian palatalisation / `l`-vowel
-(Minas, Bahia, Brasília), and correctly does *nothing* where the contrast is
-unspellable (São Paulo coda sibilants, Mozambican vowels), where the honest gain
-is `0`. The evaluation measures the respeller against the lattice's own target
-transcription, holding the lattice fixed on both sides.
+`scripts/roundtrip_eval.py` measures the respeller on the gold sentences. It
+compares the base voice's reading of the original text and of the respelled
+text against the target lect's own transcription, with the same lattice on both
+sides. Respelling lowers the PER for accents whose phenomena are orthographic:
+Northern betacism (Alfena, Braga, Porto, Viana) gains the most, Brazilian
+palatalisation and `l`-vocalisation (Minas, Bahia) gain less. The gain is zero,
+or close to it, where the contrast is unspellable (São Paulo coda sibilants,
+Mozambican vowels).
 
 ```bash
 python scripts/roundtrip_eval.py                     # per-lect base/respell/gain
 python scripts/roundtrip_eval.py pt-BR pt-PT-x-porto
 ```
+
+The script reads orthography2ipa's benchmark module from its source tree, like
+`--full` above, and has the same limit
+([#179](https://github.com/TigreGotico/tugaphone/issues/179)).
 
 One caveat the numbers carry: words are respelled independently, so
 cross-word sandhi is not modelled during respelling, which can leave a

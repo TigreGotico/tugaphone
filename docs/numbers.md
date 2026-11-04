@@ -136,6 +136,8 @@ scale, grouping each magnitude by its scale word instead of by every three
 digits. There is no ceiling on the integer part.
 
 ```python
+from tugaphone.number_utils import NumberParser
+
 NumberParser.pronounce_number_word("9007199254740991")
 # 'nove mil e sete biliões cento e noventa e nove mil duzentos e
 #  cinquenta e quatro milhões setecentos e quarenta mil novecentos
@@ -213,8 +215,8 @@ Gender is inferred from:
   with nothing after the number is the preposition "to", not the article, as
   in a score reading like `"3 a 2"`, and does not force feminine.
 - For a function word, a noun of both genders or a word that tugalex does
-  not know, the word's ending (`-a`, `-dade`, `-agem` → feminine, default
-  masculine)
+  not know, the word's ending (`-a`, `-dade`, `-age`, `-agem` → feminine,
+  default masculine)
 - In a range, both numbers agree with the noun after the second number:
   `"de 1 a 2 dias"` → `"de um a dois dias"`, `"das 2 às 3 horas"` →
   `"das duas às três horas"`, `"entre 1 e 2 semanas"` →
@@ -224,8 +226,9 @@ Gender is inferred from:
 - A unit symbol after the number (`2 m`, `2 g`): always masculine
 - An explicit `gender` override passed to `pronounce_number_word`
 
-Only numbers 1, 2, and the hundreds (100 to 900) change form with gender in
-Portuguese.
+Only one and two, alone or at the end of a larger number (`"21 casas"` →
+`"vinte e uma casas"`), and the hundreds from 200 to 900 change form with
+gender in Portuguese. *Cem* (100) does not change.
 
 ---
 

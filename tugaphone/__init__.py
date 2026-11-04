@@ -37,12 +37,20 @@ class TugaPhonemizer:
     """
 
     def __init__(self) -> None:
-        pass
+        """Create a phonemizer. Construction does no work.
+
+        The orthography2ipa engine and the lexicon cache for a lect are built
+        on the first call for that lect and reused by the calls after it.
+        """
 
     def phonemize_sentence(self, sentence: str, lang: str = "pt-PT",
                            contact: str = "none",
                            regional_dialect: Optional[object] = None) -> str:
         """Phonemize ``sentence`` for the ``lang`` dialect.
+
+        Digits, abbreviations and other written conventions are spelled out
+        and heterophonic homographs are marked before the lattice transcribes
+        the text, so the caller passes raw text.
 
         Parameters:
             sentence: Input text to phonemize.
@@ -58,13 +66,16 @@ class TugaPhonemizer:
                 the dialect's side) or force a single lattice with ``"es"`` /
                 ``"fr"`` / ``"en"``. Contact words are transcribed through the
                 orthography2ipa contact lattice and nativized onto the Portuguese
-                inventory; see :mod:`tugaphone.codeswitch`.
-            regional_dialect: Deprecated and ignored. Dialect is now selected
-                entirely by ``lang``; the regional accent is encoded in the
+                inventory; see :mod:`tugaphone.codeswitch`. Any other value
+                raises ``ValueError``.
+            regional_dialect: Deprecated and ignored. ``lang`` alone selects
+                the dialect; the regional accent is encoded in the
                 orthography2ipa lect spec, not applied as a post-hoc transform.
+                Passing it emits a ``DeprecationWarning``.
 
         Returns:
-            Space-separated IPA for each word.
+            Space-separated IPA for each word, with ``ˈ`` before each stressed
+            syllable.
         """
         if regional_dialect is not None:
             warnings.warn(
@@ -92,7 +103,11 @@ class TugaPhonemizer:
 
     @staticmethod
     def is_supported(lang: str) -> bool:
-        """Whether ``lang`` resolves to a known Portuguese lect."""
+        """Whether ``lang`` resolves to a known Portuguese lect.
+
+        :func:`resolve_lect` falls back to ``"pt-PT"`` and never returns
+        ``None``, so this returns ``True`` for every input.
+        """
         return resolve_lect(lang) is not None
 
 

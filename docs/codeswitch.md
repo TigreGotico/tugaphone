@@ -23,9 +23,12 @@ engine-only output exactly and code-switching is opt-in.
 | `"es"` / `"fr"` / `"en"` | force that contact lattice for detected words |
 
 ```python
-ph.phonemize_sentence("fiz o download do app", "pt-BR")                  # none: ˈfis u dõˈload du ˈapp
+from tugaphone import TugaPhonemizer
+
+ph = TugaPhonemizer()
+ph.phonemize_sentence("fiz o download do app", "pt-BR")                  # none: ˈfis u dow̃ˈload du ˈapp
 ph.phonemize_sentence("fiz o download do app", "pt-BR", contact="auto")  # en:   ˈfis u dawnlowd du ap
-ph.phonemize_sentence("comprei cerveza", "pt-UY", contact="auto")        # es side on the border
+ph.phonemize_sentence("fui ao ayuntamiento", "pt-UY", contact="auto")    # es:   ˈfuj au aʒuntamjento
 ```
 
 The dialect's default side comes from `tugaphone.registry.default_contact`:
@@ -184,7 +187,7 @@ the English projection table above, not by a stored pronunciation.
 ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="auto")
 # kõˈpɾej ˈũ ɛɐɾbɐɡ ˈnovu   -- "airbag" nativized; "comprei"/"novo" untouched
 ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="none")
-# kõˈpɾej ˈũ ajɾˈbɐɡ ˈnovu  -- code-switching off: "airbag" read as Portuguese spelling
+# kõˈpɾej ˈũ ɐˈiɾbɐɡ ˈnovu  -- code-switching off: "airbag" read as Portuguese spelling
 ```
 
 The list is ported from [logus2k/tts_eu_pt](https://github.com/logus2k/tts_eu_pt)
@@ -199,7 +202,8 @@ Portuguese loan there (`cover`, `face`, `for`, `gin`, `java`, `media`, `metal`,
 `pixel`, `polo`, `remix`, `sugar`, `xerox`, ...) were dropped so the lexicon
 never hijacks a word tugalex already owns, and about 130 proper nouns/brand
 names/personal names the upstream curation missed (`aberdeen`, `batman`,
-`google`, U.S. state and city names, ...) were dropped too — 630 entries ship.
+`google`, U.S. state and city names, ...) were dropped too. The remaining
+entries ship in the file.
 
 
 ---

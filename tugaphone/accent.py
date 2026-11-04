@@ -256,10 +256,9 @@ class Transform:
 class AccentOverlay:
     """An ordered, shareable stack of user ad-hoc accent tweaks.
 
-    The overlay is the escape hatch the old string-transform feature effectively
-    was, now clearly user-owned: hand-authored regex/word substitutions applied
-    *after* the lattice, in order, either to the IPA (``stage="ipa"``) or to the
-    respelled text (``stage="text"``). It serialises to plain JSON so a voice
+    The overlay is a user-owned escape hatch: hand-authored regex/word
+    substitutions applied *after* the lattice, in order, either to the IPA
+    (``stage="ipa"``) or to the respelled text (``stage="text"``). It serialises to plain JSON so a voice
     tweak — "on my TTS, always render ⟨lh⟩ as [j]" — can be saved next to the
     voice and shared, without ever touching shipped phonology.
     """
@@ -329,6 +328,9 @@ def force_accent(
 
     Returns:
         Target-accent IPA (``mode="ipa"``) or respelled text (``mode="respell"``).
+
+    Raises:
+        ValueError: ``mode`` is neither ``"ipa"`` nor ``"respell"``.
     """
     target = resolve_lect(lect)
     base = resolve_lect(base_lect)

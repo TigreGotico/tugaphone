@@ -9,12 +9,13 @@ tugaphone phonemizes by driving the shared
 [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) candidate
 lattice. A dialect *is* an orthography2ipa lect spec:
 `phonemize_sentence(text, lang)` resolves `lang` to a lect code and runs
-`orthography2ipa.G2P(lect).transcribe(text)`. The spec's grapheme table,
+`orthography2ipa.G2P(lect, normalizer=...).transcribe(text)`. The spec's grapheme table,
 `allophone_rules` and cross-word `sandhi_rules` produce the dialect's phonology, betacism, rising diphthongs, palatalization, `/u/` fronting, coda-sibilant
 voicing sandhi and the rest, with no string-transform pass after transcription.
 
-tugaphone adds only the stages orthography2ipa leaves to the caller, wired
-through orthography2ipa's own extension points:
+tugaphone adds the stages orthography2ipa leaves to the caller, wired through
+orthography2ipa's own extension points, and takes syllabification from
+orthography2ipa:
 
 1. **Normalization**, orthographic rewrites
    (`tugaphone.text_normalization.normalize_orthography`), number/ordinal
@@ -25,8 +26,8 @@ through orthography2ipa's own extension points:
    `orthography2ipa.register_lexicon()`, so a covered word folds into the same
    override path as a spec `word_exceptions` entry, the lattice generates only
    out-of-vocabulary words.
-3. **Syllabification**, supplied by orthography2ipa's own `silabificador`
-   `syllabify` plugin.
+3. **Syllabification**, supplied by the `silabificador`-backed `syllabify`
+   plugin that `orthography2ipa[portuguese]` registers.
 
 For the full breakdown of what comes from where, see
 [architecture.md](architecture.md).
@@ -48,17 +49,18 @@ notation so a sentence's IPA stays internally consistent.
 
 ## Lexicon cache
 
-Each lect's overlay isn't queried from `tugalex` word by word: the first call
+Each lect's overlay is not queried from `tugalex` word by word. The first call
 that needs it materialises the whole region's `word\tipa` map as a TSV under
-`TUGAPHONE_LEXICON_DIR` (default `~/.cache/tugaphone/lexicon`) and registers
+`TUGAPHONE_LEXICON_DIR` (default `$XDG_CACHE_HOME/tugaphone/lexicon`, which is
+`~/.cache/tugaphone/lexicon` when `XDG_CACHE_HOME` is unset) and registers
 that file with `orthography2ipa.register_lexicon()`. Later calls for the same
 lect reuse the materialised file instead of rebuilding it.
 
 The TSV carries a sidecar `.version` file next to it holding the installed
 `tugalex` version. A cached TSV is rebuilt when it is missing, empty (a
-previous write was interrupted), or its `.version` sidecar doesn't match the
-currently installed `tugalex` — the case that otherwise lets a `tugalex` data
-fix never reach an installation that already has a TSV on disk. Set
+previous write was interrupted), or its `.version` sidecar does not match the
+installed `tugalex`. The version check lets a `tugalex` data fix reach an
+installation that already has a TSV on disk. Set
 `TUGAPHONE_LEXICON_DIR` to control where the cache lives, for example to keep
 it outside the default XDG cache directory or to give each test run an
 isolated cache:
@@ -81,10 +83,12 @@ normalize_numbers("897654356789098", "pt-PT")  # long scale (biliões)
 normalize_numbers("897654356789098", "pt-BR")  # short scale (trilhões)
 ```
 
-Gender is inferred from the gender of the following noun in tugalex
-(`TugaLexicon.get_noun_gender`), then from preceding articles (`a`, `as`, `o`,
-`os` and their contractions with `de`), and for a word that tugalex does not
-know from its ending (`-a`, `-dade`, `-agem` endings lean feminine). Pass
+Gender comes first from an ordinal marker (`º`, `ª`) and from a label head
+before the number (`artigo 1`). Next comes the gender of the following noun in
+tugalex (`TugaLexicon.get_noun_gender`), then a preceding article (`a`, `as`,
+`o`, `os` and their contractions with `de`). Last, for a word that tugalex does
+not know, the ending decides (`-a`, `-dade`, `-age`, `-agem` endings are
+feminine). [numbers.md](numbers.md#gender-inference) gives the full rule list. Pass
 `strict=False` to leave unparseable tokens in place instead of raising. Inside
 the pipeline this runs as the engine's `normalize` stage, so a bare digit in the
 input sentence is verbalized before the lattice transcribes it.
@@ -99,14 +103,15 @@ usable on its own:
 - [`tugalex`](https://github.com/TigreGotico/tugalex), the phonetic lexicon
   (`LEXICON` in `tugaphone.dialects`), registered per lect as an override.
 - [`silabificador`](https://github.com/TigreGotico/silabificador), the
-  syllabifier, wired in as orthography2ipa's `syllabify` plugin.
+  syllabifier, which `orthography2ipa[portuguese]` registers as its `syllabify`
+  plugin.
 - [`bifonia`](https://github.com/TigreGotico/bifonia), meaning-based
   heterophone disambiguation, called via `add_extra_diacritics` in the
   `normalize` stage.
 
 A TTS front-end typically wires `tugaphone` as the G2P stage: pass text and a
-target lect code, hand the returned IPA string to the acoustic model. It can also
-be loaded through the `orthography2ipa` G2P plugin interface, see
+target lect code, hand the returned IPA string to the acoustic model. A
+framework that drives engine objects can use `TugaphoneG2PPlugin` instead, see
 [api.md](api.md#tugaphoneplugin).
 
 ## The token-feature API

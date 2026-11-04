@@ -6,8 +6,8 @@ stress markers.
 
 ```
 O gato dorme.
-pt-PT → ˈo ˈgatu ˈdɔɾmɨ
-pt-BR → ˈu ˈgatʊ ˈdoɾmi
+pt-PT → o ˈɡatu ˈdɔɾmɨ
+pt-BR → u ˈɡatʊ ˈdoɾmi
 ```
 
 ## 1. Install
@@ -18,24 +18,28 @@ pip install -e .                 # from a source checkout
 ```
 
 Runtime dependencies (`ovos-number-parser`, `silabificador`, `tugalex`,
-`bifonia`, `orthography2ipa`) install automatically. The phonetic lexicon ships through
-[`tugalex`](https://github.com/TigreGotico/tugalex), which wraps the HuggingFace
-dataset `TigreGotico/portuguese_phonetic_lexicon`. It is lazy-loaded on first use
-and warmed during `TugaPhonemizer()` construction.
+`bifonia`, `orthography2ipa`) install automatically. The phonetic lexicon ships
+inside [`tugalex`](https://github.com/TigreGotico/tugalex) as an extract of the
+Hugging Face dataset
+[TigreGotico/portuguese-unified-pronunciation-lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon),
+so a phonemization call needs no network. The first call for a lect writes
+that lect's lexicon to a cache file, see
+[advanced.md](advanced.md#lexicon-cache).
 
 ## 2. The one thing to understand
 
-`TugaPhonemizer` is the entry point. You construct it once (it loads the
-lexicon), then call `phonemize_sentence(text, lang)` as many times as you like.
-The `lang` argument is an IETF dialect tag and it changes the phonology, not just
-the spelling:
+`TugaPhonemizer` is the entry point. Construct it, then call
+`phonemize_sentence(text, lang)` as many times as you like. The constructor does
+no work: the first call for a lect builds that lect's engine, and the calls
+after it reuse the engine. The `lang` argument is an IETF dialect tag and it
+changes the phonology, not just the spelling:
 
 ```python
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # ˈo ˈgatu ˈdɔɾmɨ
-print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # ˈu ˈgatʊ ˈdoɾmi
+print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # o ˈɡatu ˈdɔɾmɨ
+print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # u ˈɡatʊ ˈdoɾmi
 ```
 
 The return value is a space-separated phoneme string: one token per word, with
@@ -49,7 +53,7 @@ phonology, so `lang` changes the sounds, not just the spelling. See
 
 Every Portuguese-family lect is reachable by its BCP-47 code, the five national
 standards plus the European, Brazilian, African, Asian and other varieties.
-`list_dialects()` returns all 41.
+`list_dialects()` returns them all.
 
 ```python
 ph = TugaPhonemizer()
@@ -77,16 +81,18 @@ from tugaphone import TugaPhonemizer
 ph = TugaPhonemizer()
 sentence = "Vou pôr a manteiga no frigorífico."
 print(ph.phonemize_sentence(sentence, "pt-PT"))
+# ˈvo ˈpoɾ ɐ mɐ̃ˈtɐjɡɐ nu fɾiɡuˈɾifiku
 ```
 
-Digits in your text are best spelled out first, with gender agreement, using the
-`normalize_numbers` helper:
+Digits need no preparation. `phonemize_sentence` spells them out with gender
+agreement before it transcribes the sentence. The `normalize_numbers` helper
+exposes that step on its own:
 
 ```python
 from tugaphone.number_utils import normalize_numbers
 
-text = normalize_numbers("comprei 2 casas")   # 'comprei duas casas'
-print(ph.phonemize_sentence(text, "pt-PT"))
+print(ph.phonemize_sentence("comprei 2 casas", "pt-PT"))   # kõˈpɾej ˈduɐʃ ˈkazɐʃ
+normalize_numbers("comprei 2 casas")                       # 'comprei duas casas'
 ```
 
 ## 5. Sub-regional accents
@@ -98,23 +104,23 @@ extra argument is needed:
 ```python
 ph = TugaPhonemizer()
 print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
-# ˈwo ˈbiɲu ˈjɛ ˈmujtu ˈbõ   (betacism: vinho → binho, rising diphthongs)
+# o ˈbiɲu ˈjɛ ˈmujtu ˈbõ   (betacism: vinho → binho, rising diphthong: é → jɛ)
 ```
 
 See [dialects.md](dialects.md) for the full list of European and Brazilian
 sub-regional codes and the legacy aliases.
 
-## 6. orthography2ipa plugin
+## 6. Engine object
 
-`TugaphoneG2PPlugin` implements the `orthography2ipa` G2P plugin interface
-(`transcribe`, `transcribe_word`, `language_codes`), useful when a framework
-loads phonemizers through that interface:
+`TugaphoneG2PPlugin` wraps the phonemizer in an engine object with
+`transcribe`, `transcribe_word` and `language_codes`, for a framework that
+drives several G2P engines through these members:
 
 ```python
 from tugaphone.plugin import TugaphoneG2PPlugin
 
 p = TugaphoneG2PPlugin(lang="pt-PT")
-print(p.transcribe("o gato dorme"))   # ˈo ˈgatu ˈdɔɾmɨ
+print(p.transcribe("o gato dorme"))   # o ˈɡatu ˈdɔɾmɨ
 ```
 
 `SilabificadorSyllabifier` is a `SyllabifierPlugin` you can use directly.

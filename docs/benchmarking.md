@@ -26,24 +26,28 @@ python scripts/tts_gold_benchmark.py pt-PT pt-BR
 ```
 
 The default lect set is the intersection of orthography2ipa's Portuguese TTS gold
-with tugaphone's own 41 canonical dialects, the Portuguese family. orthography2ipa
+with tugaphone's canonical dialects (`list_dialects()`), the Portuguese family.
+A lect with no gold set is not scored. orthography2ipa
 also ships gold for the Astur-Leonese lects of Portugal (Mirandese `mwl`, the
 `ast-PT` border varieties), which dedicated downstream phonemizers own, those are
 out of tugaphone's scope and are excluded rather than scored through the pt-PT
 fallback.
 
-The mean sentence-level PER across the 41 pt-family lects is **0.034**. The
-reading splits cleanly by path:
+The script prints one PER per lect and the mean. The scores split by path:
 
-- the **pure-lattice** lects (no lexicon overlay) match the gold near-exactly.
-  The lect spec and the gold share one convention, so most score **0.000**.
-- the **lexicon-overlay** lects (`pt-PT`, `pt-BR`, `pt-AO`, `pt-MZ`, `pt-TL` and
-  their city variants) carry a small residual (`pt-PT` 0.11, `pt-BR` 0.17,
-  `pt-TL` 0.31), because the gold is authored in a broader convention than the
-  lect spec resolves to. The `tugalex` lexicon overlay now reproduces the lattice
-  output for the words these sentences exercise, so it neither helps nor hurts
-  the score. It is retained as the authority for lexical facts outside the gold.
-  Read the number as agreement with the spec tradition, not absolute correctness.
+- The **pure-lattice** European, African and Asian lects (no lexicon overlay)
+  match the gold almost exactly, because the lect spec and the gold share one
+  convention. The pure-lattice Brazilian sub-regional lects carry a residual.
+- The **lexicon-overlay** lects (`pt-PT`, `pt-PT-x-lisbon`, `pt-BR`,
+  `pt-BR-x-rj`, `pt-BR-x-sp`, `pt-AO`, `pt-MZ`, `pt-TL`) carry the largest
+  residuals. The overlay causes them: the `tugalex` entries follow the
+  lexicon's own transcription tradition, which differs from the spec and the
+  gold in places (word-final `[ɨ]` deletion, `[ɐj]` for *ei* in Lisbon, the
+  quality of some stressed vowels). The same lects score close to zero when the
+  lattice runs without the overlay.
+
+Read the number as agreement with the spec tradition, not as absolute
+correctness.
 
 ## Rules-only baseline
 
