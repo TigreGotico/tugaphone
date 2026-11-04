@@ -10,13 +10,14 @@ selecting a lect.
 
 `TugaPhonemizer().phonemize_sentence(text, lang)` resolves `lang` to an
 orthography2ipa lect code and drives
-`orthography2ipa.G2P(lect).transcribe(text)`. Every Portuguese-family lect ships
+`orthography2ipa.G2P(lect, normalizer=...).transcribe(text)`, with the
+lexicon for that lect registered first. Every Portuguese-family lect ships
 an engine spec whose grapheme table, `allophone_rules` and cross-word
 `sandhi_rules` encode that variety's phonology. The dialect phenomena are
 produced by the lattice itself, not by a post-hoc string-transform pass:
 
 - northern **betacism** (`/v/` → `[b]`, *vinho* → `[ˈbiɲu]`),
-- Porto **rising diphthongs** (`[ˈwo]`, `[ˈje]`),
+- Porto **rising diphthongs** (*bola* → `[ˈbwɔlɐ]`, *é* → `[ˈjɛ]`),
 - Transmontano `<ch>` → `[tʃ]` and the apico-alveolar `[s̺]`,
 - Madeiran `/l/` → `[ʎ]`,
 - Azorean and Alentejan stressed `/u/` → `[y]`,
@@ -26,20 +27,25 @@ produced by the lattice itself, not by a post-hoc string-transform pass:
 and the rest of each lect's inventory, allophony and stress. There is no
 string-edit layer applied after transcription.
 
-## The three caller-owned layers
+## The caller-owned layers
 
-tugaphone contributes only the concerns orthography2ipa deliberately does not
-own, wired through orthography2ipa's own extension points (see
-`tugaphone/lattice_core.py`):
+tugaphone contributes the concerns orthography2ipa deliberately does not own,
+wired through orthography2ipa's own extension points (see
+`tugaphone/lattice_core.py`). The third stage below, syllabification, comes
+from orthography2ipa itself:
 
 ### 1. Normalization / verbalization
 
-Gender-aware number and ordinal expansion
+Orthographic rewrites (`tugaphone.text_normalization.normalize_orthography`:
+ranges, clock times, separators, abbreviations, Roman numerals, acronyms),
+gender-aware number and ordinal expansion
 (`tugaphone.number_utils.normalize_numbers`) and sense-based
 heterophonic-homograph marking (`bifonia.add_extra_diacritics`, e.g. *sede*
-thirst `/ˈsedɨ/` vs seat `/ˈsɛdɨ/`) run as the engine's `normalizer`, the
-orthography2ipa `normalize` stage, before the lattice sees the text. Numbers are
-verbalized first so their spelled-out words are available to homograph marking, both are orthographic, pre-lattice transformations.
+thirst `/ˈsedɨ/` vs seat `/ˈsɛdɨ/`) run in that order as the engine's
+`normalizer`, the orthography2ipa `normalize` stage, before the lattice sees the
+text. Numbers are verbalized before homograph marking, so their spelled-out
+words are available to it. All three are orthographic, pre-lattice
+transformations.
 
 ### 2. Lexicon
 
@@ -70,8 +76,10 @@ internally consistent.
 
 ### 3. Syllabification
 
-Supplied by orthography2ipa's own `silabificador` `syllabify` plugin, a neutral
-stage, so stress lands on the same syllable the lattice would choose.
+tugaphone does not own this stage. `orthography2ipa[portuguese]`, a tugaphone
+dependency, registers a `silabificador`-backed plugin in the
+`orthography2ipa.syllabify` entry-point group, and the lattice uses it for
+Portuguese stress detection.
 
 ## What comes from where
 
@@ -84,7 +92,7 @@ stage, so stress lands on the same syllable the lattice would choose.
 | Number / ordinal verbalization | tugaphone (`number_utils`, via the `normalize` stage) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via the `normalize` stage) |
 | Curated pronunciation lexicon | tugaphone (`tugalex`, via `register_lexicon`) |
-| Syllabification | tugaphone (`silabificador`, via the `syllabify` plugin) |
+| Syllabification | orthography2ipa (`silabificador`, through the `syllabify` plugin of `orthography2ipa[portuguese]`) |
 
 ## Selecting a dialect
 
@@ -96,11 +104,11 @@ from tugaphone import TugaPhonemizer
 ph = TugaPhonemizer()
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
     print(code, "→", ph.phonemize_sentence("O gato dorme.", code))
-# pt-PT → ˈo ˈgatu ˈdɔɾmɨ
-# pt-BR → ˈu ˈgatʊ ˈdoɾmi
-# pt-AO → ˈʊ ˈgatʊ ˈdɔʁmɨ
-# pt-MZ → ˈu ˈgatu ˈdɔrme
-# pt-TL → ˈo ˈgatʊ ˈdɔrme
+# pt-PT → o ˈɡatu ˈdɔɾmɨ
+# pt-BR → u ˈɡatʊ ˈdoɾmi
+# pt-AO → ʊ ˈɡatʊ ˈdɔʁmɨ
+# pt-MZ → u ˈɡatu ˈdɔrme
+# pt-TL → o ˈɡatʊ ˈdɔrme
 ```
 
 ## The token-feature API

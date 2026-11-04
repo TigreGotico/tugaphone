@@ -17,8 +17,8 @@ accent from text your base speaker already reads.
 
 By default this runs over a small built-in sentence set and a handful of lects
 so it stays fast. Pass ``--full`` to iterate orthography2ipa's entire
-sentence-level Portuguese TTS gold over all 41 pt-family lects, writing a real
-parallel corpus TSV.
+sentence-level Portuguese TTS gold over every pt-family lect that has gold,
+writing a real parallel corpus TSV.
 
 Run::
 

@@ -17,6 +17,7 @@ TugaPhonemizer()
 ```python
 phonemize_sentence(sentence: str,
                    lang: str = "pt-PT",
+                   contact: str = "none",
                    regional_dialect=None) -> str
 ```
 
@@ -31,15 +32,33 @@ African, Asian and other lects. Resolution is case-insensitive with alias
 support, an unresolved code falls back to `pt-PT`. See
 [dialects.md](dialects.md#the-lect-codes).
 
+`contact` sets the code-switch policy: `"none"` (the default) transcribes
+every word as Portuguese, `"auto"` detects Spanish, French and English words,
+and `"es"`, `"fr"` or `"en"` forces one contact lattice. Any other value raises
+`ValueError`. See [codeswitch.md](codeswitch.md).
+
 `regional_dialect` is **deprecated and ignored**. The accent is selected
 entirely by `lang`, it is encoded in the orthography2ipa lect spec, not applied
 as a post-hoc transform. Passing it emits a `DeprecationWarning`.
 
 ```python
+from tugaphone import TugaPhonemizer
+
 ph = TugaPhonemizer()
-ph.phonemize_sentence("O gato dorme.", "pt-BR")        # 'ˈu ˈgatʊ ˈdoɾmi'
-ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-porto")  # 'ˈwo ˈbiɲu ˈjɛ ˈbõ'
+ph.phonemize_sentence("O gato dorme.", "pt-BR")        # 'u ˈɡatʊ ˈdoɾmi'
+ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-porto")  # 'o ˈbiɲu ˈjɛ ˈbõ'
 ```
+
+### `force_accent` (staticmethod)
+
+```python
+TugaPhonemizer.force_accent(text: str, lect: str, mode: str = "ipa",
+                            base_lect: str = "pt-PT",
+                            overlay: AccentOverlay | None = None) -> str
+```
+
+The same call as [`tugaphone.force_accent`](#force_accent), without the `rules`
+argument.
 
 ### `is_supported` (staticmethod)
 
@@ -47,7 +66,9 @@ ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-porto")  # 'ˈwo ˈbiɲu ˈjɛ
 TugaPhonemizer.is_supported(lang: str) -> bool
 ```
 
-Whether `lang` resolves to a known Portuguese lect.
+Meant to tell whether `lang` resolves to a known Portuguese lect.
+`resolve_lect` falls back to `pt-PT` and never returns `None`, so
+`is_supported` returns `True` for every input, `"xx-YY"` included.
 
 ## `tugaphone.accent`
 
@@ -59,13 +80,15 @@ root. See [accent_forcing.md](accent_forcing.md) for the guide.
 ```python
 force_accent(text: str, lect: str, mode: str = "ipa",
              base_lect: str = "pt-PT",
-             overlay: AccentOverlay | None = None) -> str
+             overlay: AccentOverlay | None = None,
+             rules: tuple[RespellRule, ...] = DEFAULT_RESPELL_RULES) -> str
 ```
 
 Force `text` into the `lect` accent. `mode="ipa"` returns the target lect's IPA
 (phoneme-input TTS), `mode="respell"` returns Portuguese text respelled so a
 grapheme-input TTS speaking `base_lect` pronounces the target accent. An optional
-`overlay` of user tweaks is applied last.
+`overlay` of user tweaks is applied last. `rules` is the respelling rule table.
+Any other `mode` raises `ValueError`.
 
 ### `respell` / `respell_word`
 
@@ -104,7 +127,7 @@ are re-exported from the package root.
 from tugaphone import resolve_lect, list_dialects
 
 resolve_lect("pt-PT-x-lisboa")   # 'pt-PT-x-lisbon'  (alias)
-len(list_dialects())             # 41
+"pt-BR-x-sp" in list_dialects()  # True
 ```
 
 ## `tugaphone.number_utils`
@@ -112,13 +135,15 @@ len(list_dialects())             # 41
 ### `normalize_numbers`
 
 ```python
-normalize_numbers(text: str, lang: str = "pt-PT", strict: bool = True) -> str
+normalize_numbers(text: str, lang: str = "pt-PT", strict: bool = True,
+                  scale: str | None = None) -> str
 ```
 
 Replaces numeric tokens in a sentence with their Portuguese written form,
 inferring gender and ordinality from the surrounding words. `pt-PT` uses the
-long scale (biliões), `pt-BR` the short scale (trilhões). With `strict=False`,
-tokens that fail to format are left untouched instead of raising. This runs
+long scale (biliões), `pt-BR` the short scale (trilhões), and `scale="long"` or
+`scale="short"` overrides that choice. With `strict=False`, tokens that fail to
+format are left untouched instead of raising. This runs
 inside the engine's `normalize` stage before the lattice sees the text.
 
 ```python
@@ -135,11 +160,12 @@ finer control or want to interrogate a single token.
 
 | Method | Returns |
 |--------|---------|
-| `pronounce_number_word(word, prev_word=None, next_word=None, gender=None, as_ordinal=None, is_brazilian=False)` | Spelled-out form of one numeric token. |
+| `pronounce_number_word(word, prev_word=None, next_word=None, gender=None, as_ordinal=None, is_brazilian=False, scale=None)` | Spelled-out form of one numeric token. |
 | `to_int(word)` / `is_int(word)` | Integer value (ordinal markers stripped) / membership test. |
 | `to_float(word)` / `is_float(word)` | Float value / membership test. |
+| `is_decimal(word)` | `True` for a non-scientific decimal like `"10,4"`. |
 | `is_scientific_notation(word)` | `True` for forms like `"1.5e10"`. |
-| `pronounce_scientific(word, is_brazilian=False)` | Spoken form of scientific notation. |
+| `pronounce_scientific(word, is_brazilian=False, scale=None)` | Spoken form of scientific notation. |
 | `is_ordinal(word, next_word=None)` | Detects `º`/`ª` markers, attached or separate. |
 | `get_number_gender(word, prev_word=None, next_word=None)` | `"feminine"` or `"masculine"`. |
 
@@ -162,8 +188,7 @@ manner, place, voicing, vowel height, syllable roles and CV skeletons. See
 | Symbol | Role |
 |--------|------|
 | `Sentence(surface, words=[], dialect=EuropeanPortuguese())` | Top-level container, `.ipa`, `.words`, `.n_words`, `.features`. |
-| `Sentence.from_postagged(surface, tags, dialect=None)` | Build from `(token, pos)` pairs. |
-| `WordToken` | `.surface`, `.syllables`, `.graphemes`, `.stressed_syllable_idx`, `.ipa`, `.features`, phonological summaries `.stress_pattern`, `.syllable_structure_pattern`, `.phoneme_count`, `.vowel_sequence`, `.consonant_sequence`, `.has_diphthongs`, `.has_nasal_sounds`, `.has_palatal_sounds`, `.has_consonant_clusters`, `.is_homograph`, `.is_irregular`. |
+| `WordToken` | `.surface`, `.syllables`, `.n_syllables`, `.graphemes`, `.stressed_syllable_idx`, `.ipa`, `.features`, phonological summaries `.stress_pattern`, `.syllable_structure_pattern`, `.phoneme_count`, `.vowel_sequence`, `.consonant_sequence`, `.has_diphthongs`, `.has_nasal_sounds`, `.has_palatal_sounds`, `.has_consonant_clusters`, `.is_homograph`, `.is_irregular`. |
 | `GraphemeToken` | `.surface`, `.ipa`, `.is_diphthong`, `.is_nasal`, `.is_digraph`, `.features`, syllable features `.syllable_position`, `.phonological_weight`, `.has_complex_onset`, `.is_palatal`, `.triggers_palatalization`, `.is_vowel_grapheme`/`.is_consonant_grapheme`. |
 | `CharToken` | character-level predicates (`.is_vowel`, `.is_consonant`, `.ipa`, ...), articulatory features `.manner_of_articulation`, `.place_of_articulation`, `.voicing`, `.vowel_height`/`.vowel_backness`/`.vowel_roundedness`, syllable role `.is_nucleus`/`.is_onset`/`.is_coda`. |
 
@@ -174,27 +199,31 @@ module-level `LEXICON` (`TugaLexicon()`) instance.
 
 ## `tugaphone.plugin`
 
-Two classes that implement the `orthography2ipa` plugin interfaces.
+Two classes for frameworks that drive engines and syllabifiers through common
+members.
 
 ### `TugaphoneG2PPlugin`
 
 ```python
-TugaphoneG2PPlugin(lang: str = "pt-PT")
+TugaphoneG2PPlugin(lang: str = "pt-PT", contact: str = "none")
 ```
 
-Implements `orthography2ipa.g2p_plugin.G2PPlugin`.
+An engine object around `TugaPhonemizer`, which it builds on the first
+transcription. It subclasses nothing: orthography2ipa ships no G2P plugin base
+class. `contact` passes through to `phonemize_sentence`.
 
 | Member | Description |
 |--------|-------------|
 | `language_codes` | `list_dialects()`, every reachable lect code. |
 | `transcribe(text)` | Phonemize a full sentence. |
-| `transcribe_word(word, context=None)` | Phonemize a single word, `context.lang` overrides `self.lang`. |
+| `transcribe_word(word, context=None)` | Phonemize a single word. A `context` (an `orthography2ipa.WordContext`) with a `lang` overrides `self.lang`. |
+| `force_accent(text, lect, mode="ipa", base_lect=None, overlay=None)` | `tugaphone.force_accent`, with `base_lect` defaulting to `self.lang`. |
 
 ```python
 from tugaphone.plugin import TugaphoneG2PPlugin
 
 p = TugaphoneG2PPlugin(lang="pt-BR")
-p.transcribe("o gato dorme")   # 'ˈu ˈgatʊ ˈdoɾmi'
+p.transcribe("o gato dorme")   # 'u ˈɡatʊ ˈdoɾmi'
 ```
 
 ### `SilabificadorSyllabifier`

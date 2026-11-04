@@ -1,7 +1,7 @@
 # The token tree
 
-`phonemize_sentence` returns a string, but the transcription is built from a
-four-level model you can inspect directly:
+`tugaphone.tokenizer` builds a four-level model of a sentence that you can
+inspect directly:
 
 ```
 Sentence → Word → Grapheme → Character
@@ -9,7 +9,10 @@ Sentence → Word → Grapheme → Character
 
 Each level carries phonological features and its own IPA. This is the layer to
 reach for when you want syllables, stress positions, diphthong detection, or a
-feature dict for machine learning, not just the final phoneme string.
+feature dict for machine learning. It is not the phonemization path:
+`phonemize_sentence` runs on the orthography2ipa lattice, and the token tree
+runs tugaphone's own grapheme cascade. The two can give different
+IPA for the same sentence.
 
 ## Built on the orthography2ipa shared substrate
 
@@ -41,9 +44,9 @@ from tugaphone.tokenizer import Sentence
 from tugaphone.dialects import EuropeanPortuguese
 
 s = Sentence("O cão comeu o pão.", dialect=EuropeanPortuguese())
-print(s.ipa)        # 'ˈu kˈɐ̃w ku·ˈmew ˈu pˈɐ̃w'
+print(s.ipa)        # u kˈɐ̃w ku·ˈmew u pˈɐ̃w
 print(s.n_words)    # 5
-print(repr(s))      # Sentence('O cão comeu o pão.' → [...])
+print(repr(s))      # Sentence('O cão comeu o pão.' → [u kˈɐ̃w ku·ˈmew u pˈɐ̃w])
 ```
 
 ## Word level
@@ -59,9 +62,11 @@ for word in s.words:
 ```
 
 ```
-o    o        stress@ 0 → ˈu
-cão  cão      stress@ 0 → kˈɐ̃w
-comeu co.meu  stress@ 1 → ku·ˈmew
+o o stress@ 0 → u
+cão cão stress@ 0 → kˈɐ̃w
+comeu co.meu stress@ 1 → ku·ˈmew
+o o stress@ 0 → u
+pão pão stress@ 0 → pˈɐ̃w
 ```
 
 `syllables` comes from the `silabificador` library, `stressed_syllable_idx` is
@@ -152,8 +157,9 @@ w.has_palatal_sounds           # True
 ```
 
 Also: `has_diphthongs`, `has_nasal_sounds`, `has_consonant_clusters`,
-`is_homograph` (POS-dependent IPA, e.g. *gosto*) and `is_irregular` (IPA comes
-from the lexicon rather than the rules).
+`is_homograph` (the word is in bifonia's heterophonic-homograph table, e.g.
+*gosto*) and `is_irregular` (IPA comes from the lexicon rather than the
+rules).
 
 ## Feature extraction
 

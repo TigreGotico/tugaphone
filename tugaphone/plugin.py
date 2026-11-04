@@ -1,4 +1,4 @@
-"""tugaphone on the orthography2ipa base interfaces.
+"""tugaphone as an engine object and an orthography2ipa syllabifier plugin.
 
 tugaphone *consumes* orthography2ipa — it drives the shared candidate lattice
 (the Portuguese lect specs, their stress and sandhi rules) and adds the stages
@@ -11,12 +11,13 @@ sense-based homograph marking and the curated ``tugalex`` lexicon overlay (see
 
 Two classes live here:
 
-- :class:`TugaphoneG2PPlugin` — the full phonemizer behind the shared
-  engine interface.
-- :class:`SilabificadorSyllabifier` — a component plugin registered in
-  the ``orthography2ipa.syllabify`` entry-point group, so
-  orthography2ipa's own stress detection syllabifies Portuguese with
-  ``silabificador`` instead of its naive vowel-group splitter.
+- :class:`TugaphoneG2PPlugin` — the full phonemizer behind the
+  ``transcribe`` / ``transcribe_word`` / ``language_codes`` engine members.
+- :class:`SilabificadorSyllabifier` — an orthography2ipa
+  :class:`~orthography2ipa.syllabifier_plugin.SyllabifierPlugin` that
+  syllabifies Portuguese with ``silabificador``. tugaphone does not register
+  it as an entry point; ``orthography2ipa[portuguese]`` registers its own
+  ``silabificador`` plugin in the ``orthography2ipa.syllabify`` group.
 """
 from typing import List, Optional
 
@@ -41,6 +42,7 @@ class TugaphoneG2PPlugin:
 
     @property
     def language_codes(self) -> List[str]:
+        """Every lect code this engine accepts (:func:`tugaphone.list_dialects`)."""
         return list_dialects()
 
     def _engine(self):
@@ -50,12 +52,18 @@ class TugaphoneG2PPlugin:
         return self._phonemizer
 
     def transcribe(self, text: str) -> str:
+        """Phonemize ``text`` for ``self.lang``; space-separated IPA per word."""
         return self._engine().phonemize_sentence(
             text, lang=self.lang, contact=self.contact)
 
     def transcribe_word(
         self, word: str, context: Optional[WordContext] = None
     ) -> str:
+        """Phonemize one word.
+
+        A ``context`` whose ``lang`` is set overrides ``self.lang``. The other
+        ``WordContext`` fields are not read.
+        """
         lang = (context.lang if context is not None and context.lang
                 else self.lang)
         return self._engine().phonemize_sentence(
@@ -80,12 +88,10 @@ class TugaphoneG2PPlugin:
 class SilabificadorSyllabifier(SyllabifierPlugin):
     """Portuguese syllabifier for orthography2ipa's stress detection.
 
-    **Kept as a class, no longer registered as an entry point.**
-    orthography2ipa ships this same plugin itself now
-    (``orthography2ipa[portuguese]``, wrapping the same ``silabificador``), and
-    two entry points claiming ``pt-PT`` at the same priority meant the winner was
-    whichever importlib enumerated last — a coin flip between two objects that do
-    the identical thing. One owner, and it is the library the plugin plugs into.
+    The class is not registered as an entry point.
+    ``orthography2ipa[portuguese]`` registers its own plugin around the same
+    ``silabificador``, and two entry points claiming ``pt-PT`` at the same
+    priority would leave the winner to importlib's enumeration order.
     """
 
     @property

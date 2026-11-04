@@ -11,17 +11,18 @@ from tugaphone import TugaPhonemizer
 ph = TugaPhonemizer()
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
     print(code, "→", ph.phonemize_sentence("O gato dorme.", code))
-# pt-PT → ˈo ˈgatu ˈdɔɾmɨ
-# pt-BR → ˈu ˈgatʊ ˈdoɾmi
-# pt-AO → ˈʊ ˈgatʊ ˈdɔʁmɨ
-# pt-MZ → ˈu ˈgatu ˈdɔrme
-# pt-TL → ˈo ˈgatʊ ˈdɔrme
+# pt-PT → o ˈɡatu ˈdɔɾmɨ
+# pt-BR → u ˈɡatʊ ˈdoɾmi
+# pt-AO → ʊ ˈɡatʊ ˈdɔʁmɨ
+# pt-MZ → u ˈɡatu ˈdɔrme
+# pt-TL → o ˈɡatʊ ˈdɔrme
 ```
 
 ## The lect codes
 
-`tugaphone.list_dialects()` returns every reachable code, 41 in all, derived
-from `orthography2ipa.available_codes()`.
+`tugaphone.list_dialects()` returns every reachable code. It reads them from
+`orthography2ipa.available_codes()` at import time, so the set follows the
+installed orthography2ipa. The lists below group the codes it returns.
 
 ### National standards
 
@@ -36,7 +37,7 @@ from `orthography2ipa.available_codes()`.
 ### European sub-regional varieties
 
 `pt-PT-x-porto`, `pt-PT-x-braga`, `pt-PT-x-minho`, `pt-PT-x-viana`,
-`pt-PT-x-alfena`, `pt-PT-x-trasosmontes`, `pt-PT-x-aveiro`, `pt-PT-x-beira`,
+`pt-PT-x-alfena`, `pt-PT-x-tras-os-montes`, `pt-PT-x-aveiro`, `pt-PT-x-beira`,
 `pt-PT-x-coimbra`, `pt-PT-x-alentejo`, `pt-PT-x-algarve`, `pt-PT-x-madeira`,
 `pt-PT-x-acores`, `pt-PT-x-sao-miguel`, `pt-PT-x-terceira`, `pt-PT-x-lisbon`,
 `pt-PT-x-medieval`.
@@ -46,23 +47,25 @@ directly:
 
 ```python
 # Porto: rising diphthongs, betacism /v/ → [b]
+print(ph.phonemize_sentence("A bola é do Porto.", "pt-PT-x-porto"))
+# ɐ ˈbwɔlɐ ˈjɛ du ˈpwoɾtu
 print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
-# ˈwo ˈbiɲu ˈjɛ ˈmujtu ˈbõ
+# o ˈbiɲu ˈjɛ ˈmujtu ˈbõ
 
 # Trás-os-Montes: <ch> → [tʃ], betacism
-print(ph.phonemize_sentence("A chave.", "pt-PT-x-trasosmontes"))
-# ˈɐ ˈtʃabɨ
+print(ph.phonemize_sentence("A chave.", "pt-PT-x-tras-os-montes"))
+# ɐ ˈtʃabɨ
 
-# Madeira: /l/ palatalization → [ʎ]
-print(ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-madeira"))
-# ˈo ˈviɲu ˈɛ ˈbõ
+# Madeira: intervocalic /l/ after /i/ → [ʎ]
+print(ph.phonemize_sentence("A vila é bonita.", "pt-PT-x-madeira"))
+# ɐ ˈviʎɐ ˈɛ buˈnitɐ
 ```
 
 ### Brazilian sub-regional varieties
 
 `pt-BR-x-sp`, `pt-BR-x-rj`, `pt-BR-x-mg`, `pt-BR-x-pr`, `pt-BR-x-sul`,
-`pt-BR-x-caipira`, `pt-BR-x-fluminense`, `pt-BR-x-bahia`, `pt-BR-x-recife`,
-`pt-BR-x-ce`, `pt-BR-x-norte`, `pt-BR-x-brasilia`.
+`pt-BR-x-caipira`, `pt-BR-x-fluminen`, `pt-BR-x-bahia`, `pt-BR-x-recife`,
+`pt-BR-x-ce`, `pt-BR-x-norte`, `pt-BR-x-cuiaba`, `pt-BR-x-floripa`.
 
 ```python
 print(ph.phonemize_sentence("noite", "pt-BR"))       # ˈnojtʃɪ
@@ -72,14 +75,16 @@ print(ph.phonemize_sentence("noite", "pt-BR-x-sp"))  # ˈnojti
 ### African, Asian and other lects
 
 `pt-CV` (Cape Verde), `pt-GW` (Guinea-Bissau), `pt-ST` (São Tomé and Príncipe),
-`pt-MO` (Macau), `pt-UY` (Uruguay), `ext-PT-x-barrancos` (Barranquenho), and
-`roa-x-galaicopt` (Galician-Portuguese).
+`pt-MO` (Macau), `pt-UY` (Uruguay), `ext-PT-x-barranco` (Barranquenho), and
+`roa-x-galaico-pt` (Galician-Portuguese).
 
 ## Legacy aliases
 
 Legacy tugaphone accent codes resolve to their orthography2ipa equivalents.
 Resolution is case-insensitive, an unresolved private-use subtag falls back to
-its parent tag, and any unrecognised code falls back to `pt-PT`.
+its parent tag, and any unrecognised code falls back to `pt-PT`. A code that
+orthography2ipa renamed also resolves, through the old key orthography2ipa
+keeps as an alias.
 
 | Alias | Resolves to |
 |-------|-------------|
@@ -88,10 +93,13 @@ its parent tag, and any unrecognised code falls back to `pt-PT`.
 | `pt-PT-x-azores` | `pt-PT-x-acores` |
 | `pt-PT-x-north`, `pt-PT-x-norte`, `pt-PT-x-fafe` | `pt-PT-x-minho` |
 | `pt-PT-x-famalicao` | `pt-PT-x-viana` |
-| `pt-PT-x-transmontano`, `pt-PT-x-tras-os-montes` | `pt-PT-x-trasosmontes` |
+| `pt-PT-x-transmontano`, `pt-PT-x-trasosmontes` | `pt-PT-x-tras-os-montes` |
 | `pt-PT-x-central` | `pt-PT-x-coimbra` |
 | `pt-BR-x-sao-paulo` | `pt-BR-x-sp` |
 | `pt-BR-x-rio-janeiro`, `pt-BR-x-rio` | `pt-BR-x-rj` |
+| `pt-BR-x-fluminense` | `pt-BR-x-fluminen` |
+| `ext-PT-x-barrancos` | `ext-PT-x-barranco` |
+| `roa-x-galaicopt` | `roa-x-galaico-pt` |
 
 ```python
 from tugaphone import resolve_lect
