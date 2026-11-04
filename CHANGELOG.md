@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.19a1](https://github.com/TigreGotico/tugaphone/tree/1.4.19a1) (2026-11-04)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.18a1...1.4.19a1)
+
+**Merged pull requests:**
+
+- fix: resolve dialect codes that orthography2ipa renamed [\#176](https://github.com/TigreGotico/tugaphone/pull/176) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.4.18a1](https://github.com/TigreGotico/tugaphone/tree/1.4.18a1) (2026-11-04)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.17a1...1.4.18a1)
@@ -390,10 +398,6 @@
 ## [0.8.1a1](https://github.com/TigreGotico/tugaphone/tree/0.8.1a1) (2026-07-13)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.0a1...0.8.1a1)
-
-**Merged pull requests:**
-
-- fix\(lexicon\): adopt tugalex 2.0 canonical-register data [\#71](https://github.com/TigreGotico/tugaphone/pull/71) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.8.0a1](https://github.com/TigreGotico/tugaphone/tree/0.8.0a1) (2026-07-13)
 
