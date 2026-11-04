@@ -19,10 +19,12 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional
 
-from orthography2ipa import available_codes
+from orthography2ipa import available_codes, resolve, resolves_exactly
 
 #: Portuguese-family lect codes orthography2ipa ships, the canonical dialects.
-_PT_PREFIXES = ("pt-", "pt_", "ext-PT", "roa-x-galaicopt")
+#: The Galician-Portuguese key goes through ``resolve`` because orthography2ipa
+#: keeps a renamed spec's old key as an exact alias of the new one.
+_PT_PREFIXES = ("pt-", "pt_", "ext-PT", resolve("roa-x-galaicopt"))
 
 
 def _canonical_codes() -> List[str]:
@@ -97,24 +99,38 @@ def normalize_dialect_code(lang: str) -> str:
 def resolve_lect(lang: str = "pt-PT") -> str:
     """Resolve ``lang`` to the orthography2ipa lect code that answers for it.
 
-    Resolution order: exact canonical code, then a legacy alias, then a
-    progressive pop of trailing subtags (``pt-PT-x-unknown`` → ``pt-PT``). An
-    unresolved code falls back to ``pt-PT``, preserving the European Portuguese
-    default.
+    Resolution order: a legacy alias, then the code itself, each matched
+    exactly against the canonical codes or the old keys orthography2ipa keeps
+    as aliases, then a progressive pop of trailing subtags
+    (``pt-PT-x-unknown`` → ``pt-PT``). An unresolved code falls back to
+    ``pt-PT``, preserving the European Portuguese default.
     """
     canon = normalize_dialect_code(lang)
     key = canon.lower()
     while key:
-        if key in _ALIASES:
-            return _ALIASES[key]
-        # canonical codes are compared case-insensitively
-        for code in _CANONICAL:
-            if code.lower() == key:
-                return code
+        lect = _registered(_ALIASES.get(key, key))
+        if lect:
+            return lect
         if "-" not in key:
             break
         key = key.rsplit("-", 1)[0]
     return "pt-PT"
+
+
+def _registered(code: str) -> Optional[str]:
+    """The canonical dialect that ``code`` names exactly, or ``None``.
+
+    Canonical codes compare case-insensitively. A code orthography2ipa renamed
+    reaches its spec through the exact alias orthography2ipa keeps for the old
+    key; nearest-language guessing never counts as a match.
+    """
+    folded = code.lower()
+    for lect in _CANONICAL:
+        if lect.lower() == folded:
+            return lect
+    if resolves_exactly(code) and (lect := resolve(code)) in _CANONICAL_SET:
+        return lect
+    return None
 
 
 def lexicon_region(lect: str) -> Optional[str]:

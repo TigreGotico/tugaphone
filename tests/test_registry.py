@@ -5,6 +5,7 @@ by running the phonemizer.
 """
 
 import pytest
+from orthography2ipa import resolve
 
 from tugaphone.registry import (normalize_dialect_code, resolve_lect,
                                 resolve_dialect, lexicon_region, list_dialects,
@@ -47,7 +48,17 @@ class TestResolution:
         ("pt-PT-x-azores", "pt-PT-x-acores"),
     ])
     def test_legacy_aliases(self, alias, lect):
-        assert resolve_lect(alias) == lect
+        assert resolve_lect(alias) == resolve(lect)
+
+    @pytest.mark.parametrize("code", [
+        "pt-PT-x-trasosmontes", "pt-BR-x-fluminense", "roa-x-galaicopt",
+        "ext-PT-x-barrancos",
+    ])
+    def test_a_key_orthography2ipa_renamed_still_names_its_dialect(self, code):
+        # orthography2ipa keeps the old key of a renamed spec as an exact
+        # alias, so the old key must not fall back to the parent variety.
+        assert resolve_lect(code) == resolve(code)
+        assert resolve(code) in list_dialects()
 
     def test_case_insensitive(self):
         assert resolve_lect("PT-BR") == "pt-BR"
