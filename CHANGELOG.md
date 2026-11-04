@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.19a2](https://github.com/TigreGotico/tugaphone/tree/1.4.19a2) (2026-11-04)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.19a1...1.4.19a2)
+
+**Merged pull requests:**
+
+- docs: correct claims that no longer match dev [\#180](https://github.com/TigreGotico/tugaphone/pull/180) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.4.19a1](https://github.com/TigreGotico/tugaphone/tree/1.4.19a1) (2026-11-04)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.18a1...1.4.19a1)
@@ -386,10 +394,6 @@
 ## [0.8.1a3](https://github.com/TigreGotico/tugaphone/tree/0.8.1a3) (2026-07-14)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a2...0.8.1a3)
-
-**Merged pull requests:**
-
-- Update actions/setup-python action to v6 [\#72](https://github.com/TigreGotico/tugaphone/pull/72) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [0.8.1a2](https://github.com/TigreGotico/tugaphone/tree/0.8.1a2) (2026-07-14)
 
