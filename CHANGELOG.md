@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.18a1](https://github.com/TigreGotico/tugaphone/tree/1.4.18a1) (2026-11-04)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.17a1...1.4.18a1)
+
+**Merged pull requests:**
+
+- fix: rewrite the lexicon cache when its stamp is not UTF-8 [\#174](https://github.com/TigreGotico/tugaphone/pull/174) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.17a1](https://github.com/TigreGotico/tugaphone/tree/1.4.17a1) (2026-11-02)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.16a2...1.4.17a1)
@@ -378,11 +386,6 @@
 ## [0.8.1a2](https://github.com/TigreGotico/tugaphone/tree/0.8.1a2) (2026-07-14)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a1...0.8.1a2)
-
-**Merged pull requests:**
-
-- Update actions/checkout action to v7 [\#69](https://github.com/TigreGotico/tugaphone/pull/69) ([renovate[bot]](https://github.com/apps/renovate))
-- Update dependency python to 3.14 [\#68](https://github.com/TigreGotico/tugaphone/pull/68) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [0.8.1a1](https://github.com/TigreGotico/tugaphone/tree/0.8.1a1) (2026-07-13)
 
