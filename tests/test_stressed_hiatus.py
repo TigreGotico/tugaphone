@@ -45,9 +45,7 @@ def test_saude_stress_on_the_accented_u(ph, lect):
 
 
 DIPHTHONGS = [
-    # The pt-PT rules read the ⟨ui⟩ of muito oral, and no lexicon covers it.
-    pytest.param("muito", "ˈmũj̃tu", marks=pytest.mark.xfail(
-        strict=True, reason="the pt-PT rules give ˈmujtu, with no nasal diphthong")),
+    ("muito", "ˈmũj̃tu"),
     ("fui", "ˈfuj"),
     ("cuidado", "kujˈdadu"),
     ("foi", "ˈfoj"),
