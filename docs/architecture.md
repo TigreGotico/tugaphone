@@ -95,7 +95,7 @@ ph = TugaPhonemizer()
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
     print(code, "→", ph.phonemize_sentence("O gato dorme.", code))
 # pt-PT → o ˈɡatu ˈdɔɾmɨ
-# pt-BR → u ˈɡatʊ ˈdoɾmi
+# pt-BR → u ˈɡatu ˈdoɾmi
 # pt-AO → ʊ ˈɡatʊ ˈdɔʁmɨ
 # pt-MZ → u ˈɡatu ˈdɔrme
 # pt-TL → o ˈɡatʊ ˈdɔrme

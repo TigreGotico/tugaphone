@@ -12,7 +12,7 @@ ph = TugaPhonemizer()
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
     print(code, "→", ph.phonemize_sentence("O gato dorme.", code))
 # pt-PT → o ˈɡatu ˈdɔɾmɨ
-# pt-BR → u ˈɡatʊ ˈdoɾmi
+# pt-BR → u ˈɡatu ˈdoɾmi
 # pt-AO → ʊ ˈɡatʊ ˈdɔʁmɨ
 # pt-MZ → u ˈɡatu ˈdɔrme
 # pt-TL → o ˈɡatʊ ˈdɔrme
@@ -39,8 +39,7 @@ installed orthography2ipa. The lists below group the codes it returns.
 `pt-PT-x-porto`, `pt-PT-x-braga`, `pt-PT-x-minho`, `pt-PT-x-viana`,
 `pt-PT-x-alfena`, `pt-PT-x-tras-os-montes`, `pt-PT-x-aveiro`, `pt-PT-x-beira`,
 `pt-PT-x-coimbra`, `pt-PT-x-alentejo`, `pt-PT-x-algarve`, `pt-PT-x-madeira`,
-`pt-PT-x-acores`, `pt-PT-x-sao-miguel`, `pt-PT-x-terceira`, `pt-PT-x-lisbon`,
-`pt-PT-x-medieval`.
+`pt-PT-x-acores`, `pt-PT-x-sao-miguel`, `pt-PT-x-terceira`, `pt-PT-x-lisbon`.
 
 Each spec's `allophone_rules` and `sandhi_rules` encode the variety's phonology
 directly:
@@ -75,16 +74,18 @@ print(ph.phonemize_sentence("noite", "pt-BR-x-sp"))  # ˈnojti
 ### African, Asian and other lects
 
 `pt-CV` (Cape Verde), `pt-GW` (Guinea-Bissau), `pt-ST` (São Tomé and Príncipe),
-`pt-MO` (Macau), `pt-UY` (Uruguay), and `roa-x-galaico-pt` (Galician-Portuguese).
+`pt-MO` (Macau) and `pt-UY` (Uruguay).
 
-Barranquenho is not a tugaphone lect. It has its own orthography, and
-`g2p_barranquenho` reads it.
+Barranquenho, Old Portuguese and Galician-Portuguese are not tugaphone lects.
+Each has its own orthography, so the modern Portuguese text stages do not apply.
+`g2p_barranquenho` reads Barranquenho, and orthography2ipa keeps all three specs.
 
 ## Legacy aliases
 
 Legacy tugaphone accent codes resolve to their orthography2ipa equivalents.
 Resolution is case-insensitive, an unresolved private-use subtag falls back to
-its parent tag, and any unrecognised code falls back to `pt-PT`. A code that
+its parent tag, and any unrecognised code falls back to `pt-PT`. Both fallbacks
+warn. A code that
 orthography2ipa renamed also resolves, through the old key orthography2ipa
 keeps as an alias.
 
@@ -100,7 +101,6 @@ keeps as an alias.
 | `pt-BR-x-sao-paulo` | `pt-BR-x-sp` |
 | `pt-BR-x-rio-janeiro`, `pt-BR-x-rio` | `pt-BR-x-rj` |
 | `pt-BR-x-fluminense` | `pt-BR-x-fluminen` |
-| `roa-x-galaicopt` | `roa-x-galaico-pt` |
 
 ```python
 from tugaphone import resolve_lect

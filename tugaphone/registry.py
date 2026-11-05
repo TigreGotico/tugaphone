@@ -25,16 +25,19 @@ from orthography2ipa import available_codes, resolve, resolves_exactly
 from tugaphone.version import VERSION_MAJOR
 
 #: Portuguese-family lect codes orthography2ipa ships, the canonical dialects.
-#: The Galician-Portuguese key goes through ``resolve`` because orthography2ipa
-#: keeps a renamed spec's old key as an exact alias of the new one. Barranquenho
-#: is left out: it has its own orthography, which ``g2p_barranquenho`` reads.
-_PT_PREFIXES = ("pt-", "pt_", resolve("roa-x-galaicopt"))
+_PT_PREFIXES = ("pt-", "pt_")
+
+#: Lects written in another orthography, so the modern Portuguese text stages do
+#: not apply. orthography2ipa keeps their specs. Barranquenho and
+#: Galician-Portuguese fall outside the prefixes; ``g2p_barranquenho`` reads the
+#: first.
+_OWN_ORTHOGRAPHY = frozenset({"pt-PT-x-medieval"})
 
 
 def _canonical_codes() -> List[str]:
     return sorted(
         c for c in available_codes()
-        if c.startswith(_PT_PREFIXES)
+        if c.startswith(_PT_PREFIXES) and c not in _OWN_ORTHOGRAPHY
     )
 
 
@@ -102,18 +105,19 @@ def resolve_lect(lang: str = "pt-PT") -> str:
     exactly against the canonical codes or the old keys orthography2ipa keeps
     as aliases, then a progressive pop of trailing subtags
     (``pt-PT-x-unknown`` → ``pt-PT``). An unresolved code falls back to
-    ``pt-PT``, preserving the European Portuguese default.
+    ``pt-PT``, preserving the European Portuguese default. A code that does not
+    name a lect itself warns, because the caller gets another variety.
     """
-    canon = normalize_dialect_code(lang)
-    key = canon.lower()
-    while key:
-        lect = _registered(_ALIASES.get(key, key))
-        if lect:
-            return lect
-        if "-" not in key:
-            break
-        key = key.rsplit("-", 1)[0]
-    return "pt-PT"
+    canon = normalize_dialect_code(lang).lower()
+    key = canon
+    lect = None
+    while key and not (lect := _registered(_ALIASES.get(key, key))):
+        key = key.rpartition("-")[0]
+    resolved = lect or "pt-PT"
+    if key != canon or lect is None:
+        warnings.warn(f"{lang!r} is not a tugaphone lect; using {resolved}",
+                      stacklevel=2)
+    return resolved
 
 
 def _registered(code: str) -> Optional[str]:
