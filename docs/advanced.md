@@ -22,12 +22,12 @@ orthography2ipa:
    verbalization (`tugaphone.number_utils.normalize_numbers`) and sense-based
    homograph marking (`bifonia.add_extra_diacritics`) run as the engine's
    `normalizer`, before the lattice sees the text.
-2. **Lexicon**, for `pt-PT` and `pt-BR` only, the residual lexicon of
-   `o2i-lexicons` is enabled via `orthography2ipa.use_packaged_lexicons()`, so a
-   covered word folds into the same override path as a spec `word_exceptions`
-   entry. Every other lect runs on the rules alone.
-3. **Syllabification**, supplied by the `silabificador`-backed `syllabify`
-   plugin that `orthography2ipa[portuguese]` registers.
+2. **Lexicon**, for `pt-PT` and `pt-BR` only, the engine takes the residual
+   lexicon of `o2i-lexicons` through its `orthography2ipa.Pipeline`, so a covered
+   word folds into the same override path as a spec `word_exceptions` entry.
+   Every other lect runs on the rules alone.
+3. **Syllabification**, supplied by the bundled splitter of orthography2ipa,
+   which reads the diphthongs and hiatus of the lect spec.
 
 For the full breakdown of what comes from where, see
 [architecture.md](architecture.md).
@@ -35,10 +35,10 @@ For the full breakdown of what comes from where, see
 ## The lexicon boundary
 
 The `pt-PT` lect takes the residual lexicon of
-[`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), enabled through
-`orthography2ipa.use_packaged_lexicons(["pt-PT"])`. A covered word folds into
-the same override path as a spec `word_exceptions` entry. The lexicon holds only
-the words that the `pt-PT` rules get wrong, from the Infopédia readings of the
+[`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), passed to the
+engine as `Pipeline(lexicon=packaged_lexicon("pt-PT"))`. A covered word folds
+into the same override path as a spec `word_exceptions` entry. The lexicon holds
+only the words that the `pt-PT` rules get wrong, from the Infopédia readings of the
 [portuguese-unified pronunciation lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon).
 Every other lect runs on the orthography2ipa rules alone.
 
@@ -85,8 +85,8 @@ usable on its own:
   genders, and the phonetic lexicon of the legacy `tugaphone.dialects`
   inventories (`LEXICON`).
 - [`silabificador`](https://github.com/TigreGotico/silabificador), the
-  syllabifier, which `orthography2ipa[portuguese]` registers as its `syllabify`
-  plugin.
+  syllabifier of the `tugaphone.tokenizer` token tree. The phonemization path
+  does not use it.
 - [`bifonia`](https://github.com/TigreGotico/bifonia), meaning-based
   heterophone disambiguation, called via `add_extra_diacritics` in the
   `normalize` stage.

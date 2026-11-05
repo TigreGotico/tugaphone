@@ -50,9 +50,10 @@ transformations.
 ### 2. Lexicon
 
 The `pt-PT` and `pt-BR` lects each take a residual lexicon of
-[`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), enabled through
-`orthography2ipa.use_packaged_lexicons`. A covered word folds into the same
-override path as a spec `word_exceptions` entry. Each lexicon holds only the
+[`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), passed to the
+engine through `orthography2ipa.Pipeline`. The lexicon belongs to that engine,
+so a plain `G2P` in the same process stays on the rules. A covered word folds
+into the same override path as a spec `word_exceptions` entry. Each lexicon holds only the
 words that the lect's rules get wrong. The `pt-PT` entries come from the
 Infopédia readings of the
 [portuguese-unified pronunciation lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon).
@@ -66,10 +67,9 @@ no sub-lect takes one.
 
 ### 3. Syllabification
 
-tugaphone does not own this stage. `orthography2ipa[portuguese]`, a tugaphone
-dependency, registers a `silabificador`-backed plugin in the
-`orthography2ipa.syllabify` entry-point group, and the lattice uses it for
-Portuguese stress detection.
+tugaphone does not own this stage. The engine uses the bundled splitter of
+orthography2ipa, which reads the diphthongs and hiatus of the lect spec. The
+`tugaphone.tokenizer` token tree syllabifies with `silabificador`.
 
 ## What comes from where
 
@@ -81,8 +81,8 @@ Portuguese stress detection.
 | Stress placement | orthography2ipa lect spec (stress rules) |
 | Number / ordinal verbalization | tugaphone (`number_utils`, via the `normalize` stage) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via the `normalize` stage) |
-| `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, enabled by tugaphone via `use_packaged_lexicons` |
-| Syllabification | orthography2ipa (`silabificador`, through the `syllabify` plugin of `orthography2ipa[portuguese]`) |
+| `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, passed by tugaphone through `Pipeline` |
+| Syllabification | orthography2ipa (the bundled splitter) |
 
 ## Selecting a dialect
 

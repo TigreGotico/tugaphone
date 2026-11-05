@@ -15,9 +15,8 @@ Two classes live here:
   ``transcribe`` / ``transcribe_word`` / ``language_codes`` engine members.
 - :class:`SilabificadorSyllabifier` — an orthography2ipa
   :class:`~orthography2ipa.syllabifier_plugin.SyllabifierPlugin` that
-  syllabifies Portuguese with ``silabificador``. tugaphone does not register
-  it as an entry point; ``orthography2ipa[portuguese]`` registers its own
-  ``silabificador`` plugin in the ``orthography2ipa.syllabify`` group.
+  syllabifies Portuguese with ``silabificador``. The phonemization path does
+  not use it, and tugaphone does not register it as an entry point.
 """
 from typing import List, Optional
 
@@ -88,10 +87,8 @@ class TugaphoneG2PPlugin:
 class SilabificadorSyllabifier(SyllabifierPlugin):
     """Portuguese syllabifier for orthography2ipa's stress detection.
 
-    The class is not registered as an entry point.
-    ``orthography2ipa[portuguese]`` registers its own plugin around the same
-    ``silabificador``, and two entry points claiming ``pt-PT`` at the same
-    priority would leave the winner to importlib's enumeration order.
+    The class is not registered as an entry point. A caller passes it to an
+    engine as ``Pipeline(syllabifier=SilabificadorSyllabifier())``.
     """
 
     @property
