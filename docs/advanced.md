@@ -22,10 +22,10 @@ orthography2ipa:
    verbalization (`tugaphone.number_utils.normalize_numbers`) and sense-based
    homograph marking (`bifonia.add_extra_diacritics`) run as the engine's
    `normalizer`, before the lattice sees the text.
-2. **Lexicon**, for `pt-PT` only, the residual lexicon of `o2i-lexicons` is
-   enabled via `orthography2ipa.use_packaged_lexicons()`, so a covered word
-   folds into the same override path as a spec `word_exceptions` entry. Every
-   other lect runs on the rules alone.
+2. **Lexicon**, for `pt-PT` and `pt-BR` only, the residual lexicon of
+   `o2i-lexicons` is enabled via `orthography2ipa.use_packaged_lexicons()`, so a
+   covered word folds into the same override path as a spec `word_exceptions`
+   entry. Every other lect runs on the rules alone.
 3. **Syllabification**, supplied by the `silabificador`-backed `syllabify`
    plugin that `orthography2ipa[portuguese]` registers.
 
@@ -79,8 +79,8 @@ usable on its own:
 
 - [`orthography2ipa`](https://github.com/TigreGotico/orthography2ipa), the
   candidate lattice and the lect specs that are tugaphone's core.
-- [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), the `pt-PT`
-  residual lexicon.
+- [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), the `pt-PT` and
+  `pt-BR` residual lexicons.
 - [`tugalex`](https://github.com/TigreGotico/tugalex), the noun and given-name
   genders, and the phonetic lexicon of the legacy `tugaphone.dialects`
   inventories (`LEXICON`).

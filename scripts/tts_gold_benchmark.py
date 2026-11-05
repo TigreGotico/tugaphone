@@ -18,9 +18,10 @@ downstream phonemizers own them — so scoring them here through the pt-PT fallb
 would be meaningless, and they are excluded. Pass explicit lect codes to override.
 
 Read the number as agreement-with-the-spec-tradition, not absolute correctness:
-the gold is authored to the lect specs' broad convention. ``pt-PT`` takes the
-``o2i-lexicons`` residual lexicon (:data:`tugaphone.registry.PACKAGED_LEXICON_LECTS`),
-which holds only the words the ``pt-PT`` rules get wrong.
+the gold is authored to the lect specs' broad convention. ``pt-PT`` and
+``pt-BR`` take an ``o2i-lexicons`` residual lexicon
+(:data:`tugaphone.registry.PACKAGED_LEXICON_LECTS`), which holds only the words
+the lect's rules get wrong.
 """
 from __future__ import annotations
 

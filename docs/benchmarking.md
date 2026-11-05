@@ -36,8 +36,10 @@ fallback.
 The script prints one PER per lect and the mean. The scores split by path:
 
 - The European, African and Asian lects match the gold almost exactly,
-  because the lect spec and the gold share one convention. `pt-PT` takes the
-  `o2i-lexicons` residual lexicon, and every other lect runs on the rules alone.
+  because the lect spec and the gold share one convention. `pt-PT` takes its
+  `o2i-lexicons` residual lexicon.
+- `pt-BR` takes its `o2i-lexicons` residual lexicon, and every other lect runs
+  on the rules alone.
 - The Brazilian sub-regional lects carry a residual.
 
 Read the number as agreement with the spec tradition, not as absolute
@@ -79,6 +81,11 @@ the words compared and the misses for each row. `--stress-misses` writes each
 miss to a file, because a miss may be a defect of the source. Some Michaelis
 entries place the stress mark on the wrong vowel or print the reading of another
 word, so a Michaelis miss is a lead to read, not a rules error by itself.
+
+The `pt-BR` lexicon takes its readings from the NILC file and its second sources
+from Michaelis, so a lexicon word would score a source against itself. The script
+leaves the words of the lect's lexicon out of each row, so every row measures the
+rules.
 
 An ALiB row gives the share of the city's forms with a palatal coda, and the
 share with the class that the spec gives. A city with no regional spec scores

@@ -74,9 +74,9 @@ class TestResolution:
 
 
 class TestPackagedLexiconLects:
-    def test_only_pt_pt_takes_a_packaged_lexicon(self):
-        # A sub-lect would take the pt-PT forms over its own spec's phonology.
-        assert PACKAGED_LEXICON_LECTS == {"pt-PT"}
+    def test_only_the_national_lects_take_a_packaged_lexicon(self):
+        # A sub-lect would take its parent's forms over its own spec's phonology.
+        assert PACKAGED_LEXICON_LECTS == {"pt-PT", "pt-BR"}
 
     @pytest.mark.parametrize("lect", ["pt-PT", "pt-PT-x-lisbon", "pt-BR", "pt-TL"])
     def test_lexicon_region_is_deprecated_and_names_no_region(self, lect):

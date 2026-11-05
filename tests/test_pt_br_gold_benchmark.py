@@ -179,3 +179,9 @@ def test_sample_is_fixed_by_the_seed():
 def test_every_source_prints_a_tier():
     assert set(bench.TIERS) == {"nilc", "michaelis", "aeiouado", "alib"}
     assert "never a gold target" in bench.TIERS["aeiouado"]
+
+
+def test_a_lexicon_word_leaves_the_row():
+    golds = {"táxi": ["ˈtaksi"], "casa": ["ˈkazɐ"]}
+    assert bench.beyond_lexicon(golds, {"táxi": "ˈtaksi"}) == {"casa": ["ˈkazɐ"]}
+    assert bench.beyond_lexicon(golds, {}) == golds
