@@ -229,13 +229,15 @@ _UNCONDITIONAL_ABBREVIATIONS.update({
     "Eng.": "Engenheiro",
     "Prof.": "Professor",
 })
-# A lowercase abbreviation is capitalised at the start of a sentence or a
-# reference ("Cap. XII", "Art. 5.º") and stands for the same word.
-_UNCONDITIONAL_ABBREVIATIONS.update({
-    key.capitalize(): value.capitalize()
-    for key, value in list(_UNCONDITIONAL_ABBREVIATIONS.items())
-    if key[0].islower() and key.capitalize() not in _UNCONDITIONAL_ABBREVIATIONS
-})
+# Reference markers stand before the number of a part of a text ("cap. 3",
+# "art. 5.º", "séc. XIX"). Capitalised at the start of a sentence or a
+# reference, they expand only before that number: "Cap." before a name is
+# also the military rank, and "Art." a name.
+_REFERENCE_MARKERS = frozenset({"cap.", "art.", "fig.", "pág.", "págs.", "séc.", "tel."})
+_CAPITALISED_MARKERS = {
+    key.capitalize(): _UNCONDITIONAL_ABBREVIATIONS[key].capitalize()
+    for key in _REFERENCE_MARKERS
+}
 _HONORIFIC_ABBREVIATIONS = {
     "D.": "Dom",
 }
@@ -255,17 +257,9 @@ _POSSESSIVES = {
 }
 _EXCELENCIA_PLURAL = {"Ex.as": True, "Exas.": True, "Ex.ª": False, "Exa.": False}
 # Punctuation after an abbreviation's own period ("V. Ex.ª, obrigado").
-_ABBREVIATION_TRAIL = ",;:!?)\"”"
+_ABBREVIATION_TRAIL = ",;:!?)\"”»"
 
-_LEAD_PUNCT = "(“\"'¿¡"
-
-
-def is_abbreviation(token: str) -> bool:
-    """Whether *token*, without the punctuation after its own period, is an
-    abbreviation :func:`expand_abbreviations` reads ("Cap.", "Dr.,", "D.")."""
-    core = token.rstrip(_ABBREVIATION_TRAIL)
-    return (core in _UNCONDITIONAL_ABBREVIATIONS or core in _HONORIFIC_ABBREVIATIONS
-            or core in _POSSESSIVES)
+_LEAD_PUNCT = "(“\"'¿¡«"
 
 
 def _is_capitalised(word: str) -> bool:
@@ -273,34 +267,80 @@ def _is_capitalised(word: str) -> bool:
     return bool(core) and core[0].isupper()
 
 
+def _abbreviation_edges(word: str) -> tuple[str, str, str]:
+    """(leading punctuation, abbreviation with its own period, trailing
+    punctuation) of a token: "(Cap." -> ("(", "Cap.", "")."""
+    body = word.lstrip(_LEAD_PUNCT)
+    core = body.rstrip(_ABBREVIATION_TRAIL)
+    return word[:len(word) - len(body)], core, body[len(core):]
+
+
+def _is_number(word: str) -> bool:
+    """Whether *word* is a number in digits ("5", "5.º") or Roman numerals."""
+    core = _split_edges(word)[1]
+    return core[:1].isdigit() or _roman_value(core) is not None
+
+
+def _expansion(words: list[str], i: int) -> str | None:
+    """The words that the abbreviation ``words[i]`` stands for in its
+    context, or None when ``words[i]`` is not read as an abbreviation there."""
+    core = _abbreviation_edges(words[i])[1]
+    following = _abbreviation_edges(words[i + 1])[1] if i + 1 < len(words) else None
+    possessive = _POSSESSIVES.get(core)
+    if possessive is not None and following in _EXCELENCIA_PLURAL:
+        return possessive[_EXCELENCIA_PLURAL[following]]
+    if core in _UNCONDITIONAL_ABBREVIATIONS:
+        return _UNCONDITIONAL_ABBREVIATIONS[core]
+    if core in _CAPITALISED_MARKERS and following is not None and _is_number(following):
+        return _CAPITALISED_MARKERS[core]
+    after_label = i > 0 and _abbreviation_edges(words[i - 1])[1].lower() in _LETTER_LABEL_NOUNS
+    if (core in _HONORIFIC_ABBREVIATIONS and following is not None
+            and _is_capitalised(words[i + 1]) and not after_label):
+        if _name_gender(_split_edges(following)[1]) == "feminine":
+            return "Dona"
+        return _HONORIFIC_ABBREVIATIONS[core]
+    return None
+
+
+def _is_portuguese_abbreviation(words: list[str], i: int) -> bool:
+    core = _abbreviation_edges(words[i])[1]
+    if core == "R." or _expansion(words, i) is None:
+        return False
+    if core.lower() in _REFERENCE_MARKERS:
+        return i + 1 < len(words) and _is_number(words[i + 1])
+    return True
+
+
+def stays_portuguese(words: list[str], i: int) -> bool:
+    """Whether code-switch routing must keep ``words[i]`` Portuguese because
+    only Portuguese reads it in its context.
+
+    That is an abbreviation :func:`expand_abbreviations` expands there, with
+    two limits. A reference marker counts only before its number, because
+    "art." and "cap." are also English words at a sentence end ("street
+    art."), and its number then stays with it ("Cap. X"). "R." never counts,
+    because it is also an initial ("George R. R. Martin")."""
+    if _is_portuguese_abbreviation(words, i):
+        return True
+    previous = _abbreviation_edges(words[i - 1])[1].lower() if i > 0 else None
+    return previous in _REFERENCE_MARKERS and _is_portuguese_abbreviation(words, i - 1)
+
+
 def expand_abbreviations(text: str) -> str:
     """"Sr. Silva" -> "Senhor Silva"; "D. Maria" -> "Dona Maria"; "n.º 4" ->
     "número 4"; "Av. Liberdade"
     or a bare "R." at sentence end both -> "Avenida"/"Rua" regardless of
-    capitalisation, since these stand for the same word either way."""
+    capitalisation, since these stand for the same word either way.
+    "Cap. 3" -> "Capítulo 3"; "(art. 5.º)" -> "(artigo 5.º)"."""
     words = text.split()
-    cores = [w.rstrip(_ABBREVIATION_TRAIL) for w in words]
     out = []
     for i, w in enumerate(words):
-        core, trail = cores[i], w[len(cores[i]):]
-        following = cores[i + 1] if i + 1 < len(words) else None
-        possessive = _POSSESSIVES.get(core)
-        if possessive is not None and following in _EXCELENCIA_PLURAL:
-            out.append(possessive[_EXCELENCIA_PLURAL[following]] + trail)
+        expansion = _expansion(words, i)
+        if expansion is None:
+            out.append(w)
             continue
-        expansion = _UNCONDITIONAL_ABBREVIATIONS.get(core)
-        if expansion is not None:
-            out.append(expansion + trail)
-            continue
-        expansion = _HONORIFIC_ABBREVIATIONS.get(core)
-        after_label = i > 0 and cores[i - 1].lower() in _LETTER_LABEL_NOUNS
-        if (expansion is not None and following is not None
-                and _is_capitalised(words[i + 1]) and not after_label):
-            if _name_gender(_split_edges(following)[1]) == "feminine":
-                expansion = "Dona"
-            out.append(expansion + trail)
-            continue
-        out.append(w)
+        lead, _, trail = _abbreviation_edges(w)
+        out.append(lead + expansion + trail)
     return " ".join(out)
 
 
@@ -347,7 +387,7 @@ _PRENOMINAL = {
     "na": "feminine", "nas": "feminine", "à": "feminine", "às": "feminine",
     "pela": "feminine", "pelas": "feminine",
 }
-_TRAIL_PUNCT = ".,;:!?)\"”"
+_TRAIL_PUNCT = ".,;:!?)\"”»"
 
 
 @functools.lru_cache(maxsize=1)
@@ -403,12 +443,21 @@ def _converts(numeral: str, prev_word: str | None, cores: list[str], i: int) -> 
     return len(numeral) >= 2 or (prev_word is not None and TugaLexicon.get_given_name_gender(prev_word) is not None)
 
 
+def _head_gender(word: str) -> str:
+    """The gender of the name or noun a numeral follows: "Isabel II" and
+    "a figura II" take the feminine ordinal. A word of both genders, or one
+    tugalex does not know, gives masculine."""
+    if TugaLexicon.get_given_name_gender(word) is not None:
+        return _name_gender(word)
+    return "feminine" if TugaLexicon.get_noun_gender(word.lower()) == "f" else "masculine"
+
+
 def _read_roman(value: int, prev_word: str | None, lang: str) -> str:
     article = _PRENOMINAL.get(prev_word.lower()) if prev_word else "masculine"
     if article is not None:
         gender, as_ordinal = article, True
     elif value <= 10:
-        gender = _WORK_PARTS.get(prev_word.lower()) or _name_gender(prev_word)
+        gender = _WORK_PARTS.get(prev_word.lower()) or _head_gender(prev_word)
         as_ordinal = True
     else:
         gender, as_ordinal = "masculine", False
@@ -431,7 +480,7 @@ def expand_regnal_numerals(text: str, lang: str = "pt-PT") -> str:
     for i, w in enumerate(words):
         core, trail = _split_trailing_punct(w)
         value = _roman_value(core)
-        prev_core = _split_trailing_punct(words[i - 1])[0] if i > 0 else None
+        prev_core = _split_edges(words[i - 1])[1] if i > 0 else None
         if value is None or not _converts(core, prev_core, cores, i):
             out.append(w)
             continue
@@ -489,7 +538,7 @@ for _a in ("GPS", "USB", "PDF", "SMS", "CPU", "URL", "API", "IVA", "IRS", "NIF",
     _ACRONYMS[_a] = _spell_letters(_a)
 del _a
 
-_TRAIL_PUNCT_WIDE = ".,;:!?)\"”…"
+_TRAIL_PUNCT_WIDE = ".,;:!?)\"”»…"
 
 
 def _split_edges(w: str) -> tuple[str, str, str]:
