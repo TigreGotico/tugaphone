@@ -425,3 +425,121 @@ class TestDecimalCommaReading(object):
 
     def test_dot_decimal_still_works(self):
         assert normalize_numbers("tem 10.4 graus") == "tem dez vírgula quatro graus"
+
+
+class TestNumberInsideBracketsOrQuotes:
+    """A number glued to an opening or closing bracket or guillemet is read
+    out, and the punctuation stays on the spelled-out words."""
+
+    @pytest.mark.parametrize("text, expected", [
+        ("li (789) hoje", "li (setecentos e oitenta e nove) hoje"),
+        ("li (789 hoje", "li (setecentos e oitenta e nove hoje"),
+        ("li 789) hoje", "li setecentos e oitenta e nove) hoje"),
+        ("li «7» hoje", "li «sete» hoje"),
+        ("li «7 hoje", "li «sete hoje"),
+        ("li 789» hoje", "li setecentos e oitenta e nove» hoje"),
+        ("comprei «2 casas»", "comprei «duas casas»"),
+        ("ele disse “5” vezes", "ele disse “cinco” vezes"),
+        ('ele disse "5" vezes', 'ele disse "cinco" vezes'),
+        ("a Expo '98 foi em Lisboa", "a Expo 'noventa e oito foi em Lisboa"),
+        ("¿5?", "¿cinco?"),
+        ("¡5!", "¡cinco!"),
+        ("tem de 1 a (2 cães)", "tem de um a (dois cães)"),
+        ("a taxa subiu (0 vírgula 02)", "a taxa subiu (zero vírgula zero dois)"),
+        ("(1) vírgula 5 m", "(um) vírgula cinco metros"),
+        ("«1» vírgula 5 m", "«um» vírgula cinco metros"),
+        ("a medida (1) vírgula 5 m", "a medida (um) vírgula cinco metros"),
+        ("(0, vírgula 5 m)", "(zero, vírgula cinco metros)"),
+        ("1) vírgula 5 m", "um) vírgula cinco metros"),
+        ("0, vírgula 5 m", "zero, vírgula cinco metros"),
+        ("de 1 a (2) casas", "de uma a (duas) casas"),
+        ("de 1 a «2» casas", "de uma a «duas» casas"),
+        ('de 1 a "2" casas', 'de uma a "duas" casas'),
+        ("de 1 a “2” casas", "de uma a “duas” casas"),
+        ("de 1 a 2) casas", "de um a duas) casas"),
+        ("de 1 a 2» casas", "de um a duas» casas"),
+        ("de 2 a (3) pessoas", "de duas a (três) pessoas"),
+        ("de 2 a «3» pessoas", "de duas a «três» pessoas"),
+        ("de 2 a (3) dias", "de dois a (três) dias"),
+        ("o valor (de 2 a 3) varia muito", "o valor (de dois a três) varia muito"),
+        ("os graus (de 1 a 3) da escala", "os graus (de um a três) da escala"),
+        ("a escala (de 1 a 5) ajuda a medir", "a escala (de um a cinco) ajuda a medir"),
+        ("o valor (2 a 3) varia muito", "o valor (dois a três) varia muito"),
+        ("os graus (1 a 3) da escala", "os graus (um a três) da escala"),
+        ("a escala (1 a 5) ajuda a medir", "a escala (um a cinco) ajuda a medir"),
+    ])
+    def test_number_is_spelled_out(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text", [
+        "de 1 a 2, casas",
+        "de 1 a (2), casas",
+        "de 1 a (2). Casas",
+    ])
+    def test_range_noun_after_a_break_does_not_agree(self, text):
+        assert normalize_numbers(text).startswith("de um a ")
+
+    @pytest.mark.parametrize("text, first", [
+        ('ele deu "de 1 a 2" a Maria', '"de um a '),
+        ("ele deu «1 a 2» a Maria", "«um a "),
+    ])
+    def test_word_after_a_closed_range_is_not_its_noun(self, text, first):
+        assert first in normalize_numbers(text)
+
+    @pytest.mark.parametrize("text", [
+        "li (o livro) hoje",
+        "li «o livro» hoje",
+        # float() reads "nan", "inf" and "infinity", but they are words here.
+        "o verbo (inf.) é",
+        "a fotógrafa (Nan Goldin)",
+        "«Nan»",
+        "(inf)",
+        "(nan",
+        "o Inf. Henrique",
+    ])
+    def test_bracketed_words_unchanged(self, text):
+        assert normalize_numbers(text) == text
+
+
+class TestBracketedNumberPhonemes:
+    """The IPA of a sentence with a bracketed number equals the IPA of the
+    same sentence without the brackets, which reads the number."""
+
+    @pytest.fixture(scope="class")
+    def phonemize(self):
+        from tugaphone import TugaPhonemizer
+        pho = TugaPhonemizer()
+        return lambda text, lang="pt-PT": pho.phonemize_sentence(text, lang)
+
+    @pytest.mark.parametrize("text, bare", [
+        ("li (789) hoje", "li 789 hoje"),
+        ("li 789) hoje", "li 789 hoje"),
+        ("li «7» hoje", "li 7 hoje"),
+        ("li 789» hoje", "li 789 hoje"),
+        ("o «Tel. 213 456 789» não atende", "o Tel. 213 456 789 não atende"),
+        ("li (o livro) hoje", "li o livro hoje"),
+        ("a taxa subiu (0,02)", "a taxa subiu 0,02"),
+        ("a taxa subiu «0,02»", "a taxa subiu 0,02"),
+        ("tem de 1 a (2 cães)", "tem de 1 a 2 cães"),
+        ("tem de 1 a «2» cães", "tem de 1 a 2 cães"),
+        ("pesa (0,5 kg)", "pesa 0,5 kg"),
+    ])
+    def test_brackets_do_not_change_the_reading(self, phonemize, text, bare):
+        assert phonemize(text) == phonemize(bare)
+
+    def test_bracketed_decimal_unit_pt_br(self, phonemize):
+        assert phonemize("o cano mede (0,05 m)", "pt-BR") == \
+            phonemize("o cano mede 0,05 m", "pt-BR")
+
+    @pytest.mark.parametrize("text, word", [
+        ("o verbo (inf.) é", "ˈĩf"),
+        ("a fotógrafa (Nan Goldin)", "ˈnɐ̃"),
+        ("«Nan»", "ˈnɐ̃"),
+    ])
+    def test_bracketed_word_is_read_as_a_word(self, phonemize, text, word):
+        assert word in phonemize(text).split()
+
+    def test_bare_number_is_read(self, phonemize):
+        # The reference sentence reads every number: "nove" is the last word
+        # of 789 ("setecentos e oitenta e nove").
+        assert "ˈnɔvɨ" in phonemize("o Tel. 213 456 789 não atende")
