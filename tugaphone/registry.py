@@ -26,8 +26,9 @@ from tugaphone.version import VERSION_MAJOR
 
 #: Portuguese-family lect codes orthography2ipa ships, the canonical dialects.
 #: The Galician-Portuguese key goes through ``resolve`` because orthography2ipa
-#: keeps a renamed spec's old key as an exact alias of the new one.
-_PT_PREFIXES = ("pt-", "pt_", "ext-PT", resolve("roa-x-galaicopt"))
+#: keeps a renamed spec's old key as an exact alias of the new one. Barranquenho
+#: is left out: it has its own orthography, which ``g2p_barranquenho`` reads.
+_PT_PREFIXES = ("pt-", "pt_", resolve("roa-x-galaicopt"))
 
 
 def _canonical_codes() -> List[str]:
