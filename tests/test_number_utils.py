@@ -456,11 +456,17 @@ class TestNumberInsideBracketsOrQuotes:
         ("de 1 a «2» casas", "de uma a «duas» casas"),
         ('de 1 a "2" casas', 'de uma a "duas" casas'),
         ("de 1 a “2” casas", "de uma a “duas” casas"),
-        ("de 1 a 2) casas", "de uma a duas) casas"),
-        ("de 1 a 2» casas", "de uma a duas» casas"),
+        ("de 1 a 2) casas", "de um a duas) casas"),
+        ("de 1 a 2» casas", "de um a duas» casas"),
         ("de 2 a (3) pessoas", "de duas a (três) pessoas"),
         ("de 2 a «3» pessoas", "de duas a «três» pessoas"),
         ("de 2 a (3) dias", "de dois a (três) dias"),
+        ("o valor (de 2 a 3) varia muito", "o valor (de dois a três) varia muito"),
+        ("os graus (de 1 a 3) da escala", "os graus (de um a três) da escala"),
+        ("a escala (de 1 a 5) ajuda a medir", "a escala (de um a cinco) ajuda a medir"),
+        ("o valor (2 a 3) varia muito", "o valor (dois a três) varia muito"),
+        ("os graus (1 a 3) da escala", "os graus (um a três) da escala"),
+        ("a escala (1 a 5) ajuda a medir", "a escala (um a cinco) ajuda a medir"),
     ])
     def test_number_is_spelled_out(self, text, expected):
         assert normalize_numbers(text) == expected
@@ -472,6 +478,13 @@ class TestNumberInsideBracketsOrQuotes:
     ])
     def test_range_noun_after_a_break_does_not_agree(self, text):
         assert normalize_numbers(text).startswith("de um a ")
+
+    @pytest.mark.parametrize("text, first", [
+        ('ele deu "de 1 a 2" a Maria', '"de um a '),
+        ("ele deu «1 a 2» a Maria", "«um a "),
+    ])
+    def test_word_after_a_closed_range_is_not_its_noun(self, text, first):
+        assert first in normalize_numbers(text)
 
     @pytest.mark.parametrize("text", [
         "li (o livro) hoje",

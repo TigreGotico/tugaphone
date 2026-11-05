@@ -529,10 +529,13 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
               and not NumberParser.is_ordinal(core, next_word)):
             # Both numbers of a range agree with the noun after the second
             # one ("de 1 a 2 dias" -> "de um a dois dias").
-            # A closing bracket or quote keeps the second number with its noun
-            # ("de 1 a (2) casas"); a comma or a full stop cuts them apart.
+            # A bracket or quote around the second number alone keeps it with
+            # its noun ("de 1 a (2) casas"). One that closes a longer stretch
+            # ("(de 2 a 3) varia muito"), a comma or a full stop cut them apart.
             second, second_trail = NumberParser.split_trailing_punctuation(words[idx + 2])
-            after = None if second_trail.rstrip(")\"”»") or idx + 3 >= len(words) else words[idx + 3]
+            cut = (second_trail.rstrip(")\"”»") if second[0] in NumberParser.LEADING_PUNCTUATION
+                   else second_trail)
+            after = None if cut or idx + 3 >= len(words) else words[idx + 3]
             gender = ("masculine" if unit_symbol(after)
                       else NumberParser.get_number_gender(second, next_word, after))
         try:
