@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.1a1](https://github.com/TigreGotico/tugaphone/tree/1.6.1a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.0a1...1.6.1a1)
+
+**Merged pull requests:**
+
+- fix: remove Barranquenho from the tugaphone lects [\#198](https://github.com/TigreGotico/tugaphone/pull/198) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.6.0a1](https://github.com/TigreGotico/tugaphone/tree/1.6.0a1) (2026-11-05)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.5.2a2...1.6.0a1)
@@ -390,10 +398,6 @@
 ## [1.1.0a1](https://github.com/TigreGotico/tugaphone/tree/1.1.0a1) (2026-07-16)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.0.0a2...1.1.0a1)
-
-**Merged pull requests:**
-
-- feat: rebuild accent-forcing on the lattice core [\#89](https://github.com/TigreGotico/tugaphone/pull/89) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.0.0a2](https://github.com/TigreGotico/tugaphone/tree/1.0.0a2) (2026-07-16)
 
