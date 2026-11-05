@@ -12,7 +12,8 @@ stays Portuguese; every other token is left to the router.
 import pytest
 
 from tugaphone import TugaPhonemizer
-from tugaphone.codeswitch import _classify, _is_contact, split_runs, transcribe_contact
+import tugaphone.codeswitch as codeswitch
+from tugaphone.codeswitch import _classify, _is_contact, split_runs
 from tugaphone.text_normalization import normalize_orthography
 
 SENTENCE = "Tenho 23 anos, Sr. Silva; li o Cap. XII."
@@ -35,6 +36,14 @@ def _router(token, contact):
 
 def _route(text, contact, index):
     return split_runs(text, contact)[index]
+
+
+def _router_reading(ph, monkeypatch, text, lect, contact):
+    """The reading of *text* with every token routed by the classifier alone,
+    as on a tree without the abbreviation guard."""
+    with monkeypatch.context() as patch:
+        patch.setattr(codeswitch, "stays_portuguese", lambda *args: False)
+        return ph.phonemize_sentence(text, lect, contact=contact)
 
 
 @pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
@@ -103,14 +112,6 @@ def test_router_decides(classifier, contact, text, index):
     assert _route(text, contact, index) == (_router(token, contact), token)
 
 
-def test_english_art_reads_english(ph):
-    # The detector (a test dependency) routes "art."; the spelling fallback
-    # keeps it Portuguese, as it did before the abbreviation guard.
-    assert _router("art.", "en") == "en"
-    ipa = ph.phonemize_sentence("Ela adora street art.", "pt-PT", contact="en")
-    assert ipa.split()[-1] == transcribe_contact("art.", "en")
-
-
 @pytest.mark.parametrize("contact", ["en", "auto"])
 def test_period_final_contact_word_routes(classifier, contact):
     assert _route("fiz o download.", contact, 2) == ("en", "download.")
@@ -141,12 +142,19 @@ def test_capitalised_abbreviation_expands(text, expected):
 
 @pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
 @pytest.mark.parametrize("contact", ["en", "auto"])
-@pytest.mark.parametrize("sentence,marker,expansion", [
-    ("I wore a cap. I liked it.", "cap.", "capítulo"),
-    ("I love street art. I paint every day.", "art.", "artigo"),
-    ("I love pop art. I collect it.", "art.", "artigo"),
+@pytest.mark.parametrize("text", [
+    "Ela adora street art.",
+    # a single I, V or X after an English marker is the pronoun or a letter
+    "I wore a cap. I liked it.",
+    "I love street art. I paint every day.",
+    "I love pop art. I collect it.",
+    "street art. V for Vendetta",
+    "I love art. X marks the spot.",
 ])
-def test_english_marker_before_pronoun_reads_english(ph, lect, contact, sentence, marker, expansion):
-    words = ph.phonemize_sentence(sentence, lect, contact=contact).split()
-    assert transcribe_contact(marker, "en") in words
-    assert ph.phonemize_sentence(expansion, lect, contact="none") not in words
+def test_english_marker_reads_as_routed(classifier, ph, monkeypatch, lect, contact, text):
+    # Whether the marker reads English depends on the classifier: the
+    # detector routes "art." out, the spelling fallback keeps it Portuguese.
+    # Either way the guard claims no word, so the sentence reads as the
+    # router alone reads it.
+    assert ph.phonemize_sentence(text, lect, contact=contact) == \
+        _router_reading(ph, monkeypatch, text, lect, contact)
