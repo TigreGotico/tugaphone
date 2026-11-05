@@ -446,9 +446,32 @@ class TestNumberInsideBracketsOrQuotes:
         ("¡5!", "¡cinco!"),
         ("tem de 1 a (2 cães)", "tem de um a (dois cães)"),
         ("a taxa subiu (0 vírgula 02)", "a taxa subiu (zero vírgula zero dois)"),
+        ("(1) vírgula 5 m", "(um) vírgula cinco metros"),
+        ("«1» vírgula 5 m", "«um» vírgula cinco metros"),
+        ("a medida (1) vírgula 5 m", "a medida (um) vírgula cinco metros"),
+        ("(0, vírgula 5 m)", "(zero, vírgula cinco metros)"),
+        ("1) vírgula 5 m", "um) vírgula cinco metros"),
+        ("0, vírgula 5 m", "zero, vírgula cinco metros"),
+        ("de 1 a (2) casas", "de uma a (duas) casas"),
+        ("de 1 a «2» casas", "de uma a «duas» casas"),
+        ('de 1 a "2" casas', 'de uma a "duas" casas'),
+        ("de 1 a “2” casas", "de uma a “duas” casas"),
+        ("de 1 a 2) casas", "de uma a duas) casas"),
+        ("de 1 a 2» casas", "de uma a duas» casas"),
+        ("de 2 a (3) pessoas", "de duas a (três) pessoas"),
+        ("de 2 a «3» pessoas", "de duas a «três» pessoas"),
+        ("de 2 a (3) dias", "de dois a (três) dias"),
     ])
     def test_number_is_spelled_out(self, text, expected):
         assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text", [
+        "de 1 a 2, casas",
+        "de 1 a (2), casas",
+        "de 1 a (2). Casas",
+    ])
+    def test_range_noun_after_a_break_does_not_agree(self, text):
+        assert normalize_numbers(text).startswith("de um a ")
 
     @pytest.mark.parametrize("text", [
         "li (o livro) hoje",

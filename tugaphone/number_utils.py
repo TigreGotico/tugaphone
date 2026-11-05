@@ -529,8 +529,10 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
               and not NumberParser.is_ordinal(core, next_word)):
             # Both numbers of a range agree with the noun after the second
             # one ("de 1 a 2 dias" -> "de um a dois dias").
+            # A closing bracket or quote keeps the second number with its noun
+            # ("de 1 a (2) casas"); a comma or a full stop cuts them apart.
             second, second_trail = NumberParser.split_trailing_punctuation(words[idx + 2])
-            after = None if second_trail or idx + 3 >= len(words) else words[idx + 3]
+            after = None if second_trail.rstrip(")\"”»") or idx + 3 >= len(words) else words[idx + 3]
             gender = ("masculine" if unit_symbol(after)
                       else NumberParser.get_number_gender(second, next_word, after))
         try:
@@ -545,7 +547,8 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
                     is_brazilian=is_brazilian, scale=scale))
             if unit:
                 if is_fraction:
-                    integer = words[idx - 2].lstrip(NumberParser.LEADING_PUNCTUATION)
+                    integer = NumberParser.split_trailing_punctuation(
+                        words[idx - 2].lstrip(NumberParser.LEADING_PUNCTUATION))[0]
                     value = float(f"{integer}.{core or 0}")
                 else:
                     value = NumberParser.to_float(core)
