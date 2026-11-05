@@ -308,17 +308,25 @@ def _is_marker_number(words: list[str], j: int, is_foreign: Callable[[str], bool
 
     A single I, V or X is also the English pronoun or a letter ("I wore a
     cap. I liked it.", "street art. V for Vendetta"), so it counts only when
-    none of the two words before the marker and the two words after the
-    numeral is foreign. Punctuation after the numeral ends its phrase ("li o
-    cap. I.")."""
+    neither the word before the marker nor the two words after the numeral
+    are foreign. The English evidence is the clause that the pronoun starts.
+    Before the marker there is often a citation's author or year ("Gibbon
+    1985, cap. I, p. 36"), which the router reads as foreign. A word before
+    the marker that ends a sentence is outside the window, and punctuation
+    ends the window after the numeral ("li o cap. I.")."""
     if not _is_number(words[j]):
         return False
     _, core, trail = _split_edges(words[j])
     if core not in ("I", "V", "X"):
         return True
-    neighbours = words[max(j - 3, 0):j - 1]
+    neighbours = words[max(j - 2, 0):j - 1]
+    if neighbours and neighbours[0].rstrip("»”\")").endswith((".", "!", "?")):
+        neighbours = []
     if not trail:
-        neighbours += words[j + 1:j + 3]
+        for word in words[j + 1:j + 3]:
+            neighbours.append(word)
+            if _split_edges(word)[2]:
+                break
     return not any(is_foreign(w) for w in neighbours)
 
 

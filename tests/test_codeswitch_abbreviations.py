@@ -80,6 +80,23 @@ def test_abbreviation_stays_portuguese(classifier, contact, text, index):
 
 @pytest.mark.parametrize("contact", ["en", "auto"])
 @pytest.mark.parametrize("text,index", [
+    # pt.wikipedia references after a citation, an author and year that
+    # the router reads as foreign
+    ("338. Gibbon 1985, cap. I, p. 36.", 3),
+    ("Lange, Dierk (2010). «Cap. X - Reinos", 3),
+    ("991. Versteegh 1977, cap. I. Campbell 2000,", 3),
+    ("75. Lamothe 2006, Cap. X: La rencontre", 3),
+    ("King Publishing, 2005, cap. V, s/pp. Boardman,", 3),
+    ("15. Coburn (1955), Cap. V. Tapp (2016).", 3),
+    ("Constituição Lumen gentium, cap. V. «Mensagem aos", 3),
+])
+def test_reference_after_citation_stays_portuguese(classifier, contact, text, index):
+    for i in (index, index + 1):
+        assert _route(text, contact, i) == (None, text.split()[i])
+
+
+@pytest.mark.parametrize("contact", ["en", "auto"])
+@pytest.mark.parametrize("text,index", [
     # an English word with a sentence period
     ("Ela adora street art.", 3),
     ("Eu jogo com os elementos da natureza quando pratico land art.", 10),
