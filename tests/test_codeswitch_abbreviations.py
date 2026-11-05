@@ -55,6 +55,7 @@ def _router_reading(ph, monkeypatch, text, lect, contact):
     ("li o Cap. X.", "li o capítulo décimo."),
     ("No Cap. I do livro", "No capítulo primeiro do livro"),
     ("li o cap. I.", "li o capítulo primeiro."),
+    ("Leia o Cap. V do livro.", "Leia o capítulo quinto do livro."),
     ("de D. Maria I no baú", "de Dona Maria Primeira no baú"),
     ("S. Ex.ª o Presidente", "Sua Excelência o Presidente"),
 ])
@@ -75,6 +76,29 @@ def test_reads_as_spoken(ph, lect, contact, written, spoken):
 ])
 def test_abbreviation_stays_portuguese(classifier, contact, text, index):
     assert _route(text, contact, index) == (None, text.split()[index])
+
+
+@pytest.mark.parametrize("contact", ["en", "auto"])
+@pytest.mark.parametrize("text,index", [
+    # pt.wikipedia references after a citation, an author and year that
+    # the router reads as foreign
+    ("338. Gibbon 1985, cap. I, p. 36.", 3),
+    ("Lange, Dierk (2010). «Cap. X - Reinos", 3),
+    ("991. Versteegh 1977, cap. I. Campbell 2000,", 3),
+    ("75. Lamothe 2006, Cap. X: La rencontre", 3),
+    ("King Publishing, 2005, cap. V, s/pp. Boardman,", 3),
+    ("15. Coburn (1955), Cap. V. Tapp (2016).", 3),
+    ("Constituição Lumen gentium, cap. V. «Mensagem aos", 3),
+    # a sentence end before the marker, behind a closing bracket or quote
+    ("(em inglês). [S.l.: s.n.] Cap. I: African Ophiolatry", 4),
+    ("Lange, Dierk.] Cap. X do livro", 2),
+    ("Lange, Dierk.’ Cap. X do livro", 2),
+    ("Lange, Dierk.' Cap. X do livro", 2),
+    ("Lange, Dierk… Cap. X do livro", 2),
+])
+def test_reference_after_citation_stays_portuguese(classifier, contact, text, index):
+    for i in (index, index + 1):
+        assert _route(text, contact, i) == (None, text.split()[i])
 
 
 @pytest.mark.parametrize("contact", ["en", "auto"])
@@ -146,6 +170,13 @@ def test_capitalised_abbreviation_expands(text, expected):
     "Ela adora street art.",
     # a single I, V or X after an English marker is the pronoun or a letter
     "I wore a cap. I liked it.",
+    "I wore a cap. I think it suits me.",
+    "She gave me a cap. I wear it daily.",
+    "He lost his cap. I found it.",
+    "Nice cap. I want one.",
+    "I bought a new cap. I am happy.",
+    "Take off your cap. I mean it.",
+    "My cap. I need it back.",
     "I love street art. I paint every day.",
     "I love pop art. I collect it.",
     "street art. V for Vendetta",
