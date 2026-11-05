@@ -89,6 +89,12 @@ def test_abbreviation_stays_portuguese(classifier, contact, text, index):
     ("King Publishing, 2005, cap. V, s/pp. Boardman,", 3),
     ("15. Coburn (1955), Cap. V. Tapp (2016).", 3),
     ("Constituição Lumen gentium, cap. V. «Mensagem aos", 3),
+    # a sentence end before the marker, behind a closing bracket or quote
+    ("(em inglês). [S.l.: s.n.] Cap. I: African Ophiolatry", 4),
+    ("Lange, Dierk.] Cap. X do livro", 2),
+    ("Lange, Dierk.’ Cap. X do livro", 2),
+    ("Lange, Dierk.' Cap. X do livro", 2),
+    ("Lange, Dierk… Cap. X do livro", 2),
 ])
 def test_reference_after_citation_stays_portuguese(classifier, contact, text, index):
     for i in (index, index + 1):

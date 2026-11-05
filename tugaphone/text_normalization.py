@@ -320,7 +320,7 @@ def _is_marker_number(words: list[str], j: int, is_foreign: Callable[[str], bool
     if core not in ("I", "V", "X"):
         return True
     neighbours = words[max(j - 2, 0):j - 1]
-    if neighbours and neighbours[0].rstrip("»”\")").endswith((".", "!", "?")):
+    if neighbours and neighbours[0].rstrip("»”’\"')]").endswith((".", "!", "?", "…")):
         neighbours = []
     if not trail:
         for word in words[j + 1:j + 3]:
