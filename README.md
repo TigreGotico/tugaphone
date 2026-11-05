@@ -280,10 +280,10 @@ o2i's own extension points, and relies on o2i for syllabification:
 | Base phonology, dialect phenomena, sandhi, stress | orthography2ipa lect spec |
 | Number / ordinal verbalization | tugaphone (`number_utils`, via the `normalize` stage) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via the `normalize` stage) |
-| `pt-PT` residual lexicon | `o2i-lexicons`, enabled by tugaphone via `use_packaged_lexicons` |
+| `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, enabled by tugaphone via `use_packaged_lexicons` |
 | Syllabification | orthography2ipa (`silabificador`, through the `syllabify` plugin of `orthography2ipa[portuguese]`) |
 
-Only `pt-PT` takes a lexicon. It holds the words that the `pt-PT` rules get
+Only `pt-PT` and `pt-BR` take a lexicon. Each holds the words that the lect's rules get
 wrong. Every other lect runs on the rules alone.
 
 `tugaphone.tokenizer` and `tugaphone.dialects` remain as a token-tree

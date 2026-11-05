@@ -62,10 +62,11 @@ _ALIASES: Dict[str, str] = {
 
 
 #: Lects that take a packaged orthography2ipa lexicon. ``o2i-lexicons`` ships a
-#: ``pt-PT`` residual lexicon: the words the ``pt-PT`` rules get wrong. It is
-#: not enabled for a sub-lect, because it would overwrite that spec's phonology
-#: with the ``pt-PT`` forms. Every other lect runs on the rules alone.
-PACKAGED_LEXICON_LECTS = frozenset({"pt-PT"})
+#: residual lexicon for ``pt-PT`` and for ``pt-BR``: the words the lect's rules
+#: get wrong. It is not enabled for a sub-lect, because it would overwrite that
+#: spec's phonology with the parent's forms. Every other lect runs on the rules
+#: alone.
+PACKAGED_LEXICON_LECTS = frozenset({"pt-PT", "pt-BR"})
 
 #: The release that removes :func:`lexicon_region`.
 LEXICON_REGION_REMOVAL_VERSION = f"{VERSION_MAJOR + 1}.0.0"

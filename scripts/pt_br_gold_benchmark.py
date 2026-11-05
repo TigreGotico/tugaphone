@@ -251,6 +251,11 @@ def share(hits: int, total: int) -> float:
     return hits / total if total else float("nan")
 
 
+def beyond_lexicon(golds: dict[str, list[str]], lexicon: dict[str, str]) -> dict[str, list[str]]:
+    """*golds* without the words *lexicon* answers, so a row measures the rules."""
+    return {word: forms for word, forms in golds.items() if word not in lexicon}
+
+
 def score_stress_quality(golds: dict[str, list[str]], hyp: Callable[[str], str]) -> dict:
     """Stress and stressed e/o agreement of the rules with *golds*.
 
@@ -383,7 +388,9 @@ def main(argv: Optional[list[str]] = None) -> dict:
 
     from tts_gold_benchmark import O2I
 
-    from tugaphone import phonemize
+    from orthography2ipa.lexicon import get_lexicon
+
+    from tugaphone import lattice_core, phonemize
 
     cache: dict[tuple[str, str], str] = {}
 
@@ -415,21 +422,27 @@ def main(argv: Optional[list[str]] = None) -> dict:
         def rules(word: str, lect: str = lect) -> str:
             return hyp(word, lect)
 
+        lattice_core.engine(lect)
+        lexicon = get_lexicon(lect)
+        print(f"{lect}: {len(lexicon)} lexicon words leave the rows")
+
         if nilc:
-            per = score_per(nilc, rules, O2I.normalize, O2I.levenshtein)
-            sq = stress_counts("NILC", lect, score_stress_quality(nilc, rules))
+            scored = beyond_lexicon(nilc, lexicon)
+            per = score_per(scored, rules, O2I.normalize, O2I.levenshtein)
+            sq = stress_counts("NILC", lect, score_stress_quality(scored, rules))
             by_lect["nilc"] = {**per, **sq}
             rows += [("NILC", TIERS["nilc"], lect, "PER, folded", per["per"], per["n"]),
                      ("NILC", TIERS["nilc"], lect, "stress", sq["stress"], sq["stress_n"]),
                      ("NILC", TIERS["nilc"], lect, "stressed e/o", sq["mid"], sq["mid_n"])]
         if michaelis:
-            sq = stress_counts("Michaelis", lect, score_stress_quality(michaelis, rules))
+            sq = stress_counts("Michaelis", lect,
+                               score_stress_quality(beyond_lexicon(michaelis, lexicon), rules))
             by_lect["michaelis"] = sq
             rows += [("Michaelis", TIERS["michaelis"], lect, "stress", sq["stress"], sq["stress_n"]),
                      ("Michaelis", TIERS["michaelis"], lect, "stressed e/o", sq["mid"], sq["mid_n"])]
         if aeiouado:
-            per = score_per(sample(aeiouado, args.aeiouado_sample), rules, O2I.normalize,
-                            O2I.levenshtein)
+            per = score_per(beyond_lexicon(sample(aeiouado, args.aeiouado_sample), lexicon),
+                            rules, O2I.normalize, O2I.levenshtein)
             by_lect["aeiouado"] = per
             rows.append(("Aeiouadô", TIERS["aeiouado"], lect, "PER, folded", per["per"], per["n"]))
     if nilc and michaelis:

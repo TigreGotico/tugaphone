@@ -111,13 +111,14 @@ resolve_lect("pt")                 # 'pt-PT'
 
 ## Lexicon vs pure lattice
 
-Only `pt-PT` takes a lexicon: the `o2i-lexicons` residual lexicon, which holds
-the words that the `pt-PT` rules get wrong. For a covered word the lexicon
-supplies the pronunciation, and the lattice reads every other word.
+Only `pt-PT` and `pt-BR` take a lexicon: the `o2i-lexicons` residual lexicon of
+the lect, which holds the words that the lect's rules get wrong. For a covered
+word the lexicon supplies the pronunciation, and the lattice reads every other
+word.
 
 Every other lect is **pure lattice**, its phonology comes entirely from the
-orthography2ipa spec. A sub-lect does not take the `pt-PT` lexicon, because it
-would overwrite the sub-lect spec's phonology with the `pt-PT` forms. See
+orthography2ipa spec. A sub-lect does not take its parent's lexicon, because it
+would overwrite the sub-lect spec's phonology with the parent's forms. See
 [architecture.md](architecture.md) for the layer boundary.
 
 ## Where next

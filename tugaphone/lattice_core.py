@@ -18,11 +18,12 @@ the fact:
   (:mod:`tugaphone.number_utils`) and sense-based heterophone marking
   (:mod:`bifonia`) run as the engine's ``normalizer``, i.e. before the lattice
   sees the text (orthography2ipa's ``normalize`` stage);
-* **lexicon** — for ``pt-PT``, the residual lexicon of ``o2i-lexicons`` is
-  enabled through :func:`orthography2ipa.use_packaged_lexicons`, so a covered
-  word folds into the *same* override path as a spec ``word_exceptions`` entry.
-  It holds only the words the ``pt-PT`` rules get wrong. Every other lect runs
-  on the rules alone;
+* **lexicon** — for ``pt-PT`` and ``pt-BR``, the residual lexicon of
+  ``o2i-lexicons`` is enabled through
+  :func:`orthography2ipa.use_packaged_lexicons`, so a covered word folds into
+  the *same* override path as a spec ``word_exceptions`` entry. It holds only
+  the words the lect's rules get wrong. Every other lect runs on the rules
+  alone;
 * **syllabification** — supplied by orthography2ipa's own ``silabificador``
   ``syllabify`` plugin (a neutral stage), so stress lands on the same syllable
   tugaphone would have chosen.

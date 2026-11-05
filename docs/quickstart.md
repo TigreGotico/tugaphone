@@ -19,7 +19,7 @@ pip install -e .                 # from a source checkout
 
 Runtime dependencies (`ovos-number-parser`, `silabificador`, `tugalex`,
 `bifonia`, `orthography2ipa`, `o2i-lexicons`) install automatically. The `pt-PT`
-lexicon ships inside [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons),
+and `pt-BR` lexicons ship inside [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons),
 so a phonemization call needs no network. See
 [advanced.md](advanced.md#the-lexicon-boundary).
 

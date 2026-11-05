@@ -30,7 +30,7 @@ dependencies = [
     "tugalex>=2.2.0a1",
     "bifonia>=0.3.0a1",
     "orthography2ipa[portuguese]>=7.118.5a1",
-    "o2i-lexicons>=0.2.0a1",
+    "o2i-lexicons>=0.4.0a1",
 ]
 
 [project.optional-dependencies]

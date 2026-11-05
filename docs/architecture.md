@@ -49,17 +49,20 @@ transformations.
 
 ### 2. Lexicon
 
-The `pt-PT` lect takes the residual lexicon of
+The `pt-PT` and `pt-BR` lects each take a residual lexicon of
 [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), enabled through
-`orthography2ipa.use_packaged_lexicons(["pt-PT"])`. A covered word folds into
-the same override path as a spec `word_exceptions` entry. The lexicon holds only
-the words that the `pt-PT` rules get wrong, from the Infopédia readings of the
+`orthography2ipa.use_packaged_lexicons`. A covered word folds into the same
+override path as a spec `word_exceptions` entry. Each lexicon holds only the
+words that the lect's rules get wrong. The `pt-PT` entries come from the
+Infopédia readings of the
 [portuguese-unified pronunciation lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon).
+The `pt-BR` entries come from the NILC Aeiouadô training file and from
+pt.wiktionary, and each one has a second source.
 Every other lect runs on the orthography2ipa rules alone.
 `tugaphone.registry.PACKAGED_LEXICON_LECTS` names the lects that take a
-lexicon. Enabling the `pt-PT` lexicon for a sub-lect such as `pt-PT-x-porto`
-would overwrite that spec's phonology with the `pt-PT` forms, so no sub-lect
-takes it.
+lexicon. Enabling a parent lexicon for a sub-lect such as `pt-PT-x-porto` or
+`pt-BR-x-sp` would overwrite that spec's phonology with the parent's forms, so
+no sub-lect takes one.
 
 ### 3. Syllabification
 
@@ -78,7 +81,7 @@ Portuguese stress detection.
 | Stress placement | orthography2ipa lect spec (stress rules) |
 | Number / ordinal verbalization | tugaphone (`number_utils`, via the `normalize` stage) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via the `normalize` stage) |
-| `pt-PT` residual lexicon | `o2i-lexicons`, enabled by tugaphone via `use_packaged_lexicons` |
+| `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, enabled by tugaphone via `use_packaged_lexicons` |
 | Syllabification | orthography2ipa (`silabificador`, through the `syllabify` plugin of `orthography2ipa[portuguese]`) |
 
 ## Selecting a dialect
