@@ -43,6 +43,47 @@ The script prints one PER per lect and the mean. The scores split by path:
 Read the number as agreement with the spec tradition, not as absolute
 correctness.
 
+## Pipeline: the Brazilian word sources
+
+`scripts/pt_br_gold_benchmark.py` scores the pipeline word by word against four
+Brazilian Portuguese sources. No source is a gold for every feature, so each
+row prints the tier of its source, and each source scores only what it can show.
+
+| Source | Tier | What it scores |
+| --- | --- | --- |
+| NILC Aeiouadô training file (São Paulo) | human-revised by one research team, not independently verified | PER, stress position, stressed e/o quality |
+| Michaelis | broad notation, editor-made, method unstated, some stress marks misplaced and some readings of another word | Stress position and stressed e/o quality, never allophones |
+| Aeiouadô published lexicon | machine-generated | A comparison row on a fixed sample, never a gold target |
+| ALiB per-informant forms | expert-human, narrow | Only the coda /S/ of six words, by city, against the regional spec |
+
+The script reads the source files from paths on the command line, because the
+sources do not ship with tugaphone. Each source is optional:
+
+```bash
+O2I_ROOT=/path/to/orthography2ipa python scripts/pt_br_gold_benchmark.py \
+    --nilc unitex_sample_transcribed.txt --aeiouado aeiouado-ipa-01.csv \
+    --michaelis entries.jsonl --alib-capitals alib-capitals-coda-s.tsv \
+    --alib-bahia alib-bahia-coda-s.tsv --lects pt-BR pt-BR-x-sp
+```
+
+PER folds the notation of a source into the spec's symbols: [ɪ ʊ ə] and the
+fricative rhotics. It folds nothing else, so a `pt-BR-x-sp` row pays for the tap
+and the dropped infinitive ⟨r⟩ that the spec writes and the NILC file does not.
+
+The stress measure aligns the two readings sound by sound, and the stress agrees
+when a cheapest alignment pairs the two stressed vowels. So notation does not
+count as a stress miss: a glide against a hiatus after the stress (vácuo), the
+epenthetic [i] (pacto) and a dropped infinitive ⟨r⟩ leave the comparison equal,
+and saída [saˈidɐ] against [ˈsajdɐ] stays a miss. The script prints the words in,
+the words compared and the misses for each row. `--stress-misses` writes each
+miss to a file, because a miss may be a defect of the source. Some Michaelis
+entries place the stress mark on the wrong vowel or print the reading of another
+word, so a Michaelis miss is a lead to read, not a rules error by itself.
+
+An ALiB row gives the share of the city's forms with a palatal coda, and the
+share with the class that the spec gives. A city with no regional spec scores
+against `pt-BR`.
+
 ## Rules-only baseline
 
 The sections below measure the grapheme cascade in `tugaphone.tokenizer` /
