@@ -308,16 +308,17 @@ def _is_marker_number(words: list[str], j: int, is_foreign: Callable[[str], bool
 
     A single I, V or X is also the English pronoun or a letter ("I wore a
     cap. I liked it.", "street art. V for Vendetta"), so it counts only when
-    neither the word before the marker nor the word after the numeral is
-    foreign. Punctuation after the numeral ends its phrase ("li o cap. I.")."""
+    none of the two words before the marker and the two words after the
+    numeral is foreign. Punctuation after the numeral ends its phrase ("li o
+    cap. I.")."""
     if not _is_number(words[j]):
         return False
     _, core, trail = _split_edges(words[j])
     if core not in ("I", "V", "X"):
         return True
-    neighbours = [words[j - 2]] if j >= 2 else []
-    if not trail and j + 1 < len(words):
-        neighbours.append(words[j + 1])
+    neighbours = words[max(j - 3, 0):j - 1]
+    if not trail:
+        neighbours += words[j + 1:j + 3]
     return not any(is_foreign(w) for w in neighbours)
 
 

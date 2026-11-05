@@ -132,9 +132,9 @@ extra guards keep the default honest:
   its number, and its number then stays with it ("Cap. X"), because "street
   art." and "um cap." are English words with a sentence period. A single
   `I`, `V` or `X` is also the English pronoun or a letter, so it counts as
-  the number only when the classifier routes neither the word before the
-  marker nor the word after the numeral out of Portuguese: "No Cap. I do
-  livro" keeps it, and "I wore a cap. I liked it." does not. `R.` never
+  the number only when the classifier routes none of the two words before
+  the marker and the two words after the numeral out of Portuguese: "No
+  Cap. I do livro" keeps it, and "He lost his cap. I found it." does not. `R.` never
   counts, because it is also an initial ("George R. R. Martin"). Routing
   splits the text into words before the normalizer runs, so a routed
   abbreviation would reach the contact lattice unexpanded, and a Roman

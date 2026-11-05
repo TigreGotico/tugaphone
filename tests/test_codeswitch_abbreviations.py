@@ -55,6 +55,7 @@ def _router_reading(ph, monkeypatch, text, lect, contact):
     ("li o Cap. X.", "li o capítulo décimo."),
     ("No Cap. I do livro", "No capítulo primeiro do livro"),
     ("li o cap. I.", "li o capítulo primeiro."),
+    ("Leia o Cap. V do livro.", "Leia o capítulo quinto do livro."),
     ("de D. Maria I no baú", "de Dona Maria Primeira no baú"),
     ("S. Ex.ª o Presidente", "Sua Excelência o Presidente"),
 ])
@@ -146,6 +147,13 @@ def test_capitalised_abbreviation_expands(text, expected):
     "Ela adora street art.",
     # a single I, V or X after an English marker is the pronoun or a letter
     "I wore a cap. I liked it.",
+    "I wore a cap. I think it suits me.",
+    "She gave me a cap. I wear it daily.",
+    "He lost his cap. I found it.",
+    "Nice cap. I want one.",
+    "I bought a new cap. I am happy.",
+    "Take off your cap. I mean it.",
+    "My cap. I need it back.",
     "I love street art. I paint every day.",
     "I love pop art. I collect it.",
     "street art. V for Vendetta",
