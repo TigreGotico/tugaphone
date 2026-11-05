@@ -120,10 +120,9 @@ p = TugaphoneG2PPlugin(lang="pt-PT")
 print(p.transcribe("o gato dorme"))   # o ˈɡatu ˈdɔɾmɨ
 ```
 
-`SilabificadorSyllabifier` is a `SyllabifierPlugin` you can use directly.
-`orthography2ipa[portuguese]` (a tugaphone dependency) already ships its own
-`silabificador`-backed syllabifier, so tugaphone does not register a competing
-entry point for it.
+`SilabificadorSyllabifier` is a `SyllabifierPlugin` you can use directly. The
+phonemization path does not use it, and tugaphone does not register it as an
+entry point.
 
 ## Where next
 

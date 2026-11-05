@@ -18,22 +18,23 @@ the fact:
   (:mod:`tugaphone.number_utils`) and sense-based heterophone marking
   (:mod:`bifonia`) run as the engine's ``normalizer``, i.e. before the lattice
   sees the text (orthography2ipa's ``normalize`` stage);
-* **lexicon** — for ``pt-PT`` and ``pt-BR``, the residual lexicon of
-  ``o2i-lexicons`` is enabled through
-  :func:`orthography2ipa.use_packaged_lexicons`, so a covered word folds into
-  the *same* override path as a spec ``word_exceptions`` entry. It holds only
-  the words the lect's rules get wrong. Every other lect runs on the rules
-  alone;
-* **syllabification** — supplied by orthography2ipa's own ``silabificador``
-  ``syllabify`` plugin (a neutral stage), so stress lands on the same syllable
-  tugaphone would have chosen.
+* **lexicon** — for ``pt-PT`` and ``pt-BR``, the engine takes the residual
+  lexicon of ``o2i-lexicons`` through its :class:`orthography2ipa.Pipeline`, so
+  a covered word folds into the *same* override path as a spec
+  ``word_exceptions`` entry. It holds only the words the lect's rules get
+  wrong. Every other lect runs on the rules alone. The lexicon belongs to the
+  engine, so a plain :class:`orthography2ipa.G2P` in the same process stays on
+  the rules;
+* **syllabification** — orthography2ipa's bundled splitter, which reads the
+  diphthongs and hiatus of the lect spec.
 """
 from __future__ import annotations
 
 import functools
-from typing import List
+from typing import List, Optional
 
-from orthography2ipa import G2P, use_packaged_lexicons
+from orthography2ipa import G2P, Pipeline, packaged_lexicon
+from orthography2ipa.syllabifier_plugin import SyllabifierPlugin
 
 from tugaphone.codeswitch import split_runs, transcribe_contact
 from tugaphone.number_utils import normalize_numbers
@@ -49,20 +50,19 @@ except Exception:  # pragma: no cover - exercised only on a broken install
         return sentence
 
 
-_enabled: set = set()
+class _BundledSplitter(SyllabifierPlugin):
+    """Sends every word to the bundled splitter of orthography2ipa.
 
-
-def _ensure_lexicon(lect: str) -> None:
-    """Enable the packaged lexicon for ``lect`` with orthography2ipa, once.
-
-    Only the lects in :data:`tugaphone.registry.PACKAGED_LEXICON_LECTS` take a
-    lexicon. Every other lect runs on the orthography2ipa rules alone.
+    A pipeline with no syllabifier takes the plugin that discovery finds, and
+    ``silabificador`` is installed for :mod:`tugaphone.tokenizer`.
     """
-    if lect in _enabled:
-        return
-    if lect in PACKAGED_LEXICON_LECTS:
-        use_packaged_lexicons([lect])
-    _enabled.add(lect)
+
+    @property
+    def language_codes(self) -> List[str]:
+        return []
+
+    def syllabify(self, word: str, lang: Optional[str] = None) -> List[str]:
+        return []
 
 
 def _normalizer(lect: str):
@@ -90,11 +90,13 @@ def engine(lect: str) -> G2P:
     """A cached orthography2ipa engine for ``lect`` with tugaphone's layers.
 
     ``lect`` must already be an orthography2ipa lect code (see
-    :func:`tugaphone.registry.resolve_lect`); the lexicon is enabled and the
-    number/homograph normalizer attached before the engine is built.
+    :func:`tugaphone.registry.resolve_lect`). The engine holds the lect's
+    packaged lexicon and the number/homograph normalizer. A lect with no packaged
+    lexicon gets an empty one, so only the rules answer it.
     """
-    _ensure_lexicon(lect)
-    return G2P(lect, normalizer=_normalizer(lect))
+    lexicon = packaged_lexicon(lect) if lect in PACKAGED_LEXICON_LECTS else {}
+    return G2P(lect, normalizer=_normalizer(lect),
+               pipeline=Pipeline(lexicon=lexicon, syllabifier=_BundledSplitter()))
 
 
 def _validate_contact(contact: str) -> None:
@@ -143,6 +145,5 @@ def phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str:
 
 
 def clear_caches() -> None:
-    """Drop the per-lect engine and lexicon caches (tests)."""
+    """Drop the per-lect engine cache (tests)."""
     engine.cache_clear()
-    _enabled.clear()
