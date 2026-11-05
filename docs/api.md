@@ -45,7 +45,7 @@ as a post-hoc transform. Passing it emits a `DeprecationWarning`.
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-ph.phonemize_sentence("O gato dorme.", "pt-BR")        # 'u ˈɡatʊ ˈdoɾmi'
+ph.phonemize_sentence("O gato dorme.", "pt-BR")        # 'u ˈɡatu ˈdoɾmi'
 ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-porto")  # 'o ˈbiɲu ˈjɛ ˈbõ'
 ```
 
@@ -224,7 +224,7 @@ class. `contact` passes through to `phonemize_sentence`.
 from tugaphone.plugin import TugaphoneG2PPlugin
 
 p = TugaphoneG2PPlugin(lang="pt-BR")
-p.transcribe("o gato dorme")   # 'u ˈɡatʊ ˈdoɾmi'
+p.transcribe("o gato dorme")   # 'u ˈɡatu ˈdoɾmi'
 ```
 
 ### `SilabificadorSyllabifier`

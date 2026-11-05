@@ -7,7 +7,7 @@ stress marks.
 ```
 O gato dorme.
 pt-PT → o ˈɡatu ˈdɔɾmɨ
-pt-BR → u ˈɡatʊ ˈdoɾmi
+pt-BR → u ˈɡatu ˈdoɾmi
 pt-AO → ʊ ˈɡatʊ ˈdɔʁmɨ
 pt-MZ → u ˈɡatu ˈdɔrme
 pt-TL → o ˈɡatʊ ˈdɔrme
@@ -243,7 +243,7 @@ engines through these three members can drive tugaphone too:
 from tugaphone.plugin import TugaphoneG2PPlugin
 
 p = TugaphoneG2PPlugin(lang="pt-BR")
-print(p.transcribe("o gato dorme"))   # u ˈɡatʊ ˈdoɾmi
+print(p.transcribe("o gato dorme"))   # u ˈɡatu ˈdoɾmi
 ```
 
 ### Command line

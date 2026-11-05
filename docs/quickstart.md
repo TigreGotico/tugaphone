@@ -7,7 +7,7 @@ stress markers.
 ```
 O gato dorme.
 pt-PT → o ˈɡatu ˈdɔɾmɨ
-pt-BR → u ˈɡatʊ ˈdoɾmi
+pt-BR → u ˈɡatu ˈdoɾmi
 ```
 
 ## 1. Install
@@ -36,7 +36,7 @@ from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
 print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # o ˈɡatu ˈdɔɾmɨ
-print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # u ˈɡatʊ ˈdoɾmi
+print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # u ˈɡatu ˈdoɾmi
 ```
 
 The return value is a space-separated phoneme string: one token per word, with
