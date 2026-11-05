@@ -119,13 +119,13 @@ class TestPhonemizerIntegration:
         # keeping its open /a/ quality (proclitic to "noite").
         # No word of the sentence is in a lexicon, so each lect gives the
         # output of the bare orthography2ipa G2P for that lect.
-        ("pt-PT", "ʃuˈvew ˈmujtu ˈõtɐ̃j̃ a ˈnojtɨ"),
-        ("pt-BR", "ʃoˈvew ˈmujtu ˈõtẽj̃ a ˈnojt͡ʃi"),
-        ("pt-AO", "ʃoˈvew ˈmujtʊ ˈõtẽj̃ a ˈnojtɨ"),
-        ("pt-MZ", "ʃoˈvew ˈmujtu ˈõtẽ a ˈnojte"),
-        ("pt-TL", "ʃoˈvew ˈmujto ˈõtẽj̃ a ˈnojte"),
+        ("pt-PT", "ʃuˈvew ˈmũj̃tu ˈõtɐ̃j̃ a ˈnojtɨ"),
+        ("pt-BR", "ʃoˈvew ˈmũj̃tu ˈõtẽj̃ a ˈnojt͡ʃi"),
+        ("pt-AO", "ʃoˈvew ˈmũj̃tʊ ˈõtẽj̃ a ˈnojtɨ"),
+        ("pt-MZ", "ʃoˈvew ˈmũj̃tu ˈõtẽ a ˈnojte"),
+        ("pt-TL", "ʃoˈvew ˈmũj̃to ˈõtẽj̃ a ˈnojte"),
         # Porto "ontem" keeps the close-mid nucleus of the nasal -em diphthong [ẽj̃].
-        ("pt-PT-x-porto", "ʃuˈbew ˈmujtu ˈwõtẽj̃ a ˈnojtɨ"),
+        ("pt-PT-x-porto", "ʃuˈbew ˈmũj̃tu ˈwõtẽj̃ a ˈnojtɨ"),
     ])
     def test_dialect_output(self, pho, code, expected):
         import unicodedata

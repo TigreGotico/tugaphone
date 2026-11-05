@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.1a1](https://github.com/TigreGotico/tugaphone/tree/1.5.1a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.5.0a1...1.5.1a1)
+
+**Merged pull requests:**
+
+- fix: raise the orthography2ipa floor for the muito reading [\#190](https://github.com/TigreGotico/tugaphone/pull/190) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.5.0a1](https://github.com/TigreGotico/tugaphone/tree/1.5.0a1) (2026-11-05)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.21a1...1.5.0a1)
@@ -390,10 +398,6 @@
 ## [0.9.2a2](https://github.com/TigreGotico/tugaphone/tree/0.9.2a2) (2026-07-14)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.2a1...0.9.2a2)
-
-**Merged pull requests:**
-
-- refactor: stop subclassing G2PPlugin — it was never a plugin [\#81](https://github.com/TigreGotico/tugaphone/pull/81) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.9.2a1](https://github.com/TigreGotico/tugaphone/tree/0.9.2a1) (2026-07-14)
 
