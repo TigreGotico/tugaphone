@@ -228,9 +228,10 @@ The numbers themselves are then spelled out by `normalize_numbers` in standard E
 ### Syllabification and stress
 
 Stress and the dialect's phonology come from the orthography2ipa lect spec.
-Syllabification comes from
-[silabificador](https://github.com/TigreGotico/silabificador), through the
-`syllabify` plugin that `orthography2ipa[portuguese]` registers.
+Syllabification comes from the bundled splitter of orthography2ipa, which reads
+the diphthongs and hiatus of the lect spec. The `tugaphone.tokenizer` token tree
+syllabifies with
+[silabificador](https://github.com/TigreGotico/silabificador).
 
 ### Engine object
 
@@ -280,8 +281,8 @@ o2i's own extension points, and relies on o2i for syllabification:
 | Base phonology, dialect phenomena, sandhi, stress | orthography2ipa lect spec |
 | Number / ordinal verbalization | tugaphone (`number_utils`, via the `normalize` stage) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via the `normalize` stage) |
-| `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, enabled by tugaphone via `use_packaged_lexicons` |
-| Syllabification | orthography2ipa (`silabificador`, through the `syllabify` plugin of `orthography2ipa[portuguese]`) |
+| `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, passed by tugaphone through `Pipeline` |
+| Syllabification | orthography2ipa (the bundled splitter) |
 
 Only `pt-PT` and `pt-BR` take a lexicon. Each holds the words that the lect's rules get
 wrong. Every other lect runs on the rules alone.

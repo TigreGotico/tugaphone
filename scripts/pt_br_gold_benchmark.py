@@ -388,8 +388,6 @@ def main(argv: Optional[list[str]] = None) -> dict:
 
     from tts_gold_benchmark import O2I
 
-    from orthography2ipa.lexicon import get_lexicon
-
     from tugaphone import lattice_core, phonemize
 
     cache: dict[tuple[str, str], str] = {}
@@ -422,8 +420,7 @@ def main(argv: Optional[list[str]] = None) -> dict:
         def rules(word: str, lect: str = lect) -> str:
             return hyp(word, lect)
 
-        lattice_core.engine(lect)
-        lexicon = get_lexicon(lect)
+        lexicon = lattice_core.engine(lect).pipeline.lexicon
         print(f"{lect}: {len(lexicon)} lexicon words leave the rows")
 
         if nilc:
