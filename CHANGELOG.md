@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.21a1](https://github.com/TigreGotico/tugaphone/tree/1.4.21a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.20a1...1.4.21a1)
+
+**Merged pull requests:**
+
+- fix: look two words each side before reading I, V or X as a marker's number [\#185](https://github.com/TigreGotico/tugaphone/pull/185) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.20a1](https://github.com/TigreGotico/tugaphone/tree/1.4.20a1) (2026-11-05)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.19a2...1.4.20a1)
@@ -390,10 +398,6 @@
 ## [0.9.1a1](https://github.com/TigreGotico/tugaphone/tree/0.9.1a1) (2026-07-14)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.0a1...0.9.1a1)
-
-**Merged pull requests:**
-
-- fix: pin silabificador\>=2.1.0a1, and pin the stress agreement [\#77](https://github.com/TigreGotico/tugaphone/pull/77) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [0.9.0a1](https://github.com/TigreGotico/tugaphone/tree/0.9.0a1) (2026-07-14)
 
