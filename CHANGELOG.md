@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0a1](https://github.com/TigreGotico/tugaphone/tree/1.6.0a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.5.2a2...1.6.0a1)
+
+**Merged pull requests:**
+
+- feat: pt-BR takes the o2i-lexicons residual lexicon [\#195](https://github.com/TigreGotico/tugaphone/pull/195) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.5.2a2](https://github.com/TigreGotico/tugaphone/tree/1.5.2a2) (2026-11-05)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.5.2a1...1.5.2a2)
@@ -390,10 +398,6 @@
 ## [1.0.0a2](https://github.com/TigreGotico/tugaphone/tree/1.0.0a2) (2026-07-16)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.0.0a1...1.0.0a2)
-
-**Merged pull requests:**
-
-- chore: refresh pt-family gold measurement after o2i engine changes [\#87](https://github.com/TigreGotico/tugaphone/pull/87) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.0.0a1](https://github.com/TigreGotico/tugaphone/tree/1.0.0a1) (2026-07-16)
 
