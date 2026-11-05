@@ -187,11 +187,14 @@ class NumberParser:
             ordinals=is_ord, gender=gender_enum,
         )
 
-    # Punctuation that can trail a numeric token in running text without
-    # being part of the number itself (sentence-final marks, list commas).
-    # Deliberately excludes the ordinal markers (º/ª), which are handled
-    # separately and carry meaning for gender/ordinality detection.
-    TRAILING_PUNCTUATION = ".,;:!?)\"”…"
+    # Punctuation that can open or close a numeric token in running text
+    # without being part of the number itself (brackets, quotes,
+    # sentence-final marks, list commas). These are the sets that
+    # text_normalization strips from a word's edges. Deliberately excludes
+    # the ordinal markers (º/ª), which are handled separately and carry
+    # meaning for gender/ordinality detection.
+    LEADING_PUNCTUATION = "(“\"'¿¡«"
+    TRAILING_PUNCTUATION = ".,;:!?)\"”»…"
 
     @classmethod
     def split_trailing_punctuation(cls, word: str) -> tuple:
@@ -484,11 +487,13 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
         if skip_unit:
             skip_unit = False
             continue
-        # A numeric token may carry trailing punctuation glued to it
-        # ("54.", "05,", "5!") -- split it off so is_int/is_float see a
-        # clean number, then glue it back onto the spelled-out word so the
-        # caller never has to detach it with a space (see #116).
-        core, trail = NumberParser.split_trailing_punctuation(word)
+        # A numeric token may carry punctuation glued to its edges ("54.",
+        # "05,", "5!", "(789)", "«7»") -- split it off so is_int/is_float
+        # see a clean number, then glue it back onto the spelled-out words
+        # so the caller never has to detach it with a space (see #116).
+        body = word.lstrip(NumberParser.LEADING_PUNCTUATION)
+        lead = word[:len(word) - len(body)]
+        core, trail = NumberParser.split_trailing_punctuation(body)
         if not is_number(core):
             normalized_words.append(word)
             continue
@@ -546,7 +551,7 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
                 spelled.append(NumberParser.unit_name(unit, plural, is_brazilian))
                 trail = NumberParser.split_trailing_punctuation(next_word)[1]
                 skip_unit = True
-            normalized_words.append(" ".join(spelled) + trail)
+            normalized_words.append(lead + " ".join(spelled) + trail)
         except Exception as e:
             if strict:
                 raise e

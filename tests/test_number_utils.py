@@ -425,3 +425,51 @@ class TestDecimalCommaReading(object):
 
     def test_dot_decimal_still_works(self):
         assert normalize_numbers("tem 10.4 graus") == "tem dez vírgula quatro graus"
+
+
+class TestNumberInsideBracketsOrQuotes:
+    """A number glued to an opening or closing bracket or guillemet is read
+    out, and the punctuation stays on the spelled-out words."""
+
+    @pytest.mark.parametrize("text, expected", [
+        ("li (789) hoje", "li (setecentos e oitenta e nove) hoje"),
+        ("li (789 hoje", "li (setecentos e oitenta e nove hoje"),
+        ("li 789) hoje", "li setecentos e oitenta e nove) hoje"),
+        ("li «7» hoje", "li «sete» hoje"),
+        ("li «7 hoje", "li «sete hoje"),
+        ("li 789» hoje", "li setecentos e oitenta e nove» hoje"),
+        ("comprei «2 casas»", "comprei «duas casas»"),
+    ])
+    def test_number_is_spelled_out(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text", ["li (o livro) hoje", "li «o livro» hoje"])
+    def test_bracketed_words_unchanged(self, text):
+        assert normalize_numbers(text) == text
+
+
+class TestBracketedNumberPhonemes:
+    """The IPA of a sentence with a bracketed number equals the IPA of the
+    same sentence without the brackets, which reads the number."""
+
+    @pytest.fixture(scope="class")
+    def phonemize(self):
+        from tugaphone import TugaPhonemizer
+        pho = TugaPhonemizer()
+        return lambda text: pho.phonemize_sentence(text, "pt-PT")
+
+    @pytest.mark.parametrize("text, bare", [
+        ("li (789) hoje", "li 789 hoje"),
+        ("li 789) hoje", "li 789 hoje"),
+        ("li «7» hoje", "li 7 hoje"),
+        ("li 789» hoje", "li 789 hoje"),
+        ("o «Tel. 213 456 789» não atende", "o Tel. 213 456 789 não atende"),
+        ("li (o livro) hoje", "li o livro hoje"),
+    ])
+    def test_brackets_do_not_change_the_reading(self, phonemize, text, bare):
+        assert phonemize(text) == phonemize(bare)
+
+    def test_bare_number_is_read(self, phonemize):
+        # The reference sentence reads every number: "nove" is the last word
+        # of 789 ("setecentos e oitenta e nove").
+        assert "ˈnɔvɨ" in phonemize("o Tel. 213 456 789 não atende")
