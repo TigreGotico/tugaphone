@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.20a1](https://github.com/TigreGotico/tugaphone/tree/1.4.20a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.19a2...1.4.20a1)
+
+**Merged pull requests:**
+
+- fix: keep Portuguese abbreviations on the Portuguese path under code-switching [\#183](https://github.com/TigreGotico/tugaphone/pull/183) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.4.19a2](https://github.com/TigreGotico/tugaphone/tree/1.4.19a2) (2026-11-04)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.19a1...1.4.19a2)
