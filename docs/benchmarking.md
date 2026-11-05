@@ -35,16 +35,10 @@ fallback.
 
 The script prints one PER per lect and the mean. The scores split by path:
 
-- The **pure-lattice** European, African and Asian lects (no lexicon overlay)
-  match the gold almost exactly, because the lect spec and the gold share one
-  convention. The pure-lattice Brazilian sub-regional lects carry a residual.
-- The **lexicon-overlay** lects (`pt-PT`, `pt-PT-x-lisbon`, `pt-BR`,
-  `pt-BR-x-rj`, `pt-BR-x-sp`, `pt-AO`, `pt-MZ`, `pt-TL`) carry the largest
-  residuals. The overlay causes them: the `tugalex` entries follow the
-  lexicon's own transcription tradition, which differs from the spec and the
-  gold in places (word-final `[ɨ]` deletion, `[ɐj]` for *ei* in Lisbon, the
-  quality of some stressed vowels). The same lects score close to zero when the
-  lattice runs without the overlay.
+- The European, African and Asian lects match the gold almost exactly,
+  because the lect spec and the gold share one convention. `pt-PT` takes the
+  `o2i-lexicons` residual lexicon, and every other lect runs on the rules alone.
+- The Brazilian sub-regional lects carry a residual.
 
 Read the number as agreement with the spec tradition, not as absolute
 correctness.

@@ -18,13 +18,10 @@ pip install -e .                 # from a source checkout
 ```
 
 Runtime dependencies (`ovos-number-parser`, `silabificador`, `tugalex`,
-`bifonia`, `orthography2ipa`) install automatically. The phonetic lexicon ships
-inside [`tugalex`](https://github.com/TigreGotico/tugalex) as an extract of the
-Hugging Face dataset
-[TigreGotico/portuguese-unified-pronunciation-lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon),
-so a phonemization call needs no network. The first call for a lect writes
-that lect's lexicon to a cache file, see
-[advanced.md](advanced.md#lexicon-cache).
+`bifonia`, `orthography2ipa`, `o2i-lexicons`) install automatically. The `pt-PT`
+lexicon ships inside [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons),
+so a phonemization call needs no network. See
+[advanced.md](advanced.md#the-lexicon-boundary).
 
 ## 2. The one thing to understand
 

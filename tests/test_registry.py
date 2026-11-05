@@ -8,7 +8,8 @@ import pytest
 from orthography2ipa import resolve
 
 from tugaphone.registry import (normalize_dialect_code, resolve_lect,
-                                resolve_dialect, lexicon_region, list_dialects,
+                                resolve_dialect, PACKAGED_LEXICON_LECTS, lexicon_region,
+                                list_dialects,
                                 get_dialect_inventory)
 
 
@@ -72,22 +73,17 @@ class TestResolution:
         assert resolve_lect("") == "pt-PT"
 
 
-class TestLexiconRegion:
-    @pytest.mark.parametrize("lect,region", [
-        ("pt-PT", "lbx"), ("pt-PT-x-lisbon", "lbx"),
-        ("pt-BR", "rjx"), ("pt-BR-x-sp", "spx"),
-        ("pt-AO", "lda"), ("pt-MZ", "mpx"), ("pt-TL", "dli"),
-    ])
-    def test_lexicon_overlaid_lects(self, lect, region):
-        assert lexicon_region(lect) == region
+class TestPackagedLexiconLects:
+    def test_only_pt_pt_takes_a_packaged_lexicon(self):
+        # A sub-lect would take the pt-PT forms over its own spec's phonology.
+        assert PACKAGED_LEXICON_LECTS == {"pt-PT"}
 
-    @pytest.mark.parametrize("lect", [
-        "pt-PT-x-porto", "pt-PT-x-madeira", "pt-BR-x-caipira", "pt-CV",
-    ])
-    def test_pure_lattice_lects_have_no_lexicon(self, lect):
-        # Overlaying the Lisbon lexicon on a Porto lect would overwrite the
-        # spec's phonology with Lisbon forms — these lects are lattice-only.
-        assert lexicon_region(lect) is None
+    @pytest.mark.parametrize("lect", ["pt-PT", "pt-PT-x-lisbon", "pt-BR", "pt-TL"])
+    def test_lexicon_region_is_deprecated_and_names_no_region(self, lect):
+        from tugaphone.version import VERSION_MAJOR
+
+        with pytest.warns(DeprecationWarning, match=f"removed in tugaphone {VERSION_MAJOR + 1}.0.0"):
+            assert lexicon_region(lect) is None
 
 
 class TestListDialects:
@@ -121,11 +117,13 @@ class TestPhonemizerIntegration:
     @pytest.mark.parametrize("code,expected", [
         # "à" is a function word: the pan-pt clitic rule destresses it while
         # keeping its open /a/ quality (proclitic to "noite").
-        ("pt-PT", "ʃuˈvew ˈmũjtu ˈõtɐ̃j a ˈnojt"),
-        ("pt-BR", "ʃoˈvew ˈmwĩtʊ ˈõtẽj a ˈnojtʃɪ"),
-        ("pt-AO", "ʃoˈvew ˈmũjntʊ ˈõntẽj a ˈnojtɨ"),
-        ("pt-MZ", "ʃoˈvew ˈmũjtu ˈõtẽj a ˈnɔjtɨ"),
-        ("pt-TL", "ʃoˈvew ˈmujtʊ ˈõntɐ̃j a ˈnojtʰ"),
+        # No word of the sentence is in a lexicon, so each lect gives the
+        # output of the bare orthography2ipa G2P for that lect.
+        ("pt-PT", "ʃuˈvew ˈmujtu ˈõtɐ̃j̃ a ˈnojtɨ"),
+        ("pt-BR", "ʃoˈvew ˈmujtu ˈõtẽj̃ a ˈnojt͡ʃi"),
+        ("pt-AO", "ʃoˈvew ˈmujtʊ ˈõtẽj̃ a ˈnojtɨ"),
+        ("pt-MZ", "ʃoˈvew ˈmujtu ˈõtẽ a ˈnojte"),
+        ("pt-TL", "ʃoˈvew ˈmujto ˈõtẽj̃ a ˈnojte"),
         # Porto "ontem" keeps the close-mid nucleus of the nasal -em diphthong [ẽj̃].
         ("pt-PT-x-porto", "ʃuˈbew ˈmujtu ˈwõtẽj̃ a ˈnojtɨ"),
     ])
@@ -133,10 +131,6 @@ class TestPhonemizerIntegration:
         import unicodedata
         got = unicodedata.normalize("NFC", pho.phonemize_sentence(self.SENTENCE, code))
         assert got == unicodedata.normalize("NFC", expected)
-
-    def test_lexicon_overlay_differs_across_regions(self, pho):
-        assert pho.phonemize_sentence("noite", "pt-BR") == "ˈnojtʃɪ"
-        assert pho.phonemize_sentence("noite", "pt-BR-x-sp") == "ˈnojti"
 
     def test_regional_dialect_kwarg_deprecated_and_ignored(self, pho):
         with pytest.deprecated_call():

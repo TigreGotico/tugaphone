@@ -3,7 +3,7 @@
 tugaphone *consumes* orthography2ipa — it drives the shared candidate lattice
 (the Portuguese lect specs, their stress and sandhi rules) and adds the stages
 orthography2ipa leaves to the caller: gender-aware number verbalization,
-sense-based homograph marking and the curated ``tugalex`` lexicon overlay (see
+sense-based homograph marking and the ``pt-PT`` residual lexicon (see
 :mod:`tugaphone.lattice_core`). Use the engine directly:
 
     >>> from tugaphone.plugin import TugaphoneG2PPlugin

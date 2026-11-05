@@ -5,7 +5,7 @@ an orthography2ipa lect spec, and the lattice — the spec's grapheme table,
 ``allophone_rules`` and cross-word ``sandhi_rules`` — produces the dialect's
 phonology directly. tugaphone contributes the stages orthography2ipa leaves to
 the caller (number/ordinal verbalization, sense-based homograph marking, the
-curated ``tugalex`` lexicon, syllabification), wired through orthography2ipa's
+``pt-PT`` residual lexicon, syllabification), wired through orthography2ipa's
 own extension points. See :mod:`tugaphone.lattice_core`.
 """
 import warnings
@@ -39,8 +39,8 @@ class TugaPhonemizer:
     def __init__(self) -> None:
         """Create a phonemizer. Construction does no work.
 
-        The orthography2ipa engine and the lexicon cache for a lect are built
-        on the first call for that lect and reused by the calls after it.
+        The orthography2ipa engine for a lect is built on the first call for
+        that lect and reused by the calls after it.
         """
 
     def phonemize_sentence(self, sentence: str, lang: str = "pt-PT",

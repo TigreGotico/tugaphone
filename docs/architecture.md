@@ -11,7 +11,7 @@ selecting a lect.
 `TugaPhonemizer().phonemize_sentence(text, lang)` resolves `lang` to an
 orthography2ipa lect code and drives
 `orthography2ipa.G2P(lect, normalizer=...).transcribe(text)`, with the
-lexicon for that lect registered first. Every Portuguese-family lect ships
+lexicon for that lect enabled first. Every Portuguese-family lect ships
 an engine spec whose grapheme table, `allophone_rules` and cross-word
 `sandhi_rules` encode that variety's phonology. The dialect phenomena are
 produced by the lattice itself, not by a post-hoc string-transform pass:
@@ -49,30 +49,17 @@ transformations.
 
 ### 2. Lexicon
 
-The curated `tugalex` pronunciation lexicon is registered per lect via
-`orthography2ipa.register_lexicon()`, so a covered word folds into the same
-override path as a spec `word_exceptions` entry. The lattice generates only the
-out-of-vocabulary words.
-
-The lexicon overlay applies to **only the lects whose lexical tradition matches
-a `tugalex` region**:
-
-| Lect | tugalex region |
-|------|----------------|
-| `pt-PT`, `pt-PT-x-lisbon` | Lisbon |
-| `pt-BR`, `pt-BR-x-rj` | Rio |
-| `pt-BR-x-sp` | São Paulo |
-| `pt-AO` | Luanda |
-| `pt-MZ` | Maputo |
-| `pt-TL` | Dili |
-
-Every other lect is pure lattice. Registering the Lisbon lexicon on, say, a
-Porto lect would overwrite the Porto spec's phonology with Lisbon forms, so the
-overlay is deliberately withheld from lects with no matching tradition. `tugalex`
-entries are relaid from its `·`-joined, nucleus-marked layout into
-orthography2ipa's stress-before-syllable layout on registration, so a lexicon
-hit and a lattice-generated word share one notation and a sentence's IPA stays
-internally consistent.
+The `pt-PT` lect takes the residual lexicon of
+[`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), enabled through
+`orthography2ipa.use_packaged_lexicons(["pt-PT"])`. A covered word folds into
+the same override path as a spec `word_exceptions` entry. The lexicon holds only
+the words that the `pt-PT` rules get wrong, from the Infopédia readings of the
+[portuguese-unified pronunciation lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon).
+Every other lect runs on the orthography2ipa rules alone.
+`tugaphone.registry.PACKAGED_LEXICON_LECTS` names the lects that take a
+lexicon. Enabling the `pt-PT` lexicon for a sub-lect such as `pt-PT-x-porto`
+would overwrite that spec's phonology with the `pt-PT` forms, so no sub-lect
+takes it.
 
 ### 3. Syllabification
 
@@ -91,7 +78,7 @@ Portuguese stress detection.
 | Stress placement | orthography2ipa lect spec (stress rules) |
 | Number / ordinal verbalization | tugaphone (`number_utils`, via the `normalize` stage) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via the `normalize` stage) |
-| Curated pronunciation lexicon | tugaphone (`tugalex`, via `register_lexicon`) |
+| `pt-PT` residual lexicon | `o2i-lexicons`, enabled by tugaphone via `use_packaged_lexicons` |
 | Syllabification | orthography2ipa (`silabificador`, through the `syllabify` plugin of `orthography2ipa[portuguese]`) |
 
 ## Selecting a dialect

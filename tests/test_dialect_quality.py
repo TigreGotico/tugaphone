@@ -52,15 +52,16 @@ class TestNorthernSignatures:
 
 
 class TestBrazilianPhonology:
+    # The pt-BR spec writes the affricates with a tie bar.
     def test_t_palatalization_before_i(self, pho):
-        assert "tʃ" in say(pho, "tia", "pt-BR")
+        assert "t͡ʃ" in say(pho, "tia", "pt-BR")
 
     def test_d_palatalization_before_i(self, pho):
-        assert "dʒ" in say(pho, "dia", "pt-BR")
+        assert "d͡ʒ" in say(pho, "dia", "pt-BR")
 
     def test_final_te_palatalized(self, pho):
-        out = say(pho, "abacate", "pt-BR")
-        assert "tʃ" in out and "ɪ" in out
+        # Final unstressed ⟨e⟩ raises to [i], and the [t] before it palatalises.
+        assert say(pho, "abacate", "pt-BR").endswith("t͡ʃi")
 
     def test_coda_l_vocalization(self, pho):
         assert say(pho, "brasil", "pt-BR").endswith("w")
@@ -69,14 +70,17 @@ class TestBrazilianPhonology:
 class TestAfricanAndAsianRhotic:
     @pytest.mark.parametrize("lect", ["pt-AO", "pt-MZ", "pt-TL"])
     def test_no_uvular_r(self, pho, lect):
+        # The pt-AO spec writes a word-initial ⟨r⟩ as the tap [ɾ]; pt-MZ and
+        # pt-TL write the trill [r]. Neither is the uvular of pt-PT.
         out = say(pho, "rua", lect)
-        assert "ʁ" not in out and out.startswith("r")
+        assert "ʁ" not in out and out[0] in "rɾ"
 
 
 class TestTimoresePhonology:
-    def test_unstressed_a_is_schwa(self, pho):
-        # Tetum-influenced schwa system.
-        assert "ə" in say(pho, "aba", "pt-TL")
+    def test_unstressed_a_keeps_its_quality(self, pho):
+        # The pt-TL spec models no unstressed vowel reduction (Albuquerque
+        # 2010): a final unstressed ⟨a⟩ stays [a], not [ɐ] or [ə].
+        assert say(pho, "aba", "pt-TL") == "aba"
 
 
 class TestInsularPhonology:

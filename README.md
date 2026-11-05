@@ -34,9 +34,9 @@ number expansion, wired through orthography2ipa's own extension points. See
 pip install tugaphone
 ```
 
-Its runtime dependencies (`orthography2ipa`, `silabificador`, `tugalex`,
-`bifonia`, `ovos-number-parser`) install automatically. The phonetic lexicon rides in
-through [`tugalex`](https://github.com/TigreGotico/tugalex).
+Its runtime dependencies (`orthography2ipa`, `o2i-lexicons`, `silabificador`,
+`tugalex`, `bifonia`, `ovos-number-parser`) install automatically. The `pt-PT`
+lexicon rides in through [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons).
 
 ---
 
@@ -51,8 +51,8 @@ print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))
 ```
 
 Construct `TugaPhonemizer()`, then call `phonemize_sentence(text, lang)` as
-often as you like. The first call for a lect builds that lect's engine and
-lexicon cache, so it is slower than the calls after it. The result is a
+often as you like. The first call for a lect builds that lect's engine, so it is
+slower than the calls after it. The result is a
 space-separated phoneme string, one token per word, with `ˈ` marking primary
 stress. `lang` selects the orthography2ipa lect spec, so it changes the
 phonology, not just the spelling.
@@ -280,12 +280,11 @@ o2i's own extension points, and relies on o2i for syllabification:
 | Base phonology, dialect phenomena, sandhi, stress | orthography2ipa lect spec |
 | Number / ordinal verbalization | tugaphone (`number_utils`, via the `normalize` stage) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via the `normalize` stage) |
-| Curated pronunciation lexicon | tugaphone (`tugalex`, via `register_lexicon`) |
+| `pt-PT` residual lexicon | `o2i-lexicons`, enabled by tugaphone via `use_packaged_lexicons` |
 | Syllabification | orthography2ipa (`silabificador`, through the `syllabify` plugin of `orthography2ipa[portuguese]`) |
 
-The lexicon overlay applies only to the lects whose lexical tradition matches a
-`tugalex` region (`pt-PT`/`pt-PT-x-lisbon`, `pt-BR`/`pt-BR-x-rj`, `pt-BR-x-sp`,
-`pt-AO`, `pt-MZ`, `pt-TL`), every other lect is pure lattice.
+Only `pt-PT` takes a lexicon. It holds the words that the `pt-PT` rules get
+wrong. Every other lect runs on the rules alone.
 
 `tugaphone.tokenizer` and `tugaphone.dialects` remain as a token-tree
 linguistic **feature** API (manner, place, voicing, syllable roles, CV
@@ -344,7 +343,7 @@ the orthographic fallback. `tests/test_examples.py` runs every script in
 | Path | Content |
 |------|---------|
 | `tugaphone/lattice_core.py` | The phonemization pipeline on the orthography2ipa lattice |
-| `tugaphone/registry.py` | Lect codes, legacy aliases, the lexicon-overlay map |
+| `tugaphone/registry.py` | Lect codes, legacy aliases, the lects that take a packaged lexicon |
 | `tugaphone/text_normalization.py`, `tugaphone/number_utils.py` | The `normalize` stage |
 | `tugaphone/codeswitch.py`, `tugaphone/langdetect.py` | Contact-language detection and nativization |
 | `tugaphone/accent.py`, `tugaphone/__main__.py` | Accent forcing and the command line |

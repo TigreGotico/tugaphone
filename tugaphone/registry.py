@@ -17,9 +17,12 @@ resolve to their orthography2ipa equivalents through :data:`_ALIASES`.
 """
 from __future__ import annotations
 
+import warnings
 from typing import Dict, List, Optional
 
 from orthography2ipa import available_codes, resolve, resolves_exactly
+
+from tugaphone.version import VERSION_MAJOR
 
 #: Portuguese-family lect codes orthography2ipa ships, the canonical dialects.
 #: The Galician-Portuguese key goes through ``resolve`` because orthography2ipa
@@ -58,20 +61,14 @@ _ALIASES: Dict[str, str] = {
 }
 
 
-#: Lects whose lexical tradition matches a ``tugalex`` region map. Only these
-#: get a curated-lexicon overlay; every other lect is produced purely by the
-#: orthography2ipa lattice (registering, say, the Lisbon lexicon for a Porto
-#: lect would overwrite the Porto spec's phonology with Lisbon forms).
-_LEXICON_REGION: Dict[str, str] = {
-    "pt-PT": "lbx",
-    "pt-PT-x-lisbon": "lbx",
-    "pt-BR": "rjx",
-    "pt-BR-x-rj": "rjx",
-    "pt-BR-x-sp": "spx",
-    "pt-AO": "lda",
-    "pt-MZ": "mpx",
-    "pt-TL": "dli",
-}
+#: Lects that take a packaged orthography2ipa lexicon. ``o2i-lexicons`` ships a
+#: ``pt-PT`` residual lexicon: the words the ``pt-PT`` rules get wrong. It is
+#: not enabled for a sub-lect, because it would overwrite that spec's phonology
+#: with the ``pt-PT`` forms. Every other lect runs on the rules alone.
+PACKAGED_LEXICON_LECTS = frozenset({"pt-PT"})
+
+#: The release that removes :func:`lexicon_region`.
+LEXICON_REGION_REMOVAL_VERSION = f"{VERSION_MAJOR + 1}.0.0"
 
 
 def normalize_dialect_code(lang: str) -> str:
@@ -134,8 +131,19 @@ def _registered(code: str) -> Optional[str]:
 
 
 def lexicon_region(lect: str) -> Optional[str]:
-    """The ``tugalex`` region whose lexicon overlays ``lect``, or ``None``."""
-    return _LEXICON_REGION.get(lect)
+    """Deprecated: the ``tugalex`` region whose lexicon overlays ``lect``.
+
+    No lect takes a ``tugalex`` region map, so the answer is ``None`` for every
+    lect. :data:`PACKAGED_LEXICON_LECTS` names the lects that take a lexicon.
+    """
+    warnings.warn(
+        "lexicon_region() is deprecated and returns None: no lect takes a "
+        "tugalex region map. Use PACKAGED_LEXICON_LECTS. It will be removed in "
+        f"tugaphone {LEXICON_REGION_REMOVAL_VERSION}.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return None
 
 
 def list_dialects() -> List[str]:

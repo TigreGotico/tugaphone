@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "Dialect-aware Portuguese (Lusophone) text-to-IPA phonemizer"
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 authors = [
     {name = "JarbasAi", email = "jarbasai@mailfence.com"},
 ]
@@ -19,8 +19,6 @@ classifiers = [
     "Natural Language :: Portuguese",
     "Natural Language :: Portuguese (Brazilian)",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Text Processing :: Linguistic",
@@ -31,7 +29,8 @@ dependencies = [
     "silabificador>=2.1.0a1",
     "tugalex>=2.2.0a1",
     "bifonia>=0.3.0a1",
-    "orthography2ipa[portuguese]>=7.111.2a1",
+    "orthography2ipa[portuguese]>=7.112.0a1",
+    "o2i-lexicons>=0.2.0a1",
 ]
 
 [project.optional-dependencies]

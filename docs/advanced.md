@@ -22,52 +22,31 @@ orthography2ipa:
    verbalization (`tugaphone.number_utils.normalize_numbers`) and sense-based
    homograph marking (`bifonia.add_extra_diacritics`) run as the engine's
    `normalizer`, before the lattice sees the text.
-2. **Lexicon**, the curated `tugalex` lexicon is registered per lect via
-   `orthography2ipa.register_lexicon()`, so a covered word folds into the same
-   override path as a spec `word_exceptions` entry, the lattice generates only
-   out-of-vocabulary words.
+2. **Lexicon**, for `pt-PT` only, the residual lexicon of `o2i-lexicons` is
+   enabled via `orthography2ipa.use_packaged_lexicons()`, so a covered word
+   folds into the same override path as a spec `word_exceptions` entry. Every
+   other lect runs on the rules alone.
 3. **Syllabification**, supplied by the `silabificador`-backed `syllabify`
    plugin that `orthography2ipa[portuguese]` registers.
 
 For the full breakdown of what comes from where, see
 [architecture.md](architecture.md).
 
-## The lexicon-overlay boundary
+## The lexicon boundary
 
-The lexicon overlay is registered for **only** the eight lects whose lexical
-tradition matches a `tugalex` region: `pt-PT` and `pt-PT-x-lisbon` (Lisbon),
-`pt-BR` and `pt-BR-x-rj` (Rio), `pt-BR-x-sp` (São Paulo), `pt-AO` (Luanda),
-`pt-MZ` (Maputo) and `pt-TL` (Dili). Every other lect is produced purely by the
-lattice.
+The `pt-PT` lect takes the residual lexicon of
+[`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), enabled through
+`orthography2ipa.use_packaged_lexicons(["pt-PT"])`. A covered word folds into
+the same override path as a spec `word_exceptions` entry. The lexicon holds only
+the words that the `pt-PT` rules get wrong, from the Infopédia readings of the
+[portuguese-unified pronunciation lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon).
+Every other lect runs on the orthography2ipa rules alone.
 
-The boundary is deliberate: a `tugalex` region encodes one tradition's lexical
-pronunciations, so registering the Lisbon lexicon on a Porto lect would overwrite
-the Porto spec's phonology with Lisbon forms. `tugalex` entries are relaid from
-its `·`-joined, nucleus-marked layout into the spec's stress-before-syllable
-layout on registration, keeping a lexicon hit and a lattice-generated word in one
-notation so a sentence's IPA stays internally consistent.
-
-## Lexicon cache
-
-Each lect's overlay is not queried from `tugalex` word by word. The first call
-that needs it materialises the whole region's `word\tipa` map as a TSV under
-`TUGAPHONE_LEXICON_DIR` (default `$XDG_CACHE_HOME/tugaphone/lexicon`, which is
-`~/.cache/tugaphone/lexicon` when `XDG_CACHE_HOME` is unset) and registers
-that file with `orthography2ipa.register_lexicon()`. Later calls for the same
-lect reuse the materialised file instead of rebuilding it.
-
-The TSV carries a sidecar `.version` file next to it holding the installed
-`tugalex` version. A cached TSV is rebuilt when it is missing, empty (a
-previous write was interrupted), or its `.version` sidecar does not match the
-installed `tugalex`. The version check lets a `tugalex` data fix reach an
-installation that already has a TSV on disk. Set
-`TUGAPHONE_LEXICON_DIR` to control where the cache lives, for example to keep
-it outside the default XDG cache directory or to give each test run an
-isolated cache:
-
-```bash
-export TUGAPHONE_LEXICON_DIR=/path/to/lexicon-cache
-```
+The boundary is deliberate. The lexicon is in the `pt-PT` norm, so enabling it
+for a sub-lect such as `pt-PT-x-porto` would overwrite that spec's phonology
+with the `pt-PT` forms. The entries are in the spec's notation, with the stress
+mark before the stressed syllable, so a lexicon hit and a rules reading share
+one notation.
 
 ## Number normalization
 
@@ -100,8 +79,11 @@ usable on its own:
 
 - [`orthography2ipa`](https://github.com/TigreGotico/orthography2ipa), the
   candidate lattice and the lect specs that are tugaphone's core.
-- [`tugalex`](https://github.com/TigreGotico/tugalex), the phonetic lexicon
-  (`LEXICON` in `tugaphone.dialects`), registered per lect as an override.
+- [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), the `pt-PT`
+  residual lexicon.
+- [`tugalex`](https://github.com/TigreGotico/tugalex), the noun and given-name
+  genders, and the phonetic lexicon of the legacy `tugaphone.dialects`
+  inventories (`LEXICON`).
 - [`silabificador`](https://github.com/TigreGotico/silabificador), the
   syllabifier, which `orthography2ipa[portuguese]` registers as its `syllabify`
   plugin.

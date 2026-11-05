@@ -109,18 +109,16 @@ resolve_lect("pt-BR-x-sao-paulo")  # 'pt-BR-x-sp'
 resolve_lect("pt")                 # 'pt-PT'
 ```
 
-## Lexicon overlay vs pure lattice
+## Lexicon vs pure lattice
 
-Eight lects carry the curated `tugalex` lexicon overlay, because their lexical
-tradition matches a `tugalex` region: `pt-PT` and `pt-PT-x-lisbon` (Lisbon),
-`pt-BR` and `pt-BR-x-rj` (Rio), `pt-BR-x-sp` (São Paulo), `pt-AO` (Luanda),
-`pt-MZ` (Maputo) and `pt-TL` (Dili). For a covered word the lexicon supplies the
-pronunciation and the lattice fills in only the out-of-vocabulary words.
+Only `pt-PT` takes a lexicon: the `o2i-lexicons` residual lexicon, which holds
+the words that the `pt-PT` rules get wrong. For a covered word the lexicon
+supplies the pronunciation, and the lattice reads every other word.
 
 Every other lect is **pure lattice**, its phonology comes entirely from the
-orthography2ipa spec. The overlay is withheld deliberately: registering the
-Lisbon lexicon on a Porto lect would overwrite the Porto spec's phonology with
-Lisbon forms. See [architecture.md](architecture.md) for the layer boundary.
+orthography2ipa spec. A sub-lect does not take the `pt-PT` lexicon, because it
+would overwrite the sub-lect spec's phonology with the `pt-PT` forms. See
+[architecture.md](architecture.md) for the layer boundary.
 
 ## Where next
 
