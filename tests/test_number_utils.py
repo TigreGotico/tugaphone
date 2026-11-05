@@ -439,11 +439,28 @@ class TestNumberInsideBracketsOrQuotes:
         ("li «7 hoje", "li «sete hoje"),
         ("li 789» hoje", "li setecentos e oitenta e nove» hoje"),
         ("comprei «2 casas»", "comprei «duas casas»"),
+        ("ele disse “5” vezes", "ele disse “cinco” vezes"),
+        ('ele disse "5" vezes', 'ele disse "cinco" vezes'),
+        ("a Expo '98 foi em Lisboa", "a Expo 'noventa e oito foi em Lisboa"),
+        ("¿5?", "¿cinco?"),
+        ("¡5!", "¡cinco!"),
+        ("tem de 1 a (2 cães)", "tem de um a (dois cães)"),
+        ("a taxa subiu (0 vírgula 02)", "a taxa subiu (zero vírgula zero dois)"),
     ])
     def test_number_is_spelled_out(self, text, expected):
         assert normalize_numbers(text) == expected
 
-    @pytest.mark.parametrize("text", ["li (o livro) hoje", "li «o livro» hoje"])
+    @pytest.mark.parametrize("text", [
+        "li (o livro) hoje",
+        "li «o livro» hoje",
+        # float() reads "nan", "inf" and "infinity", but they are words here.
+        "o verbo (inf.) é",
+        "a fotógrafa (Nan Goldin)",
+        "«Nan»",
+        "(inf)",
+        "(nan",
+        "o Inf. Henrique",
+    ])
     def test_bracketed_words_unchanged(self, text):
         assert normalize_numbers(text) == text
 
@@ -456,7 +473,7 @@ class TestBracketedNumberPhonemes:
     def phonemize(self):
         from tugaphone import TugaPhonemizer
         pho = TugaPhonemizer()
-        return lambda text: pho.phonemize_sentence(text, "pt-PT")
+        return lambda text, lang="pt-PT": pho.phonemize_sentence(text, lang)
 
     @pytest.mark.parametrize("text, bare", [
         ("li (789) hoje", "li 789 hoje"),
@@ -465,9 +482,26 @@ class TestBracketedNumberPhonemes:
         ("li 789» hoje", "li 789 hoje"),
         ("o «Tel. 213 456 789» não atende", "o Tel. 213 456 789 não atende"),
         ("li (o livro) hoje", "li o livro hoje"),
+        ("a taxa subiu (0,02)", "a taxa subiu 0,02"),
+        ("a taxa subiu «0,02»", "a taxa subiu 0,02"),
+        ("tem de 1 a (2 cães)", "tem de 1 a 2 cães"),
+        ("tem de 1 a «2» cães", "tem de 1 a 2 cães"),
+        ("pesa (0,5 kg)", "pesa 0,5 kg"),
     ])
     def test_brackets_do_not_change_the_reading(self, phonemize, text, bare):
         assert phonemize(text) == phonemize(bare)
+
+    def test_bracketed_decimal_unit_pt_br(self, phonemize):
+        assert phonemize("o cano mede (0,05 m)", "pt-BR") == \
+            phonemize("o cano mede 0,05 m", "pt-BR")
+
+    @pytest.mark.parametrize("text, word", [
+        ("o verbo (inf.) é", "ˈĩf"),
+        ("a fotógrafa (Nan Goldin)", "ˈnɐ̃"),
+        ("«Nan»", "ˈnɐ̃"),
+    ])
+    def test_bracketed_word_is_read_as_a_word(self, phonemize, text, word):
+        assert word in phonemize(text).split()
 
     def test_bare_number_is_read(self, phonemize):
         # The reference sentence reads every number: "nove" is the last word

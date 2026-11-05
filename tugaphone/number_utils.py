@@ -473,8 +473,12 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
     def is_number(token: Optional[str]) -> bool:
         if token is None:
             return False
-        token = NumberParser.split_trailing_punctuation(token)[0]
-        return NumberParser.is_int(token) or NumberParser.is_float(token)
+        token = NumberParser.split_trailing_punctuation(
+            token.lstrip(NumberParser.LEADING_PUNCTUATION))[0]
+        # float() also accepts "nan", "inf" and "infinity", which are words
+        # in running text ("Inf." is "Infante", "(inf.)" is "infinitivo").
+        return (any(ch.isdigit() for ch in token)
+                and (NumberParser.is_int(token) or NumberParser.is_float(token)))
 
     def unit_symbol(token: Optional[str]) -> Optional[str]:
         if token is None:
@@ -541,7 +545,8 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
                     is_brazilian=is_brazilian, scale=scale))
             if unit:
                 if is_fraction:
-                    value = float(f"{words[idx - 2]}.{core or 0}")
+                    integer = words[idx - 2].lstrip(NumberParser.LEADING_PUNCTUATION)
+                    value = float(f"{integer}.{core or 0}")
                 else:
                     value = NumberParser.to_float(core)
                 plural = NumberParser.unit_takes_plural(value, is_fraction, is_brazilian)
