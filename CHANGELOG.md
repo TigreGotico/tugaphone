@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.2a1](https://github.com/TigreGotico/tugaphone/tree/1.6.2a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.1a2...1.6.2a1)
+
+**Merged pull requests:**
+
+- fix: remove the historical lects and warn on a resolve\_lect fallback [\#201](https://github.com/TigreGotico/tugaphone/pull/201) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.6.1a2](https://github.com/TigreGotico/tugaphone/tree/1.6.1a2) (2026-11-05)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.1a1...1.6.1a2)
@@ -377,7 +385,6 @@
 **Merged pull requests:**
 
 - build: raise orthography2ipa floor to 7.44.0a4 [\#98](https://github.com/TigreGotico/tugaphone/pull/98) ([JarbasAl](https://github.com/JarbasAl))
-- Update actions/setup-python action to v7 [\#93](https://github.com/TigreGotico/tugaphone/pull/93) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [1.2.1a1](https://github.com/TigreGotico/tugaphone/tree/1.2.1a1) (2026-08-02)
 
