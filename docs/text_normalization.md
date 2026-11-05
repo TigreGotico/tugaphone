@@ -112,7 +112,9 @@ sentence's end is more often the plain abbreviation than a title. `D.` is
 the abbreviation of both "Dom" and "Dona" (Priberam): it reads "Dona" before
 a feminine given name and "Dom" before any other name, so "D. Maria" is
 "Dona Maria" and "D. Sebastião" is "Dom Sebastião". A name of both genders,
-or one that is not in the given-name list, reads "Dom".
+or one that is not in the given-name list, reads "Dom". A lowercase
+reference marker is capitalised at the start of a sentence or a reference and
+expands the same way: `Cap. 3` is "Capítulo 3" and `Art. 5` is "Artigo 5".
 
 Forms with a superscript ending match no ordinary word, so they expand
 unconditionally: `Sr.ª`, `Sr.as`, `Dr.ª`, `Eng.ª`, `Prof.ª`, `n.os`/`N.os`

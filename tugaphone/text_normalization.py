@@ -229,6 +229,13 @@ _UNCONDITIONAL_ABBREVIATIONS.update({
     "Eng.": "Engenheiro",
     "Prof.": "Professor",
 })
+# A lowercase abbreviation is capitalised at the start of a sentence or a
+# reference ("Cap. XII", "Art. 5.º") and stands for the same word.
+_UNCONDITIONAL_ABBREVIATIONS.update({
+    key.capitalize(): value.capitalize()
+    for key, value in list(_UNCONDITIONAL_ABBREVIATIONS.items())
+    if key[0].islower() and key.capitalize() not in _UNCONDITIONAL_ABBREVIATIONS
+})
 _HONORIFIC_ABBREVIATIONS = {
     "D.": "Dom",
 }
@@ -251,6 +258,14 @@ _EXCELENCIA_PLURAL = {"Ex.as": True, "Exas.": True, "Ex.ª": False, "Exa.": Fals
 _ABBREVIATION_TRAIL = ",;:!?)\"”"
 
 _LEAD_PUNCT = "(“\"'¿¡"
+
+
+def is_abbreviation(token: str) -> bool:
+    """Whether *token*, without the punctuation after its own period, is an
+    abbreviation :func:`expand_abbreviations` reads ("Cap.", "Dr.,", "D.")."""
+    core = token.rstrip(_ABBREVIATION_TRAIL)
+    return (core in _UNCONDITIONAL_ABBREVIATIONS or core in _HONORIFIC_ABBREVIATIONS
+            or core in _POSSESSIVES)
 
 
 def _is_capitalised(word: str) -> bool:

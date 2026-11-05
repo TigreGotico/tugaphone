@@ -126,6 +126,11 @@ extra guards keep the default honest:
   so the unaccented spellings speakers actually type (`mae`, `nao`, `voce`)
   reach the accented entry.
 * an empty or all-punctuation token is Portuguese by default.
+* an abbreviation the normalizer reads (`Cap.`, `Dr.`, `Av.`, `D.`) is
+  Portuguese in every contact mode. Routing splits the text into words before
+  the normalizer runs, so a routed abbreviation would reach the contact lattice
+  unexpanded, and a Roman numeral after it would lose its noun: `Cap. XII` reads
+  "capítulo doze".
 
 A `default_side` tie-break routes a genuinely ambiguous embed (two foreign models
 within a margin of each other) to the dialect's expected contact language.

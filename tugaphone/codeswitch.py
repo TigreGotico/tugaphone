@@ -87,6 +87,7 @@ from pathlib import Path
 from typing import Dict, FrozenSet, List, Optional, Tuple
 
 from tugaphone.langdetect import is_keep_word
+from tugaphone.text_normalization import is_abbreviation
 
 # ---------------------------------------------------------------------------
 # Detection (orthographic fallback — used only when the Markov detector,
@@ -365,10 +366,14 @@ def split_runs(text: str, contact: str,
     ``contact == "auto"`` each token is classified individually; for a forced
     ``"es"`` / ``"fr"`` / ``"en"`` every detected contact token routes through
     that language. ``contact == "none"`` marks every token as Portuguese.
+
+    An abbreviation the Portuguese normalizer reads ("Cap.", "Dr.", "Av.")
+    stays Portuguese, so it is expanded and the words next to it keep it as
+    context ("Cap. XII" reads "capítulo doze").
     """
     runs: List[Tuple[Optional[str], str]] = []
     for token in text.split():
-        if contact == "none":
+        if contact == "none" or is_abbreviation(token):
             runs.append((None, token))
         elif contact == "auto":
             runs.append((_classify(token, default_side), token))
