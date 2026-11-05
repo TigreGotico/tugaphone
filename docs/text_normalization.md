@@ -105,25 +105,34 @@ wherever they appear, with no regard to what follows: section/reference
 markers (`vs.`, `pág.`/`págs.`, `tel.`, `art.`, `fig.`, `cap.`, `séc.`) and
 place-name abbreviations (`Av.`, `R.`, `Lx.`, `n.º`/`nº`, `N.º`/`Nº`) that
 stand for the same word whether followed by a capitalised name, a lowercase
-word, or the end of a sentence. Personal honorifics (`D.`, `Sr.`, `Sra.`,
-`Dr.`, `Dra.`, `Eng.`, `Prof.`) expand only when followed by a capitalised
-word — the name they introduce — since a standalone "Dr." or "Sr." at a
-sentence's end is more often the plain abbreviation than a title. `D.` is
-the abbreviation of both "Dom" and "Dona" (Priberam): it reads "Dona" before
-a feminine given name and "Dom" before any other name, so "D. Maria" is
-"Dona Maria" and "D. Sebastião" is "Dom Sebastião". A name of both genders,
-or one that is not in the given-name list, reads "Dom".
+word, or the end of a sentence. The personal titles (`Sr.`, `Sra.`, `Srs.`,
+`Sras.`, `Dr.`, `Dra.`, `Eng.`, `Prof.`) also expand wherever they appear:
+"os Srs. deputados" and "falei com o Dr." read the title. `D.` expands only
+when a capitalised word follows, the name it introduces, and not after a
+noun that labels a letter ("a vitamina D."). It is the abbreviation of both
+"Dom" and "Dona" (Priberam): it reads "Dona" before a feminine given name and
+"Dom" before any other name, so "D. Maria" is "Dona Maria" and "D. Sebastião"
+is "Dom Sebastião". A name of both genders, or one that is not in the
+given-name list, reads "Dom".
+
+A reference marker (`cap.`, `art.`, `fig.`, `pág.`, `págs.`, `séc.`, `tel.`)
+is capitalised at the start of a sentence or a reference. Capitalised, it
+expands only before its number, in digits or Roman numerals: `Cap. 3` is
+"Capítulo 3" and `Art. 5.º` is "Artigo 5.º". Before a name, `Cap.` is also
+the military rank and `Art.` is a name, so "O Cap. Salgueiro Maia" stays as
+written.
 
 Forms with a superscript ending match no ordinary word, so they expand
 unconditionally: `Sr.ª`, `Sr.as`, `Dr.ª`, `Eng.ª`, `Prof.ª`, `n.os`/`N.os`
 ("números"), `Ex.mo`/`Ex.ma` and their plurals, and the "Excelência" forms
 `Ex.ª`, `Ex.as`, `Exa.`, `Exas.`. Before an "Excelência" form, `V.` reads
 "Vossa", `VV.` or `Vv.` reads "Vossas" and `S.` reads "Sua"; alone, `V.` and
-`S.` are left for the other rules. The plurals `Srs.` and `Sras.` follow the
-personal-honorific rule. The expansions follow the *Vocabulário Ortográfico*
+`S.` are left for the other rules. The expansions follow the *Vocabulário Ortográfico*
 of the Academia das Ciências de Lisboa and the vocabularies quoted by
-Ciberdúvidas (answers 33650 and 15826). A comma, colon or similar mark after
-the abbreviation's own period stays in place.
+Ciberdúvidas (answers 33650 and 15826). An opening bracket or quotation mark
+before the abbreviation stays in place, and so does a comma, colon, closing
+bracket or similar mark after its own period: "(art. 5.º)" is "(artigo
+5.º)".
 
 ```python
 from tugaphone.text_normalization import expand_abbreviations
@@ -156,8 +165,10 @@ lowercase after a common noun such as "século". The cardinals follow `lang`
 
 An ordinal agrees in gender with its name or noun: "Isabel II" is "Isabel
 Segunda", "D. Maria I" is "Dona Maria Primeira", "a parte V" is "a parte
-quinta". A cardinal above ten is a label and stays masculine. A name of both
-genders, or one that is not in the given-name list, reads as masculine.
+quinta". After a word that is not a given name, the ordinal takes the gender
+of that noun in tugalex (`TugaLexicon.get_noun_gender`): "a figura II" is "a
+figura segunda". A cardinal above ten is a label and stays masculine. A name
+of both genders, or a word that tugalex does not know, reads as masculine.
 
 These rules decide when a capital letter is a numeral:
 
@@ -181,7 +192,7 @@ words such as "vi", "li" and "mix" are never numerals.
 The rules take a given name and its gender from tugalex
 (`TugaLexicon.get_given_name_gender`). A name before a Roman numeral reads the
 numeral as regnal, and a feminine name after `D.` reads `Dona`. A name borne by
-both genders, or a word that is not a name, reads as masculine.
+both genders reads as masculine.
 
 ```python
 from tugaphone.text_normalization import expand_regnal_numerals
