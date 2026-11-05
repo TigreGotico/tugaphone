@@ -58,20 +58,11 @@ _ALIASES: Dict[str, str] = {
 }
 
 
-#: Lects whose lexical tradition matches a ``tugalex`` region map. Only these
-#: get a curated-lexicon overlay; every other lect is produced purely by the
-#: orthography2ipa lattice (registering, say, the Lisbon lexicon for a Porto
-#: lect would overwrite the Porto spec's phonology with Lisbon forms).
-_LEXICON_REGION: Dict[str, str] = {
-    "pt-PT": "lbx",
-    "pt-PT-x-lisbon": "lbx",
-    "pt-BR": "rjx",
-    "pt-BR-x-rj": "rjx",
-    "pt-BR-x-sp": "spx",
-    "pt-AO": "lda",
-    "pt-MZ": "mpx",
-    "pt-TL": "dli",
-}
+#: Lects that take a packaged orthography2ipa lexicon. ``o2i-lexicons`` ships a
+#: ``pt-PT`` residual lexicon: the words the ``pt-PT`` rules get wrong. It is
+#: not enabled for a sub-lect, because it would overwrite that spec's phonology
+#: with the ``pt-PT`` forms. Every other lect runs on the rules alone.
+PACKAGED_LEXICON_LECTS = frozenset({"pt-PT"})
 
 
 def normalize_dialect_code(lang: str) -> str:
@@ -131,11 +122,6 @@ def _registered(code: str) -> Optional[str]:
     if resolves_exactly(code) and (lect := resolve(code)) in _CANONICAL_SET:
         return lect
     return None
-
-
-def lexicon_region(lect: str) -> Optional[str]:
-    """The ``tugalex`` region whose lexicon overlays ``lect``, or ``None``."""
-    return _LEXICON_REGION.get(lect)
 
 
 def list_dialects() -> List[str]:

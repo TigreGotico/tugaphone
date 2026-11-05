@@ -119,7 +119,7 @@ are re-exported from the package root.
 |--------|------|
 | `resolve_lect(lang="pt-PT")` | Resolve any BCP-47 code (case-insensitive, alias-aware) to the orthography2ipa lect code that answers for it, unresolved codes fall back to the parent tag, then `pt-PT`. |
 | `list_dialects()` | Sorted list of every reachable lect code (the Portuguese-family orthography2ipa specs). |
-| `lexicon_region(lect)` | The `tugalex` region whose lexicon overlays `lect`, or `None` for a pure-lattice lect. |
+| `PACKAGED_LEXICON_LECTS` | The lects that take a packaged orthography2ipa lexicon: `pt-PT`. |
 | `normalize_dialect_code(lang)` | BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). |
 | `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`, emits a `DeprecationWarning`. |
 

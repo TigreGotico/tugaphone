@@ -82,11 +82,11 @@ def test_respell_strictly_helps_a_betacism_lect():
 # ---------------------------------------------------------------------------
 def test_overlay_applies_ipa_stage_only_in_ipa_mode():
     overlay = AccentOverlay(transforms=[
-        Transform(kind="regex", pattern="ʀ", replacement="ɾ", stage="ipa"),
+        Transform(kind="regex", pattern="ʁ", replacement="ɾ", stage="ipa"),
         Transform(kind="regex", pattern="XXX", replacement="!", stage="text"),
     ])
     out = force_accent("o carro", "pt-PT", mode="ipa", overlay=overlay)
-    assert "ʀ" not in out           # ipa-stage transform fired
+    assert "ʁ" not in out           # ipa-stage transform fired
     assert "ɾ" in out
 
 
