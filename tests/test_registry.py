@@ -8,7 +8,8 @@ import pytest
 from orthography2ipa import resolve
 
 from tugaphone.registry import (normalize_dialect_code, resolve_lect,
-                                resolve_dialect, PACKAGED_LEXICON_LECTS, list_dialects,
+                                resolve_dialect, PACKAGED_LEXICON_LECTS, lexicon_region,
+                                list_dialects,
                                 get_dialect_inventory)
 
 
@@ -76,6 +77,13 @@ class TestPackagedLexiconLects:
     def test_only_pt_pt_takes_a_packaged_lexicon(self):
         # A sub-lect would take the pt-PT forms over its own spec's phonology.
         assert PACKAGED_LEXICON_LECTS == {"pt-PT"}
+
+    @pytest.mark.parametrize("lect", ["pt-PT", "pt-PT-x-lisbon", "pt-BR", "pt-TL"])
+    def test_lexicon_region_is_deprecated_and_names_no_region(self, lect):
+        from tugaphone.version import VERSION_MAJOR
+
+        with pytest.warns(DeprecationWarning, match=f"removed in tugaphone {VERSION_MAJOR + 1}.0.0"):
+            assert lexicon_region(lect) is None
 
 
 class TestListDialects:

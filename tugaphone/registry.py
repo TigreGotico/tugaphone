@@ -17,9 +17,12 @@ resolve to their orthography2ipa equivalents through :data:`_ALIASES`.
 """
 from __future__ import annotations
 
+import warnings
 from typing import Dict, List, Optional
 
 from orthography2ipa import available_codes, resolve, resolves_exactly
+
+from tugaphone.version import VERSION_MAJOR
 
 #: Portuguese-family lect codes orthography2ipa ships, the canonical dialects.
 #: The Galician-Portuguese key goes through ``resolve`` because orthography2ipa
@@ -63,6 +66,9 @@ _ALIASES: Dict[str, str] = {
 #: not enabled for a sub-lect, because it would overwrite that spec's phonology
 #: with the ``pt-PT`` forms. Every other lect runs on the rules alone.
 PACKAGED_LEXICON_LECTS = frozenset({"pt-PT"})
+
+#: The release that removes :func:`lexicon_region`.
+LEXICON_REGION_REMOVAL_VERSION = f"{VERSION_MAJOR + 1}.0.0"
 
 
 def normalize_dialect_code(lang: str) -> str:
@@ -121,6 +127,22 @@ def _registered(code: str) -> Optional[str]:
             return lect
     if resolves_exactly(code) and (lect := resolve(code)) in _CANONICAL_SET:
         return lect
+    return None
+
+
+def lexicon_region(lect: str) -> Optional[str]:
+    """Deprecated: the ``tugalex`` region whose lexicon overlays ``lect``.
+
+    No lect takes a ``tugalex`` region map, so the answer is ``None`` for every
+    lect. :data:`PACKAGED_LEXICON_LECTS` names the lects that take a lexicon.
+    """
+    warnings.warn(
+        "lexicon_region() is deprecated and returns None: no lect takes a "
+        "tugalex region map. Use PACKAGED_LEXICON_LECTS. It will be removed in "
+        f"tugaphone {LEXICON_REGION_REMOVAL_VERSION}.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     return None
 
 
