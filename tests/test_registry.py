@@ -53,13 +53,17 @@ class TestResolution:
 
     @pytest.mark.parametrize("code", [
         "pt-PT-x-trasosmontes", "pt-BR-x-fluminense", "roa-x-galaicopt",
-        "ext-PT-x-barrancos",
     ])
     def test_a_key_orthography2ipa_renamed_still_names_its_dialect(self, code):
         # orthography2ipa keeps the old key of a renamed spec as an exact
         # alias, so the old key must not fall back to the parent variety.
         assert resolve_lect(code) == resolve(code)
         assert resolve(code) in list_dialects()
+
+    @pytest.mark.parametrize("code", ["ext-PT-x-barranco", "ext-PT-x-barrancos"])
+    def test_barranquenho_is_not_a_tugaphone_lect(self, code):
+        assert resolve(code) not in list_dialects()
+        assert resolve_lect(code) != resolve(code)
 
     def test_case_insensitive(self):
         assert resolve_lect("PT-BR") == "pt-BR"

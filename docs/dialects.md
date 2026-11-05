@@ -75,8 +75,10 @@ print(ph.phonemize_sentence("noite", "pt-BR-x-sp"))  # ˈnojti
 ### African, Asian and other lects
 
 `pt-CV` (Cape Verde), `pt-GW` (Guinea-Bissau), `pt-ST` (São Tomé and Príncipe),
-`pt-MO` (Macau), `pt-UY` (Uruguay), `ext-PT-x-barranco` (Barranquenho), and
-`roa-x-galaico-pt` (Galician-Portuguese).
+`pt-MO` (Macau), `pt-UY` (Uruguay), and `roa-x-galaico-pt` (Galician-Portuguese).
+
+Barranquenho is not a tugaphone lect. It has its own orthography, and
+`g2p_barranquenho` reads it.
 
 ## Legacy aliases
 
@@ -98,7 +100,6 @@ keeps as an alias.
 | `pt-BR-x-sao-paulo` | `pt-BR-x-sp` |
 | `pt-BR-x-rio-janeiro`, `pt-BR-x-rio` | `pt-BR-x-rj` |
 | `pt-BR-x-fluminense` | `pt-BR-x-fluminen` |
-| `ext-PT-x-barrancos` | `ext-PT-x-barranco` |
 | `roa-x-galaicopt` | `roa-x-galaico-pt` |
 
 ```python
