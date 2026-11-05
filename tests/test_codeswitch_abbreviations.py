@@ -44,6 +44,8 @@ def _route(text, contact, index):
     ("ver (Cap. XII) e (art. 5.º)", "ver (capítulo doze) e (artigo quinto)"),
     ("«Cap. XII»", "«capítulo doze»"),
     ("li o Cap. X.", "li o capítulo décimo."),
+    ("No Cap. I do livro", "No capítulo primeiro do livro"),
+    ("li o cap. I.", "li o capítulo primeiro."),
     ("de D. Maria I no baú", "de Dona Maria Primeira no baú"),
     ("S. Ex.ª o Presidente", "Sua Excelência o Presidente"),
 ])
@@ -83,6 +85,18 @@ def test_abbreviation_stays_portuguese(classifier, contact, text, index):
     # a contact word that ends in a period
     ("fiz o download.", 2),
     ("Gosto de jazz.", 2),
+    # a single I, V or X after an English word with a sentence period is the
+    # pronoun or a letter, not the marker's number
+    ("I wore a cap. I liked it.", 3),
+    ("I wore a cap. I liked it.", 4),
+    ("I love street art. I paint every day.", 3),
+    ("I love street art. I paint every day.", 4),
+    ("I love pop art. I collect it.", 3),
+    ("I love pop art. I collect it.", 4),
+    ("street art. V for Vendetta", 1),
+    ("street art. V for Vendetta", 2),
+    ("I love art. X marks the spot.", 2),
+    ("I love art. X marks the spot.", 3),
 ])
 def test_router_decides(classifier, contact, text, index):
     token = text.split()[index]
@@ -123,3 +137,16 @@ def test_period_final_contact_word_routes(classifier, contact):
 ])
 def test_capitalised_abbreviation_expands(text, expected):
     assert normalize_orthography(text) == expected
+
+
+@pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
+@pytest.mark.parametrize("contact", ["en", "auto"])
+@pytest.mark.parametrize("sentence,marker,expansion", [
+    ("I wore a cap. I liked it.", "cap.", "capítulo"),
+    ("I love street art. I paint every day.", "art.", "artigo"),
+    ("I love pop art. I collect it.", "art.", "artigo"),
+])
+def test_english_marker_before_pronoun_reads_english(ph, lect, contact, sentence, marker, expansion):
+    words = ph.phonemize_sentence(sentence, lect, contact=contact).split()
+    assert transcribe_contact(marker, "en") in words
+    assert ph.phonemize_sentence(expansion, lect, contact="none") not in words

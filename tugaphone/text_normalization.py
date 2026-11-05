@@ -22,6 +22,7 @@ from __future__ import annotations
 import functools
 import json
 import re
+from collections.abc import Callable
 from pathlib import Path
 
 from tugalex import TugaLexicon
@@ -302,16 +303,36 @@ def _expansion(words: list[str], i: int) -> str | None:
     return None
 
 
-def _is_portuguese_abbreviation(words: list[str], i: int) -> bool:
+def _is_marker_number(words: list[str], j: int, is_foreign: Callable[[str], bool]) -> bool:
+    """Whether ``words[j]`` is the number of the reference marker before it.
+
+    A single I, V or X is also the English pronoun or a letter ("I wore a
+    cap. I liked it.", "street art. V for Vendetta"), so it counts only when
+    neither the word before the marker nor the word after the numeral is
+    foreign. Punctuation after the numeral ends its phrase ("li o cap. I.")."""
+    if not _is_number(words[j]):
+        return False
+    _, core, trail = _split_edges(words[j])
+    if core not in ("I", "V", "X"):
+        return True
+    neighbours = [words[j - 2]] if j >= 2 else []
+    if not trail and j + 1 < len(words):
+        neighbours.append(words[j + 1])
+    return not any(is_foreign(w) for w in neighbours)
+
+
+def _is_portuguese_abbreviation(words: list[str], i: int,
+                                is_foreign: Callable[[str], bool]) -> bool:
     core = _abbreviation_edges(words[i])[1]
     if core == "R." or _expansion(words, i) is None:
         return False
     if core.lower() in _REFERENCE_MARKERS:
-        return i + 1 < len(words) and _is_number(words[i + 1])
+        return i + 1 < len(words) and _is_marker_number(words, i + 1, is_foreign)
     return True
 
 
-def stays_portuguese(words: list[str], i: int) -> bool:
+def stays_portuguese(words: list[str], i: int,
+                     is_foreign: Callable[[str], bool] = lambda word: False) -> bool:
     """Whether code-switch routing must keep ``words[i]`` Portuguese because
     only Portuguese reads it in its context.
 
@@ -319,11 +340,14 @@ def stays_portuguese(words: list[str], i: int) -> bool:
     two limits. A reference marker counts only before its number, because
     "art." and "cap." are also English words at a sentence end ("street
     art."), and its number then stays with it ("Cap. X"). "R." never counts,
-    because it is also an initial ("George R. R. Martin")."""
-    if _is_portuguese_abbreviation(words, i):
+    because it is also an initial ("George R. R. Martin"). ``is_foreign``
+    is the router's decision for a single word; it decides whether a single
+    I, V or X after a marker is its number."""
+    if _is_portuguese_abbreviation(words, i, is_foreign):
         return True
     previous = _abbreviation_edges(words[i - 1])[1].lower() if i > 0 else None
-    return previous in _REFERENCE_MARKERS and _is_portuguese_abbreviation(words, i - 1)
+    return (previous in _REFERENCE_MARKERS
+            and _is_portuguese_abbreviation(words, i - 1, is_foreign))
 
 
 def expand_abbreviations(text: str) -> str:

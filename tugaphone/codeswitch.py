@@ -373,13 +373,16 @@ def split_runs(text: str, contact: str,
     the words next to it keep it as context ("Cap. XII" reads "capítulo
     doze").
     """
-    runs: List[Tuple[Optional[str], str]] = []
+    def route(token: str) -> Optional[str]:
+        if contact == "auto":
+            return _classify(token, default_side)
+        return contact if _is_contact(token) else None
+
+    def is_foreign(token: str) -> bool:
+        return route(token) is not None
+
+    if contact == "none":
+        return [(None, token) for token in text.split()]
     tokens = text.split()
-    for i, token in enumerate(tokens):
-        if contact == "none" or stays_portuguese(tokens, i):
-            runs.append((None, token))
-        elif contact == "auto":
-            runs.append((_classify(token, default_side), token))
-        else:
-            runs.append(((contact if _is_contact(token) else None), token))
-    return runs
+    return [(None if stays_portuguese(tokens, i, is_foreign) else route(token), token)
+            for i, token in enumerate(tokens)]
