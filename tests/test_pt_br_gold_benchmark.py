@@ -52,16 +52,52 @@ def test_load_michaelis_keeps_one_word_headwords_with_a_reading(tmp_path):
     assert bench.load_michaelis(path) == {"ética": ["ˈɛtikə"]}
 
 
-@pytest.mark.parametrize("ipa, from_end, vowel", [
-    ("kaˈdejɾəs", 1, "e"),
-    ("ˈpɛ", 0, "ɛ"),
-    ("ˈlɐ̃padɐ", 2, "ɐ"),
-    ("fleksjoˈnaɾ", 0, "a"),
-    ("mesa", None, None),
+@pytest.mark.parametrize("ipa, vowel", [
+    ("kaˈdejɾəs", "e"),
+    ("ˈpɛ", "ɛ"),
+    ("ˈlɐ̃padɐ", "ɐ"),
+    ("fleksjoˈnaɾ", "a"),
+    ("mesa", None),
 ])
-def test_stress_position_and_vowel(ipa, from_end, vowel):
-    assert bench.stress_from_end(ipa) == from_end
+def test_stressed_vowel(ipa, vowel):
     assert bench.stressed_vowel(ipa) == vowel
+
+
+@pytest.mark.parametrize("left, right", [
+    ("ˈvakwu", "ˈvakuu"),            # vácuo: a post-tonic glide against a hiatus
+    ("ˈɔlju", "ˈɔleu"),              # óleo
+    ("siˈẽsjə", "siˈẽsiɐ"),          # ciência
+    ("aˈdɛptu", "aˈdepitu"),         # adepto: the epenthetic [i] after the stress
+    ("ˈpaktu", "ˈpakitu"),           # pacto
+    ("eˈʒipsju", "eˈʒipisiu"),       # egípcio: epenthesis and a hiatus together
+    ("faˈlaɾ", "faˈla"),             # falar: a dropped infinitive ⟨r⟩
+    ("ad͡ʒivoˈɡadu", "advoˈɡadu"),    # advogado: the epenthesis before the stress
+    ("ˈtaksi", "ˈtaʃi"),             # táxi: the value of ⟨x⟩
+    ("ˈvou", "ˈvoo"),                # a repeated vowel leaves a tie
+    ("ˈɛlɐ", "ˈelɐ"),                # a mid-vowel difference is no stress difference
+])
+def test_notation_is_no_stress_difference(left, right):
+    assert bench.same_stress(left, right)
+    assert bench.same_stress(right, left)
+
+
+@pytest.mark.parametrize("left, right", [
+    ("saˈidɐ", "ˈsajdɐ"),            # saída
+    ("paˈpa", "ˈpapa"),
+    ("abadiˈa", "abaˈd͡ʒiɐ"),         # abadia: Michaelis against the rules
+    ("owˈzadiə", "owzaˈd͡ʒiɐ"),       # ousadia
+    ("iɾakũˈdu", "iɾaˈkũdu"),        # iracundo
+    ("aˈlastɾaɾ", "alasˈtɾa"),       # alastrar
+    ("baˈu", "ˈbaw"),                # baú against a falling diphthong
+    ("kaˈfɛ", "ˈkafe"),
+])
+def test_a_true_stress_miss_stays_a_miss(left, right):
+    assert not bench.same_stress(left, right)
+    assert not bench.same_stress(right, left)
+
+
+def test_a_reading_with_no_stress_mark_never_agrees():
+    assert not bench.same_stress("mesa", "ˈmezɐ")
 
 
 @pytest.mark.parametrize("form, coda", [
@@ -81,7 +117,17 @@ def test_stress_quality_counts_a_word_once_and_mid_vowels_only():
     }
     out = {"pele": "ˈpeli", "gato": "ˈɡatu", "seco": "ˈseku", "café": "ˈkafe"}
     assert bench.score_stress_quality(golds, out.get) == {
-        "stress": 3 / 4, "stress_n": 4, "mid": 1 / 3, "mid_n": 3}
+        "words": 4, "source_unmarked": 0, "rules_unmarked": 0, "stress": 3 / 4, "stress_n": 4,
+        "stress_misses": 1, "mid": 1 / 2, "mid_n": 2, "misses": [("café", "ˈkafe", "kaˈfɛ")]}
+
+
+def test_stress_counts_keep_the_input_and_the_unmarked_words():
+    golds = {"mesa": ["meza"], "de": ["ˈd͡ʒi"], "gato": ["ˈɡatu"], "pacto": ["ˈpaktu"]}
+    out = {"mesa": "ˈmezɐ", "de": "d͡ʒi", "gato": "ɡaˈtu", "pacto": "ˈpakitu"}
+    scored = bench.score_stress_quality(golds, out.get)
+    assert (scored["words"], scored["source_unmarked"], scored["rules_unmarked"],
+            scored["stress_n"], scored["stress_misses"]) == (4, 1, 1, 2, 1)
+    assert scored["stress"] == 1 / 2
 
 
 def test_per_folds_notation_only():
@@ -102,7 +148,8 @@ def test_compare_sources_reads_only_the_shared_words():
     left = {"pele": ["ˈpɛlɪ"], "gato": ["ˈɡatʊ"], "só": ["ˈsɔ"]}
     right = {"pele": ["ˈpelə"], "gato": ["ɡaˈtu"], "mar": ["ˈmaɾ"]}
     assert bench.compare_sources(left, right) == {
-        "stress": 1 / 2, "stress_n": 2, "mid": 0.0, "mid_n": 1}
+        "words": 2, "stress": 1 / 2, "stress_n": 2, "stress_misses": 1, "mid": 0.0, "mid_n": 1,
+        "misses": [("gato", "ˈɡatʊ", "ɡaˈtu")]}
 
 
 def test_alib_scores_the_coda_by_place(tmp_path):

@@ -19,7 +19,10 @@ The sources, and what each one scores:
   nothing else, so a ``pt-BR-x-sp`` row pays for the tap and the dropped
   infinitive ⟨r⟩ that the spec writes and the file does not.
 - Michaelis prints a broad notation with no [tʃ dʒ] and no regional coda. It
-  scores stress position and stressed e/o quality, and never PER.
+  scores stress position and stressed e/o quality, and never PER. Some of its
+  entries place the stress mark on the wrong vowel (chato [ʃa′tu]) or print the
+  reading of another word (erótico [eroz′ivu]), so a miss against it is a lead
+  to read, and no word rests on it alone.
 - The Aeiouadô published lexicon is machine-generated. Its row is a comparison
   on a fixed sample and is never a gold target.
 - ALiB scores only the coda /S/ of six words, one row per city, against the
@@ -40,7 +43,8 @@ from typing import Callable, Iterable, Optional
 
 TIERS = {
     "nilc": "human-revised by one research team, not independently verified",
-    "michaelis": "broad notation, editor-made, method unstated",
+    "michaelis": "broad notation, editor-made, method unstated, "
+                 "some stress marks misplaced and some readings of another word",
     "aeiouado": "machine-generated, comparison only, never a gold target",
     "alib": "expert-human, narrow",
 }
@@ -63,6 +67,9 @@ NOTATION_FOLD = {"ɪ": "i", "ʊ": "u", "ə": "ɐ", "x": "ʁ", "ɣ": "ʁ", "h": "
                  "ɦ": "ʁ", "χ": "ʁ", "ʌ": "ɐ", "y": "j"}
 
 VOWELS = frozenset("aɐeɛəɨioɔuʊɪ")
+VOCALIC = VOWELS | frozenset("jw")
+VOWEL_FOLD = {"ɐ": "a", "ə": "a", "ʌ": "a", "ɛ": "e", "ɔ": "o", "ɪ": "i", "ʊ": "u", "ɨ": "i"}
+TIE_BAR = "\u0361"
 MID_VOWELS = frozenset("eɛoɔ")
 
 #: The regional spec of a city, in lower case, where the ``location`` of the
@@ -158,16 +165,77 @@ def nuclei(ipa: str) -> list[tuple[str, bool]]:
     return out
 
 
-def stress_from_end(ipa: str) -> Optional[int]:
-    """How many nuclei follow the stressed one, or ``None`` with no stress mark."""
-    found = nuclei(ipa)
-    marks = [i for i, (_, stressed) in enumerate(found) if stressed]
-    return len(found) - 1 - marks[0] if marks else None
-
-
 def stressed_vowel(ipa: str) -> Optional[str]:
     """The letter of the stressed nucleus of *ipa*, or ``None``."""
     return next((vowel for vowel, stressed in nuclei(ipa) if stressed), None)
+
+
+def sounds(ipa: str) -> tuple[list[str], Optional[int]]:
+    """The sounds of *ipa*, and the index of its stressed vowel or ``None``.
+
+    Combining marks drop, so a nasal vowel is its oral letter and a nasal glide
+    its plain glide. A tie bar keeps an affricate as one sound. Vowel notations
+    and mid-vowel heights fold together, because a stress comparison asks where
+    the stress falls, not which vowel carries it.
+    """
+    out: list[str] = []
+    stressed, pending, tied = None, False, False
+    for ch in unicodedata.normalize("NFD", ipa):
+        if ch in "ˈ'":
+            pending = True
+        elif ch == TIE_BAR:
+            tied = True
+        elif not unicodedata.combining(ch) and ch != ".":
+            if tied:
+                out[-1] += ch
+                tied = False
+                continue
+            out.append(VOWEL_FOLD.get(ch, ch))
+            if pending and ch in VOWELS:
+                stressed, pending = len(out) - 1, False
+    return out, stressed
+
+
+def pair_cost(a: str, b: str) -> float:
+    """The cost of aligning sound *a* with sound *b*.
+
+    A vowel pairs freely with a vowel or a glide, and a consonant with a
+    consonant. A vowel against a consonant costs more than two gaps, so an
+    alignment never makes that pair.
+    """
+    if a == b:
+        return 0.0
+    if (a in VOCALIC) == (b in VOCALIC):
+        return 0.5
+    return 3.0
+
+
+def alignment_cost(a: list[str], b: list[str]) -> float:
+    """The cost of the cheapest alignment of *a* with *b*, one per gap."""
+    row = [float(j) for j in range(len(b) + 1)]
+    for i, x in enumerate(a, 1):
+        last, row[0] = row[0], float(i)
+        for j, y in enumerate(b, 1):
+            last, row[j] = row[j], min(row[j] + 1, row[j - 1] + 1, last + pair_cost(x, y))
+    return row[-1]
+
+
+def same_stress(left: str, right: str) -> bool:
+    """Whether two readings put the stress on the same vowel of the word.
+
+    Counting nuclei measures the notation: a glide against a hiatus after the
+    stress (vácuo [ˈvakwu], [ˈvakuu]), an epenthetic [i] (pacto [ˈpaktu],
+    [ˈpakitu]) and a dropped infinitive ⟨r⟩ all change the count and not the
+    stress. So the readings are aligned sound by sound, and the stress agrees
+    when a cheapest alignment pairs the two stressed vowels.
+    """
+    a, i = sounds(left)
+    b, j = sounds(right)
+    if i is None or j is None:
+        return False
+    through = (alignment_cost(a[:i], b[:j]) + pair_cost(a[i], b[j])
+               + alignment_cost(a[i + 1:], b[j + 1:]))
+    return through <= alignment_cost(a, b)
 
 
 def coda_s(form: str) -> Optional[str]:
@@ -186,22 +254,38 @@ def share(hits: int, total: int) -> float:
 def score_stress_quality(golds: dict[str, list[str]], hyp: Callable[[str], str]) -> dict:
     """Stress and stressed e/o agreement of the rules with *golds*.
 
-    A word counts when any of its readings agrees. Stressed e/o quality counts
-    only the words whose reading stresses a mid vowel.
+    A word counts when any of its readings agrees. Two kinds of word cannot
+    show a stress position, and each has its count: a word with no stress mark
+    in any reading (``source_unmarked``), and a clitic or a bare letter, which
+    the rules leave without a stress mark (``rules_unmarked``). So ``words`` is
+    ``stress_n`` plus those two. Stressed e/o quality counts the words where
+    the rules stress the vowel that a reading stresses, and that vowel is a mid
+    vowel. ``misses`` lists each stress miss as ``(word, rules, readings)``,
+    with spaces between readings.
     """
-    stress = stress_n = mid = mid_n = 0
+    stress = stress_n = mid = mid_n = source_unmarked = rules_unmarked = 0
+    misses = []
     for word, readings in golds.items():
         out = hyp(word)
-        marked = [r for r in readings if stress_from_end(r) is not None]
-        if marked:
+        marked = [r for r in readings if stressed_vowel(r) is not None]
+        if not marked:
+            source_unmarked += 1
+        elif stressed_vowel(out) is None:
+            rules_unmarked += 1
+        else:
             stress_n += 1
-            stress += any(stress_from_end(r) == stress_from_end(out) for r in marked)
-        mids = [r for r in marked if stressed_vowel(r) in MID_VOWELS]
-        if mids:
-            mid_n += 1
-            mid += any(stressed_vowel(r) == stressed_vowel(out) for r in mids)
-    return {"stress": share(stress, stress_n), "stress_n": stress_n,
-            "mid": share(mid, mid_n), "mid_n": mid_n}
+            agreeing = [r for r in marked if same_stress(r, out)]
+            stress += bool(agreeing)
+            if not agreeing:
+                misses.append((word, out, " ".join(marked)))
+            mids = [r for r in agreeing if stressed_vowel(r) in MID_VOWELS]
+            if mids:
+                mid_n += 1
+                mid += any(stressed_vowel(r) == stressed_vowel(out) for r in mids)
+    return {"words": len(golds), "source_unmarked": source_unmarked,
+            "rules_unmarked": rules_unmarked, "stress": share(stress, stress_n),
+            "stress_n": stress_n, "stress_misses": stress_n - stress,
+            "mid": share(mid, mid_n), "mid_n": mid_n, "misses": misses}
 
 
 def score_per(golds: dict[str, list[str]], hyp: Callable[[str], str], normalize: Callable,
@@ -220,19 +304,24 @@ def compare_sources(left: dict[str, list[str]], right: dict[str, list[str]]) -> 
     """Stress and stressed e/o agreement of two sources on the words they share."""
     shared = sorted(set(left) & set(right))
     stress = stress_n = mid = mid_n = 0
+    misses = []
     for word in shared:
         pairs = [(a, b) for a in left[word] for b in right[word]
-                 if stress_from_end(a) is not None and stress_from_end(b) is not None]
+                 if stressed_vowel(a) is not None and stressed_vowel(b) is not None]
         if pairs:
             stress_n += 1
-            stress += any(stress_from_end(a) == stress_from_end(b) for a, b in pairs)
-        mids = [(a, b) for a, b in pairs
-                if stressed_vowel(a) in MID_VOWELS and stressed_vowel(b) in MID_VOWELS]
-        if mids:
-            mid_n += 1
-            mid += any(stressed_vowel(a) == stressed_vowel(b) for a, b in mids)
-    return {"stress": share(stress, stress_n), "stress_n": stress_n,
-            "mid": share(mid, mid_n), "mid_n": mid_n}
+            agreeing = [(a, b) for a, b in pairs if same_stress(a, b)]
+            stress += bool(agreeing)
+            if not agreeing:
+                misses.append((word, " ".join(left[word]), " ".join(right[word])))
+            mids = [(a, b) for a, b in agreeing
+                    if stressed_vowel(a) in MID_VOWELS and stressed_vowel(b) in MID_VOWELS]
+            if mids:
+                mid_n += 1
+                mid += any(stressed_vowel(a) == stressed_vowel(b) for a, b in mids)
+    return {"words": len(shared), "stress": share(stress, stress_n), "stress_n": stress_n,
+            "stress_misses": stress_n - stress, "mid": share(mid, mid_n), "mid_n": mid_n,
+            "misses": misses}
 
 
 def load_alib(path: Path, place_column: str) -> dict[str, dict[str, list[str]]]:
@@ -289,6 +378,7 @@ def main(argv: Optional[list[str]] = None) -> dict:
     ap.add_argument("--lects", nargs="+", default=["pt-BR", "pt-BR-x-sp"])
     ap.add_argument("--aeiouado-sample", type=int, default=3000)
     ap.add_argument("--json", type=Path, help="write the report here")
+    ap.add_argument("--stress-misses", type=Path, help="write each stress miss here as TSV")
     args = ap.parse_args(argv)
 
     from tts_gold_benchmark import O2I
@@ -307,6 +397,18 @@ def main(argv: Optional[list[str]] = None) -> dict:
     michaelis = load_michaelis(args.michaelis) if args.michaelis else {}
     report: dict = {"tiers": TIERS, "lects": {}, "alib": []}
     rows = []
+    misses: list[tuple] = []
+
+    def stress_counts(source: str, lect: str, scored: dict) -> dict:
+        """*scored* without its miss list, which goes to ``misses``."""
+        found = scored.pop("misses")
+        misses.extend((source, lect, *miss) for miss in found)
+        print(f"{source} {lect}: {scored['words']} words in, {scored['stress_n']} compared, "
+              f"{scored.get('source_unmarked', 0)} unmarked in the source, "
+              f"{scored.get('rules_unmarked', 0)} unmarked by the rules, "
+              f"{scored['stress_misses']} stress misses")
+        return scored
+
     for lect in args.lects:
         by_lect = report["lects"].setdefault(lect, {})
 
@@ -315,13 +417,13 @@ def main(argv: Optional[list[str]] = None) -> dict:
 
         if nilc:
             per = score_per(nilc, rules, O2I.normalize, O2I.levenshtein)
-            sq = score_stress_quality(nilc, rules)
+            sq = stress_counts("NILC", lect, score_stress_quality(nilc, rules))
             by_lect["nilc"] = {**per, **sq}
             rows += [("NILC", TIERS["nilc"], lect, "PER, folded", per["per"], per["n"]),
                      ("NILC", TIERS["nilc"], lect, "stress", sq["stress"], sq["stress_n"]),
                      ("NILC", TIERS["nilc"], lect, "stressed e/o", sq["mid"], sq["mid_n"])]
         if michaelis:
-            sq = score_stress_quality(michaelis, rules)
+            sq = stress_counts("Michaelis", lect, score_stress_quality(michaelis, rules))
             by_lect["michaelis"] = sq
             rows += [("Michaelis", TIERS["michaelis"], lect, "stress", sq["stress"], sq["stress_n"]),
                      ("Michaelis", TIERS["michaelis"], lect, "stressed e/o", sq["mid"], sq["mid_n"])]
@@ -331,7 +433,7 @@ def main(argv: Optional[list[str]] = None) -> dict:
             by_lect["aeiouado"] = per
             rows.append(("Aeiouadô", TIERS["aeiouado"], lect, "PER, folded", per["per"], per["n"]))
     if nilc and michaelis:
-        both = compare_sources(nilc, michaelis)
+        both = stress_counts("NILC=Mich.", "", compare_sources(nilc, michaelis))
         report["nilc_vs_michaelis"] = both
         rows += [("NILC=Mich.", TIERS["michaelis"], "", "stress", both["stress"], both["stress_n"]),
                  ("NILC=Mich.", TIERS["michaelis"], "", "stressed e/o", both["mid"], both["mid_n"])]
@@ -352,6 +454,9 @@ def main(argv: Optional[list[str]] = None) -> dict:
             print(f"{row['place']:<24}{row['lect']:<16}{row['palatal']:>8.3f}"
                   f"{row['match']:>8.3f}{row['n']:>6}")
     report["alib"] = alib
+    if args.stress_misses:
+        args.stress_misses.write_text("source\tlect\tword\tfirst\tsecond\n" + "".join(
+            "\t".join(row) + "\n" for row in misses), encoding="utf-8")
     if args.json:
         args.json.write_text(json.dumps(report, ensure_ascii=False, indent=1) + "\n",
                              encoding="utf-8")
