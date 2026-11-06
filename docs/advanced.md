@@ -9,7 +9,7 @@ tugaphone phonemizes by driving the shared
 [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) candidate
 lattice. A dialect *is* an orthography2ipa lect spec:
 `phonemize_sentence(text, lang)` resolves `lang` to a lect code and runs
-`orthography2ipa.G2P(lect, normalizer=...).transcribe(text)`. The spec's grapheme table,
+`orthography2ipa.G2P(lect, pipeline=Pipeline(lexicon=..., expand=..., mark=...)).transcribe(text)`. The spec's grapheme table,
 `allophone_rules` and cross-word `sandhi_rules` produce the dialect's phonology, betacism, rising diphthongs, palatalization, `/u/` fronting, coda-sibilant
 voicing sandhi and the rest, with no string-transform pass after transcription.
 
@@ -20,8 +20,9 @@ orthography2ipa:
 1. **Normalization**, orthographic rewrites
    (`tugaphone.text_normalization.normalize_orthography`), number/ordinal
    verbalization (`tugaphone.number_utils.normalize_numbers`) and sense-based
-   homograph marking (`bifonia.add_extra_diacritics`) run as the engine's
-   `normalizer`, before the lattice sees the text.
+   homograph marking (`bifonia.add_extra_diacritics`) run before the lattice
+   sees the text. The rewrites and the numbers are the pipeline's `expand`, and
+   the homograph marks are its `mark`.
 2. **Lexicon**, for `pt-PT` and `pt-BR` only, the engine takes the residual
    lexicon of `o2i-lexicons` through its `orthography2ipa.Pipeline`, so a covered
    word folds into the same override path as a spec `word_exceptions` entry.
@@ -69,7 +70,7 @@ tugalex (`TugaLexicon.get_noun_gender`), then a preceding article (`a`, `as`,
 not know, the ending decides (`-a`, `-dade`, `-age`, `-agem` endings are
 feminine). [numbers.md](numbers.md#gender-inference) gives the full rule list. Pass
 `strict=False` to leave unparseable tokens in place instead of raising. Inside
-the pipeline this runs as the engine's `normalize` stage, so a bare digit in the
+the pipeline this runs in the engine's `expand` step, so a bare digit in the
 input sentence is verbalized before the lattice transcribes it.
 
 ## Integration with sibling libraries
@@ -89,7 +90,7 @@ usable on its own:
   does not use it.
 - [`bifonia`](https://github.com/TigreGotico/bifonia), meaning-based
   heterophone disambiguation, called via `add_extra_diacritics` in the
-  `normalize` stage.
+  pipeline's `mark` step.
 
 A TTS front-end typically wires `tugaphone` as the G2P stage: pass text and a
 target lect code, hand the returned IPA string to the acoustic model. A

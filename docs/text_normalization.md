@@ -1,6 +1,6 @@
 # Text normalization
 
-Written text contains conventions that the phoneme rules cannot read: unit symbols, number ranges, clock times, European thousands and decimal separators, honorific abbreviations, regnal Roman numerals and acronyms. `tugaphone.text_normalization` rewrites them into plain words or plain digit tokens so that [`normalize_numbers`](numbers.md) can read the result. It runs on the text before any lattice or phoneme work, in the engine's `normalize` stage, ahead of `normalize_numbers`. Number words follow standard European Portuguese ("vinte e cinco").
+Written text contains conventions that the phoneme rules cannot read: unit symbols, number ranges, clock times, European thousands and decimal separators, honorific abbreviations, regnal Roman numerals and acronyms. `tugaphone.text_normalization` rewrites them into plain words or plain digit tokens so that [`normalize_numbers`](numbers.md) can read the result. It runs on the text before any lattice or phoneme work, in the engine's `expand` step, ahead of `normalize_numbers`. Number words follow standard European Portuguese ("vinte e cinco").
 
 ```python
 from tugaphone.text_normalization import normalize_orthography
