@@ -11,8 +11,8 @@ where the vowel quality shifts depending on which sense is active:
 
 [bifonia](https://github.com/TigreGotico/bifonia) is a required dependency, so
 `TugaPhonemizer.phonemize_sentence` always calls
-`bifonia.add_extra_diacritics` on Portuguese input, in the engine's `normalize`
-stage, before the lattice transcribes it. bifonia
+`bifonia.add_extra_diacritics` on Portuguese input, in the pipeline's `mark`
+step, before the lattice transcribes it. bifonia
 performs context-sensitive sense disambiguation and inserts the open/closed
 vowel diacritic directly into the orthography, so the lattice produces the
 correct vowel quality without any special casing.

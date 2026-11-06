@@ -10,8 +10,8 @@ selecting a lect.
 
 `TugaPhonemizer().phonemize_sentence(text, lang)` resolves `lang` to an
 orthography2ipa lect code and drives
-`orthography2ipa.G2P(lect, normalizer=...).transcribe(text)`, with the
-lexicon for that lect enabled first. Every Portuguese-family lect ships
+`orthography2ipa.G2P(lect, pipeline=Pipeline(lexicon=..., expand=..., mark=...)).transcribe(text)`.
+The pipeline holds the lexicon of that lect. Every Portuguese-family lect ships
 an engine spec whose grapheme table, `allophone_rules` and cross-word
 `sandhi_rules` encode that variety's phonology. The dialect phenomena are
 produced by the lattice itself, not by a post-hoc string-transform pass:
@@ -41,9 +41,9 @@ ranges, clock times, separators, abbreviations, Roman numerals, acronyms),
 gender-aware number and ordinal expansion
 (`tugaphone.number_utils.normalize_numbers`) and sense-based
 heterophonic-homograph marking (`bifonia.add_extra_diacritics`, e.g. *sede*
-thirst `/ˈsedɨ/` vs seat `/ˈsɛdɨ/`) run in that order as the engine's
-`normalizer`, the orthography2ipa `normalize` stage, before the lattice sees the
-text. Numbers are verbalized before homograph marking, so their spelled-out
+thirst `/ˈsedɨ/` vs seat `/ˈsɛdɨ/`) run in that order before the lattice sees the
+text. The rewrites and the numbers are the `expand` field of the orthography2ipa
+`Pipeline`, and the homograph marks are its `mark` field. Numbers are verbalized before homograph marking, so their spelled-out
 words are available to it. All three are orthographic, pre-lattice
 transformations.
 
@@ -79,8 +79,8 @@ orthography2ipa, which reads the diphthongs and hiatus of the lect spec. The
 | Dialect phenomena (betacism, rising diphthongs, palatalization, `/u/` fronting, …) | orthography2ipa lect spec (`allophone_rules`) |
 | Cross-word sandhi (coda-sibilant voicing, …) | orthography2ipa lect spec (`sandhi_rules`) |
 | Stress placement | orthography2ipa lect spec (stress rules) |
-| Number / ordinal verbalization | tugaphone (`number_utils`, via the `normalize` stage) |
-| Sense-based homograph marking | tugaphone (`bifonia`, via the `normalize` stage) |
+| Number / ordinal verbalization | tugaphone (`number_utils`, via `Pipeline.expand`) |
+| Sense-based homograph marking | tugaphone (`bifonia`, via `Pipeline.mark`) |
 | `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, passed by tugaphone through `Pipeline` |
 | Syllabification | orthography2ipa (the bundled splitter) |
 

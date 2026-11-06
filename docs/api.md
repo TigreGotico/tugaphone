@@ -145,7 +145,7 @@ inferring gender and ordinality from the surrounding words. `pt-PT` uses the
 long scale (biliões), `pt-BR` the short scale (trilhões), and `scale="long"` or
 `scale="short"` overrides that choice. With `strict=False`, tokens that fail to
 format are left untouched instead of raising. This runs
-inside the engine's `normalize` stage before the lattice sees the text.
+inside the engine's `expand` step before the lattice sees the text.
 
 ```python
 from tugaphone.number_utils import normalize_numbers

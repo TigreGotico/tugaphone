@@ -279,8 +279,8 @@ o2i's own extension points, and relies on o2i for syllabification:
 | Concern | Owner |
 |---------|-------|
 | Base phonology, dialect phenomena, sandhi, stress | orthography2ipa lect spec |
-| Number / ordinal verbalization | tugaphone (`number_utils`, via the `normalize` stage) |
-| Sense-based homograph marking | tugaphone (`bifonia`, via the `normalize` stage) |
+| Number / ordinal verbalization | tugaphone (`number_utils`, via `Pipeline.expand`) |
+| Sense-based homograph marking | tugaphone (`bifonia`, via `Pipeline.mark`) |
 | `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, passed by tugaphone through `Pipeline` |
 | Syllabification | orthography2ipa (the bundled splitter) |
 
@@ -345,7 +345,7 @@ the orthographic fallback. `tests/test_examples.py` runs every script in
 |------|---------|
 | `tugaphone/lattice_core.py` | The phonemization pipeline on the orthography2ipa lattice |
 | `tugaphone/registry.py` | Lect codes, legacy aliases, the lects that take a packaged lexicon |
-| `tugaphone/text_normalization.py`, `tugaphone/number_utils.py` | The `normalize` stage |
+| `tugaphone/text_normalization.py`, `tugaphone/number_utils.py` | The `expand` step of the engine's `Pipeline` |
 | `tugaphone/codeswitch.py`, `tugaphone/langdetect.py` | Contact-language detection and nativization |
 | `tugaphone/accent.py`, `tugaphone/__main__.py` | Accent forcing and the command line |
 | `tugaphone/tokenizer.py`, `tugaphone/dialects.py` | The token-tree feature API and the rules-only baseline |
