@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.2a3](https://github.com/TigreGotico/tugaphone/tree/1.6.2a3) (2026-11-06)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.2a2...1.6.2a3)
+
+**Merged pull requests:**
+
+- docs: describe the engine through the orthography2ipa Pipeline fields [\#206](https://github.com/TigreGotico/tugaphone/pull/206) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.6.2a2](https://github.com/TigreGotico/tugaphone/tree/1.6.2a2) (2026-11-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.2a1...1.6.2a2)
@@ -397,10 +405,6 @@
 ## [1.2.1a1](https://github.com/TigreGotico/tugaphone/tree/1.2.1a1) (2026-08-02)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.0a2...1.2.1a1)
-
-**Merged pull requests:**
-
-- fix: expand Portuguese ordinals instead of failing on the ordinal indicator [\#96](https://github.com/TigreGotico/tugaphone/pull/96) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.2.0a2](https://github.com/TigreGotico/tugaphone/tree/1.2.0a2) (2026-07-30)
 
