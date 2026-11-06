@@ -1,28 +1,574 @@
 # Changelog
 
-## [0.2.0a2](https://github.com/TigreGotico/tugaphone/tree/0.2.0a2) (2026-02-06)
+## [1.6.2a3](https://github.com/TigreGotico/tugaphone/tree/1.6.2a3) (2026-11-06)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.0a1...0.2.0a2)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.2a2...1.6.2a3)
 
 **Merged pull requests:**
 
-- Configure Renovate [\#3](https://github.com/TigreGotico/tugaphone/pull/3) ([renovate[bot]](https://github.com/apps/renovate))
+- docs: describe the engine through the orthography2ipa Pipeline fields [\#206](https://github.com/TigreGotico/tugaphone/pull/206) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.6.2a2](https://github.com/TigreGotico/tugaphone/tree/1.6.2a2) (2026-11-06)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.2a1...1.6.2a2)
+
+**Merged pull requests:**
+
+- refactor: pass expansion and homograph marks through Pipeline fields [\#204](https://github.com/TigreGotico/tugaphone/pull/204) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.6.2a1](https://github.com/TigreGotico/tugaphone/tree/1.6.2a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.1a2...1.6.2a1)
+
+**Merged pull requests:**
+
+- fix: remove the historical lects and warn on a resolve\_lect fallback [\#201](https://github.com/TigreGotico/tugaphone/pull/201) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.6.1a2](https://github.com/TigreGotico/tugaphone/tree/1.6.1a2) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.1a1...1.6.1a2)
+
+**Merged pull requests:**
+
+- refactor: build the engine with an orthography2ipa Pipeline [\#200](https://github.com/TigreGotico/tugaphone/pull/200) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.6.1a1](https://github.com/TigreGotico/tugaphone/tree/1.6.1a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.0a1...1.6.1a1)
+
+**Merged pull requests:**
+
+- fix: remove Barranquenho from the tugaphone lects [\#198](https://github.com/TigreGotico/tugaphone/pull/198) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.6.0a1](https://github.com/TigreGotico/tugaphone/tree/1.6.0a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.5.2a2...1.6.0a1)
+
+**Merged pull requests:**
+
+- feat: pt-BR takes the o2i-lexicons residual lexicon [\#195](https://github.com/TigreGotico/tugaphone/pull/195) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.5.2a2](https://github.com/TigreGotico/tugaphone/tree/1.5.2a2) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.5.2a1...1.5.2a2)
+
+**Merged pull requests:**
+
+- test: score the pipeline against the Brazilian word sources [\#191](https://github.com/TigreGotico/tugaphone/pull/191) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.5.2a1](https://github.com/TigreGotico/tugaphone/tree/1.5.2a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.5.1a1...1.5.2a1)
+
+**Merged pull requests:**
+
+- fix: read a number that has a bracket or guillemet glued to it [\#189](https://github.com/TigreGotico/tugaphone/pull/189) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.5.1a1](https://github.com/TigreGotico/tugaphone/tree/1.5.1a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.5.0a1...1.5.1a1)
+
+**Merged pull requests:**
+
+- fix: raise the orthography2ipa floor for the muito reading [\#190](https://github.com/TigreGotico/tugaphone/pull/190) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.5.0a1](https://github.com/TigreGotico/tugaphone/tree/1.5.0a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.21a1...1.5.0a1)
+
+**Merged pull requests:**
+
+- feat: take the pt-PT lexicon from o2i-lexicons, not the tugalex region maps [\#187](https://github.com/TigreGotico/tugaphone/pull/187) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.21a1](https://github.com/TigreGotico/tugaphone/tree/1.4.21a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.20a1...1.4.21a1)
+
+**Merged pull requests:**
+
+- fix: look two words each side before reading I, V or X as a marker's number [\#185](https://github.com/TigreGotico/tugaphone/pull/185) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.20a1](https://github.com/TigreGotico/tugaphone/tree/1.4.20a1) (2026-11-05)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.19a2...1.4.20a1)
+
+**Merged pull requests:**
+
+- fix: keep Portuguese abbreviations on the Portuguese path under code-switching [\#183](https://github.com/TigreGotico/tugaphone/pull/183) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.19a2](https://github.com/TigreGotico/tugaphone/tree/1.4.19a2) (2026-11-04)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.19a1...1.4.19a2)
+
+**Merged pull requests:**
+
+- docs: correct claims that no longer match dev [\#180](https://github.com/TigreGotico/tugaphone/pull/180) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.19a1](https://github.com/TigreGotico/tugaphone/tree/1.4.19a1) (2026-11-04)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.18a1...1.4.19a1)
+
+**Merged pull requests:**
+
+- fix: resolve dialect codes that orthography2ipa renamed [\#176](https://github.com/TigreGotico/tugaphone/pull/176) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.18a1](https://github.com/TigreGotico/tugaphone/tree/1.4.18a1) (2026-11-04)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.17a1...1.4.18a1)
+
+**Merged pull requests:**
+
+- fix: rewrite the lexicon cache when its stamp is not UTF-8 [\#174](https://github.com/TigreGotico/tugaphone/pull/174) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.17a1](https://github.com/TigreGotico/tugaphone/tree/1.4.17a1) (2026-11-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.16a2...1.4.17a1)
+
+**Merged pull requests:**
+
+- fix: pass the lect to bifonia homograph marking [\#170](https://github.com/TigreGotico/tugaphone/pull/170) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.16a2](https://github.com/TigreGotico/tugaphone/tree/1.4.16a2) (2026-11-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.16a1...1.4.16a2)
+
+**Merged pull requests:**
+
+- test: expect the close-mid -em nucleus in the Porto dialect output [\#171](https://github.com/TigreGotico/tugaphone/pull/171) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.16a1](https://github.com/TigreGotico/tugaphone/tree/1.4.16a1) (2026-10-30)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.15a1...1.4.16a1)
+
+**Merged pull requests:**
+
+- fix: require orthography2ipa 7.111.2a1 for paroxytone -ens [\#168](https://github.com/TigreGotico/tugaphone/pull/168) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.15a1](https://github.com/TigreGotico/tugaphone/tree/1.4.15a1) (2026-10-30)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.14a1...1.4.15a1)
+
+**Merged pull requests:**
+
+- fix: write no stress mark on an atonic function word [\#166](https://github.com/TigreGotico/tugaphone/pull/166) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.14a1](https://github.com/TigreGotico/tugaphone/tree/1.4.14a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.13a1...1.4.14a1)
+
+**Merged pull requests:**
+
+- fix: keep the full vowel of a stressed que/gue [\#162](https://github.com/TigreGotico/tugaphone/pull/162) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.13a1](https://github.com/TigreGotico/tugaphone/tree/1.4.13a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.12a1...1.4.13a1)
+
+**Merged pull requests:**
+
+- fix: read the pronounced u of qu/gu in inflected forms too [\#163](https://github.com/TigreGotico/tugaphone/pull/163) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.12a1](https://github.com/TigreGotico/tugaphone/tree/1.4.12a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.11a1...1.4.12a1)
+
+**Merged pull requests:**
+
+- fix: read the u of qu/gu as silent before e/i and as \[w\] before a/o [\#150](https://github.com/TigreGotico/tugaphone/pull/150) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.11a1](https://github.com/TigreGotico/tugaphone/tree/1.4.11a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.10a1...1.4.11a1)
+
+**Merged pull requests:**
+
+- fix: require orthography2ipa 7.111.1a1 for one primary per compound [\#159](https://github.com/TigreGotico/tugaphone/pull/159) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.10a1](https://github.com/TigreGotico/tugaphone/tree/1.4.10a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.9a1...1.4.10a1)
+
+**Merged pull requests:**
+
+- fix: read given-name genders from tugalex [\#157](https://github.com/TigreGotico/tugaphone/pull/157) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.9a1](https://github.com/TigreGotico/tugaphone/tree/1.4.9a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.8a1...1.4.9a1)
+
+**Merged pull requests:**
+
+- fix: pin stress on the accented vowel of a uí/oí hiatus [\#142](https://github.com/TigreGotico/tugaphone/pull/142) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.8a1](https://github.com/TigreGotico/tugaphone/tree/1.4.8a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.7a1...1.4.8a1)
+
+**Merged pull requests:**
+
+- fix: find orthography2ipa's benchmark module from a PyPI install [\#152](https://github.com/TigreGotico/tugaphone/pull/152) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.7a1](https://github.com/TigreGotico/tugaphone/tree/1.4.7a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.6a1...1.4.7a1)
+
+**Merged pull requests:**
+
+- fix: mark one primary stress per hyphenated compound [\#149](https://github.com/TigreGotico/tugaphone/pull/149) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.6a1](https://github.com/TigreGotico/tugaphone/tree/1.4.6a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.5a1...1.4.6a1)
+
+**Merged pull requests:**
+
+- fix: read a number's gender from a Portuguese noun-gender list [\#145](https://github.com/TigreGotico/tugaphone/pull/145) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.5a1](https://github.com/TigreGotico/tugaphone/tree/1.4.5a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.4a2...1.4.5a1)
+
+**Merged pull requests:**
+
+- fix: read Roman numerals by grammar and guard capitals, letter-digit codes [\#144](https://github.com/TigreGotico/tugaphone/pull/144) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.4a2](https://github.com/TigreGotico/tugaphone/tree/1.4.4a2) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.4a1...1.4.4a2)
+
+**Merged pull requests:**
+
+- test\(bench\): score stress accuracy next to PER per dialect [\#143](https://github.com/TigreGotico/tugaphone/pull/143) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.4a1](https://github.com/TigreGotico/tugaphone/tree/1.4.4a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.3a1...1.4.4a1)
+
+**Merged pull requests:**
+
+- fix: read feminine and plural honorifics and Excelência forms [\#141](https://github.com/TigreGotico/tugaphone/pull/141) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.3a1](https://github.com/TigreGotico/tugaphone/tree/1.4.3a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.2a3...1.4.3a1)
+
+**Merged pull requests:**
+
+- fix: read percent, unit symbols, euros and multiplication [\#140](https://github.com/TigreGotico/tugaphone/pull/140) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.2a3](https://github.com/TigreGotico/tugaphone/tree/1.4.2a3) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.2a2...1.4.2a3)
+
+## [1.4.2a2](https://github.com/TigreGotico/tugaphone/tree/1.4.2a2) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.2a1...1.4.2a2)
+
+**Merged pull requests:**
+
+- Update dependency python to 3.15 [\#132](https://github.com/TigreGotico/tugaphone/pull/132) ([renovate[bot]](https://github.com/apps/renovate))
+- Update actions/checkout action to v7 [\#128](https://github.com/TigreGotico/tugaphone/pull/128) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [1.4.2a1](https://github.com/TigreGotico/tugaphone/tree/1.4.2a1) (2026-10-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.1a2...1.4.2a1)
+
+**Merged pull requests:**
+
+- fix: read a numeral after a label head as invariable [\#136](https://github.com/TigreGotico/tugaphone/pull/136) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.4.1a2](https://github.com/TigreGotico/tugaphone/tree/1.4.1a2) (2026-09-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.1a1...1.4.1a2)
+
+**Merged pull requests:**
+
+- Update actions/setup-python action to v7 [\#129](https://github.com/TigreGotico/tugaphone/pull/129) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [1.4.1a1](https://github.com/TigreGotico/tugaphone/tree/1.4.1a1) (2026-09-07)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.0a1...1.4.1a1)
+
+**Merged pull requests:**
+
+- fix: honour the Portuguese keep-list on both code-switch classifiers [\#127](https://github.com/TigreGotico/tugaphone/pull/127) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.4.0a1](https://github.com/TigreGotico/tugaphone/tree/1.4.0a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.6a1...1.4.0a1)
+
+**Merged pull requests:**
+
+- feat: read common English loanwords with their English pronunciation [\#125](https://github.com/TigreGotico/tugaphone/pull/125) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.3.6a1](https://github.com/TigreGotico/tugaphone/tree/1.3.6a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.5a1...1.3.6a1)
+
+**Merged pull requests:**
+
+- fix: read numbers of any size through ovos-number-parser with correct long and short scales [\#122](https://github.com/TigreGotico/tugaphone/pull/122) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.3.5a1](https://github.com/TigreGotico/tugaphone/tree/1.3.5a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.4a2...1.3.5a1)
+
+**Merged pull requests:**
+
+- fix: spell numbers that carry trailing punctuation without detaching it [\#121](https://github.com/TigreGotico/tugaphone/pull/121) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.3.4a2](https://github.com/TigreGotico/tugaphone/tree/1.3.4a2) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.4a1...1.3.4a2)
+
+**Merged pull requests:**
+
+- docs: rewrite the text normalization overview as plain paragraphs [\#119](https://github.com/TigreGotico/tugaphone/pull/119) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.3.4a1](https://github.com/TigreGotico/tugaphone/tree/1.3.4a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.3a2...1.3.4a1)
+
+**Merged pull requests:**
+
+- test: lock hiatus before diminutive suffixes \(rainha, moinho\) as a guarded invariant [\#115](https://github.com/TigreGotico/tugaphone/pull/115) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.3.3a2](https://github.com/TigreGotico/tugaphone/tree/1.3.3a2) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.3a1...1.3.3a2)
+
+**Merged pull requests:**
+
+- docs: describe text normalisation and the lexicon cache [\#109](https://github.com/TigreGotico/tugaphone/pull/109) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.3.3a1](https://github.com/TigreGotico/tugaphone/tree/1.3.3a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.2a1...1.3.3a1)
+
+**Merged pull requests:**
+
+- fix: guard the number ceiling, expose the numeric scale and read scientific notation [\#112](https://github.com/TigreGotico/tugaphone/pull/112) ([JarbasAl](https://github.com/JarbasAl))
+- fix: detect vocalic hiatus and navigate chars across grapheme boundaries [\#111](https://github.com/TigreGotico/tugaphone/pull/111) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.3.2a1](https://github.com/TigreGotico/tugaphone/tree/1.3.2a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.1a1...1.3.2a1)
+
+**Merged pull requests:**
+
+- fix: restore lost minute/24:00/abbreviation reading fixes; credit tts\_eu\_pt [\#110](https://github.com/TigreGotico/tugaphone/pull/110) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.3.1a1](https://github.com/TigreGotico/tugaphone/tree/1.3.1a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.0a1...1.3.1a1)
+
+**Merged pull requests:**
+
+- fix: write the velar stop as IPA ɡ in every gold fixture [\#105](https://github.com/TigreGotico/tugaphone/pull/105) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.3.0a1](https://github.com/TigreGotico/tugaphone/tree/1.3.0a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.3a1...1.3.0a1)
+
+**Merged pull requests:**
+
+- feat: read ranges, clock times, abbreviations, regnal numerals and acronyms in Portuguese text [\#102](https://github.com/TigreGotico/tugaphone/pull/102) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.2.3a1](https://github.com/TigreGotico/tugaphone/tree/1.2.3a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.2a1...1.2.3a1)
+
+**Merged pull requests:**
+
+- fix: require tugalex 2.0.2a1 for IPA ɡ transcriptions [\#104](https://github.com/TigreGotico/tugaphone/pull/104) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.2.2a1](https://github.com/TigreGotico/tugaphone/tree/1.2.2a1) (2026-09-03)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.2a1)
+
+**Merged pull requests:**
+
+- fix: invalidate the materialised lexicon cache when tugalex changes [\#101](https://github.com/TigreGotico/tugaphone/pull/101) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a2...1.2.1a3)
+
+## [1.2.1a2](https://github.com/TigreGotico/tugaphone/tree/1.2.1a2) (2026-08-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a1...1.2.1a2)
+
+**Merged pull requests:**
+
+- build: raise orthography2ipa floor to 7.44.0a4 [\#98](https://github.com/TigreGotico/tugaphone/pull/98) ([JarbasAl](https://github.com/JarbasAl))
+
+## [1.2.1a1](https://github.com/TigreGotico/tugaphone/tree/1.2.1a1) (2026-08-02)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.0a2...1.2.1a1)
+
+## [1.2.0a2](https://github.com/TigreGotico/tugaphone/tree/1.2.0a2) (2026-07-30)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.0a1...1.2.0a2)
+
+## [1.2.0a1](https://github.com/TigreGotico/tugaphone/tree/1.2.0a1) (2026-07-16)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.1.0a1...1.2.0a1)
+
+## [1.1.0a1](https://github.com/TigreGotico/tugaphone/tree/1.1.0a1) (2026-07-16)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.0.0a2...1.1.0a1)
+
+## [1.0.0a2](https://github.com/TigreGotico/tugaphone/tree/1.0.0a2) (2026-07-16)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.0.0a1...1.0.0a2)
+
+## [1.0.0a1](https://github.com/TigreGotico/tugaphone/tree/1.0.0a1) (2026-07-16)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.2a3...1.0.0a1)
+
+## [0.9.2a3](https://github.com/TigreGotico/tugaphone/tree/0.9.2a3) (2026-07-16)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.2a2...0.9.2a3)
+
+## [0.9.2a2](https://github.com/TigreGotico/tugaphone/tree/0.9.2a2) (2026-07-14)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.2a1...0.9.2a2)
+
+## [0.9.2a1](https://github.com/TigreGotico/tugaphone/tree/0.9.2a1) (2026-07-14)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.1a1...0.9.2a1)
+
+## [0.9.1a1](https://github.com/TigreGotico/tugaphone/tree/0.9.1a1) (2026-07-14)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.9.0a1...0.9.1a1)
+
+## [0.9.0a1](https://github.com/TigreGotico/tugaphone/tree/0.9.0a1) (2026-07-14)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a3...0.9.0a1)
+
+## [0.8.1a3](https://github.com/TigreGotico/tugaphone/tree/0.8.1a3) (2026-07-14)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a2...0.8.1a3)
+
+## [0.8.1a2](https://github.com/TigreGotico/tugaphone/tree/0.8.1a2) (2026-07-14)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.1a1...0.8.1a2)
+
+## [0.8.1a1](https://github.com/TigreGotico/tugaphone/tree/0.8.1a1) (2026-07-13)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.8.0a1...0.8.1a1)
+
+## [0.8.0a1](https://github.com/TigreGotico/tugaphone/tree/0.8.0a1) (2026-07-13)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.7.0a2...0.8.0a1)
+
+## [0.7.0a2](https://github.com/TigreGotico/tugaphone/tree/0.7.0a2) (2026-07-13)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.7.0a1...0.7.0a2)
+
+## [0.7.0a1](https://github.com/TigreGotico/tugaphone/tree/0.7.0a1) (2026-07-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.2a2...0.7.0a1)
+
+## [0.6.2a2](https://github.com/TigreGotico/tugaphone/tree/0.6.2a2) (2026-07-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.2a1...0.6.2a2)
+
+## [0.6.2a1](https://github.com/TigreGotico/tugaphone/tree/0.6.2a1) (2026-07-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a4...0.6.2a1)
+
+## [0.6.1a4](https://github.com/TigreGotico/tugaphone/tree/0.6.1a4) (2026-07-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a3...0.6.1a4)
+
+## [0.6.1a3](https://github.com/TigreGotico/tugaphone/tree/0.6.1a3) (2026-07-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a2...0.6.1a3)
+
+## [0.6.1a2](https://github.com/TigreGotico/tugaphone/tree/0.6.1a2) (2026-07-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.1a1...0.6.1a2)
+
+## [0.6.1a1](https://github.com/TigreGotico/tugaphone/tree/0.6.1a1) (2026-06-20)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.6.0a1...0.6.1a1)
+
+## [0.6.0a1](https://github.com/TigreGotico/tugaphone/tree/0.6.0a1) (2026-06-13)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a3...0.6.0a1)
+
+## [0.5.1a3](https://github.com/TigreGotico/tugaphone/tree/0.5.1a3) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a2...0.5.1a3)
+
+## [0.5.1a2](https://github.com/TigreGotico/tugaphone/tree/0.5.1a2) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.1a1...0.5.1a2)
+
+## [0.5.1a1](https://github.com/TigreGotico/tugaphone/tree/0.5.1a1) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a2...0.5.1a1)
+
+## [0.5.0a2](https://github.com/TigreGotico/tugaphone/tree/0.5.0a2) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.5.0a1...0.5.0a2)
+
+## [0.5.0a1](https://github.com/TigreGotico/tugaphone/tree/0.5.0a1) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.4.0a2...0.5.0a1)
+
+## [0.4.0a2](https://github.com/TigreGotico/tugaphone/tree/0.4.0a2) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.4.0a1...0.4.0a2)
+
+## [0.4.0a1](https://github.com/TigreGotico/tugaphone/tree/0.4.0a1) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.3.1a1...0.4.0a1)
+
+## [0.3.1a1](https://github.com/TigreGotico/tugaphone/tree/0.3.1a1) (2026-06-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.3.0a1...0.3.1a1)
+
+## [0.3.0a1](https://github.com/TigreGotico/tugaphone/tree/0.3.0a1) (2026-06-11)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.2a2...0.3.0a1)
+
+## [0.2.2a2](https://github.com/TigreGotico/tugaphone/tree/0.2.2a2) (2026-05-29)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.2a1...0.2.2a2)
+
+## [0.2.2a1](https://github.com/TigreGotico/tugaphone/tree/0.2.2a1) (2026-02-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.1...0.2.2a1)
+
+## [0.2.1](https://github.com/TigreGotico/tugaphone/tree/0.2.1) (2026-02-06)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.0...0.2.1)
+
+## [0.2.0](https://github.com/TigreGotico/tugaphone/tree/0.2.0) (2026-02-06)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.0a2...0.2.0)
+
+## [0.2.0a2](https://github.com/TigreGotico/tugaphone/tree/0.2.0a2) (2026-02-06)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.2.0a1...0.2.0a2)
 
 ## [0.2.0a1](https://github.com/TigreGotico/tugaphone/tree/0.2.0a1) (2026-02-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.1.0a1...0.2.0a1)
 
-**Merged pull requests:**
-
-- feat: regional accent transformations [\#1](https://github.com/TigreGotico/tugaphone/pull/1) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [0.1.0a1](https://github.com/TigreGotico/tugaphone/tree/0.1.0a1) (2026-02-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.0.2...0.1.0a1)
 
-**Merged pull requests:**
+## [0.0.2](https://github.com/TigreGotico/tugaphone/tree/0.0.2) (2025-10-12)
 
-- feat: new phonemizer + postag backends [\#4](https://github.com/TigreGotico/tugaphone/pull/4) ([JarbasAl](https://github.com/JarbasAl))
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/0.0.2a1...0.0.2)
+
+## [0.0.2a1](https://github.com/TigreGotico/tugaphone/tree/0.0.2a1) (2025-10-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/f6c50d8226b24b4dad362d73a2d62629fc2fd5e4...0.0.2a1)
 
 
 

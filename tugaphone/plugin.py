@@ -1,0 +1,101 @@
+"""tugaphone as an engine object and an orthography2ipa syllabifier plugin.
+
+tugaphone *consumes* orthography2ipa — it drives the shared candidate lattice
+(the Portuguese lect specs, their stress and sandhi rules) and adds the stages
+orthography2ipa leaves to the caller: gender-aware number verbalization,
+sense-based homograph marking and the ``pt-PT`` residual lexicon (see
+:mod:`tugaphone.lattice_core`). Use the engine directly:
+
+    >>> from tugaphone.plugin import TugaphoneG2PPlugin
+    >>> TugaphoneG2PPlugin().transcribe("o gato dorme")
+
+Two classes live here:
+
+- :class:`TugaphoneG2PPlugin` — the full phonemizer behind the
+  ``transcribe`` / ``transcribe_word`` / ``language_codes`` engine members.
+- :class:`SilabificadorSyllabifier` — an orthography2ipa
+  :class:`~orthography2ipa.syllabifier_plugin.SyllabifierPlugin` that
+  syllabifies Portuguese with ``silabificador``. The phonemization path does
+  not use it, and tugaphone does not register it as an entry point.
+"""
+from typing import List, Optional
+
+from orthography2ipa import WordContext
+from orthography2ipa.syllabifier_plugin import SyllabifierPlugin
+from silabificador import syllabify as _syllabify
+
+from tugaphone.registry import list_dialects
+
+
+class TugaphoneG2PPlugin:
+    """Dialect-aware Portuguese G2P via the tugaphone pipeline.
+
+    The underlying :class:`tugaphone.TugaPhonemizer` (lexicon + bifonia
+    homograph resolution) loads lazily on first transcription.
+    """
+
+    def __init__(self, lang: str = "pt-PT", contact: str = "none") -> None:
+        self.lang = lang
+        self.contact = contact
+        self._phonemizer = None
+
+    @property
+    def language_codes(self) -> List[str]:
+        """Every lect code this engine accepts (:func:`tugaphone.list_dialects`)."""
+        return list_dialects()
+
+    def _engine(self):
+        if self._phonemizer is None:
+            from tugaphone import TugaPhonemizer
+            self._phonemizer = TugaPhonemizer()
+        return self._phonemizer
+
+    def transcribe(self, text: str) -> str:
+        """Phonemize ``text`` for ``self.lang``; space-separated IPA per word."""
+        return self._engine().phonemize_sentence(
+            text, lang=self.lang, contact=self.contact)
+
+    def transcribe_word(
+        self, word: str, context: Optional[WordContext] = None
+    ) -> str:
+        """Phonemize one word.
+
+        A ``context`` whose ``lang`` is set overrides ``self.lang``. The other
+        ``WordContext`` fields are not read.
+        """
+        lang = (context.lang if context is not None and context.lang
+                else self.lang)
+        return self._engine().phonemize_sentence(
+            word, lang=lang, contact=self.contact)
+
+    def force_accent(self, text: str, lect: str, mode: str = "ipa",
+                     base_lect: Optional[str] = None,
+                     overlay=None) -> str:
+        """Force ``text`` into ``lect`` for a downstream TTS.
+
+        Thin exposure of :func:`tugaphone.accent.force_accent` through the
+        plugin. ``base_lect`` defaults to the plugin's own ``lang`` — the accent
+        the grapheme-input voice this plugin drives speaks — so ``mode="respell"``
+        respells against the right base without the caller repeating it.
+        """
+        from tugaphone.accent import force_accent as _force_accent
+
+        return _force_accent(text, lect, mode=mode,
+                             base_lect=base_lect or self.lang, overlay=overlay)
+
+
+class SilabificadorSyllabifier(SyllabifierPlugin):
+    """Portuguese syllabifier for orthography2ipa's stress detection.
+
+    The class is not registered as an entry point. A caller passes it to an
+    engine as ``Pipeline(syllabifier=SilabificadorSyllabifier())``.
+    """
+
+    @property
+    def language_codes(self) -> List[str]:
+        codes = list_dialects()
+        codes.extend(["pt-CV", "pt-GW", "pt-MO", "pt-ST", "pt-GQ"])
+        return codes
+
+    def syllabify(self, word: str, lang: Optional[str] = None) -> List[str]:
+        return list(_syllabify(word))
