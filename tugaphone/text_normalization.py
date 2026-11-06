@@ -5,7 +5,7 @@ times, European thousands/decimal separators, honorific abbreviations, regnal
 Roman numerals, letter-spelled acronyms) into plain words or digit tokens that
 :func:`tugaphone.number_utils.normalize_numbers` can then read out loud. They
 run at the text level, before any lattice/phoneme work, so they are plugged
-into :func:`tugaphone.lattice_core._normalizer` ahead of
+into :func:`tugaphone.lattice_core._expander` ahead of
 ``normalize_numbers``.
 
 The reading rules for ranges, clock times, separators, abbreviations, and
