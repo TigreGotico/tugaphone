@@ -14,10 +14,12 @@ What tugaphone adds sits in the stages orthography2ipa leaves to the caller,
 wired through orthography2ipa's own extension points rather than bolted on after
 the fact:
 
-* **normalization + verbalization** — gender-aware number/ordinal expansion
-  (:mod:`tugaphone.number_utils`) and sense-based heterophone marking
-  (:mod:`bifonia`) run as the engine's ``normalizer``, i.e. before the lattice
-  sees the text (orthography2ipa's ``normalize`` stage);
+* **expansion** — orthographic rewrites (:mod:`tugaphone.text_normalization`)
+  and gender-aware number/ordinal expansion (:mod:`tugaphone.number_utils`) run
+  as the pipeline's ``expand``, before the lattice sees the text;
+* **marks** — sense-based heterophone marking (:mod:`bifonia`) runs as the
+  pipeline's ``mark``, on the whole sentence after ``expand``. It adds marks
+  and keeps every letter, and the engine checks that;
 * **lexicon** — for ``pt-PT`` and ``pt-BR``, the engine takes the residual
   lexicon of ``o2i-lexicons`` through its :class:`orthography2ipa.Pipeline`, so
   a covered word folds into the *same* override path as a spec
@@ -31,10 +33,10 @@ the fact:
 from __future__ import annotations
 
 import functools
-from typing import List, Optional
+from typing import List
 
+from bifonia import add_extra_diacritics
 from orthography2ipa import G2P, Pipeline, packaged_lexicon
-from orthography2ipa.syllabifier_plugin import SyllabifierPlugin
 
 from tugaphone.codeswitch import split_runs, transcribe_contact
 from tugaphone.number_utils import normalize_numbers
@@ -43,46 +45,20 @@ from tugaphone.text_normalization import normalize_orthography
 
 _VALID_CONTACT = ("auto", "es", "fr", "en", "none")
 
-try:  # bifonia is a hard dependency, but keep the import failure legible
-    from bifonia import add_extra_diacritics as _mark_heterophones
-except Exception:  # pragma: no cover - exercised only on a broken install
-    def _mark_heterophones(sentence: str, lang: str = "pt-PT") -> str:
-        return sentence
-
-
-class _BundledSplitter(SyllabifierPlugin):
-    """Sends every word to the bundled splitter of orthography2ipa.
-
-    A pipeline with no syllabifier takes the plugin that discovery finds, and
-    ``silabificador`` is installed for :mod:`tugaphone.tokenizer`.
-    """
-
-    @property
-    def language_codes(self) -> List[str]:
-        return []
-
-    def syllabify(self, word: str, lang: Optional[str] = None) -> List[str]:
-        return []
-
-
-def _normalizer(lect: str):
-    """The orthography2ipa ``normalize`` callable tugaphone supplies for ``lect``.
+def _expander(lect: str):
+    """The orthography2ipa ``expand`` callable tugaphone supplies for ``lect``.
 
     Orthographic rewrites (ranges, clock times, European number separators,
     abbreviations, regnal numerals, letter-spelled acronyms) run first, since
-    they produce the digit tokens and words number verbalization then reads;
-    numbers and ordinals are verbalized next (so their spelled-out words are
-    then available to homograph marking); heterophonic homographs are marked
-    last, with ``lect`` selecting bifonia's per-lect marks (every ``pt-BR``
-    sub-lect takes the Brazilian ones). All three stages are orthographic,
-    pre-lattice transformations.
+    they produce the digit tokens and words number verbalization then reads.
+    Numbers and ordinals are verbalized next, so ``mark`` sees their
+    spelled-out words.
     """
 
-    def normalize(text: str) -> str:
-        text = normalize_numbers(normalize_orthography(text, lect), lect)
-        return _mark_heterophones(text, lect)
+    def expand(text: str) -> str:
+        return normalize_numbers(normalize_orthography(text, lect), lect)
 
-    return normalize
+    return expand
 
 
 @functools.lru_cache(maxsize=None)
@@ -91,12 +67,15 @@ def engine(lect: str) -> G2P:
 
     ``lect`` must already be an orthography2ipa lect code (see
     :func:`tugaphone.registry.resolve_lect`). The engine holds the lect's
-    packaged lexicon and the number/homograph normalizer. A lect with no packaged
-    lexicon gets an empty one, so only the rules answer it.
+    packaged lexicon, the number expansion and the homograph marks, with
+    ``lect`` selecting bifonia's per-lect marks. A lect with no packaged lexicon
+    gets an empty one, so only the rules answer it.
     """
     lexicon = packaged_lexicon(lect) if lect in PACKAGED_LEXICON_LECTS else {}
-    return G2P(lect, normalizer=_normalizer(lect),
-               pipeline=Pipeline(lexicon=lexicon, syllabifier=_BundledSplitter()))
+    return G2P(lect, pipeline=Pipeline(
+        lexicon=lexicon,
+        expand=_expander(lect),
+        mark=functools.partial(add_extra_diacritics, lang=lect)))
 
 
 def _validate_contact(contact: str) -> None:

@@ -93,7 +93,8 @@ def test_estou_online(ph):
     auto = ph.phonemize_sentence("Estou online.", "pt-PT", contact="auto")
     none = ph.phonemize_sentence("Estou online.", "pt-PT", contact="none")
     assert auto != none
-    assert auto.startswith("eʃˈto")   # "estou" stays Portuguese-transcribed
+    # "estou" stays Portuguese-transcribed: it reads as it reads alone.
+    assert auto.startswith(ph.phonemize_sentence("Estou", "pt-PT", contact="none"))
     for bad in ("ɹ", "ɒ", "ʌ", "θ", "h", "ː"):
         assert bad not in auto
 
