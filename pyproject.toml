@@ -29,8 +29,8 @@ dependencies = [
     "silabificador>=2.1.0a1",
     "tugalex>=2.2.0a1",
     "bifonia>=0.3.9a1",
-    "orthography2ipa>=7.122.0a2",
-    "o2i-lexicons>=0.4.0a1",
+    "orthography2ipa>=7.122.11a4",
+    "o2i-lexicons>=0.7.0a1",
 ]
 
 [project.optional-dependencies]
