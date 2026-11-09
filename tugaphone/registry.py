@@ -67,7 +67,7 @@ _ALIASES: Dict[str, str] = {
 
 #: Lects that take a packaged orthography2ipa lexicon. ``o2i-lexicons`` ships a
 #: residual lexicon for ``pt-PT`` and for ``pt-BR``: the words the lect's rules
-#: get wrong. It is not enabled for a sub-lect, because it would overwrite that
+#: get wrong, as exceptions and patches, and tugaphone takes both. It is not enabled for a sub-lect, because it would overwrite that
 #: spec's phonology with the parent's forms. Every other lect runs on the rules
 #: alone.
 PACKAGED_LEXICON_LECTS = frozenset({"pt-PT", "pt-BR"})

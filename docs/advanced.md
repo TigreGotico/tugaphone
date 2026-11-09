@@ -24,7 +24,8 @@ orthography2ipa:
    sees the text. The rewrites and the numbers are the pipeline's `expand`, and
    the homograph marks are its `mark`.
 2. **Lexicon**, for `pt-PT` and `pt-BR` only, the engine takes the residual
-   lexicon of `o2i-lexicons` through its `orthography2ipa.Pipeline`, so a covered
+   lexicon of `o2i-lexicons`, its exceptions and its patches, through its
+   `orthography2ipa.Pipeline`, so a covered
    word folds into the same override path as a spec `word_exceptions` entry.
    Every other lect runs on the rules alone.
 3. **Syllabification**, supplied by the bundled splitter of orthography2ipa,
@@ -37,7 +38,9 @@ For the full breakdown of what comes from where, see
 
 The `pt-PT` lect takes the residual lexicon of
 [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), passed to the
-engine as `Pipeline(lexicon=packaged_lexicon("pt-PT"))`. A covered word folds
+engine as `Pipeline(lexicon=packaged_lexicon("pt-PT", patches=True))`. The
+exceptions are the words whose reading the spelling cannot give, and the patches
+are the words that a rule could reach and does not reach yet. A covered word folds
 into the same override path as a spec `word_exceptions` entry. The lexicon holds
 only the words that the `pt-PT` rules get wrong, from the Infopédia readings of the
 [portuguese-unified pronunciation lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon).

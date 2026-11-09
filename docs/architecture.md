@@ -51,7 +51,8 @@ transformations.
 
 The `pt-PT` and `pt-BR` lects each take a residual lexicon of
 [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), passed to the
-engine through `orthography2ipa.Pipeline`. The lexicon belongs to that engine,
+engine through `orthography2ipa.Pipeline`. tugaphone takes the exceptions and
+the patches (`packaged_lexicon(lect, patches=True)`). The lexicon belongs to that engine,
 so a plain `G2P` in the same process stays on the rules. A covered word folds
 into the same override path as a spec `word_exceptions` entry. Each lexicon holds only the
 words that the lect's rules get wrong. The `pt-PT` entries come from the

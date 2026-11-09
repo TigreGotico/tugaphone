@@ -113,7 +113,8 @@ resolve_lect("pt")                 # 'pt-PT'
 ## Lexicon vs pure lattice
 
 Only `pt-PT` and `pt-BR` take a lexicon: the `o2i-lexicons` residual lexicon of
-the lect, which holds the words that the lect's rules get wrong. For a covered
+the lect, which holds the words that the lect's rules get wrong. tugaphone takes
+its exceptions and its patches. For a covered
 word the lexicon supplies the pronunciation, and the lattice reads every other
 word.
 

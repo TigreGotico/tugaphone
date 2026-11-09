@@ -273,4 +273,4 @@ class TestFullPipelineEndToEnd:
         assert not any(c.isdigit() for c in ps)
         assert "ˈvĩt" in ps    # vinte
         assert "ˈkwatɾu" in ps  # quatro
-        assert "ˈoɾɐʃ" in ps    # horas
+        assert "ˈɔɾɐʃ" in ps    # horas: Infopédia hora [ˈɔrɐ], open o

@@ -68,10 +68,12 @@ def engine(lect: str) -> G2P:
     ``lect`` must already be an orthography2ipa lect code (see
     :func:`tugaphone.registry.resolve_lect`). The engine holds the lect's
     packaged lexicon, the number expansion and the homograph marks, with
-    ``lect`` selecting bifonia's per-lect marks. A lect with no packaged lexicon
-    gets an empty one, so only the rules answer it.
+    ``lect`` selecting bifonia's per-lect marks. The packaged lexicon holds the
+    exceptions and the patches of the lect: the patches cover the words that a
+    rule could reach and does not reach yet. A lect with no packaged lexicon gets
+    an empty one, so only the rules answer it.
     """
-    lexicon = packaged_lexicon(lect) if lect in PACKAGED_LEXICON_LECTS else {}
+    lexicon = packaged_lexicon(lect, patches=True) if lect in PACKAGED_LEXICON_LECTS else {}
     return G2P(lect, pipeline=Pipeline(
         lexicon=lexicon,
         expand=_expander(lect),

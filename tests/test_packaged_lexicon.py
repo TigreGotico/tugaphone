@@ -1,5 +1,6 @@
-"""The lexicon each engine holds: its o2i-lexicons lexicon for pt-PT and pt-BR,
-an empty one for any other lect, and nothing outside tugaphone's engines."""
+"""The lexicon each engine holds: its o2i-lexicons exceptions and patches for
+pt-PT and pt-BR, an empty one for any other lect, and nothing outside
+tugaphone's engines."""
 import subprocess
 import sys
 import textwrap
@@ -12,9 +13,13 @@ from orthography2ipa.lexicon import parse_lexicon_text
 from tugaphone import lattice_core, list_dialects, phonemize
 
 
+def read(path):
+    return parse_lexicon_text(path.read_text(encoding="utf-8"))
+
+
 def packaged(lect):
-    text = o2i_lexicons.tsv_path(lect).read_text(encoding="utf-8")
-    return parse_lexicon_text(text)
+    """The exceptions and the patches of *lect*; an exception wins."""
+    return {**read(o2i_lexicons.patch_tsv_path(lect)), **read(o2i_lexicons.tsv_path(lect))}
 
 
 @pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
@@ -26,6 +31,19 @@ def test_a_national_lect_holds_its_packaged_lexicon(lect):
 def test_a_packaged_entry_reaches_the_pt_pt_output(word):
     # The pt-PT rules get each of these words wrong, so the lexicon answers.
     assert phonemize(word, "pt-PT") == packaged("pt-PT")[word]
+
+
+@pytest.mark.parametrize("lect, kind, word", [
+    ("pt-PT", "exception", "táxi"),      # ⟨x⟩ as [ks]: the spelling cannot show it
+    ("pt-PT", "patch", "indemnizar"),    # a rule could reach it
+    ("pt-BR", "exception", "foto"),      # the height of a stressed mid vowel
+    ("pt-BR", "patch", "joga"),          # the stem vowel of a rhizotonic verb form
+])
+def test_both_kinds_of_entry_reach_the_output(lect, kind, word):
+    path = o2i_lexicons.tsv_path(lect) if kind == "exception" else o2i_lexicons.patch_tsv_path(lect)
+    entry = read(path)[word]
+    assert phonemize(word, lect) == entry
+    assert G2P(lect).transcribe_word(word) != entry
 
 
 def test_a_packaged_entry_reaches_the_pt_br_output():
