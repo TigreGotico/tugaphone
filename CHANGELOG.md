@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.4a1](https://github.com/TigreGotico/tugaphone/tree/1.6.4a1) (2026-11-10)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.3a2...1.6.4a1)
+
+**Merged pull requests:**
+
+- fix: keep the edge spaces of a plain run in expand [\#213](https://github.com/TigreGotico/tugaphone/pull/213) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.6.3a2](https://github.com/TigreGotico/tugaphone/tree/1.6.3a2) (2026-11-10)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.3a1...1.6.3a2)
@@ -389,10 +397,6 @@
 ## [1.2.3a1](https://github.com/TigreGotico/tugaphone/tree/1.2.3a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.2a1...1.2.3a1)
-
-**Merged pull requests:**
-
-- fix: require tugalex 2.0.2a1 for IPA ɡ transcriptions [\#104](https://github.com/TigreGotico/tugaphone/pull/104) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.2.2a1](https://github.com/TigreGotico/tugaphone/tree/1.2.2a1) (2026-09-03)
 
