@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.3a2](https://github.com/TigreGotico/tugaphone/tree/1.6.3a2) (2026-11-10)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.3a1...1.6.3a2)
+
+**Merged pull requests:**
+
+- docs: name the pt-BR lexicon beside pt-PT [\#211](https://github.com/TigreGotico/tugaphone/pull/211) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.6.3a1](https://github.com/TigreGotico/tugaphone/tree/1.6.3a1) (2026-11-09)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.2a3...1.6.3a1)
@@ -378,10 +386,6 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.3a1...1.3.0a1)
 
-**Merged pull requests:**
-
-- feat: read ranges, clock times, abbreviations, regnal numerals and acronyms in Portuguese text [\#102](https://github.com/TigreGotico/tugaphone/pull/102) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [1.2.3a1](https://github.com/TigreGotico/tugaphone/tree/1.2.3a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.2a1...1.2.3a1)
@@ -393,10 +397,6 @@
 ## [1.2.2a1](https://github.com/TigreGotico/tugaphone/tree/1.2.2a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.2.1a3...1.2.2a1)
-
-**Merged pull requests:**
-
-- fix: invalidate the materialised lexicon cache when tugalex changes [\#101](https://github.com/TigreGotico/tugaphone/pull/101) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.2.1a3](https://github.com/TigreGotico/tugaphone/tree/1.2.1a3) (2026-08-02)
 
