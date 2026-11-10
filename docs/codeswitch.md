@@ -35,6 +35,20 @@ The dialect's default side comes from `tugaphone.registry.default_contact`:
 English for every lect except the Uruguayan border lect `pt-UY`, which defaults
 to Spanish.
 
+A word forced with the SSML `<phoneme ph="…">…</phoneme>` element of
+orthography2ipa stays Portuguese in every contact mode. The router keeps the
+element as one token and never sends it to a contact lattice, so the forced IPA
+comes out as written.
+
+Malformed markup raises the same `MarkupError` as it does with
+`contact="none"`.
+
+A word that touches an element with no space, as in
+`download<phoneme ph="…">jogo</phoneme>`, is part of the element token and
+reads as Portuguese, as with `contact="none"`. The abbreviation check does not
+see the text inside an element, so in `Cap. <phoneme ph="…">XII</phoneme>` the
+word `Cap.` goes to the contact side.
+
 ## Total nativization
 
 Following arbtok's principle, *never drop a segment, always project it*, every
