@@ -53,10 +53,19 @@ def _expander(lect: str):
     they produce the digit tokens and words number verbalization then reads.
     Numbers and ordinals are verbalized next, so ``mark`` sees their
     spelled-out words.
+
+    The engine joins the expanded runs and the forced words back into one
+    sentence for ``mark``, so the spaces at the ends of a run are kept: the
+    rewrites drop them, and a forced word would then fuse with its neighbours.
     """
 
     def expand(text: str) -> str:
-        return normalize_numbers(normalize_orthography(text, lect), lect)
+        words = text.strip()
+        if not words:
+            return text
+        lead = text[:len(text) - len(text.lstrip())]
+        trail = text[len(text.rstrip()):]
+        return lead + normalize_numbers(normalize_orthography(words, lect), lect) + trail
 
     return expand
 
