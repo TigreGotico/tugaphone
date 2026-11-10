@@ -43,6 +43,12 @@ comes out as written.
 Malformed markup raises the same `MarkupError` as it does with
 `contact="none"`.
 
+A word that touches an element with no space, as in
+`download<phoneme ph="…">jogo</phoneme>`, is part of the element token and
+reads as Portuguese, as with `contact="none"`. The abbreviation check does not
+see the text inside an element, so in `Cap. <phoneme ph="…">XII</phoneme>` the
+word `Cap.` goes to the contact side.
+
 ## Total nativization
 
 Following arbtok's principle, *never drop a segment, always project it*, every

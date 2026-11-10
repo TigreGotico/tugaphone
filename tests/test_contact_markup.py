@@ -50,6 +50,12 @@ FORCED = [
     'Ela viu <phoneme ph="ˈfoɾsɐ">força</phoneme> a força dele.',
     # two forced words
     'O <phoneme ph="ˈʒoɡu">jogo</phoneme> e a <phoneme ph="ˈfoɾsɐ">força</phoneme> dele.',
+    # the element name and attribute in upper case
+    '<PHONEME PH="ˈʒoɡu">jogo</PHONEME> o jogo.',
+    # a single-quoted attribute
+    "<phoneme ph='ˈʒoɡu'>jogo</phoneme> o jogo.",
+    # a line break in the tag and in the text
+    '<phoneme\nph="ˈʒoɡu"\n>jo\ngo</phoneme> o jogo.',
 ]
 
 UNCLOSED = '<phoneme ph="ˈʒoɡu">jogo o jogo 2 vezes.'
@@ -76,6 +82,24 @@ def test_element_is_one_portuguese_token(contact, classifier):
     assert runs[2] == (None, '<phoneme ph="ˈfoɾsɐ">força</phoneme>')
     assert [token for _, token in runs] == [
         "Ela", "viu", '<phoneme ph="ˈfoɾsɐ">força</phoneme>', "a", "força", "dele."]
+
+
+@pytest.mark.parametrize("contact", CONTACT_MODES)
+@pytest.mark.parametrize("text, element", [
+    ('<PHONEME PH="ˈʒoɡu">jogo</PHONEME> o jogo.', '<PHONEME PH="ˈʒoɡu">jogo</PHONEME>'),
+    ("<phoneme ph='ˈʒoɡu'>jogo</phoneme> o jogo.", "<phoneme ph='ˈʒoɡu'>jogo</phoneme>"),
+    ('<phoneme\nph="ˈʒoɡu"\n>jo\ngo</phoneme> o jogo.', '<phoneme\nph="ˈʒoɡu"\n>jo\ngo</phoneme>'),
+])
+def test_element_grammar_of_parse_markup_gives_one_token(text, element, contact, classifier):
+    assert split_runs(text, contact) == [(None, element), (None, "o"), (None, "jogo.")]
+
+
+@pytest.mark.parametrize("contact", ["en", "auto"])
+def test_contact_word_between_two_elements_is_its_own_token(contact, classifier):
+    google = '<phoneme ph="ˈɡuɡɫ">Google</phoneme>'
+    jogo = '<phoneme ph="ˈʒoɡu">jogo</phoneme>'
+    runs = split_runs(f"{google} download {jogo}", contact)
+    assert runs == [(None, google), ("en", "download"), (None, jogo)]
 
 
 @pytest.mark.parametrize("contact", CONTACT_MODES)
