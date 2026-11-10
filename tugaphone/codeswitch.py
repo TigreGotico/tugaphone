@@ -83,8 +83,11 @@ from __future__ import annotations
 
 import functools
 import json
+import re
 from pathlib import Path
 from typing import Dict, FrozenSet, List, Optional, Tuple
+
+from orthography2ipa.markup import parse_markup
 
 from tugaphone.langdetect import is_keep_word
 from tugaphone.text_normalization import stays_portuguese
@@ -357,6 +360,16 @@ def _is_contact(token: str) -> bool:
     return is_contact_word(token)
 
 
+#: A token: a run of non-space characters in which a whole
+#: ``<phoneme …>…</phoneme>`` element counts as one unit, spaces and all. The
+#: element grammar is the one :func:`orthography2ipa.markup.parse_markup` reads.
+_TOKEN = re.compile(
+    r"""(?:<phoneme(?=[\s>])(?:[^>"']|"[^"]*"|'[^']*')*>.*?</phoneme\s*>|\S)+""",
+    re.DOTALL | re.IGNORECASE)
+
+_PHONEME_TAG = re.compile(r"<phoneme(?=[\s>])", re.IGNORECASE)
+
+
 def split_runs(text: str, contact: str,
                default_side: str = "en") -> List[Tuple[Optional[str], str]]:
     """Split *text* into ``(contact_lang, token)`` pairs by the word decision.
@@ -367,6 +380,12 @@ def split_runs(text: str, contact: str,
     ``"es"`` / ``"fr"`` / ``"en"`` every detected contact token routes through
     that language. ``contact == "none"`` marks every token as Portuguese.
 
+    A ``<phoneme ph="…">…</phoneme>`` element is one token, and it is always
+    Portuguese: the Portuguese engine reads its markup, so the forced word is
+    never language-detected. Malformed markup raises the
+    :class:`orthography2ipa.markup.MarkupError` that the engine raises for the
+    same text.
+
     An abbreviation that only Portuguese reads in its context
     (:func:`tugaphone.text_normalization.stays_portuguese`: "Dr.", "Av.",
     "Cap." and its number) stays Portuguese, so the normalizer expands it and
@@ -374,6 +393,8 @@ def split_runs(text: str, contact: str,
     doze").
     """
     def route(token: str) -> Optional[str]:
+        if _PHONEME_TAG.search(token):
+            return None
         if contact == "auto":
             return _classify(token, default_side)
         return contact if _is_contact(token) else None
@@ -381,8 +402,9 @@ def split_runs(text: str, contact: str,
     def is_foreign(token: str) -> bool:
         return route(token) is not None
 
+    parse_markup(text)
+    tokens = _TOKEN.findall(text)
     if contact == "none":
-        return [(None, token) for token in text.split()]
-    tokens = text.split()
+        return [(None, token) for token in tokens]
     return [(None if stays_portuguese(tokens, i, is_foreign) else route(token), token)
             for i, token in enumerate(tokens)]
