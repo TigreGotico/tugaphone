@@ -2,8 +2,8 @@
 
 The engine joins the plain runs and the forced words back into one sentence
 for the homograph marks, so the expansion of a plain run must keep the spaces
-at its ends. A ``<phoneme>`` tag changes how its own word is read and nothing
-else: every other word reads as it does in the same sentence without the tag.
+at its ends. The homograph marks then read the words around a forced word as
+they read them in the same sentence without the tag.
 """
 import pytest
 
@@ -18,6 +18,10 @@ CASES = [
     # sits in the middle of the sentence.
     ('Ela viu <phoneme ph="ˈfoɾsɐ">força</phoneme> a força dele.',
      "Ela viu força a força dele.", 4),
+    # "jogo" after "Eu" is the verb, open [ɔ]; the homograph stands directly
+    # before the forced word.
+    ('Eu jogo <phoneme ph="ˈkazɐ">casa</phoneme> todos os dias.',
+     "Eu jogo casa todos os dias.", 1),
 ]
 
 
