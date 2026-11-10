@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.5a1](https://github.com/TigreGotico/tugaphone/tree/1.6.5a1) (2026-11-10)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.4a1...1.6.5a1)
+
+**Merged pull requests:**
+
+- fix: keep a \<phoneme\> element whole in contact modes [\#215](https://github.com/TigreGotico/tugaphone/pull/215) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.6.4a1](https://github.com/TigreGotico/tugaphone/tree/1.6.4a1) (2026-11-10)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.3a2...1.6.4a1)
@@ -385,10 +393,6 @@
 ## [1.3.1a1](https://github.com/TigreGotico/tugaphone/tree/1.3.1a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.0a1...1.3.1a1)
-
-**Merged pull requests:**
-
-- fix: write the velar stop as IPA ɡ in every gold fixture [\#105](https://github.com/TigreGotico/tugaphone/pull/105) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.3.0a1](https://github.com/TigreGotico/tugaphone/tree/1.3.0a1) (2026-09-03)
 
