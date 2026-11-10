@@ -82,10 +82,10 @@ miss to a file, because a miss may be a defect of the source. Some Michaelis
 entries place the stress mark on the wrong vowel or print the reading of another
 word, so a Michaelis miss is a lead to read, not a rules error by itself.
 
-The `pt-BR` lexicon takes its readings from the NILC file and its second sources
-from Michaelis, so a lexicon word would score a source against itself. The script
-leaves the words of the lect's lexicon out of each row, so every row measures the
-rules.
+The `pt-BR` lexicon takes its readings from the NILC file, and its build uses
+Michaelis as one second source, so a lexicon word would score a source against
+itself. The script leaves the words of the lect's lexicon out of each row, so
+every row measures the rules.
 
 An ALiB row gives the share of the city's forms with a palatal coda, and the
 share with the class that the spec gives. A city with no regional spec scores

@@ -36,21 +36,23 @@ For the full breakdown of what comes from where, see
 
 ## The lexicon boundary
 
-The `pt-PT` lect takes the residual lexicon of
+The `pt-PT` and `pt-BR` lects each take the residual lexicon of
 [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), passed to the
-engine as `Pipeline(lexicon=packaged_lexicon("pt-PT", patches=True))`. The
+engine as `Pipeline(lexicon=packaged_lexicon(lect, patches=True))`. The
 exceptions are the words whose reading the spelling cannot give, and the patches
 are the words that a rule could reach and does not reach yet. A covered word folds
-into the same override path as a spec `word_exceptions` entry. The lexicon holds
-only the words that the `pt-PT` rules get wrong, from the Infopédia readings of the
-[portuguese-unified pronunciation lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon).
+into the same override path as a spec `word_exceptions` entry. Each lexicon holds
+only the words that the lect's rules get wrong. The `pt-PT` entries come from the
+Infopédia readings of the
+[portuguese-unified pronunciation lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon),
+and the `pt-BR` entries from the NILC Aeiouadô training file and pt.wiktionary.
 Every other lect runs on the orthography2ipa rules alone.
 
-The boundary is deliberate. The lexicon is in the `pt-PT` norm, so enabling it
-for a sub-lect such as `pt-PT-x-porto` would overwrite that spec's phonology
-with the `pt-PT` forms. The entries are in the spec's notation, with the stress
-mark before the stressed syllable, so a lexicon hit and a rules reading share
-one notation.
+The boundary is deliberate. Each lexicon is in the norm of its lect, so enabling
+it for a sub-lect such as `pt-PT-x-porto` or `pt-BR-x-sp` would overwrite that
+spec's phonology with the parent's forms. The entries are in the spec's
+notation, with the stress mark before the stressed syllable, so a lexicon hit
+and a rules reading share one notation.
 
 ## Number normalization
 

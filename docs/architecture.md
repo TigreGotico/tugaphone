@@ -59,7 +59,7 @@ words that the lect's rules get wrong. The `pt-PT` entries come from the
 Infopédia readings of the
 [portuguese-unified pronunciation lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon).
 The `pt-BR` entries come from the NILC Aeiouadô training file and from
-pt.wiktionary, and each one has a second source.
+pt.wiktionary.
 Every other lect runs on the orthography2ipa rules alone.
 `tugaphone.registry.PACKAGED_LEXICON_LECTS` names the lects that take a
 lexicon. Enabling a parent lexicon for a sub-lect such as `pt-PT-x-porto` or

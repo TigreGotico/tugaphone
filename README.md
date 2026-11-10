@@ -36,7 +36,7 @@ pip install tugaphone
 
 Its runtime dependencies (`orthography2ipa`, `o2i-lexicons`, `silabificador`,
 `tugalex`, `bifonia`, `ovos-number-parser`) install automatically. The `pt-PT`
-lexicon rides in through [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons).
+and `pt-BR` lexicons ride in through [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons).
 
 ---
 
