@@ -40,7 +40,8 @@ from orthography2ipa import G2P, Pipeline, packaged_lexicon
 
 from tugaphone.codeswitch import split_runs, transcribe_contact
 from tugaphone.number_utils import normalize_numbers
-from tugaphone.registry import PACKAGED_LEXICON_LECTS, default_contact, resolve_lect
+from tugaphone.registry import (PACKAGED_LEXICON_LECTS, default_contact,
+                                list_dialects, resolve_lect)
 from tugaphone.text_normalization import normalize_orthography
 
 _VALID_CONTACT = ("auto", "es", "fr", "en", "none")
@@ -70,23 +71,46 @@ def _expander(lect: str):
     return expand
 
 
-@functools.lru_cache(maxsize=None)
-def engine(lect: str) -> G2P:
-    """A cached orthography2ipa engine for ``lect`` with tugaphone's layers.
+def pipeline(lect: str) -> Pipeline:
+    """The orthography2ipa :class:`~orthography2ipa.Pipeline` tugaphone runs for ``lect``.
 
-    ``lect`` must already be an orthography2ipa lect code (see
-    :func:`tugaphone.registry.resolve_lect`). The engine holds the lect's
-    packaged lexicon, the number expansion and the homograph marks, with
-    ``lect`` selecting bifonia's per-lect marks. The packaged lexicon holds the
-    exceptions and the patches of the lect: the patches cover the words that a
-    rule could reach and does not reach yet. A lect with no packaged lexicon gets
-    an empty one, so only the rules answer it.
+    ``G2P(lect, pipeline=pipeline(lect)).transcribe(text)`` gives the same
+    output as ``phonemize(text, lect)`` with ``contact="none"``. The
+    ``contact="auto"`` path sends contact words through the ``es-ES``,
+    ``fr-FR`` or ``en-US`` lattice, and one ``Pipeline`` cannot express that.
+
+    The pipeline holds the lect's packaged lexicon, the number expansion and the
+    homograph marks, with ``lect`` selecting bifonia's per-lect marks. The
+    packaged lexicon holds the exceptions and the patches of the lect: the
+    patches cover the words that a rule could reach and does not reach yet. A
+    lect with no packaged lexicon gets an empty one, so only the rules answer it.
+    Each call returns a new ``Pipeline``, because the lexicon is a mutable dict.
+
+    ``lect`` must be a code of :func:`tugaphone.list_dialects`. Any other code
+    raises ``ValueError``: tugaphone and orthography2ipa resolve a loose tag
+    differently (``br`` is Portuguese to :func:`tugaphone.resolve_lect` and
+    Breton to orthography2ipa), so pass the result of
+    :func:`tugaphone.resolve_lect` to both.
     """
+    if lect not in list_dialects():
+        raise ValueError(
+            f"{lect!r} is not a tugaphone lect; pass a code of list_dialects(), "
+            "for example the result of resolve_lect()")
     lexicon = packaged_lexicon(lect, patches=True) if lect in PACKAGED_LEXICON_LECTS else {}
-    return G2P(lect, pipeline=Pipeline(
+    return Pipeline(
         lexicon=lexicon,
         expand=_expander(lect),
-        mark=functools.partial(add_extra_diacritics, lang=lect)))
+        mark=functools.partial(add_extra_diacritics, lang=lect))
+
+
+@functools.lru_cache(maxsize=None)
+def engine(lect: str) -> G2P:
+    """A cached orthography2ipa engine for ``lect`` built on :func:`pipeline`.
+
+    ``lect`` must already be an orthography2ipa lect code (see
+    :func:`tugaphone.registry.resolve_lect`).
+    """
+    return G2P(lect, pipeline=pipeline(lect))
 
 
 def _validate_contact(contact: str) -> None:

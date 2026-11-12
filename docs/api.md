@@ -66,9 +66,22 @@ argument.
 TugaPhonemizer.is_supported(lang: str) -> bool
 ```
 
-Meant to tell whether `lang` resolves to a known Portuguese lect.
-`resolve_lect` falls back to `pt-PT` and never returns `None`, so
-`is_supported` returns `True` for every input, `"xx-YY"` included.
+Whether `lang` names a tugaphone lect, itself or through an alias
+(`"pt"`, `"pt_BR"`, `"pt-PT-x-azores"`). The same function is
+`tugaphone.is_supported` and `tugaphone.registry.is_supported`.
+
+A tag that `resolve_lect` answers only by its fallback returns `False`:
+another language (`"en-US"`, `"es-ES"`), a lect written in another
+orthography (`"pt-PT-x-medieval"`, Barranquenho `"pt-x-barranquenho"`) and
+an unknown sub-tag (`"pt-PT-x-unknown"`). `resolve_lect` still answers these
+tags with a fallback lect and a warning.
+
+```python
+from tugaphone import is_supported
+
+is_supported("pt-BR-x-sao-paulo")  # True
+is_supported("en-US")              # False
+```
 
 ## `tugaphone.accent`
 
@@ -109,6 +122,38 @@ ordered list of `Transform`s (`kind` `"regex"`/`"word"`, `pattern`,
 `replacement`, `stage` `"ipa"`/`"text"`, `ignore_case`). JSON-serialisable via
 `to_json` / `from_json` (and `to_dict` / `from_dict`) so a voice tweak is
 shareable.
+
+## `tugaphone.pipeline`
+
+```python
+pipeline(lect: str) -> orthography2ipa.Pipeline
+```
+
+Returns the orthography2ipa `Pipeline` that tugaphone runs for `lect`: the
+lect's packaged lexicon (`pt-PT` and `pt-BR`, an empty dict for every other
+lect), the text and number expansion as `expand`, and bifonia's homograph marks
+as `mark`. `G2P(lect, pipeline=pipeline(lect)).transcribe(text)` gives the same
+output as `phonemize(text, lect)`, and `phonemize` builds its engine from this
+function.
+
+The function covers `contact="none"` only. With `contact="auto"`, `phonemize`
+sends contact words through the `es-ES`, `fr-FR` or `en-US` lattice, and one
+`Pipeline` cannot express that.
+
+`lect` must be a code of `list_dialects()`. Any other code raises `ValueError`.
+tugaphone and orthography2ipa resolve a loose tag differently: `resolve_lect("br")`
+gives `pt-PT`, and orthography2ipa resolves `br` to Breton. Resolve the tag with
+`resolve_lect` and pass the result to both. Each call returns a new `Pipeline`,
+because the lexicon is a mutable dict.
+
+```python
+from orthography2ipa import G2P
+import tugaphone
+
+lect = tugaphone.resolve_lect("pt_pt")
+engine = G2P(lect, pipeline=tugaphone.pipeline(lect))
+engine.transcribe("Tenho 3 gatos.")   # same as tugaphone.phonemize("Tenho 3 gatos.", lect)
+```
 
 ## `tugaphone.registry`
 

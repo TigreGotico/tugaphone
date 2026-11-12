@@ -263,6 +263,24 @@ tugaphone list
 `--mode respell`, and `--overlay` reads a JSON `AccentOverlay`. See
 [docs/accent_forcing.md](docs/accent_forcing.md#command-line).
 
+### orthography2ipa pipeline
+
+`tugaphone.pipeline(lect)` returns the orthography2ipa `Pipeline` that
+tugaphone runs for a lect: the packaged lexicon, the number expansion and the
+homograph marks. A program that already drives `orthography2ipa.G2P` gets
+tugaphone's output from it:
+
+```python
+from orthography2ipa import G2P
+import tugaphone
+
+engine = G2P("pt-BR", pipeline=tugaphone.pipeline("pt-BR"))
+print(engine.transcribe("o gato dorme"))   # u ˈɡatu ˈdoɾmi
+```
+
+The pipeline covers `contact="none"`, the default. `lect` must be a code of
+`list_dialects()`; resolve a loose tag with `resolve_lect` first.
+
 ---
 
 ## Architecture: relationship to orthography2ipa
