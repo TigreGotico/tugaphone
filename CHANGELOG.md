@@ -1,8 +1,20 @@
 # Changelog
 
+## [1.7.1a4](https://github.com/TigreGotico/tugaphone/tree/1.7.1a4) (2026-11-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a3...1.7.1a4)
+
+**Merged pull requests:**
+
+- docs: point Barranquenho users to the o2i ext-PT-x-barranco spec [\#227](https://github.com/TigreGotico/tugaphone/pull/227) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.7.1a3](https://github.com/TigreGotico/tugaphone/tree/1.7.1a3) (2026-11-12)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a1...1.7.1a3)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a2...1.7.1a3)
+
+## [1.7.1a2](https://github.com/TigreGotico/tugaphone/tree/1.7.1a2) (2026-11-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a1...1.7.1a2)
 
 **Merged pull requests:**
 
@@ -385,10 +397,6 @@
 ## [1.3.4a2](https://github.com/TigreGotico/tugaphone/tree/1.3.4a2) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.4a1...1.3.4a2)
-
-**Merged pull requests:**
-
-- docs: rewrite the text normalization overview as plain paragraphs [\#119](https://github.com/TigreGotico/tugaphone/pull/119) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.3.4a1](https://github.com/TigreGotico/tugaphone/tree/1.3.4a1) (2026-09-03)
 
