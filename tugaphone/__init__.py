@@ -12,6 +12,7 @@ import warnings
 from typing import Optional
 
 from tugaphone.version import __version__
+from tugaphone.lattice_core import pipeline
 from tugaphone.lattice_core import phonemize as _phonemize
 from tugaphone.lattice_core import phonemize
 from tugaphone.registry import is_supported, list_dialects, resolve_lect
@@ -123,6 +124,7 @@ __all__ = [
     "Transform",
     "RespellRule",
     "DEFAULT_RESPELL_RULES",
+    "pipeline",
     "__version__",
 ]
 
