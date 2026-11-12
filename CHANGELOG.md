@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0a1](https://github.com/TigreGotico/tugaphone/tree/1.7.0a1) (2026-11-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.6a1...1.7.0a1)
+
+**Merged pull requests:**
+
+- feat: add tugaphone.pipeline\(lect\) and build engine\(\) on it [\#218](https://github.com/TigreGotico/tugaphone/pull/218) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.6.6a1](https://github.com/TigreGotico/tugaphone/tree/1.6.6a1) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.5a1...1.6.6a1)
@@ -377,10 +385,6 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.3a1...1.3.3a2)
 
-**Merged pull requests:**
-
-- docs: describe text normalisation and the lexicon cache [\#109](https://github.com/TigreGotico/tugaphone/pull/109) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [1.3.3a1](https://github.com/TigreGotico/tugaphone/tree/1.3.3a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.2a1...1.3.3a1)
@@ -393,10 +397,6 @@
 ## [1.3.2a1](https://github.com/TigreGotico/tugaphone/tree/1.3.2a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.1a1...1.3.2a1)
-
-**Merged pull requests:**
-
-- fix: restore lost minute/24:00/abbreviation reading fixes; credit tts\_eu\_pt [\#110](https://github.com/TigreGotico/tugaphone/pull/110) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.3.1a1](https://github.com/TigreGotico/tugaphone/tree/1.3.1a1) (2026-09-03)
 
