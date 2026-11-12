@@ -66,9 +66,22 @@ argument.
 TugaPhonemizer.is_supported(lang: str) -> bool
 ```
 
-Meant to tell whether `lang` resolves to a known Portuguese lect.
-`resolve_lect` falls back to `pt-PT` and never returns `None`, so
-`is_supported` returns `True` for every input, `"xx-YY"` included.
+Whether `lang` names a tugaphone lect, itself or through an alias
+(`"pt"`, `"pt_BR"`, `"pt-PT-x-azores"`). The same function is
+`tugaphone.is_supported` and `tugaphone.registry.is_supported`.
+
+A tag that `resolve_lect` answers only by its fallback returns `False`:
+another language (`"en-US"`, `"es-ES"`), a lect written in another
+orthography (`"pt-PT-x-medieval"`, Barranquenho `"pt-x-barranquenho"`) and
+an unknown sub-tag (`"pt-PT-x-unknown"`). `resolve_lect` still answers these
+tags with a fallback lect and a warning.
+
+```python
+from tugaphone import is_supported
+
+is_supported("pt-BR-x-sao-paulo")  # True
+is_supported("en-US")              # False
+```
 
 ## `tugaphone.accent`
 
