@@ -24,6 +24,20 @@ normalize_numbers("comprei 2 casas")      # 'comprei duas casas'
 normalize_numbers("tem 19 anos")          # 'tem dezanove anos'
 ```
 
+Punctuation and math symbols at the edges of a number stay in the text and
+the number is read: `«7»`, `[7]`, `—7`, `#7` and `7;` all read "sete". A sign
+right before the digit (`-7`) and a percent sign after it (`20%`) belong to
+the number.
+
+A token with digits that is still unread after this step gives a
+`tugaphone.number_utils.UnreadFormWarning`. The message names the token and
+the text, because the phoneme lattice drops the digits:
+
+```python
+normalize_numbers("um filme 3D")
+# UnreadFormWarning: pt-PT: no reading for '3D' in 'um filme 3D'; its digits are dropped
+```
+
 Pass `strict=False` to leave tokens that fail to format in place instead of
 raising:
 

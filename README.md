@@ -211,6 +211,8 @@ normalize_numbers("aprovou 1 lei")        # 'aprovou uma lei'
 normalize_numbers("passou 1 dia")         # 'passou um dia'
 ```
 
+A form with digits that tugaphone cannot read, such as "COVID-19" or "3D", gives an `UnreadFormWarning` that names the form and the text, because the phoneme lattice drops its digits.
+
 ### Text normalization
 
 Written text contains conventions that a phonemizer cannot read as they are: digit ranges, clock times, thousands separators, abbreviations, Roman numerals and acronyms. The `tugaphone.text_normalization` module rewrites each of them into words before the number rules run.
