@@ -180,6 +180,10 @@ NumberParser.get_number_gender("1", next_word="casa")                          #
 
 ## `tugaphone.tokenizer` and `tugaphone.dialects`
 
+**Deprecated.** Both modules and `tugaphone.registry.get_dialect_inventory`
+emit a `DeprecationWarning` and go in tugaphone 2.0.0. The phonemization path
+does not use them.
+
 These modules are the token-tree **feature** API and the rules-only benchmark
 baseline. They are not the phonemization path, `phonemize_sentence` runs on the
 orthography2ipa lattice and never routes through them. Use them to inspect

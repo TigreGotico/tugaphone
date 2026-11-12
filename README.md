@@ -287,10 +287,12 @@ o2i's own extension points, and relies on o2i for syllabification:
 Only `pt-PT` and `pt-BR` take a lexicon. Each holds the words that the lect's rules get
 wrong. Every other lect runs on the rules alone.
 
-`tugaphone.tokenizer` and `tugaphone.dialects` remain as a token-tree
-linguistic **feature** API (manner, place, voicing, syllable roles, CV
-skeletons) and the rules-only benchmark baseline, not the phonemization path.
-See [docs/architecture.md](docs/architecture.md) and
+`tugaphone.tokenizer` and `tugaphone.dialects` are a token-tree linguistic
+**feature** API (manner, place, voicing, syllable roles, CV skeletons) and the
+rules-only benchmark baseline, not the phonemization path. Both modules and
+`registry.get_dialect_inventory` are deprecated. They emit a
+`DeprecationWarning` and go in tugaphone 2.0.0. See
+[docs/architecture.md](docs/architecture.md) and
 [docs/tokenizer.md](docs/tokenizer.md).
 
 ---
