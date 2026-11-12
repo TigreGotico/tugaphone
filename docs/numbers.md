@@ -24,6 +24,20 @@ normalize_numbers("comprei 2 casas")      # 'comprei duas casas'
 normalize_numbers("tem 19 anos")          # 'tem dezanove anos'
 ```
 
+Punctuation and math symbols at the edges of a number stay in the text and
+the number is read: `«7»`, `[7]`, `—7`, `#7` and `7;` all read "sete". A sign
+right before the digit (`-7`) and a percent sign after it (`20%`) belong to
+the number.
+
+A token with digits that is still unread after this step gives a
+`tugaphone.number_utils.UnreadFormWarning`. The message names the token and
+the text, because the phoneme lattice drops the digits:
+
+```python
+normalize_numbers("um filme 3D")
+# UnreadFormWarning: pt-PT: no reading for '3D' in 'um filme 3D'; its digits are dropped
+```
+
 Pass `strict=False` to leave tokens that fail to format in place instead of
 raising:
 
@@ -102,7 +116,8 @@ normalize_numbers("2 vírgula 5 anos")  # 'dois vírgula cinco anos'
 A number followed by a unit symbol in `NumberParser.UNIT_NAMES` reads the
 symbol as its name: `%` (*por cento*), `€`, `mm`, `cm`, `m`, `km`, `km/h`,
 square and cubic metres (`m2`, `m²`, `m3`, `m³`, and the `cm`/`km` forms),
-`mg`, `g`, `kg`, `ml`, `cl`, `dl`, `l`, `L`. Symbols and names follow the SI
+`mg`, `g`, `kg`, `ml`, `cl`, `dl`, `l`, `L`, and `$` (*dólar*, plural
+*dólares*, Priberam DLPO). Symbols and names follow the SI
 brochure (*Tradução luso-brasileira de 2021 do SI*, IPQ/Inmetro, §5.2-5.3).
 Every unit name is masculine (*o grama*, *duzentos gramas*), so the number
 takes the masculine form.

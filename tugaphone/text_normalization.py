@@ -19,6 +19,7 @@ conjunction, so tugaphone always reads "vinte e cinco".
 """
 from __future__ import annotations
 
+import datetime
 import functools
 import json
 import re
@@ -36,7 +37,8 @@ _DATA = Path(__file__).parent / "data"
 # Word hyphens ("chamo-me", "guarda-chuva") have letters on at least one side
 # and are untouched.
 # ---------------------------------------------------------------------------
-_RANGE_DASH = re.compile(r"(?<=\d)[-–—−](?=\d)")
+# A dash after the hour symbol joins two times ("9h-17h").
+_RANGE_DASH = re.compile(r"(?:(?<=\d)|(?<=\dh))[-–—−](?=\d)")
 
 
 def split_number_ranges(text: str) -> str:
@@ -69,10 +71,18 @@ def normalize_number_separators(text: str) -> str:
 # such as "kg" in running text is never touched.
 # ---------------------------------------------------------------------------
 _NUMBER = r"\d+(?:[.,]\d+)*"
+# A "$" glued after digits may be escudos ("100$", "2$50"), so only the SI
+# spacing ("5 $") and the sign before the number read it as dollars.
 _SYMBOLS = "|".join(re.escape(s) for s in
-                    sorted(NumberParser.UNIT_NAMES, key=len, reverse=True))
+                    sorted(NumberParser.UNIT_NAMES, key=len, reverse=True)
+                    if s != "$")
 _GLUED_UNIT = re.compile(rf"(?<![\w.,])({_NUMBER})({_SYMBOLS})(?![\w/²³])")
 _EURO_FIRST = re.compile(rf"€ ?({_NUMBER})(?!\w)")
+_DOLLAR_FIRST = re.compile(rf"(?<![\w$])\$ ?({_NUMBER})(?!\w)")
+# A "+" between two numbers is addition, read "mais": "dois mais dois são
+# quatro" (Priberam DLPO, "mais", sense 13). A "+" with no digit before it
+# ("+351") is a sign and is left alone.
+_PLUS = re.compile(r"(?<=\d) ?\+ ?(?=\d)")
 # "2,50 €" is read "dois euros e cinquenta cêntimos" (Ciberdúvidas 25561:
 # "cinquenta euros e trinta cêntimos"). Only one or two decimals are cents.
 _EURO_CENTS = re.compile(r"(?<![\w.,])(\d+(?:\.\d{3})*),(\d{1,2}) €")
@@ -93,10 +103,12 @@ def _euro_cents_repl(match: "re.Match[str]") -> str:
 
 
 def separate_unit_symbols(text: str) -> str:
-    """"7kg" -> "7 kg"; "20%" -> "20 %"; "€20" -> "20 €";
-    "2,50 €" -> "2 € e 50 cêntimos"; "15x8" -> "15 vezes 8"."""
+    """"7kg" -> "7 kg"; "20%" -> "20 %"; "€20" -> "20 €"; "$5" -> "5 $";
+    "2,50 €" -> "2 € e 50 cêntimos"; "15x8" -> "15 vezes 8"; "5+3" -> "5 mais 3"."""
     text = _GLUED_UNIT.sub(r"\1 \2", text)
     text = _EURO_FIRST.sub(r"\1 €", text)
+    text = _DOLLAR_FIRST.sub(r"\1 $", text)
+    text = _PLUS.sub(" mais ", text)
     text = _EURO_CENTS.sub(_euro_cents_repl, text)
     while True:
         expanded = _TIMES.sub(r"\1 vezes ", text)
@@ -140,6 +152,35 @@ def _clock_time_repl(match: "re.Match[str]") -> str:
     hh, mm, punct = match.group(1), match.group(2), match.group(3)
     mm = str(int(mm))  # drop the leading zero: "05" -> "5"
     return f"{hh} e {mm}{punct}"
+
+
+# ---------------------------------------------------------------------------
+# The hour symbol. "h" is the symbol of the hour and "min" of the minute
+# (Ciberdúvidas 14648 and 14586); "17h30" is the usual short form of
+# "17 h 30 min". Written out, the time names both units: "onze horas e trinta
+# minutos" (Guilherme de Almeida, Ciberdúvidas 3267). Hours and years take
+# cardinals (Cunha & Cintra, Nova Gramática do Português Contemporâneo,
+# p. 374, quoted by Ciberdúvidas 32700). The digits are left for
+# normalize_numbers, which reads "1 hora" as "uma hora" and "21 horas" as
+# "vinte e uma horas" from the noun after them.
+# ---------------------------------------------------------------------------
+_HOUR_SYMBOL = re.compile(r"(?<![\w.,:])([01]?\d|2[0-4]) ?h(?: ?([0-5]\d)(?: ?min)?)?(?!\w)")
+
+
+def _hour_symbol_repl(match: "re.Match[str]") -> str:
+    hours, minutes = int(match.group(1)), int(match.group(2) or 0)
+    if hours == 24 and minutes:
+        return match.group(0)
+    text = f"{hours} hora" if hours == 1 else f"{hours} horas"
+    if minutes:
+        text += f" e {minutes} minuto" if minutes == 1 else f" e {minutes} minutos"
+    return text
+
+
+def expand_hour_symbol(text: str) -> str:
+    """"19h30" -> "19 horas e 30 minutos"; "9h" -> "9 horas";
+    "19 h 30 min" -> "19 horas e 30 minutos"."""
+    return _HOUR_SYMBOL.sub(_hour_symbol_repl, text)
 
 
 def expand_clock_times(text: str) -> str:
@@ -442,6 +483,80 @@ def _is_brazilian(lang: str) -> bool:
     return "pt-br" in lang.lower()
 
 
+def _cardinal(number: int, lang: str) -> str:
+    return NumberParser.pronounce_number_word(
+        str(number), gender="masculine", as_ordinal=False, is_brazilian=_is_brazilian(lang))
+
+
+# ---------------------------------------------------------------------------
+# Numeric dates: "25/12/2023", "25-12-2023", "25.12.2023" and the ISO
+# "2023-12-25" read "vinte e cinco de dezembro de dois mil e vinte e três".
+# "Nas referências aos dias do mês usam-se os cardinais, salvo na designação
+# do primeiro dia, em que é de regra o uso do numeral ordinal. Também na
+# indicação dos anos e das horas se empregam os cardinais" (Cunha & Cintra,
+# Nova Gramática do Português Contemporâneo, p. 374, quoted by Ciberdúvidas
+# 32700): "do dia primeiro de maio". The day and the year are masculine (dia,
+# ano), so they are spelled here and not left to the agreement rules of
+# normalize_numbers. Month names take a lowercase initial (Acordo
+# Ortográfico de 1990, Base XIX, 1.º, b). A day that the month does not have
+# ("31/02/2024") is no date and stays as written.
+# ---------------------------------------------------------------------------
+_MONTHS = ("janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
+           "agosto", "setembro", "outubro", "novembro", "dezembro")
+_DAY_MONTH_YEAR = re.compile(
+    r"(?<![\w/.,:-])(\d{1,2})([/.-])(\d{1,2})\2(\d{4})(?![\w/]|[.,:-]\d)")
+_ISO_DATE = re.compile(r"(?<![\w/.,:-])(\d{4})-(\d{2})-(\d{2})(?![\w/]|[.,:-]\d)")
+
+
+def _date_words(year: int, month: int, day: int, lang: str) -> str | None:
+    try:
+        datetime.date(year, month, day)
+    except ValueError:
+        return None
+    day_words = "primeiro" if day == 1 else _cardinal(day, lang)
+    return f"{day_words} de {_MONTHS[month - 1]} de {_cardinal(year, lang)}"
+
+
+def expand_numeric_dates(text: str, lang: str = "pt-PT") -> str:
+    """"25/12/2023" -> "vinte e cinco de dezembro de dois mil e vinte e três";
+    "2024-03-01" -> "primeiro de março de dois mil e vinte e quatro"."""
+    text = _ISO_DATE.sub(lambda m: _date_words(
+        int(m.group(1)), int(m.group(2)), int(m.group(3)), lang) or m.group(0), text)
+    return _DAY_MONTH_YEAR.sub(lambda m: _date_words(
+        int(m.group(4)), int(m.group(3)), int(m.group(1)), lang) or m.group(0), text)
+
+
+# ---------------------------------------------------------------------------
+# Fractions. "1/4 e 1/5 são um quarto e um quinto (mas um meio, um terço)";
+# 1/10 is "um décimo"; any other denominator is its cardinal and "avos": 2/11
+# is "dois onze avos", 1/2000 "um dois mil avos" (Ciberdúvidas 11493, after
+# Cunha & Cintra). A numerator above one makes the name plural ("três
+# quartos"); "avos" is plural already. A slash between two numbers is also a
+# day and a month ("25/12"), so only a proper fraction with no leading zero
+# reads as a fraction; any other form stays as written.
+# ---------------------------------------------------------------------------
+_FRACTION = re.compile(r"(?<![\w/.,:-])([1-9]\d{0,2})/([1-9]\d{0,3})(?![\w/]|[.,:-]\d)")
+_FRACTION_NAMES = {2: "meio", 3: "terço", 4: "quarto", 5: "quinto", 6: "sexto",
+                   7: "sétimo", 8: "oitavo", 9: "nono", 10: "décimo",
+                   100: "centésimo", 1000: "milésimo"}
+
+
+def expand_fractions(text: str, lang: str = "pt-PT") -> str:
+    """"1/2" -> "um meio"; "3/4" -> "três quartos"; "2/11" -> "dois onze avos"."""
+    def repl(match: "re.Match[str]") -> str:
+        numerator, denominator = int(match.group(1)), int(match.group(2))
+        if numerator >= denominator:
+            return match.group(0)
+        name = _FRACTION_NAMES.get(denominator)
+        if name is None:
+            name = f"{_cardinal(denominator, lang)} avos"
+        elif numerator > 1:
+            name += "s"
+        return f"{_cardinal(numerator, lang)} {name}"
+
+    return _FRACTION.sub(repl, text)
+
+
 def _roman_value(numeral: str) -> int | None:
     if not numeral or not _ROMAN.fullmatch(numeral):
         return None
@@ -648,10 +763,16 @@ def normalize_orthography(text: str, lang: str = "pt-PT") -> str:
     """Apply every rule above, in the order that keeps them from interfering:
     unit symbols first (the euro-cents rule needs the decimal comma), then
     separators and ranges (digit-only), then clock times (also digit-only),
-    then abbreviations, regnal numerals and acronyms (word-token rules)."""
+    then abbreviations, regnal numerals and acronyms (word-token rules).
+    Numeric dates and fractions come first, before the separator and range
+    rules read their dots and dashes; the hour symbol comes after the range
+    rule, so "9h-17h" reads as two times."""
+    text = expand_numeric_dates(text, lang)
+    text = expand_fractions(text, lang)
     text = separate_unit_symbols(text)
     text = normalize_number_separators(text)
     text = split_number_ranges(text)
+    text = expand_hour_symbol(text)
     text = expand_clock_times(text)
     text = expand_abbreviations(text)
     text = expand_regnal_numerals(text, lang)

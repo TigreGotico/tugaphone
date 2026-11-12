@@ -1,9 +1,20 @@
+import re
 import string
+import unicodedata
+import warnings
 from typing import Optional
 
 from ovos_number_parser import pronounce_number
 from ovos_number_parser.util import GrammaticalGender
 from tugalex import TugaLexicon
+
+
+class UnreadFormWarning(UserWarning):
+    """A written form with digits that tugaphone has no reading for.
+
+    The phoneme lattice has no reading for a digit and drops it, so the
+    warning names the form and the text it came from.
+    """
 
 
 class NumberParser:
@@ -87,6 +98,9 @@ class NumberParser:
     UNIT_NAMES = {
         "%": ("por cento", "por cento"),
         "€": ("euro", "euros"),
+        # Priberam DLPO, "dólar": "Unidade monetária (símbolo: $)", plural
+        # "dólares".
+        "$": ("dólar", "dólares"),
         "mm": ("milímetro", "milímetros"),
         "cm": ("centímetro", "centímetros"),
         "m": ("metro", "metros"),
@@ -195,6 +209,29 @@ class NumberParser:
     # meaning for gender/ordinality detection.
     LEADING_PUNCTUATION = "(“\"'¿¡«"
     TRAILING_PUNCTUATION = ".,;:!?)\"”»…"
+
+    # A sign or a percent sign belongs to the number, not to the text around it.
+    NUMBER_SIGNS = "+-−"
+    NUMBER_SUFFIXES = "%‰"
+
+    @classmethod
+    def split_edges(cls, word: str) -> tuple:
+        """
+        Split a token into (lead, core, trail), where lead and trail are the
+        punctuation and math or modifier symbols at its edges ("«7»", "[7]",
+        "—7", "7;"). A sign right before a digit ("-7") stays in the core, and
+        so does a percent sign at the end ("20%").
+        """
+        def is_mark(ch: str) -> bool:
+            return unicodedata.category(ch) in ("Sm", "Sk") or unicodedata.category(ch)[0] == "P"
+
+        i, j = 0, len(word)
+        while (i < j and is_mark(word[i])
+               and not (word[i] in cls.NUMBER_SIGNS and word[i + 1:i + 2].isdigit())):
+            i += 1
+        while j > i and is_mark(word[j - 1]) and word[j - 1] not in cls.NUMBER_SUFFIXES:
+            j -= 1
+        return word[:i], word[i:j], word[j:]
 
     @classmethod
     def split_trailing_punctuation(cls, word: str) -> tuple:
@@ -473,8 +510,7 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
     def is_number(token: Optional[str]) -> bool:
         if token is None:
             return False
-        token = NumberParser.split_trailing_punctuation(
-            token.lstrip(NumberParser.LEADING_PUNCTUATION))[0]
+        token = NumberParser.split_edges(token)[1]
         # float() also accepts "nan", "inf" and "infinity", which are words
         # in running text ("Inf." is "Infante", "(inf.)" is "infinitivo").
         return (any(ch.isdigit() for ch in token)
@@ -492,12 +528,10 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
             skip_unit = False
             continue
         # A numeric token may carry punctuation glued to its edges ("54.",
-        # "05,", "5!", "(789)", "«7»") -- split it off so is_int/is_float
-        # see a clean number, then glue it back onto the spelled-out words
-        # so the caller never has to detach it with a space (see #116).
-        body = word.lstrip(NumberParser.LEADING_PUNCTUATION)
-        lead = word[:len(word) - len(body)]
-        core, trail = NumberParser.split_trailing_punctuation(body)
+        # "05,", "5!", "(789)", "«7»", "[7]", "—7") -- split it off so
+        # is_int/is_float see a clean number, then glue it back onto the
+        # spelled-out words so the caller never has to detach it with a space.
+        lead, core, trail = NumberParser.split_edges(word)
         if not is_number(core):
             normalized_words.append(word)
             continue
@@ -568,7 +602,11 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
                 raise e
             normalized_words.append(word)
 
-    return " ".join(normalized_words)
+    normalized = " ".join(normalized_words)
+    for form in re.findall(r"\S*\d\S*", normalized):
+        warnings.warn(f"{lang}: no reading for {form!r} in {text!r}; its digits are dropped",
+                      UnreadFormWarning, stacklevel=2)
+    return normalized
 
 
 if __name__ == "__main__":
