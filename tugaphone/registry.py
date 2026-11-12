@@ -29,8 +29,8 @@ _PT_PREFIXES = ("pt-", "pt_")
 
 #: Lects written in another orthography, so the modern Portuguese text stages do
 #: not apply. orthography2ipa keeps their specs. Barranquenho and
-#: Galician-Portuguese fall outside the prefixes; ``g2p_barranquenho`` reads the
-#: first.
+#: Galician-Portuguese fall outside the prefixes; for Barranquenho, use
+#: ``orthography2ipa.G2P("ext-PT-x-barranco")``.
 _OWN_ORTHOGRAPHY = frozenset({"pt-PT-x-medieval"})
 
 

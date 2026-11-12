@@ -78,7 +78,8 @@ print(ph.phonemize_sentence("noite", "pt-BR-x-sp"))  # ˈnojti
 
 Barranquenho, Old Portuguese and Galician-Portuguese are not tugaphone lects.
 Each has its own orthography, so the modern Portuguese text stages do not apply.
-`g2p_barranquenho` reads Barranquenho, and orthography2ipa keeps all three specs.
+orthography2ipa keeps all three specs. For Barranquenho, use
+`orthography2ipa.G2P("ext-PT-x-barranco")`.
 
 ## Legacy aliases
 
