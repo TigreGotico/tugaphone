@@ -1,0 +1,50 @@
+name: Sentence gate
+
+on:
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - 'tugaphone/**'
+      - 'tests/gate_backend.py'
+      - 'tests/data/sentences/**'
+      - 'pyproject.toml'
+      - '.github/workflows/sentence_gate.yml'
+  workflow_dispatch:
+
+jobs:
+  sentence_gate:
+    runs-on: ubuntu-latest
+    env:
+      STAGES: lexicon:plain,expand:number,expand:date,expand:abbreviation,mark:homograph
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+      - name: Install tugaphone and the scriptconv test extra
+        run: |
+          uv venv .venv --python 3.12
+          uv pip install --python .venv/bin/python --prerelease=allow -e . "scriptconv[test]"
+      - name: Keep the sentence sets out of the wheel
+        run: |
+          uv build --wheel --out-dir dist
+          .venv/bin/python - <<'PY'
+          import glob, zipfile
+          names = zipfile.ZipFile(glob.glob("dist/*.whl")[0]).namelist()
+          leaked = [n for n in names if "sentences" in n or n.startswith("tests/")]
+          print(f"{len(names)} files in the wheel, {len(leaked)} from the sentence sets")
+          assert not leaked, leaked
+          PY
+      - name: Run the gate for pt-PT and pt-BR
+        run: |
+          status=0
+          for lang in pt-PT pt-BR; do
+            echo "::group::$lang"
+            .venv/bin/python -m scriptconv.testing.compare --lang "$lang" \
+              --tsv "tests/data/sentences/$lang.tsv" \
+              --backend tests.gate_backend:TugaphoneBackend --stages "$STAGES" \
+              2> "warnings-$lang.txt" || status=1
+            echo "::endgroup::"
+            # orthography2ipa warns once for each digit it drops; show the other warnings.
+            grep -v -e UnmappedGraphemeWarning -e "_handle_unmapped(word, unmapped)" "warnings-$lang.txt" || true
+          done
+          exit $status
