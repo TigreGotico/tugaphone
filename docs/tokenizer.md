@@ -1,5 +1,9 @@
 # The token tree
 
+**Deprecated.** `tugaphone.tokenizer`, `tugaphone.dialects` and
+`tugaphone.registry.get_dialect_inventory` emit a `DeprecationWarning` and go
+in tugaphone 2.0.0. `tugaphone.phonemize` does not use them.
+
 `tugaphone.tokenizer` builds a four-level model of a sentence that you can
 inspect directly:
 

@@ -121,9 +121,20 @@ portuguese creoles
 """
 import dataclasses
 import string
+import warnings
 from typing import List, Dict, Set
 
 from tugalex import TugaLexicon
+
+from tugaphone.version import VERSION_MAJOR
+
+warnings.warn(
+    "tugaphone.dialects is deprecated and will be removed in tugaphone "
+    f"{VERSION_MAJOR + 1}.0.0. tugaphone.phonemize does not use it: the "
+    "orthography2ipa lect spec holds each dialect's phonology.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 # singleton - load .csv into memory only once
 LEXICON = TugaLexicon()

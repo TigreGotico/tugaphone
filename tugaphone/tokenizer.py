@@ -73,6 +73,7 @@ QUICK REFERENCES:
 import dataclasses
 import string
 import unicodedata
+import warnings
 from functools import cached_property, lru_cache
 from typing import List, Optional, Dict, Set, Tuple
 
@@ -82,8 +83,22 @@ from orthography2ipa.vowels import is_front_vowel, is_orthographic_vowel
 
 from tugaphone.number_utils import normalize_numbers
 from silabificador import syllabify
-from tugaphone.dialects import (DialectInventory, EuropeanPortuguese, BrazilianPortuguese,
-                                AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
+from tugaphone.version import VERSION_MAJOR
+
+warnings.warn(
+    "tugaphone.tokenizer is deprecated and will be removed in tugaphone "
+    f"{VERSION_MAJOR + 1}.0.0, together with tugaphone.dialects. "
+    "tugaphone.phonemize does not use it.",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+# This module's own warning names tugaphone.dialects, so the import of
+# tugaphone.dialects here stays silent.
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", DeprecationWarning)
+    from tugaphone.dialects import (DialectInventory, EuropeanPortuguese, BrazilianPortuguese,
+                                    AngolanPortuguese, MozambicanPortuguese, TimoresePortuguese)
 
 
 @lru_cache(maxsize=None)

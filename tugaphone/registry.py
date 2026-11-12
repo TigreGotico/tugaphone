@@ -194,16 +194,26 @@ def default_contact(lect: str) -> str:
 # --------------------------------------------------------------------------
 
 def get_dialect_inventory(lang: str = "pt-PT"):
-    """A tugaphone :class:`~tugaphone.dialects.DialectInventory` for ``lang``.
+    """Deprecated: a tugaphone :class:`~tugaphone.dialects.DialectInventory` for ``lang``.
 
     Retained for the rules-only benchmark baseline and the token-feature API,
     which read the private grapheme cascade rather than the lattice. The
-    phonemization path (:func:`tugaphone.lattice_core.phonemize`) no longer uses
+    phonemization path (:func:`tugaphone.lattice_core.phonemize`) does not use
     it. The nearest national inventory is chosen from the resolved lect family.
+    It goes in the next major release, together with :mod:`tugaphone.dialects`.
     """
-    from tugaphone.dialects import (EuropeanPortuguese, BrazilianPortuguese,
-                                    AngolanPortuguese, MozambicanPortuguese,
-                                    TimoresePortuguese)
+    warnings.warn(
+        "get_dialect_inventory() is deprecated and will be removed in tugaphone "
+        f"{VERSION_MAJOR + 1}.0.0, together with tugaphone.dialects.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    # The warning above names tugaphone.dialects, so its import stays silent.
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        from tugaphone.dialects import (EuropeanPortuguese, BrazilianPortuguese,
+                                        AngolanPortuguese, MozambicanPortuguese,
+                                        TimoresePortuguese)
 
     lect = resolve_lect(lang)
     if lect.startswith("pt-BR"):
