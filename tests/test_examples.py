@@ -63,11 +63,6 @@ def test_08_rules_only():
     assert r.returncode == 0, r.stderr
 
 
-def test_09_plugin():
-    r = _run(EXAMPLES_DIR / "09_plugin.py")
-    assert r.returncode == 0, r.stderr
-
-
 def test_10_dialect_registry():
     r = _run(EXAMPLES_DIR / "10_dialect_registry.py")
     assert r.returncode == 0, r.stderr

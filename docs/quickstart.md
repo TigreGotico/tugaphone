@@ -107,23 +107,6 @@ print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
 See [dialects.md](dialects.md) for the full list of European and Brazilian
 sub-regional codes and the legacy aliases.
 
-## 6. Engine object
-
-`TugaphoneG2PPlugin` wraps the phonemizer in an engine object with
-`transcribe`, `transcribe_word` and `language_codes`, for a framework that
-drives several G2P engines through these members:
-
-```python
-from tugaphone.plugin import TugaphoneG2PPlugin
-
-p = TugaphoneG2PPlugin(lang="pt-PT")
-print(p.transcribe("o gato dorme"))   # o ˈɡatu ˈdɔɾmɨ
-```
-
-`SilabificadorSyllabifier` is a `SyllabifierPlugin` you can use directly. The
-phonemization path does not use it, and tugaphone does not register it as an
-entry point.
-
 ## Where next
 
 - [architecture.md](architecture.md), the lattice core and the caller-owned layers

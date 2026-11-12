@@ -117,10 +117,6 @@ class TestListDialects:
         # aliases are not canonical codes
         assert "pt" not in codes and "pt-PT-x-lisboa" not in codes
 
-    def test_plugin_exposes_registry(self):
-        from tugaphone.plugin import TugaphoneG2PPlugin
-        assert TugaphoneG2PPlugin().language_codes == list_dialects()
-
     def test_resolve_dialect_deprecated(self):
         with pytest.deprecated_call():
             assert resolve_dialect("pt-BR") == "pt-BR"

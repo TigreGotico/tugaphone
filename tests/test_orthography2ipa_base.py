@@ -3,9 +3,7 @@
 Validates:
 - stress detection delegates to the pt spec's declarative StressRules
   (correcting the overbroad bare -m/-n oxytone triggers)
-- SilabificadorSyllabifier feeds orthography2ipa's stress detection when
-  the caller passes it, and the engine uses the bundled splitter
-- TugaphoneG2PPlugin implements the shared engine interface lazily
+- the engine uses orthography2ipa's bundled splitter
 - differential audit: hand-tuned CHAR2IPA values appear among the
   pt spec's grapheme candidates
 """
@@ -13,11 +11,9 @@ import pytest
 from silabificador import syllabify
 
 import orthography2ipa
-from orthography2ipa.syllabifier_plugin import SyllabifierPlugin
 
 from tugaphone import phonemize
 from tugaphone.dialects import EuropeanPortuguese
-from tugaphone.plugin import SilabificadorSyllabifier, TugaphoneG2PPlugin
 from tugaphone.tokenizer import detect_stress_position
 
 
@@ -49,41 +45,12 @@ class TestStressDelegation:
         assert orthography2ipa.get(dialect.dialect_code).stress is not None
 
 
-class TestSyllabifierPlugin:
-    def test_implements_base(self):
-        assert isinstance(SilabificadorSyllabifier(), SyllabifierPlugin)
-
-    def test_syllables_rebuild_word(self):
-        plugin = SilabificadorSyllabifier()
-        for word in ("viagem", "lâmpada", "abacaxi", "sol"):
-            sylls = plugin.syllabify(word, "pt-PT")
-            assert "".join(sylls) == word
-
-    def test_orthography2ipa_stress_uses_it(self):
-        """orthography2ipa's own detection takes the syllables the caller names."""
-        from orthography2ipa.stress import detect_stress
-
-        rules = orthography2ipa.get("pt-PT").stress
-        plugin = SilabificadorSyllabifier()
-        assert detect_stress("viagem", rules, lang="pt-PT", syllabifier=plugin) == 1
-
+class TestSyllabification:
     @pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
     def test_the_engine_uses_the_bundled_splitter(self, lect):
         # The word is stressed on ⟨do⟩. With silabificador's split the stress
         # lands on the final syllable.
         assert phonemize("distribuidoras", lect).partition("ˈ")[2].startswith("d")
-
-
-class TestG2PEngineSurface:
-    def test_implements_base_lazily(self):
-        plugin = TugaphoneG2PPlugin()
-        # tugaphone is an engine BUILT ON orthography2ipa, not a plugin TO it —
-        # nothing over there discovers or calls this. What matters is the surface,
-        # not the inheritance.
-        for method in ("transcribe", "transcribe_word"):
-            assert callable(getattr(plugin, method))
-        assert plugin._phonemizer is None  # nothing heavy loaded yet
-        assert set(plugin.language_codes) >= {"pt-PT", "pt-BR"}
 
 
 class TestSpecParity:

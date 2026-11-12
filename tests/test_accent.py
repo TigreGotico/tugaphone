@@ -1,4 +1,4 @@
-"""Accent-forcing: respelling, overlays, round-trip, CLI and plugin exposure."""
+"""Accent-forcing: respelling, overlays, round-trip and CLI."""
 import json
 import subprocess
 import sys
@@ -128,17 +128,6 @@ def test_overlay_json_round_trip():
 def test_rules_have_unique_names():
     names = [r.name for r in DEFAULT_RESPELL_RULES]
     assert len(names) == len(set(names))
-
-
-# ---------------------------------------------------------------------------
-# plugin exposure
-# ---------------------------------------------------------------------------
-def test_plugin_force_accent_defaults_base_to_plugin_lang():
-    from tugaphone.plugin import TugaphoneG2PPlugin
-
-    plugin = TugaphoneG2PPlugin(lang="pt-PT")
-    assert plugin.force_accent("o vinho", "pt-PT-x-porto", mode="respell") \
-        == respell("o vinho", "pt-PT-x-porto", "pt-PT")
 
 
 # ---------------------------------------------------------------------------
