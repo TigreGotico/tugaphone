@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.7.1a3](https://github.com/TigreGotico/tugaphone/tree/1.7.1a3) (2026-11-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a1...1.7.1a3)
+
+**Merged pull requests:**
+
+- refactor: deprecate tugaphone.tokenizer, tugaphone.dialects and get\_dialect\_inventory [\#220](https://github.com/TigreGotico/tugaphone/pull/220) ([JarbasAl](https://github.com/JarbasAl))
+- refactor: remove tugaphone.plugin [\#219](https://github.com/TigreGotico/tugaphone/pull/219) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.7.1a1](https://github.com/TigreGotico/tugaphone/tree/1.7.1a1) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.0a1...1.7.1a1)
