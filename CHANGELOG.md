@@ -385,10 +385,6 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.3a2...1.3.4a1)
 
-**Merged pull requests:**
-
-- test: lock hiatus before diminutive suffixes \(rainha, moinho\) as a guarded invariant [\#115](https://github.com/TigreGotico/tugaphone/pull/115) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [1.3.3a2](https://github.com/TigreGotico/tugaphone/tree/1.3.3a2) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.3a1...1.3.3a2)
