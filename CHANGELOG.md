@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.1a1](https://github.com/TigreGotico/tugaphone/tree/1.7.1a1) (2026-11-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.0a1...1.7.1a1)
+
+**Merged pull requests:**
+
+- fix: read numbers that touch punctuation and warn on unread digit forms [\#221](https://github.com/TigreGotico/tugaphone/pull/221) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.7.0a1](https://github.com/TigreGotico/tugaphone/tree/1.7.0a1) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.6a1...1.7.0a1)
@@ -388,11 +396,6 @@
 ## [1.3.3a1](https://github.com/TigreGotico/tugaphone/tree/1.3.3a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.2a1...1.3.3a1)
-
-**Merged pull requests:**
-
-- fix: guard the number ceiling, expose the numeric scale and read scientific notation [\#112](https://github.com/TigreGotico/tugaphone/pull/112) ([JarbasAl](https://github.com/JarbasAl))
-- fix: detect vocalic hiatus and navigate chars across grapheme boundaries [\#111](https://github.com/TigreGotico/tugaphone/pull/111) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.3.2a1](https://github.com/TigreGotico/tugaphone/tree/1.3.2a1) (2026-09-03)
 
