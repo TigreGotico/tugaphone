@@ -98,9 +98,6 @@ class NumberParser:
     UNIT_NAMES = {
         "%": ("por cento", "por cento"),
         "€": ("euro", "euros"),
-        # Priberam DLPO, "dólar": "Unidade monetária (símbolo: $)", plural
-        # "dólares".
-        "$": ("dólar", "dólares"),
         "mm": ("milímetro", "milímetros"),
         "cm": ("centímetro", "centímetros"),
         "m": ("metro", "metros"),
@@ -530,7 +527,8 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
         # A numeric token may carry punctuation glued to its edges ("54.",
         # "05,", "5!", "(789)", "«7»", "[7]", "—7") -- split it off so
         # is_int/is_float see a clean number, then glue it back onto the
-        # spelled-out words so the caller never has to detach it with a space.
+        # spelled-out words so the caller never has to detach it with a space
+        # (see #116).
         lead, core, trail = NumberParser.split_edges(word)
         if not is_number(core):
             normalized_words.append(word)

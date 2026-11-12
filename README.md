@@ -211,13 +211,13 @@ normalize_numbers("aprovou 1 lei")        # 'aprovou uma lei'
 normalize_numbers("passou 1 dia")         # 'passou um dia'
 ```
 
+A form with digits that tugaphone cannot read, such as "COVID-19" or "3D", gives an `UnreadFormWarning` that names the form and the text, because the phoneme lattice drops its digits.
+
 ### Text normalization
 
-Written text contains conventions that a phonemizer cannot read as they are: numeric dates, digit ranges, clock times, fractions, thousands separators, abbreviations, Roman numerals and acronyms. The `tugaphone.text_normalization` module rewrites each of them into words before the number rules run.
+Written text contains conventions that a phonemizer cannot read as they are: digit ranges, clock times, thousands separators, abbreviations, Roman numerals and acronyms. The `tugaphone.text_normalization` module rewrites each of them into words before the number rules run.
 
-A dash between two numbers is a range. "1139-1185" reads as "1139 a 1185". A colon between digits is a clock time. "16:00" reads as "16 horas", "9:05" as "9 e 5" and "24:00" as "24 horas". The hour symbol names both units, so "19h30" reads as "19 horas e 30 minutos". A numeric date reads with the month name, so "25/12/2023" reads as "vinte e cinco de dezembro de dois mil e vinte e três", and the first day of a month is an ordinal ("primeiro de maio"). A proper fraction reads as "um meio", "três quartos" or "dois onze avos".
-
-A form with digits that tugaphone cannot read, such as "COVID-19" or "3D", gives an `UnreadFormWarning` that names the form and the text, because the phoneme lattice drops its digits.
+A dash between two numbers is a range. "1139-1185" reads as "1139 a 1185". A colon between digits is a clock time. "16:00" reads as "16 horas", "9:05" as "9 e 5" and "24:00" as "24 horas".
 
 European number separators are kept. The dot in "92.073" groups thousands and is dropped. The comma in "10,4" is a decimal mark and reads as "10 vírgula 4".
 
@@ -337,7 +337,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 - [docs/homographs.md](docs/homographs.md), meaning-based disambiguation
 - [docs/codeswitch.md](docs/codeswitch.md), embedded es/fr/en detection and nativization
 - [docs/numbers.md](docs/numbers.md), number normalization and gender agreement
-- [docs/text_normalization.md](docs/text_normalization.md), dates, ranges, clock times, fractions, separators, abbreviations, Roman numerals, acronyms, letter-digit codes
+- [docs/text_normalization.md](docs/text_normalization.md), ranges, clock times, separators, abbreviations, Roman numerals, acronyms, letter-digit codes
 - [docs/api.md](docs/api.md), full class and function reference
 - [docs/tokenizer.md](docs/tokenizer.md), the token-tree feature model
 - [docs/advanced.md](docs/advanced.md), the pipeline internals and integration

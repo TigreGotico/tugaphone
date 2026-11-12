@@ -116,8 +116,7 @@ normalize_numbers("2 vírgula 5 anos")  # 'dois vírgula cinco anos'
 A number followed by a unit symbol in `NumberParser.UNIT_NAMES` reads the
 symbol as its name: `%` (*por cento*), `€`, `mm`, `cm`, `m`, `km`, `km/h`,
 square and cubic metres (`m2`, `m²`, `m3`, `m³`, and the `cm`/`km` forms),
-`mg`, `g`, `kg`, `ml`, `cl`, `dl`, `l`, `L`, and `$` (*dólar*, plural
-*dólares*, Priberam DLPO). Symbols and names follow the SI
+`mg`, `g`, `kg`, `ml`, `cl`, `dl`, `l`, `L`. Symbols and names follow the SI
 brochure (*Tradução luso-brasileira de 2021 do SI*, IPQ/Inmetro, §5.2-5.3).
 Every unit name is masculine (*o grama*, *duzentos gramas*), so the number
 takes the masculine form.
