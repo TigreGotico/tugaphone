@@ -18,7 +18,7 @@ jobs:
     env:
       STAGES: lexicon:plain,expand:number,expand:date,expand:abbreviation,mark:homograph
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v7
       - name: Install tugaphone and the scriptconv test extra
         run: |
