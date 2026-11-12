@@ -111,13 +111,29 @@ def resolve_lect(lang: str = "pt-PT") -> str:
     canon = normalize_dialect_code(lang).lower()
     key = canon
     lect = None
-    while key and not (lect := _registered(_ALIASES.get(key, key))):
+    while key and not (lect := _named_lect(key)):
         key = key.rpartition("-")[0]
     resolved = lect or "pt-PT"
     if key != canon or lect is None:
         warnings.warn(f"{lang!r} is not a tugaphone lect; using {resolved}",
                       stacklevel=2)
     return resolved
+
+
+def is_supported(lang: str) -> bool:
+    """Whether ``lang`` names a tugaphone lect, itself or through an alias.
+
+    A tag that :func:`resolve_lect` answers only by its fallback is not
+    supported: another language (``en-US``), a lect written in another
+    orthography (``pt-PT-x-medieval``, Barranquenho) and an unknown sub-tag
+    (``pt-PT-x-unknown``) all return ``False``.
+    """
+    return _named_lect(normalize_dialect_code(lang).lower()) is not None
+
+
+def _named_lect(key: str) -> Optional[str]:
+    """The canonical dialect that the lowercased tag ``key`` names, or ``None``."""
+    return _registered(_ALIASES.get(key, key))
 
 
 def _registered(code: str) -> Optional[str]:
