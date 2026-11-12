@@ -12,9 +12,10 @@ import warnings
 from typing import Optional
 
 from tugaphone.version import __version__
+from tugaphone.lattice_core import pipeline
 from tugaphone.lattice_core import phonemize as _phonemize
 from tugaphone.lattice_core import phonemize
-from tugaphone.registry import list_dialects, resolve_lect
+from tugaphone.registry import is_supported, list_dialects, resolve_lect
 from tugaphone.accent import (
     force_accent,
     respell,
@@ -103,12 +104,11 @@ class TugaPhonemizer:
 
     @staticmethod
     def is_supported(lang: str) -> bool:
-        """Whether ``lang`` resolves to a known Portuguese lect.
+        """Whether ``lang`` names a tugaphone lect, itself or through an alias.
 
-        :func:`resolve_lect` falls back to ``"pt-PT"`` and never returns
-        ``None``, so this returns ``True`` for every input.
+        See :func:`tugaphone.registry.is_supported`.
         """
-        return resolve_lect(lang) is not None
+        return is_supported(lang)
 
 
 __all__ = [
@@ -116,6 +116,7 @@ __all__ = [
     "phonemize",
     "list_dialects",
     "resolve_lect",
+    "is_supported",
     "force_accent",
     "respell",
     "respell_word",
@@ -123,6 +124,7 @@ __all__ = [
     "Transform",
     "RespellRule",
     "DEFAULT_RESPELL_RULES",
+    "pipeline",
     "__version__",
 ]
 
