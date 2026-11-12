@@ -243,49 +243,6 @@ read (`EuropeanPortuguese`, `BrazilianPortuguese`, `AngolanPortuguese`,
 `MozambicanPortuguese`, `TimoresePortuguese`, and city inventories) plus the
 module-level `LEXICON` (`TugaLexicon()`) instance.
 
-## `tugaphone.plugin`
-
-Two classes for frameworks that drive engines and syllabifiers through common
-members.
-
-### `TugaphoneG2PPlugin`
-
-```python
-TugaphoneG2PPlugin(lang: str = "pt-PT", contact: str = "none")
-```
-
-An engine object around `TugaPhonemizer`, which it builds on the first
-transcription. It subclasses nothing: orthography2ipa ships no G2P plugin base
-class. `contact` passes through to `phonemize_sentence`.
-
-| Member | Description |
-|--------|-------------|
-| `language_codes` | `list_dialects()`, every reachable lect code. |
-| `transcribe(text)` | Phonemize a full sentence. |
-| `transcribe_word(word, context=None)` | Phonemize a single word. A `context` (an `orthography2ipa.WordContext`) with a `lang` overrides `self.lang`. |
-| `force_accent(text, lect, mode="ipa", base_lect=None, overlay=None)` | `tugaphone.force_accent`, with `base_lect` defaulting to `self.lang`. |
-
-```python
-from tugaphone.plugin import TugaphoneG2PPlugin
-
-p = TugaphoneG2PPlugin(lang="pt-BR")
-p.transcribe("o gato dorme")   # 'u ˈɡatu ˈdoɾmi'
-```
-
-### `SilabificadorSyllabifier`
-
-Implements `orthography2ipa.syllabifier_plugin.SyllabifierPlugin`, wrapping
-`silabificador`. The phonemization path does not use it, and tugaphone does not
-register it as an entry point. A caller passes it to an engine with
-`Pipeline(syllabifier=SilabificadorSyllabifier())`.
-
-```python
-from tugaphone.plugin import SilabificadorSyllabifier
-
-s = SilabificadorSyllabifier()
-s.syllabify("fonologia")   # ['fo', 'no', 'lo', 'gi', 'a']
-```
-
 ## Where next
 
 - [architecture.md](architecture.md), the lattice core and caller-owned layers

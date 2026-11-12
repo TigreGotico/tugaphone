@@ -235,20 +235,6 @@ the diphthongs and hiatus of the lect spec. The `tugaphone.tokenizer` token tree
 syllabifies with
 [silabificador](https://github.com/TigreGotico/silabificador).
 
-### Engine object
-
-`TugaphoneG2PPlugin` wraps the phonemizer in an engine object with
-`transcribe`, `transcribe_word` and `language_codes`. `transcribe_word` accepts
-an `orthography2ipa.WordContext`, so a framework that drives several G2P
-engines through these three members can drive tugaphone too:
-
-```python
-from tugaphone.plugin import TugaphoneG2PPlugin
-
-p = TugaphoneG2PPlugin(lang="pt-BR")
-print(p.transcribe("o gato dorme"))   # u ˈɡatu ˈdoɾmi
-```
-
 ### Command line
 
 The package installs a `tugaphone` command:

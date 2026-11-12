@@ -119,12 +119,6 @@ tugaphone phonemize    "o gato dorme"  --lect pt-BR
 tugaphone list
 ```
 
-## Plugin
-
-`TugaphoneG2PPlugin.force_accent(text, lect, mode=…, base_lect=…, overlay=…)`
-exposes the same call, `base_lect` defaults to the plugin's own `lang`, i.e. the
-accent the grapheme voice it drives speaks.
-
 ---
 
 ## How respelling works, and its ceiling

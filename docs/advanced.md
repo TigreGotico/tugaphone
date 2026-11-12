@@ -98,9 +98,7 @@ usable on its own:
   pipeline's `mark` step.
 
 A TTS front-end typically wires `tugaphone` as the G2P stage: pass text and a
-target lect code, hand the returned IPA string to the acoustic model. A
-framework that drives engine objects can use `TugaphoneG2PPlugin` instead, see
-[api.md](api.md#tugaphoneplugin).
+target lect code, hand the returned IPA string to the acoustic model.
 
 ## The token-feature API
 
