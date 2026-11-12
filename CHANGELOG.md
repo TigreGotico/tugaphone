@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.1a5](https://github.com/TigreGotico/tugaphone/tree/1.7.1a5) (2026-11-12)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a4...1.7.1a5)
+
+**Merged pull requests:**
+
+- test: add the pt-PT and pt-BR sentence gate [\#229](https://github.com/TigreGotico/tugaphone/pull/229) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.7.1a4](https://github.com/TigreGotico/tugaphone/tree/1.7.1a4) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a3...1.7.1a4)
@@ -389,10 +397,6 @@
 ## [1.3.5a1](https://github.com/TigreGotico/tugaphone/tree/1.3.5a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.4a2...1.3.5a1)
-
-**Merged pull requests:**
-
-- fix: spell numbers that carry trailing punctuation without detaching it [\#121](https://github.com/TigreGotico/tugaphone/pull/121) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.3.4a2](https://github.com/TigreGotico/tugaphone/tree/1.3.4a2) (2026-09-03)
 
