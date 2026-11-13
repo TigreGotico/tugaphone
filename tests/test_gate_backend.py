@@ -10,10 +10,10 @@ from tugaphone import phonemize
 
 # Infopédia: "para" the verb is [ˈpaɾɐ], the preposition [ˈpɐɾɐ] (bifonia's
 # sense table); "três" is [ˈtɾeʃ], which tugaphone keeps at the end of a sentence;
-# "comboio" is [kõˈbɔju].
+# "velho" is [ˈvɛʎu].
 STOPS = "O carro para aqui."
 DIGIT = "Aqui é a porta 3."
-LEXICAL = "O comboio é rápido."
+LEXICAL = "O carro velho é rápido."
 
 
 def ipa(backend, text, lang="pt-PT"):
@@ -42,8 +42,8 @@ def test_expand_off_drops_the_digit():
 
 def test_lexicon_off_loses_the_lexicon_vowel():
     full = TugaphoneBackend()
-    assert "kõˈbɔju" in ipa(full, LEXICAL)
-    assert "kõˈbɔju" not in ipa(full.without("lexicon"), LEXICAL)
+    assert "ˈvɛʎu" in ipa(full, LEXICAL)
+    assert "ˈvɛʎu" not in ipa(full.without("lexicon"), LEXICAL)
 
 
 @pytest.mark.parametrize("stage,text", [("mark", DIGIT), ("mark", LEXICAL),
