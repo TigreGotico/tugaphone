@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.1a6](https://github.com/TigreGotico/tugaphone/tree/1.7.1a6) (2026-11-13)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a5...1.7.1a6)
+
+**Merged pull requests:**
+
+- test: probe the lexicon stage with velho, which bifonia does not mark [\#233](https://github.com/TigreGotico/tugaphone/pull/233) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [1.7.1a5](https://github.com/TigreGotico/tugaphone/tree/1.7.1a5) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a4...1.7.1a5)
@@ -389,10 +397,6 @@
 ## [1.3.6a1](https://github.com/TigreGotico/tugaphone/tree/1.3.6a1) (2026-09-03)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.3.5a1...1.3.6a1)
-
-**Merged pull requests:**
-
-- fix: read numbers of any size through ovos-number-parser with correct long and short scales [\#122](https://github.com/TigreGotico/tugaphone/pull/122) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.3.5a1](https://github.com/TigreGotico/tugaphone/tree/1.3.5a1) (2026-09-03)
 
