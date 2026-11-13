@@ -1,0 +1,30 @@
+{
+  "about": {
+    "description": "Fixed expressions in which a capital letter after a word is a letter, not a Roman numeral. tugaphone.text_normalization.expand_regnal_numerals leaves the letter as written when the word right before it matches an entry.",
+    "match": "Each entry is '<word> <letter>'. The word is compared case-insensitively with the word before the letter, with its trailing punctuation removed. The letter is compared exactly.",
+    "guards": "The entries with a letter that is not I, V or X (vitamina C, complexo B, Dia D, Plano B) do not convert under the current rules. They are kept so that a later rule cannot read them as numerals."
+  },
+  "expressions": {
+    "raio X": "radiation, the equipment and the exam (Priberam DLPO, 'raio X')",
+    "raios X": "plural; synonym of 'raios de Röntgen' (Priberam DLPO, 'raio')",
+    "geração X": "sociology (Priberam DLPO, 'geração X')",
+    "fator X": "unknown factor; a television format",
+    "factor X": "spelling before the 1990 Orthographic Agreement",
+    "projeto X": "placeholder project name; a film title",
+    "projecto X": "spelling before the 1990 Orthographic Agreement",
+    "Malcolm X": "the name of Malcolm X; Malcolm is a given name",
+    "Twitter X": "the service named Twitter/X, written with a space",
+    "OS X": "the Apple operating system",
+    "cromossoma X": "sex chromosome",
+    "cromossomo X": "sex chromosome, Brazilian spelling",
+    "vitamina A": "vitamin",
+    "vitamina B": "vitamin",
+    "vitamina C": "vitamin",
+    "vitamina D": "vitamin",
+    "vitamina E": "vitamin",
+    "vitamina K": "vitamin",
+    "complexo B": "vitamin B complex",
+    "Dia D": "a decisive day (Priberam DLPO, 'dia D')",
+    "Plano B": "an alternative plan"
+  }
+}
