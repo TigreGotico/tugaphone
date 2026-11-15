@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.1a9](https://github.com/TigreGotico/tugaphone/tree/1.7.1a9) (2026-11-15)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a8...1.7.1a9)
+
+**Merged pull requests:**
+
+- Update actions/checkout action to v7 [\#230](https://github.com/TigreGotico/tugaphone/pull/230) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [1.7.1a8](https://github.com/TigreGotico/tugaphone/tree/1.7.1a8) (2026-11-15)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a7...1.7.1a8)
@@ -376,7 +384,6 @@
 **Merged pull requests:**
 
 - Update dependency python to 3.15 [\#132](https://github.com/TigreGotico/tugaphone/pull/132) ([renovate[bot]](https://github.com/apps/renovate))
-- Update actions/checkout action to v7 [\#128](https://github.com/TigreGotico/tugaphone/pull/128) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [1.4.2a1](https://github.com/TigreGotico/tugaphone/tree/1.4.2a1) (2026-10-29)
 
@@ -389,10 +396,6 @@
 ## [1.4.1a2](https://github.com/TigreGotico/tugaphone/tree/1.4.1a2) (2026-09-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.1a1...1.4.1a2)
-
-**Merged pull requests:**
-
-- Update actions/setup-python action to v7 [\#129](https://github.com/TigreGotico/tugaphone/pull/129) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [1.4.1a1](https://github.com/TigreGotico/tugaphone/tree/1.4.1a1) (2026-09-07)
 
