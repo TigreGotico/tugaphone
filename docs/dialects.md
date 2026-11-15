@@ -68,7 +68,7 @@ print(ph.phonemize_sentence("A vila é bonita.", "pt-PT-x-madeira"))
 
 ```python
 print(ph.phonemize_sentence("noite", "pt-BR"))       # ˈnojt͡ʃi
-print(ph.phonemize_sentence("noite", "pt-BR-x-sp"))  # ˈnojt͡ʃi
+print(ph.phonemize_sentence("noite", "pt-BR-x-recife"))  # ˈnojti
 ```
 
 ### African, Asian and other lects

@@ -67,8 +67,8 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 | `pt-TL` | Timorese Portuguese (Dili) |
 
 Sub-regional varieties use private-use subtags (`pt-PT-x-porto`,
-`pt-BR-x-sp`, …). An unrecognised code falls back to European Portuguese with
-a warning. `tugaphone.is_supported(code)` tells you first whether a code names a
+`pt-BR-x-sp`, …). An unrecognised code falls back to its parent lect, or else
+to European Portuguese, with a warning. `tugaphone.is_supported(code)` tells you first whether a code names a
 lect. The full list and the legacy aliases are in [dialects.md](dialects.md).
 
 ## 4. First real call

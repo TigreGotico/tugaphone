@@ -131,7 +131,8 @@ The European sub-regional lects (`pt-PT-x-porto`, `-braga`, `-tras-os-montes`,
 `-bahia`, …) and the rest are all reachable the same way. See
 [docs/dialects.md](docs/dialects.md) for the full list and the legacy aliases.
 
-An unknown code falls back to `pt-PT` with a warning. `is_supported(code)` tells
+An unknown code falls back to its parent lect, or else to `pt-PT`, with a
+warning. `is_supported(code)` tells
 you first whether a code names a lect:
 
 ```python
