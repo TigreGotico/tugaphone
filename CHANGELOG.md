@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.1a8](https://github.com/TigreGotico/tugaphone/tree/1.7.1a8) (2026-11-15)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a7...1.7.1a8)
+
+**Merged pull requests:**
+
+- docs: sync README and docs with dev [\#235](https://github.com/TigreGotico/tugaphone/pull/235) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.7.1a7](https://github.com/TigreGotico/tugaphone/tree/1.7.1a7) (2026-11-15)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a6...1.7.1a7)
@@ -389,10 +397,6 @@
 ## [1.4.1a1](https://github.com/TigreGotico/tugaphone/tree/1.4.1a1) (2026-09-07)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.0a1...1.4.1a1)
-
-**Merged pull requests:**
-
-- fix: honour the Portuguese keep-list on both code-switch classifiers [\#127](https://github.com/TigreGotico/tugaphone/pull/127) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.4.0a1](https://github.com/TigreGotico/tugaphone/tree/1.4.0a1) (2026-09-03)
 
