@@ -6,11 +6,11 @@ stress marks.
 
 ```
 O gato dorme.
-pt-PT → o ˈɡatu ˈdɔɾmɨ
+pt-PT → u ˈɡatu ˈdɔɾmɨ
 pt-BR → u ˈɡatu ˈdoɾmi
 pt-AO → ʊ ˈɡatʊ ˈdɔʁmɨ
 pt-MZ → u ˈɡatu ˈdɔrme
-pt-TL → o ˈɡatʊ ˈdɔrme
+pt-TL → o ˈɡato ˈdɔrme
 ```
 
 Every IPA sample in these docs is the output of the orthography2ipa lect specs
@@ -21,9 +21,10 @@ Under the hood it drives the
 [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) candidate
 lattice: a dialect **is** an orthography2ipa lect spec, and the spec's grapheme
 table, allophone rules and cross-word sandhi produce that dialect's phonology
-directly. tugaphone adds the stages orthography2ipa leaves to the caller: a
-phonetic lexicon, meaning-based homograph resolution, and gender- and scale-aware
-number expansion, wired through orthography2ipa's own extension points. See
+directly. tugaphone adds the stages orthography2ipa leaves to the caller: text
+normalization, gender- and scale-aware number expansion, meaning-based homograph
+marking and the residual lexicon of `pt-PT` and `pt-BR`, wired through
+orthography2ipa's own extension points. See
 [docs/architecture.md](docs/architecture.md).
 
 ---
@@ -47,7 +48,7 @@ from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
 print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))
-# o ˈɡatu ˈdɔɾmɨ
+# u ˈɡatu ˈdɔɾmɨ
 ```
 
 Construct `TugaPhonemizer()`, then call `phonemize_sentence(text, lang)` as
@@ -118,11 +119,11 @@ sub-regional lects. `list_dialects()` returns the full set:
 ```python
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
     print(code, "→", ph.phonemize_sentence("Choveu muito ontem.", code))
-# pt-PT → ʃuˈvew ˈmũjtu ˈõtɐ̃j
-# pt-BR → ʃoˈvew ˈmwĩtʊ ˈõtẽj
-# pt-AO → ʃoˈvew ˈmũjntʊ ˈõntẽj
-# pt-MZ → ʃoˈvew ˈmũjtu ˈõtẽj
-# pt-TL → ʃoˈvew ˈmujtʊ ˈõntɐ̃j
+# pt-PT → ʃuˈvew ˈmũj̃tu ˈõtɐ̃j̃
+# pt-BR → ʃoˈvew ˈmũj̃tu ˈõtẽj̃
+# pt-AO → ʃoˈvew ˈmũj̃tʊ ˈõtẽj̃
+# pt-MZ → ʃoˈvew ˈmũj̃tu ˈõtẽ
+# pt-TL → ʃoˈvew ˈmũj̃to ˈõtẽj̃
 ```
 
 The European sub-regional lects (`pt-PT-x-porto`, `-braga`, `-tras-os-montes`,
@@ -130,17 +131,28 @@ The European sub-regional lects (`pt-PT-x-porto`, `-braga`, `-tras-os-montes`,
 `-bahia`, …) and the rest are all reachable the same way. See
 [docs/dialects.md](docs/dialects.md) for the full list and the legacy aliases.
 
+An unknown code falls back to its parent lect, or else to `pt-PT`, with a
+warning. `is_supported(code)` tells
+you first whether a code names a lect:
+
+```python
+from tugaphone import is_supported
+
+is_supported("pt-BR-x-sao-paulo")   # True, through an alias
+is_supported("en-US")               # False
+```
+
 ### Homograph disambiguation
 
 Heterophonic homographs are resolved by meaning via **bifonia**: *sede* thirst
 vs headquarters, *forma* mould vs shape, *gosto* noun vs verb. bifonia inserts
-open/closed-vowel diacritics during the pipeline's normalization stage, before
-the lattice transcribes the sentence, so the same spelling maps to different
-pronunciations depending on sentence context.
+open/closed-vowel diacritics in the pipeline's `mark` stage, after number
+expansion and before the lattice transcribes the sentence, so the same spelling
+maps to different pronunciations depending on sentence context.
 
 ```python
 print(ph.phonemize_sentence("Eu gosto de música."))   # verb → ˈew ˈɡɔʃtu dɨ ˈmuzikɐ
-print(ph.phonemize_sentence("Tenho bom gosto."))       # noun → ˈtɛɲu ˈbõ ˈɡoʃtu
+print(ph.phonemize_sentence("Tenho bom gosto."))       # noun → ˈteɲu ˈbõ ˈɡoʃtu
 ```
 
 ### Sub-regional accents
@@ -153,7 +165,7 @@ spec, so no extra argument is needed:
 ```python
 # Porto: rising diphthongs, betacism (/v/ → [b])
 print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
-# o ˈbiɲu ˈjɛ ˈmujtu ˈbõ
+# u ˈbiɲu ˈjɛ ˈmũj̃tu ˈbõ
 
 # Trás-os-Montes: <ch> → [tʃ], betacism
 print(ph.phonemize_sentence("A chave.", "pt-PT-x-tras-os-montes"))
@@ -181,7 +193,7 @@ from tugaphone import force_accent
 
 # phoneme-input TTS: the target accent's IPA
 force_accent("o vinho verde", "pt-PT-x-porto", mode="ipa")
-# 'o ˈbiɲu ˈbjɛɾdɨ'
+# 'u ˈbiɲu ˈbjɛɾdɨ'
 
 # grapheme-input pt-PT TTS: respelled text it will pronounce with the accent
 force_accent("o vinho verde", "pt-PT-x-porto", mode="respell", base_lect="pt-PT")
@@ -231,8 +243,8 @@ The numbers themselves are then spelled out by `normalize_numbers` in standard E
 
 Stress and the dialect's phonology come from the orthography2ipa lect spec.
 Syllabification comes from the bundled splitter of orthography2ipa, which reads
-the diphthongs and hiatus of the lect spec. The `tugaphone.tokenizer` token tree
-syllabifies with
+the diphthongs and hiatus of the lect spec. Only the deprecated
+`tugaphone.tokenizer` token tree syllabifies with
 [silabificador](https://github.com/TigreGotico/silabificador).
 
 ### Command line
@@ -307,12 +319,14 @@ rules-only benchmark baseline, not the phonemization path. Both modules and
 
 tugaphone is part of the TigreGotico Portuguese NLP stack:
 
-| Library | Role |
+| Library | Role in tugaphone |
 |---------|------|
-| [tugalex](https://github.com/TigreGotico/tugalex) | Phonetic lexicon |
-| [silabificador](https://github.com/TigreGotico/silabificador) | Syllabifier |
-| [bifonia](https://github.com/TigreGotico/bifonia) | Heterophone sense disambiguation |
 | [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) | The candidate lattice and the Portuguese lect specs |
+| [o2i-lexicons](https://github.com/TigreGotico/o2i-lexicons) | The `pt-PT` and `pt-BR` residual lexicons |
+| [bifonia](https://github.com/TigreGotico/bifonia) | Heterophone sense disambiguation, the pipeline's `mark` stage |
+| [ovos-number-parser](https://github.com/OpenVoiceOS/ovos-number-parser) | Number words for `normalize_numbers` |
+| [tugalex](https://github.com/TigreGotico/tugalex) | Noun and given-name gender for number and ordinal agreement |
+| [silabificador](https://github.com/TigreGotico/silabificador) | Syllabifier of the deprecated token tree |
 
 ---
 

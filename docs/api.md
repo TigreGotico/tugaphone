@@ -46,7 +46,7 @@ from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
 ph.phonemize_sentence("O gato dorme.", "pt-BR")        # 'u ˈɡatu ˈdoɾmi'
-ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-porto")  # 'o ˈbiɲu ˈjɛ ˈbõ'
+ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-porto")  # 'u ˈbiɲu ˈjɛ ˈbõ'
 ```
 
 ### `force_accent` (staticmethod)
@@ -72,7 +72,7 @@ Whether `lang` names a tugaphone lect, itself or through an alias
 
 A tag that `resolve_lect` answers only by its fallback returns `False`:
 another language (`"en-US"`, `"es-ES"`), a lect written in another
-orthography (`"pt-PT-x-medieval"`, Barranquenho `"pt-x-barranquenho"`) and
+orthography (`"pt-PT-x-medieval"`, Barranquenho `"ext-PT-x-barranco"`) and
 an unknown sub-tag (`"pt-PT-x-unknown"`). `resolve_lect` still answers these
 tags with a fallback lect and a warning.
 
@@ -81,6 +81,22 @@ from tugaphone import is_supported
 
 is_supported("pt-BR-x-sao-paulo")  # True
 is_supported("en-US")              # False
+```
+
+## `tugaphone.phonemize`
+
+```python
+phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str
+```
+
+The function behind `TugaPhonemizer.phonemize_sentence`, with the same `lang`
+and `contact` arguments and the same return value. It takes no
+`regional_dialect` argument.
+
+```python
+import tugaphone
+
+tugaphone.phonemize("O gato dorme.", "pt-BR")   # 'u ˈɡatu ˈdoɾmi'
 ```
 
 ## `tugaphone.accent`
@@ -164,10 +180,13 @@ are re-exported from the package root.
 |--------|------|
 | `resolve_lect(lang="pt-PT")` | Resolve any BCP-47 code (case-insensitive, alias-aware) to the orthography2ipa lect code that answers for it, unresolved codes fall back to the parent tag, then `pt-PT`. |
 | `list_dialects()` | Sorted list of every reachable lect code (the Portuguese-family orthography2ipa specs). |
+| `is_supported(lang)` | Whether `lang` names a lect, itself or through an alias. See [`is_supported`](#is_supported-staticmethod). |
+| `default_contact(lect)` | The contact language that `contact="auto"` gives an unclassified word: `"es"` for `pt-UY`, `"en"` for every other lect. |
 | `PACKAGED_LEXICON_LECTS` | The lects that take a packaged orthography2ipa lexicon: `pt-PT` and `pt-BR`. |
 | `lexicon_region(lect)` | **Deprecated**, returns `None`: no lect takes a `tugalex` region map. Emits a `DeprecationWarning` that names the removal release. |
 | `normalize_dialect_code(lang)` | BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). |
 | `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`, emits a `DeprecationWarning`. |
+| `get_dialect_inventory(lang="pt-PT")` | **Deprecated**, returns the `tugaphone.dialects` inventory of the nearest national standard. Emits a `DeprecationWarning` and goes in tugaphone 2.0.0. |
 
 ```python
 from tugaphone import resolve_lect, list_dialects

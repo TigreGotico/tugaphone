@@ -17,10 +17,17 @@ performs context-sensitive sense disambiguation and inserts the open/closed
 vowel diacritic directly into the orthography, so the lattice produces the
 correct vowel quality without any special casing.
 
-bifonia receives the lect code. Every `pt-BR` lect takes the Brazilian marks:
-Brazilian Portuguese keeps the stressed vowel closed in every sense of *soma*,
-*aceno*, *abono*, *domo*, *empeno* and *desempeno*. Every other lect takes the
-European marks.
+bifonia receives the lect code. Every `pt-BR` and `pt-UY` lect takes the
+Brazilian marks: Brazilian Portuguese keeps the stressed vowel closed in every
+sense of *soma*, *aceno*, *abono*, *domo*, *empeno* and *desempeno*. Every other
+lect takes the European marks. bifonia's `data/lect_overrides.csv` holds these
+rows with their sources.
+
+bifonia also marks a short list of words that need no context, from its
+`data/context_free_marks.csv`: a mark that an older spelling norm wrote and that
+the lect says, such as *pêra* for `pt-PT` and *assembléia* for `pt-BR`. Each
+row names the `pt-PT` and `pt-BR` lects that take its mark, and every other lect
+takes none.
 
 ```python
 from tugaphone import TugaPhonemizer
@@ -29,11 +36,11 @@ ph = TugaPhonemizer()
 
 # sede thirst (closed /e/)
 print(ph.phonemize_sentence("Tenho muita sede."))
-# ˈtɛɲu ˈmujtɐ ˈsedɨ
+# ˈteɲu ˈmũj̃tɐ ˈsedɨ
 
 # sede headquarters (open /ɛ/)
 print(ph.phonemize_sentence("A sede da empresa fica em Lisboa."))
-# ɐ ˈsɛdɨ dɐ ẽˈpɾezɐ ˈfikɐ ẽj liʒˈboɐ
+# ɐ ˈsɛdɨ dɐ ẽˈpɾezɐ ˈfikɐ ɐ̃j̃ liʒˈboɐ
 
 # gosto verb (open /ɔ/)
 print(ph.phonemize_sentence("Eu gosto de música."))
@@ -41,7 +48,7 @@ print(ph.phonemize_sentence("Eu gosto de música."))
 
 # gosto noun (closed /o/)
 print(ph.phonemize_sentence("Tenho bom gosto."))
-# ˈtɛɲu ˈbõ ˈɡoʃtu
+# ˈteɲu ˈbõ ˈɡoʃtu
 ```
 
 ---

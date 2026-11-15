@@ -95,19 +95,21 @@ from tugaphone import TugaPhonemizer
 ph = TugaPhonemizer()
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
     print(code, "→", ph.phonemize_sentence("O gato dorme.", code))
-# pt-PT → o ˈɡatu ˈdɔɾmɨ
+# pt-PT → u ˈɡatu ˈdɔɾmɨ
 # pt-BR → u ˈɡatu ˈdoɾmi
 # pt-AO → ʊ ˈɡatʊ ˈdɔʁmɨ
 # pt-MZ → u ˈɡatu ˈdɔrme
-# pt-TL → o ˈɡatʊ ˈdɔrme
+# pt-TL → o ˈɡato ˈdɔrme
 ```
 
 ## The token-feature API
 
-`tugaphone.tokenizer` and `tugaphone.dialects` remain as a token-tree
-linguistic **feature** API (manner, place, voicing, vowel height, syllable
-roles, CV skeletons) and as the rules-only benchmark baseline. They are **not**
-the phonemization path, `phonemize_sentence` never routes through them. See
+`tugaphone.tokenizer` and `tugaphone.dialects` are a token-tree linguistic
+**feature** API (manner, place, voicing, vowel height, syllable roles, CV
+skeletons) and the rules-only benchmark baseline. They are **not** the
+phonemization path, `phonemize_sentence` never routes through them. Both
+modules and `tugaphone.registry.get_dialect_inventory` are deprecated: they emit
+a `DeprecationWarning` and go in tugaphone 2.0.0. See
 [tokenizer.md](tokenizer.md) for the feature model.
 
 ## Where next
