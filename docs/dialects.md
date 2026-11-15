@@ -11,11 +11,11 @@ from tugaphone import TugaPhonemizer
 ph = TugaPhonemizer()
 for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
     print(code, "→", ph.phonemize_sentence("O gato dorme.", code))
-# pt-PT → o ˈɡatu ˈdɔɾmɨ
+# pt-PT → u ˈɡatu ˈdɔɾmɨ
 # pt-BR → u ˈɡatu ˈdoɾmi
 # pt-AO → ʊ ˈɡatʊ ˈdɔʁmɨ
 # pt-MZ → u ˈɡatu ˈdɔrme
-# pt-TL → o ˈɡatʊ ˈdɔrme
+# pt-TL → o ˈɡato ˈdɔrme
 ```
 
 ## The lect codes
@@ -49,7 +49,7 @@ directly:
 print(ph.phonemize_sentence("A bola é do Porto.", "pt-PT-x-porto"))
 # ɐ ˈbwɔlɐ ˈjɛ du ˈpwoɾtu
 print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
-# o ˈbiɲu ˈjɛ ˈmujtu ˈbõ
+# u ˈbiɲu ˈjɛ ˈmũj̃tu ˈbõ
 
 # Trás-os-Montes: <ch> → [tʃ], betacism
 print(ph.phonemize_sentence("A chave.", "pt-PT-x-tras-os-montes"))
@@ -67,8 +67,8 @@ print(ph.phonemize_sentence("A vila é bonita.", "pt-PT-x-madeira"))
 `pt-BR-x-ce`, `pt-BR-x-norte`, `pt-BR-x-cuiaba`, `pt-BR-x-floripa`.
 
 ```python
-print(ph.phonemize_sentence("noite", "pt-BR"))       # ˈnojtʃɪ
-print(ph.phonemize_sentence("noite", "pt-BR-x-sp"))  # ˈnojti
+print(ph.phonemize_sentence("noite", "pt-BR"))       # ˈnojt͡ʃi
+print(ph.phonemize_sentence("noite", "pt-BR-x-sp"))  # ˈnojt͡ʃi
 ```
 
 ### African, Asian and other lects
@@ -109,6 +109,17 @@ from tugaphone import resolve_lect
 resolve_lect("pt-PT-x-lisboa")     # 'pt-PT-x-lisbon'
 resolve_lect("pt-BR-x-sao-paulo")  # 'pt-BR-x-sp'
 resolve_lect("pt")                 # 'pt-PT'
+```
+
+`is_supported` answers whether a code names a lect, itself or through an alias.
+A code that `resolve_lect` answers only by a fallback returns `False`:
+
+```python
+from tugaphone import is_supported
+
+is_supported("pt-PT-x-azores")      # True
+is_supported("pt-PT-x-unknown")     # False
+is_supported("ext-PT-x-barranco")   # False
 ```
 
 ## Lexicon vs pure lattice

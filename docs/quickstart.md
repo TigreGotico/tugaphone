@@ -6,7 +6,7 @@ stress markers.
 
 ```
 O gato dorme.
-pt-PT → o ˈɡatu ˈdɔɾmɨ
+pt-PT → u ˈɡatu ˈdɔɾmɨ
 pt-BR → u ˈɡatu ˈdoɾmi
 ```
 
@@ -35,7 +35,7 @@ changes the phonology, not just the spelling:
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # o ˈɡatu ˈdɔɾmɨ
+print(ph.phonemize_sentence("O gato dorme.", "pt-PT"))   # u ˈɡatu ˈdɔɾmɨ
 print(ph.phonemize_sentence("O gato dorme.", "pt-BR"))   # u ˈɡatu ˈdoɾmi
 ```
 
@@ -67,8 +67,9 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 | `pt-TL` | Timorese Portuguese (Dili) |
 
 Sub-regional varieties use private-use subtags (`pt-PT-x-porto`,
-`pt-BR-x-sp`, …). An unrecognised code falls back to European Portuguese. The
-full list and the legacy aliases are in [dialects.md](dialects.md).
+`pt-BR-x-sp`, …). An unrecognised code falls back to European Portuguese with
+a warning. `tugaphone.is_supported(code)` tells you first whether a code names a
+lect. The full list and the legacy aliases are in [dialects.md](dialects.md).
 
 ## 4. First real call
 
@@ -78,7 +79,7 @@ from tugaphone import TugaPhonemizer
 ph = TugaPhonemizer()
 sentence = "Vou pôr a manteiga no frigorífico."
 print(ph.phonemize_sentence(sentence, "pt-PT"))
-# ˈvo ˈpoɾ ɐ mɐ̃ˈtɐjɡɐ nu fɾiɡuˈɾifiku
+# ˈvo ˈpoɾ ɐ mɐ̃ˈtejɡɐ nu fɾiɡuˈɾifiku
 ```
 
 Digits need no preparation. `phonemize_sentence` spells them out with gender
@@ -101,7 +102,7 @@ extra argument is needed:
 ```python
 ph = TugaPhonemizer()
 print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
-# o ˈbiɲu ˈjɛ ˈmujtu ˈbõ   (betacism: vinho → binho, rising diphthong: é → jɛ)
+# u ˈbiɲu ˈjɛ ˈmũj̃tu ˈbõ   (betacism: vinho → binho, rising diphthong: é → jɛ)
 ```
 
 See [dialects.md](dialects.md) for the full list of European and Brazilian

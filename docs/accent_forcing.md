@@ -32,7 +32,7 @@ target lect. This is a thin wrapper over `phonemize`.
 from tugaphone import force_accent
 
 force_accent("o vinho verde", "pt-PT-x-porto", mode="ipa")
-# 'o ˈbiɲu ˈbjɛɾdɨ'   ← Northern betacism, [v]→[b], from the lect spec
+# 'u ˈbiɲu ˈbjɛɾdɨ'   ← Northern betacism, [v]→[b], from the lect spec
 ```
 
 Feed the returned string straight to a phoneme-input voice.
@@ -73,13 +73,13 @@ overlay = AccentOverlay(
     name="my-voice-tweaks",
     transforms=[
         # stage="ipa" edits the phonemic output of mode="ipa"
-        Transform(kind="regex", pattern="ʀ", replacement="ɾ", stage="ipa"),
+        Transform(kind="regex", pattern="ʁ", replacement="ɾ", stage="ipa"),
         # stage="text" edits the respelled text of mode="respell"
         Transform(kind="word", pattern="binho", replacement="vinho", stage="text"),
     ],
 )
 
-force_accent("o carro", "pt-PT", mode="ipa", overlay=overlay)   # 'o ˈkaɾu'
+force_accent("o carro", "pt-PT", mode="ipa", overlay=overlay)   # 'u ˈkaɾu'
 
 open("voice.json", "w").write(overlay.to_json())      # share it
 overlay = AccentOverlay.from_json(open("voice.json").read())
