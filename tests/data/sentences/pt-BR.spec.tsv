@@ -1,0 +1,226 @@
+id	category	text	reading	cite
+pt-BR-plain-01	plain	O gato é preto.	-	
+pt-BR-plain-02	plain	O livro é muito antigo.	-	
+pt-BR-plain-03	plain	O café é forte.	-	
+pt-BR-plain-04	plain	O trem é rápido.	-	
+pt-BR-plain-05	plain	O mar é calmo hoje.	-	
+pt-BR-plain-06	plain	O rio é largo.	-	
+pt-BR-plain-07	plain	O médico foi simpático.	-	
+pt-BR-plain-08	plain	O pão é fresco.	-	
+pt-BR-plain-09	plain	O caminho é difícil.	-	
+pt-BR-plain-10	plain	O vento é forte no inverno.	-	
+pt-BR-plain-11	plain	O professor é paciente.	-	
+pt-BR-plain-12	plain	O céu é azul.	-	
+pt-BR-plain-13	plain	O teatro é antigo.	-	
+pt-BR-plain-14	plain	O museu é famoso.	-	
+pt-BR-plain-15	plain	O sol é quente no verão.	-	
+pt-BR-plain-16	plain	O jardim é bonito na primavera.	-	
+pt-BR-plain-17	plain	O castelo é muito antigo.	-	
+pt-BR-plain-18	plain	O carro é vermelho.	-	
+pt-BR-plain-19	plain	O vinho é bom.	-	
+pt-BR-plain-20	plain	O chapéu é preto e branco.	-	
+pt-BR-plain-21	plain	O cavalo é bonito.	-	
+pt-BR-plain-22	plain	O barco é pequeno.	-	
+pt-BR-plain-23	plain	O quadro é lindo.	-	
+pt-BR-plain-24	plain	O silêncio é total.	-	
+pt-BR-plain-25	plain	O hospital é moderno.	-	
+pt-BR-plain-26	plain	O mercado é barato.	-	
+pt-BR-plain-27	plain	O dicionário é útil.	-	
+pt-BR-plain-28	plain	O inverno foi longo.	-	
+pt-BR-plain-29	plain	O problema é simples.	-	
+pt-BR-plain-30	plain	O hotel é confortável.	-	
+pt-BR-plain-31	plain	O caderno é azul.	-	
+pt-BR-plain-32	plain	O avião é enorme.	-	
+pt-BR-plain-33	plain	O relógio é de ouro.	-	
+pt-BR-plain-34	plain	A sopa é quente.	-	
+pt-BR-plain-35	plain	O dia é frio.	-	
+pt-BR-plain-36	plain	A música é alegre.	-	
+pt-BR-plain-37	plain	O pai é alto.	-	
+pt-BR-plain-38	plain	O filho é feliz.	-	
+pt-BR-plain-39	plain	O tempo é curto.	-	
+pt-BR-plain-40	plain	O campo é verde.	-	
+pt-BR-plain-41	plain	O computador é rápido.	-	
+pt-BR-plain-42	plain	O jantar foi simples.	-	
+pt-BR-number-01	number	É a página 25.	é a página vinte e cinco	reading: C&C p.387 (e between tens and units), pp.390-391 (cardinals)
+pt-BR-number-02	number	O quarto 12 é grande.	o quarto doze é grande	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-03	number	O ônibus 42 é rápido.	o ônibus quarenta e dois é rápido	reading: C&C p.387 (e between tens and units), pp.390-391
+pt-BR-number-04	number	O trem 15 é rápido.	o trem quinze é rápido	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-05	number	O lugar 7 é ali.	o lugar sete é ali	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-06	number	A porta 3 é aqui.	a porta três é aqui	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-07	number	Foi em 1974.	foi em mil novecentos e setenta e quatro	reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)
+pt-BR-number-08	number	O castelo é de 1147.	o castelo é de mil cento e quarenta e sete	reading: C&C p.386 (cento between cem and duzentos), p.387
+pt-BR-number-09	number	O hotel é de 1888.	o hotel é de mil oitocentos e oitenta e oito	reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)
+pt-BR-number-10	number	O museu é de 1950.	o museu é de mil novecentos e cinquenta	reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)
+pt-BR-number-11	number	O teatro é de 1793.	o teatro é de mil setecentos e noventa e três	reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)
+pt-BR-number-12	number	O mercado é de 1882.	o mercado é de mil oitocentos e oitenta e dois	reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)
+pt-BR-number-13	number	O carro é de 2015.	o carro é de dois mil e quinze	reading: C&C p.387
+pt-BR-number-14	number	O castelo é do século XII.	o castelo é do século doze	reading: C&C p.388 (ordinal to décimo, then cardinal after the noun)
+pt-BR-number-15	number	O teatro é do século XVIII.	o teatro é do século dezoito	reading: C&C p.388 (ordinal to décimo, then cardinal after the noun)
+pt-BR-number-16	number	O museu é do século XIX.	o museu é do século dezenove	reading: C&C p.388 (cardinal after décimo), pp.390-391 (dezenove)
+pt-BR-number-17	number	O quadro é do século XV.	o quadro é do século quinze	reading: C&C p.388 (ordinal to décimo, then cardinal after the noun)
+pt-BR-number-18	number	O jardim é do século V.	o jardim é do século quinto	reading: C&C p.388 (ordinal to décimo)
+pt-BR-number-19	number	O castelo é do século X.	o castelo é do século décimo	reading: C&C p.388 (ordinal to décimo)
+pt-BR-number-20	number	É o 2.º lugar.	é o segundo lugar	reading: C&C pp.390-391 (ordinals)
+pt-BR-number-21	number	O 4.º andar é aqui.	o quarto andar é aqui	reading: C&C pp.390-391 (ordinals)
+pt-BR-number-22	number	É o 5.º capítulo.	é o quinto capítulo	reading: C&C pp.390-391 (ordinals)
+pt-BR-number-23	number	É o 7.º dia.	é o sétimo dia	reading: C&C pp.390-391 (ordinals)
+pt-BR-number-24	number	É o 10.º ano.	é o décimo ano	reading: C&C pp.390-391 (ordinals)
+pt-BR-number-25	number	É o 8.º lugar.	é o oitavo lugar	reading: C&C pp.390-391 (ordinals)
+pt-BR-number-26	number	É o 20.º lugar.	é o vigésimo lugar	reading: C&C pp.390-391 (ordinals)
+pt-BR-number-27	number	É o 6.º andar.	é o sexto andar	reading: C&C pp.390-391 (ordinals)
+pt-BR-number-28	number	O ônibus 100 é rápido.	o ônibus cem é rápido	reading: C&C p.386 (cem)
+pt-BR-number-29	number	O quarto 101 é grande.	o quarto cento e um é grande	reading: C&C p.386 (cento between cem and duzentos), p.387
+pt-BR-number-30	number	A sala 400 é aqui.	a sala quatrocentos é aqui	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-31	number	O ano 2000 foi bom.	o ano dois mil foi bom	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-32	number	O lugar 17 é ali.	o lugar dezessete é ali	reading: C&C pp.390-391 (dezessete)
+pt-BR-number-33	number	A porta 19 é aqui.	a porta dezenove é aqui	reading: C&C pp.390-391 (dezenove)
+pt-BR-number-34	number	O trem 11 é rápido.	o trem onze é rápido	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-35	number	A sala 30 é grande.	a sala trinta é grande	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-36	number	O quarto 60 é pequeno.	o quarto sessenta é pequeno	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-37	number	O ônibus 70 é novo.	o ônibus setenta é novo	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-38	number	O lugar 90 é ali.	o lugar noventa é ali	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-39	number	O número 0 é redondo.	o número zero é redondo	reading: C&C p.386 (zero)
+pt-BR-number-40	number	O quarto 13 é pequeno.	o quarto treze é pequeno	reading: C&C pp.390-391 (cardinals)
+pt-BR-number-41	number	O quarto 16 é grande.	o quarto dezesseis é grande	reading: C&C pp.390-391 (dezesseis)
+pt-BR-number-42	number	O ano 1500 foi longo.	o ano mil e quinhentos foi longo	reading: C&C p.387 (1800 = mil e oitocentos)
+pt-BR-date-01	date	Foi em 25 de abril de 1974.	foi em vinte e cinco de abril de mil novecentos e setenta e quatro	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day and year); C&C p.387; AO1990 Base XIX 1.º b) (lowercase month)
+pt-BR-date-02	date	O concerto é em 10 de junho.	o concerto é em dez de junho	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-03	date	O jantar foi em 3 de agosto.	o jantar foi em três de agosto	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-04	date	Foi em 14 de julho de 1789.	foi em quatorze de julho de mil setecentos e oitenta e nove	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day and year); C&C p.387 (quatorze in Brazil)
+pt-BR-date-05	date	O exame é em 20 de maio.	o exame é em vinte de maio	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-06	date	A festa é em 13 de junho.	a festa é em treze de junho	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-07	date	O dia 5 de outubro é feriado.	o dia cinco de outubro é feriado	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-08	date	O dia 8 de dezembro é feriado.	o dia oito de dezembro é feriado	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-09	date	Foi em 5 de outubro de 1143.	foi em cinco de outubro de mil cento e quarenta e três	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day and year); C&C p.387
+pt-BR-date-10	date	O mercado é em 7 de novembro.	o mercado é em sete de novembro	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-11	date	Foi em abril de 1974.	foi em abril de mil novecentos e setenta e quatro	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal year); C&C p.387
+pt-BR-date-12	date	Foi em 2 de maio.	foi em dois de maio	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-13	date	O teatro foi em 30 de abril.	o teatro foi em trinta de abril	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-14	date	A viagem foi em 11 de agosto.	a viagem foi em onze de agosto	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-15	date	O festival é em 24 de junho.	o festival é em vinte e quatro de junho	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387
+pt-BR-date-16	date	O casamento foi em 12 de outubro.	o casamento foi em doze de outubro	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-17	date	Foi em 4 de julho de 1976.	foi em quatro de julho de mil novecentos e setenta e seis	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day and year); C&C p.387
+pt-BR-date-18	date	O exame foi em 19 de maio.	o exame foi em dezenove de maio	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); pp.390-391 (dezenove)
+pt-BR-date-19	date	O aniversário é em 17 de dezembro.	o aniversário é em dezessete de dezembro	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); pp.390-391 (dezessete)
+pt-BR-date-20	date	Hoje é dia 9 de abril.	hoje é dia nove de abril	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)
+pt-BR-date-21	date	Amanhã é dia 16 de novembro.	amanhã é dia dezesseis de novembro	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); pp.390-391 (dezesseis)
+pt-BR-date-22	date	Ontem foi dia 27 de agosto.	ontem foi dia vinte e sete de agosto	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387
+pt-BR-date-23	date	O verão de 2003 foi quente.	o verão de dois mil e três foi quente	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal year)
+pt-BR-date-24	date	Foi no inverno de 1941.	foi no inverno de mil novecentos e quarenta e um	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal year); C&C p.387
+pt-BR-date-25	date	O jantar é em 23 de julho.	o jantar é em vinte e três de julho	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387
+pt-BR-date-26	date	A festa foi em 28 de maio.	a festa foi em vinte e oito de maio	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387
+pt-BR-date-27	date	O concerto foi em 29 de outubro.	o concerto foi em vinte e nove de outubro	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387
+pt-BR-date-28	date	O dia 31 de dezembro é longo.	o dia trinta e um de dezembro é longo	reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387
+pt-BR-date-29	date	O feriado é em 1 de maio.	o feriado é em primeiro de maio	reading: C&C p.374 via Ciberdúvidas 32700 (ordinal first day)
+pt-BR-date-30	date	O feriado é em 1 de janeiro.	o feriado é em primeiro de janeiro	reading: C&C p.374 via Ciberdúvidas 32700 (ordinal first day)
+pt-BR-date-31	date	Foi em 25/12/2023.	foi em vinte e cinco de dezembro de dois mil e vinte e três	reading: C&C p.374 via Ciberdúvidas 32700; AO1990 Base XIX 1.º b)
+pt-BR-date-32	date	Foi em 10/06/1880.	foi em dez de junho de mil oitocentos e oitenta	reading: C&C p.374 via Ciberdúvidas 32700; C&C p.387
+pt-BR-date-33	date	O exame é em 21/07/2025.	o exame é em vinte e um de julho de dois mil e vinte e cinco	reading: C&C p.374 via Ciberdúvidas 32700; C&C p.387
+pt-BR-date-34	date	O concerto é em 2025-05-30.	o concerto é em trinta de maio de dois mil e vinte e cinco	reading: C&C p.374 via Ciberdúvidas 32700; C&C p.387
+pt-BR-abbreviation-01	abbreviation	O Sr. Costa é alto.	o senhor costa é alto	reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun
+pt-BR-abbreviation-02	abbreviation	O Sr. Machado é paciente.	o senhor machado é paciente	reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun
+pt-BR-abbreviation-03	abbreviation	O Sr. Rocha foi médico.	o senhor rocha foi médico	reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun
+pt-BR-abbreviation-04	abbreviation	O Sr. Cruz é feliz.	o senhor cruz é feliz	reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun
+pt-BR-abbreviation-05	abbreviation	O Sr. Rosa foi ao jardim.	o senhor rosa foi ao jardim	reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun
+pt-BR-abbreviation-06	abbreviation	O Sr. Carvalho foi ao banco.	o senhor carvalho foi ao banco	reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun
+pt-BR-abbreviation-07	abbreviation	O Dr. Carvalho é médico.	o doutor carvalho é médico	reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun
+pt-BR-abbreviation-08	abbreviation	O Dr. Costa foi simpático.	o doutor costa foi simpático	reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun
+pt-BR-abbreviation-09	abbreviation	O Dr. Cruz é paciente.	o doutor cruz é paciente	reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun
+pt-BR-abbreviation-10	abbreviation	O Dr. Rosa é alto.	o doutor rosa é alto	reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun
+pt-BR-abbreviation-11	abbreviation	O Dr. Machado foi ao teatro.	o doutor machado foi ao teatro	reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun
+pt-BR-abbreviation-12	abbreviation	A Dra. Cruz foi ao hospital.	a doutora cruz foi ao hospital	reading: Priberam DLPO 'Dra.' (abreviatura de doutora); surname read as the noun
+pt-BR-abbreviation-13	abbreviation	A Dra. Costa foi ao museu.	a doutora costa foi ao museu	reading: Priberam DLPO 'Dra.' (abreviatura de doutora); surname read as the noun
+pt-BR-abbreviation-14	abbreviation	A Dra. Rocha foi ao mercado.	a doutora rocha foi ao mercado	reading: Priberam DLPO 'Dra.' (abreviatura de doutora); surname read as the noun
+pt-BR-abbreviation-15	abbreviation	O Prof. Machado é paciente.	o professor machado é paciente	reading: Priberam DLPO 'Prof.' (abreviatura de professor); surname read as the noun
+pt-BR-abbreviation-16	abbreviation	O Prof. Rocha é famoso.	o professor rocha é famoso	reading: Priberam DLPO 'Prof.' (abreviatura de professor); surname read as the noun
+pt-BR-abbreviation-17	abbreviation	O Prof. Cruz foi ao castelo.	o professor cruz foi ao castelo	reading: Priberam DLPO 'Prof.' (abreviatura de professor); surname read as the noun
+pt-BR-abbreviation-18	abbreviation	O Eng. Costa é paciente.	o engenheiro costa é paciente	reading: Priberam DLPO 'Eng.' (abreviatura de engenheiro); surname read as the noun
+pt-BR-abbreviation-19	abbreviation	O Eng. Rosa foi ao mercado.	o engenheiro rosa foi ao mercado	reading: Priberam DLPO 'Eng.' (abreviatura de engenheiro); surname read as the noun
+pt-BR-abbreviation-20	abbreviation	O Eng. Machado é alto.	o engenheiro machado é alto	reading: Priberam DLPO 'Eng.' (abreviatura de engenheiro); surname read as the noun
+pt-BR-abbreviation-21	abbreviation	É a Av. da Liberdade.	é a avenida da liberdade	reading: Priberam DLPO 'av.' (abreviatura de avenida)
+pt-BR-abbreviation-22	abbreviation	O hotel é na Av. da Liberdade.	o hotel é na avenida da liberdade	reading: Priberam DLPO 'av.' (abreviatura de avenida)
+pt-BR-abbreviation-23	abbreviation	O museu é na Av. da República.	o museu é na avenida da república	reading: Priberam DLPO 'av.' (abreviatura de avenida)
+pt-BR-abbreviation-24	abbreviation	O mapa é da pág. 7.	o mapa é da página sete	reading: Priberam DLPO 'pág.' (abreviatura de página); C&C pp.390-391
+pt-BR-abbreviation-25	abbreviation	O quadro é da pág. 12.	o quadro é da página doze	reading: Priberam DLPO 'pág.' (abreviatura de página); C&C pp.390-391
+pt-BR-abbreviation-26	abbreviation	O poema é da pág. 30.	o poema é da página trinta	reading: Priberam DLPO 'pág.' (abreviatura de página); C&C pp.390-391
+pt-BR-abbreviation-27	abbreviation	O séc. XX foi difícil.	o século vinte foi difícil	reading: Priberam DLPO 'séc.' (abreviatura de século); C&C p.388 (cardinal after décimo)
+pt-BR-abbreviation-28	abbreviation	O castelo é do séc. XII.	o castelo é do século doze	reading: Priberam DLPO 'séc.' (abreviatura de século); C&C p.388 (cardinal after décimo)
+pt-BR-abbreviation-29	abbreviation	O teatro é do séc. XIX.	o teatro é do século dezenove	reading: Priberam DLPO 'séc.' (abreviatura de século); C&C p.388; pp.390-391 (dezenove)
+pt-BR-abbreviation-30	abbreviation	O cap. 2 é difícil.	o capítulo dois é difícil	reading: Priberam DLPO 'cap.' (abreviatura de capítulo); C&C pp.390-391
+pt-BR-abbreviation-31	abbreviation	O cap. 9 é curto.	o capítulo nove é curto	reading: Priberam DLPO 'cap.' (abreviatura de capítulo); C&C pp.390-391
+pt-BR-abbreviation-32	abbreviation	O cap. 4 é muito simples.	o capítulo quatro é muito simples	reading: Priberam DLPO 'cap.' (abreviatura de capítulo); C&C pp.390-391
+pt-BR-abbreviation-33	abbreviation	O cap. 7 é longo.	o capítulo sete é longo	reading: Priberam DLPO 'cap.' (abreviatura de capítulo); C&C pp.390-391
+pt-BR-abbreviation-34	abbreviation	A Sr.ª Rosa foi ao mercado.	a senhora rosa foi ao mercado	reading: VOLP-ACL abbreviation list via tests/test_honorific_abbreviations.py (Sr.ª senhora); surname read as the noun
+pt-BR-abbreviation-35	abbreviation	A Sr.ª Costa foi ao hospital.	a senhora costa foi ao hospital	reading: VOLP-ACL abbreviation list via tests/test_honorific_abbreviations.py (Sr.ª senhora); surname read as the noun
+pt-BR-homograph-01	homograph	O gosto do café é forte.	o gosto do café é forte	homograph: gosto, sense taste (NOUN)
+pt-BR-homograph-02	homograph	O jogo foi difícil.	o jogo foi difícil	homograph: jogo, sense game (NOUN)
+pt-BR-homograph-03	homograph	O almoço foi bom.	o almoço foi bom	homograph: almoço, sense lunch (NOUN)
+pt-BR-homograph-04	homograph	O olho do gato é azul.	o olho@ˈoʎu do gato é azul	homograph: olho, sense eye (NOUN)
+pt-BR-homograph-05	homograph	A sede do banco é ali.	a sede@ˈsɛdi do banco é ali	homograph: sede, sense seat (NOUN), by the open stressed vowel
+pt-BR-homograph-06	homograph	O peso do barco é grande.	o peso do barco é grande	homograph: peso, sense weight (NOUN)
+pt-BR-homograph-07	homograph	O selo é antigo.	o selo é antigo	homograph: selo, sense stamp (NOUN)
+pt-BR-homograph-08	homograph	O gelo é frio.	o gelo é frio	homograph: gelo, sense ice (NOUN)
+pt-BR-homograph-09	homograph	O erro foi grave.	o erro foi grave	homograph: erro, sense error (NOUN)
+pt-BR-homograph-10	homograph	O governo é novo.	o governo é novo	homograph: governo, sense government (NOUN)
+pt-BR-homograph-11	homograph	O emprego é bom.	o emprego é bom	homograph: emprego, sense job (NOUN)
+pt-BR-homograph-12	homograph	A cor do carro é azul.	a cor@ˈkoɾ do carro é azul	homograph: cor, sense colour (NOUN)
+pt-BR-homograph-13	homograph	A bola do filho é azul.	a bola do filho é azul	homograph: bola, sense ball (NOUN)
+pt-BR-homograph-14	homograph	O lobo é cinzento.	o lobo@ˈlobu é cinzento	homograph: lobo, sense wolf (NOUN), by the closed stressed vowel
+pt-BR-homograph-15	homograph	O porto é grande.	o porto é grande	homograph: porto, sense harbour (NOUN)
+pt-BR-homograph-16	homograph	O posto é aqui.	o posto é aqui	homograph: posto, sense station (NOUN)
+pt-BR-homograph-17	homograph	O começo foi difícil.	o começo foi difícil	homograph: começo, sense beginning (NOUN)
+pt-BR-homograph-18	homograph	O corte foi profundo.	o corte foi profundo	homograph: corte, sense cut (NOUN)
+pt-BR-homograph-19	homograph	O molho é picante.	o molho@ˈmoʎu é picante	homograph: molho, sense sauce (NOUN), by the closed stressed vowel
+pt-BR-homograph-20	homograph	O conforto do hotel é total.	o conforto do hotel é total	homograph: conforto, sense comfort (NOUN)
+pt-BR-homograph-21	homograph	O pão é seco.	o pão é seco	homograph: seco, sense dry (ADJ)
+pt-BR-homograph-22	homograph	A torre é alta.	a torre é alta	homograph: torre, sense tower (NOUN)
+pt-BR-homograph-23	homograph	O coro é bonito.	o coro é bonito	homograph: coro, sense choir (NOUN)
+pt-BR-homograph-24	homograph	O troco foi certo.	o troco foi certo	homograph: troco, sense change (NOUN)
+pt-BR-homograph-25	homograph	O sopro do vento é forte.	o sopro do vento é forte	homograph: sopro, sense breath (NOUN)
+pt-BR-homograph-26	homograph	O preço é o dobro.	o preço é o dobro	homograph: dobro, sense double (NOUN)
+pt-BR-homograph-27	homograph	O topo do castelo é alto.	o topo do castelo é alto	homograph: topo, sense summit (NOUN)
+pt-BR-homograph-28	homograph	O desemprego é grave.	o desemprego é grave	homograph: desemprego, sense noun (NOUN)
+pt-BR-homograph-29	homograph	O sossego do campo é bom.	o sossego do campo é bom	homograph: sossego, sense calm (NOUN)
+pt-BR-homograph-30	homograph	A soma é simples.	a soma é simples	homograph: soma, sense sum (NOUN)
+pt-BR-homograph-31	homograph	A força do vento é grande.	a força do vento é grande	homograph: força, sense strength (NOUN)
+pt-BR-homograph-32	homograph	A colher é de prata.	a colher@koˈʎɛɾ é de prata	homograph: colher, sense spoon (NOUN)
+pt-BR-homograph-33	homograph	A forma do bolo é de metal.	a forma@ˈfoɾmɐ do bolo é de metal	homograph: forma, sense mould (NOUN), by the closed stressed vowel
+pt-BR-homograph-34	homograph	O esforço foi enorme.	o esforço foi enorme	homograph: esforço, sense effort (NOUN)
+pt-BR-homograph-35	homograph	Eu gosto de café.	eu gosto~ˈɡɔstu de café	silver: homograph: gosto, sense like (VERB); the verb reading has no human source in the lexicon
+pt-BR-homograph-36	homograph	Eu jogo futebol.	eu jogo~ˈʒɔɡu futebol	silver: homograph: jogo, sense play (VERB); the verb reading has no human source in the lexicon
+pt-BR-homograph-37	homograph	Eu almoço cedo.	eu almoço~awˈmɔsu cedo	silver: homograph: almoço, sense dine (VERB); the verb reading has no human source in the lexicon
+pt-BR-homograph-38	homograph	Eu começo hoje.	eu começo~koˈmɛsu hoje	silver: homograph: começo, sense begin (VERB); the verb reading has no human source in the lexicon
+pt-BR-homograph-39	homograph	Eu olho para o mar.	eu olho@ˈɔʎu para o mar	homograph: olho, sense look (VERB), Wiktionary pt-BR reading
+pt-BR-homograph-40	homograph	Eu troco o carro.	eu troco~ˈtɾɔku o carro	silver: homograph: troco, sense exchange (VERB); the verb reading has no human source in the lexicon
+pt-BR-contact-01	contact	O jazz é bom.	-	
+pt-BR-contact-02	contact	O show foi bom.	-	
+pt-BR-contact-03	contact	O software é novo.	-	
+pt-BR-contact-04	contact	O hardware é caro.	-	
+pt-BR-contact-05	contact	O design é simples.	-	
+pt-BR-contact-06	contact	O croissant é fresco.	-	
+pt-BR-contact-07	contact	O kiwi é verde.	-	
+pt-BR-contact-08	contact	O karaokê foi divertido.	-	
+pt-BR-contact-09	contact	O judô é difícil.	-	
+pt-BR-contact-10	contact	O bar é pequeno.	-	
+pt-BR-contact-11	contact	O bacon é caro.	-	
+pt-BR-contact-12	contact	O site é novo.	-	
+pt-BR-contact-13	contact	O golfe é caro.	-	
+pt-BR-contact-14	contact	O suéter é azul.	-	
+pt-BR-contact-15	contact	O coquetel é forte.	-	
+pt-BR-contact-16	contact	A pizza é boa.	-	
+pt-BR-contact-17	contact	O hambúrguer é grande.	-	
+pt-BR-contact-18	contact	O sanduíche é fresco.	-	
+pt-BR-contact-19	contact	O shopping é enorme.	-	
+pt-BR-contact-20	contact	O mouse é novo.	-	
+pt-BR-contact-21	contact	O freezer é grande.	-	
+pt-BR-contact-22	contact	O xampu é barato.	-	
+pt-BR-contact-23	contact	O menu é simples.	-	
+pt-BR-contact-24	contact	O crepe é doce.	-	
+pt-BR-contact-25	contact	O suflê é leve.	-	
+pt-BR-contact-26	contact	O abajur é branco.	-	
+pt-BR-contact-27	contact	O iogurte é fresco.	-	
+pt-BR-contact-28	contact	O balé é bonito.	-	
+pt-BR-contact-29	contact	O blog é famoso.	-	
+pt-BR-contact-30	contact	O design é moderno.	-	
+pt-BR-contact-31	contact	O croissant é barato.	-	
+pt-BR-contact-32	contact	O estresse é grande.	-	

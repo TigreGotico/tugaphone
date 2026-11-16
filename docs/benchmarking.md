@@ -1,0 +1,218 @@
+# Benchmarking
+
+tugaphone is measured against two golds, one per path. The
+**phonemization pipeline**, a dialect selected by its lect code, driving the
+orthography2ipa lattice, is scored sentence-level against orthography2ipa's TTS
+gold. The **rules-only grapheme cascade** (the benchmark baseline, not the
+pipeline) is scored word-level against the unified pronunciation gold, those
+numbers live in [scoreboard.md](scoreboard.md).
+
+## Pipeline: the TTS-gold harness
+
+The reference for the phonemization pipeline is orthography2ipa's sentence-level
+TTS gold, one gold set per Portuguese lect (`data/gold/portuguese_tts/<lect>.tsv`
+in orthography2ipa), authored in the broad IPA tradition the lect specs are
+written to. `scripts/tts_gold_benchmark.py` scores it end to end, reusing
+orthography2ipa's own character-level PER and IPA normalization:
+
+The PER and normalization code is in orthography2ipa's source tree, not in its
+wheel. Install orthography2ipa editable, or set `O2I_ROOT` to an orthography2ipa
+checkout:
+
+```bash
+export O2I_ROOT=~/src/orthography2ipa
+python scripts/tts_gold_benchmark.py            # every pt-family lect
+python scripts/tts_gold_benchmark.py pt-PT pt-BR
+```
+
+The default lect set is the intersection of orthography2ipa's Portuguese TTS gold
+with tugaphone's canonical dialects (`list_dialects()`), the Portuguese family.
+A lect with no gold set is not scored. orthography2ipa
+also ships gold for the Astur-Leonese lects of Portugal (Mirandese `mwl`, the
+`ast-PT` border varieties), which dedicated downstream phonemizers own, those are
+out of tugaphone's scope and are excluded rather than scored through the pt-PT
+fallback.
+
+The script prints one PER per lect and the mean. The scores split by path:
+
+- The European, African and Asian lects match the gold almost exactly,
+  because the lect spec and the gold share one convention. `pt-PT` takes its
+  `o2i-lexicons` residual lexicon.
+- `pt-BR` takes its `o2i-lexicons` residual lexicon, and every other lect runs
+  on the rules alone.
+- The Brazilian sub-regional lects carry a residual.
+
+Read the number as agreement with the spec tradition, not as absolute
+correctness.
+
+## Pipeline: the Brazilian word sources
+
+`scripts/pt_br_gold_benchmark.py` scores the pipeline word by word against four
+Brazilian Portuguese sources. No source is a gold for every feature, so each
+row prints the tier of its source, and each source scores only what it can show.
+
+| Source | Tier | What it scores |
+| --- | --- | --- |
+| NILC Aeiouadô training file (São Paulo) | human-revised by one research team, not independently verified | PER, stress position, stressed e/o quality |
+| Michaelis | broad notation, editor-made, method unstated, some stress marks misplaced and some readings of another word | Stress position and stressed e/o quality, never allophones |
+| Aeiouadô published lexicon | machine-generated | A comparison row on a fixed sample, never a gold target |
+| ALiB per-informant forms | expert-human, narrow | Only the coda /S/ of six words, by city, against the regional spec |
+
+The script reads the source files from paths on the command line, because the
+sources do not ship with tugaphone. Each source is optional:
+
+```bash
+O2I_ROOT=/path/to/orthography2ipa python scripts/pt_br_gold_benchmark.py \
+    --nilc unitex_sample_transcribed.txt --aeiouado aeiouado-ipa-01.csv \
+    --michaelis entries.jsonl --alib-capitals alib-capitals-coda-s.tsv \
+    --alib-bahia alib-bahia-coda-s.tsv --lects pt-BR pt-BR-x-sp
+```
+
+PER folds the notation of a source into the spec's symbols: [ɪ ʊ ə] and the
+fricative rhotics. It folds nothing else, so a `pt-BR-x-sp` row pays for the tap
+and the dropped infinitive ⟨r⟩ that the spec writes and the NILC file does not.
+
+The stress measure aligns the two readings sound by sound, and the stress agrees
+when a cheapest alignment pairs the two stressed vowels. So notation does not
+count as a stress miss: a glide against a hiatus after the stress (vácuo), the
+epenthetic [i] (pacto) and a dropped infinitive ⟨r⟩ leave the comparison equal,
+and saída [saˈidɐ] against [ˈsajdɐ] stays a miss. The script prints the words in,
+the words compared and the misses for each row. `--stress-misses` writes each
+miss to a file, because a miss may be a defect of the source. Some Michaelis
+entries place the stress mark on the wrong vowel or print the reading of another
+word, so a Michaelis miss is a lead to read, not a rules error by itself.
+
+The `pt-BR` lexicon takes its readings from the NILC file, and its build uses
+Michaelis as one second source, so a lexicon word would score a source against
+itself. The script leaves the words of the lect's lexicon out of each row, so
+every row measures the rules.
+
+An ALiB row gives the share of the city's forms with a palatal coda, and the
+share with the class that the spec gives. A city with no regional spec scores
+against `pt-BR`.
+
+## Rules-only baseline
+
+The sections below measure the grapheme cascade in `tugaphone.tokenizer` /
+`tugaphone.dialects`, the rules-only baseline, not the lattice pipeline, against the unified pronunciation lexicon gold.
+
+## Gold source
+
+[TigreGotico/portuguese-unified-pronunciation-lexicon](https://huggingface.co/datasets/TigreGotico/portuguese-unified-pronunciation-lexicon)
+(CC BY-SA 4.0) merges three sources into one convention-normalized
+dataset: Infopédia (Porto Editora dictionary), the Portal da Língua
+Portuguesa 10-region phonetic lexicon, and pt.wiktionary.org. Every row
+is a word × region × source tuple with a broad phonemic (`ipa_broad`)
+and a narrow phonetic (`ipa_narrow`) transcription.
+
+The harness scores **`ipa_narrow`**, it matches tugaphone's
+transcription depth (explicit [ɐ ɨ ɾ ʀ ɫ]).
+
+One gold region is scored per registered dialect code:
+
+| Dialect code | Gold region |
+|---|---|
+| pt-PT | pt-PT |
+| pt-PT-x-lisbon | pt-PT-x-lisboa |
+| pt-BR | pt-BR |
+| pt-BR-x-sao-paulo | pt-BR-x-saopaulo |
+| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro |
+| pt-AO | pt-AO |
+| pt-MZ | pt-MZ-x-maputo |
+| pt-TL | pt-TL-x-dili |
+
+## Rules-only mode, and why it is non-circular
+
+tugaphone ships a lexicon (tugalex) built from the same sources as the
+gold. Scoring the normal lookup-first path would therefore measure
+*lexicon coverage*, a word found in the lexicon scores perfectly by
+construction, and say nothing about the grapheme rules that handle
+every out-of-vocabulary word.
+
+The harness instead empties the lexicon exception table
+(`DialectInventory.IRREGULAR_WORDS = {}`) before scoring, so **every**
+gold word takes the rule path. The number is then a per-word honest
+measurement: the rules never saw the answer.
+
+## Offline fixtures
+
+CI never touches the network. `tests/data/gold/<dialect>.tsv` holds a
+fixed-seed sample (seed `20260713`, up to 1000 words per region, all
+pronunciation variants of each sampled word) drawn from the gold, each
+fixture header records the SHA-256 of the exact dataset file it was
+drawn from. Refreshing the sample is a maintainer action:
+
+```bash
+python scripts/benchmark.py --refresh-fixtures
+```
+
+## Scoring
+
+Both sides are normalized identically, NFC, stress marks and
+syllable/tie joiners removed, whitespace collapsed, then a
+character-level edit distance is taken against the **closest** attested
+variant of the word (a word with several valid pronunciations is not
+penalised for the variants it did not choose). Reported per dialect:
+
+- **PER**: summed edit distance divided by summed reference length.
+- **word accuracy**: exact matches after normalization.
+- **stress accuracy** (`stress_acc`, with its word count `n_stress`): the share
+  of stress-eligible gold words whose primary stress lands on the gold's
+  syllable. See [Stress accuracy](#stress-accuracy).
+- the top-20 phone-confusion pairs (in `benchmarks/results.json`), which drive
+  the accuracy campaign: fix the biggest confusion with a cited rule, re-run,
+  repeat.
+
+The PER routine is adapted from orthography2ipa's benchmark harness.
+
+## Stress accuracy
+
+PER strips the stress marks, so a transcription with every segment right and
+the stress on the wrong syllable scores a perfect PER. Stress accuracy measures
+that one choice. orthography2ipa's board reports the same column with the same
+definition, so the two numbers compare.
+
+A gold word is eligible when it is one word, its transcription carries exactly
+one primary stress mark `ˈ` (an ASCII apostrophe in the gold counts as `ˈ`), and
+it has two syllables or more. `n_stress` counts the eligible words. Below 20
+eligible words `stress_acc` is null. A word with several gold variants scores a
+hit when the hypothesis matches any eligible variant.
+
+The hypothesis misses when it has no primary mark, more than one, or its mark
+on another syllable. To find the syllable, the harness aligns the two
+stress-stripped segment strings with the edit-distance alignment PER uses. A
+segment is a character with its diacritics, and a tie bar joins the two
+characters it links (`t͡ʃ`, `e͡ɪ`) into one segment.
+When several alignments have the same minimum cost, the harness takes the one
+that pairs the fewest nuclei with non-nuclei. The hit condition is that the gold's stressed nucleus aligns with the hypothesis's
+stressed nucleus. A nucleus is a vowel that is not marked non-syllabic (`◌̯`)
+and is not a glide letter (`j w ɥ ɰ`). A syllabic consonant (`◌̩`) is also a
+nucleus. The stressed nucleus is the first nucleus after the primary mark.
+Secondary marks `ˌ` are ignored.
+
+The alignment keeps the two failure modes apart. `saída` with gold `sɐˈidɐ`
+and hypothesis `ˈsajdɐ` is a miss: the hiatus became a diphthong and the stress
+moved to `a`. Counting nuclei from the end of the word would call it a hit.
+`texto` with gold `ˈtɐjʃtu` and hypothesis `ˈtɐʃtu` is a hit: the lost glide is
+a segment error, and PER already counts it.
+
+## Regression gate
+
+`scripts/check_benchmark_regression.py` re-scores every dialect from
+the committed fixtures and compares against the committed baseline
+(`benchmarks/results.json`), failing CI when any dialect's PER rises or
+its stress accuracy falls by more than 0.005 absolute. A dialect whose
+baseline has a stress accuracy and whose new score has none also fails.
+Improvements never fail, commit the
+regenerated baseline with the improving change so the new level becomes
+the floor. The gate fails closed when fewer rows than registered
+dialects are scored, so a broken fixture cannot produce a silent green.
+
+```bash
+python scripts/benchmark.py                    # rescore + rewrite reports
+python scripts/check_benchmark_regression.py   # gate
+```
+
+
+---
+[← Advanced](advanced.md) · [Home](../README.md) · [Scoreboard →](scoreboard.md)

@@ -1,0 +1,226 @@
+id	lang	category	text	expected_ipa	source	tier
+pt-BR-plain-01	pt-BR	plain	O gato é preto.	u ˈɡatu ˈɛ ˈpɾetu	upl@23898e1 o=W gato=M é=W preto=M	gold
+pt-BR-plain-02	pt-BR	plain	O livro é muito antigo.	u ˈlivɾu ˈɛ ˈmujtu ɐ̃ˈtiɡu	upl@23898e1 o=W livro=M é=W muito=M antigo=M	gold
+pt-BR-plain-03	pt-BR	plain	O café é forte.	u kaˈfɛ ˈɛ ˈfɔɾti	upl@23898e1 o=W café=M é=W forte=M	gold
+pt-BR-plain-04	pt-BR	plain	O trem é rápido.	u ˈtɾẽj̃ ˈɛ ˈʁapidu	upl@23898e1 o=W trem=M é=W rápido=M	gold
+pt-BR-plain-05	pt-BR	plain	O mar é calmo hoje.	u ˈmaɾ ˈɛ ˈkawmu ˈoʒi	upl@23898e1 o=W mar=M é=W calmo=M hoje=M	gold
+pt-BR-plain-06	pt-BR	plain	O rio é largo.	u ˈʁiu ˈɛ ˈlaɾɡu	upl@23898e1 o=W rio=M é=W largo=M	gold
+pt-BR-plain-07	pt-BR	plain	O médico foi simpático.	u ˈmɛdiku ˈfoj sĩˈpatiku	upl@23898e1 o=W médico=M foi=W simpático=M	gold
+pt-BR-plain-08	pt-BR	plain	O pão é fresco.	u ˈpɐ̃w̃ ˈɛ ˈfɾesku	upl@23898e1 o=W pão=M é=W fresco=M	gold
+pt-BR-plain-09	pt-BR	plain	O caminho é difícil.	u kaˈmiɲu ˈɛ diˈfisiw	upl@23898e1 o=W caminho=M é=W difícil=M	gold
+pt-BR-plain-10	pt-BR	plain	O vento é forte no inverno.	u ˈvẽtu ˈɛ ˈfɔɾti nu ĩˈvɛɾnu	upl@23898e1 o=W vento=M é=W forte=M no=M inverno=M	gold
+pt-BR-plain-11	pt-BR	plain	O professor é paciente.	u pɾofeˈsoɾ ˈɛ pasiˈẽti	upl@23898e1 o=W professor=M é=W paciente=M	gold
+pt-BR-plain-12	pt-BR	plain	O céu é azul.	u ˈsɛw ˈɛ aˈzuw	upl@23898e1 o=W céu=M é=W azul=M	gold
+pt-BR-plain-13	pt-BR	plain	O teatro é antigo.	u teˈatɾu ˈɛ ɐ̃ˈtiɡu	upl@23898e1 o=W teatro=M é=W antigo=M	gold
+pt-BR-plain-14	pt-BR	plain	O museu é famoso.	u muˈzew ˈɛ faˈmozu	upl@23898e1 o=W museu=M é=W famoso=M	gold
+pt-BR-plain-15	pt-BR	plain	O sol é quente no verão.	u ˈsɔw ˈɛ ˈkẽti nu veˈɾɐ̃w̃	upl@23898e1 o=W sol=M é=W quente=M no=M verão=M	gold
+pt-BR-plain-16	pt-BR	plain	O jardim é bonito na primavera.	u ʒaɾˈdĩ ˈɛ boˈnitu nɐ pɾimaˈvɛɾɐ	upl@23898e1 o=W jardim=M é=W bonito=M na=M primavera=M	gold
+pt-BR-plain-17	pt-BR	plain	O castelo é muito antigo.	u kasˈtɛlu ˈɛ ˈmujtu ɐ̃ˈtiɡu	upl@23898e1 o=W castelo=M é=W muito=M antigo=M	gold
+pt-BR-plain-18	pt-BR	plain	O carro é vermelho.	u ˈkaʁu ˈɛ veɾˈmeʎu	upl@23898e1 o=W carro=M é=W vermelho=M	gold
+pt-BR-plain-19	pt-BR	plain	O vinho é bom.	u ˈviɲu ˈɛ ˈbõw̃	upl@23898e1 o=W vinho=M é=W bom=M	gold
+pt-BR-plain-20	pt-BR	plain	O chapéu é preto e branco.	u ʃaˈpɛw ˈɛ ˈpɾetu i ˈbɾɐ̃ku	upl@23898e1 o=W chapéu=M é=W preto=M e=W branco=M	gold
+pt-BR-plain-21	pt-BR	plain	O cavalo é bonito.	u kaˈvalu ˈɛ boˈnitu	upl@23898e1 o=W cavalo=M é=W bonito=M	gold
+pt-BR-plain-22	pt-BR	plain	O barco é pequeno.	u ˈbaɾku ˈɛ peˈkenu	upl@23898e1 o=W barco=M é=W pequeno=M	gold
+pt-BR-plain-23	pt-BR	plain	O quadro é lindo.	u ˈkwadɾu ˈɛ ˈlĩdu	upl@23898e1 o=W quadro=M é=W lindo=M	gold
+pt-BR-plain-24	pt-BR	plain	O silêncio é total.	u siˈlẽsju ˈɛ toˈtaw	upl@23898e1 o=W silêncio=M é=W total=M	gold
+pt-BR-plain-25	pt-BR	plain	O hospital é moderno.	u ospiˈtaw ˈɛ moˈdɛɾnu	upl@23898e1 o=W hospital=M é=W moderno=M	gold
+pt-BR-plain-26	pt-BR	plain	O mercado é barato.	u meɾˈkadu ˈɛ baˈɾatu	upl@23898e1 o=W mercado=M é=W barato=M	gold
+pt-BR-plain-27	pt-BR	plain	O dicionário é útil.	u disjoˈnaɾju ˈɛ ˈutiw	upl@23898e1 o=W dicionário=M é=W útil=M	gold
+pt-BR-plain-28	pt-BR	plain	O inverno foi longo.	u ĩˈvɛɾnu ˈfoj ˈlõɡu	upl@23898e1 o=W inverno=M foi=W longo=M	gold
+pt-BR-plain-29	pt-BR	plain	O problema é simples.	u pɾoˈblemɐ ˈɛ ˈsĩplis	upl@23898e1 o=W problema=M é=W simples=M	gold
+pt-BR-plain-30	pt-BR	plain	O hotel é confortável.	u oˈtɛw ˈɛ kõfoɾˈtavew	upl@23898e1 o=W hotel=M é=W confortável=M	gold
+pt-BR-plain-31	pt-BR	plain	O caderno é azul.	u kaˈdɛɾnu ˈɛ aˈzuw	upl@23898e1 o=W caderno=M é=W azul=M	gold
+pt-BR-plain-32	pt-BR	plain	O avião é enorme.	u aviˈɐ̃w̃ ˈɛ eˈnɔɾmi	upl@23898e1 o=W avião=M é=W enorme=M	gold
+pt-BR-plain-33	pt-BR	plain	O relógio é de ouro.	u ʁeˈlɔʒju ˈɛ di ˈowɾu	upl@23898e1 o=W relógio=M é=W de=M ouro=M	gold
+pt-BR-plain-34	pt-BR	plain	A sopa é quente.	a ˈsopɐ ˈɛ ˈkẽti	upl@23898e1 a=M sopa=M é=W quente=M	gold
+pt-BR-plain-35	pt-BR	plain	O dia é frio.	u ˈdiɐ ˈɛ ˈfɾiu	upl@23898e1 o=W dia=M é=W frio=M	gold
+pt-BR-plain-36	pt-BR	plain	A música é alegre.	a ˈmuzikɐ ˈɛ aˈlɛɡɾi	upl@23898e1 a=M música=M é=W alegre=M	gold
+pt-BR-plain-37	pt-BR	plain	O pai é alto.	u ˈpaj ˈɛ ˈawtu	upl@23898e1 o=W pai=M é=W alto=M	gold
+pt-BR-plain-38	pt-BR	plain	O filho é feliz.	u ˈfiʎu ˈɛ feˈlis	upl@23898e1 o=W filho=M é=W feliz=M	gold
+pt-BR-plain-39	pt-BR	plain	O tempo é curto.	u ˈtẽpu ˈɛ ˈkuɾtu	upl@23898e1 o=W tempo=M é=W curto=M	gold
+pt-BR-plain-40	pt-BR	plain	O campo é verde.	u ˈkɐ̃pu ˈɛ ˈveɾdi	upl@23898e1 o=W campo=M é=W verde=M	gold
+pt-BR-plain-41	pt-BR	plain	O computador é rápido.	u kõputaˈdoɾ ˈɛ ˈʁapidu	upl@23898e1 o=W computador=M é=W rápido=M	gold
+pt-BR-plain-42	pt-BR	plain	O jantar foi simples.	u ʒɐ̃ˈtaɾ ˈfoj ˈsĩplis	upl@23898e1 o=W jantar=M foi=W simples=M	gold
+pt-BR-number-01	pt-BR	number	É a página 25.	ˈɛ a ˈpaʒinɐ ˈvĩti i ˈsĩku	upl@23898e1 é=W a=M página=M vinte=M e=W cinco=M | reading: C&C p.387 (e between tens and units), pp.390-391 (cardinals)	gold
+pt-BR-number-02	pt-BR	number	O quarto 12 é grande.	u ˈkwaɾtu ˈdozi ˈɛ ˈɡɾɐ̃di	upl@23898e1 o=W quarto=M doze=M é=W grande=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-03	pt-BR	number	O ônibus 42 é rápido.	u ˈonibus kwaˈɾẽtɐ i ˈdojs ˈɛ ˈʁapidu	upl@23898e1 o=W ônibus=M quarenta=M e=W dois=M é=W rápido=M | reading: C&C p.387 (e between tens and units), pp.390-391	gold
+pt-BR-number-04	pt-BR	number	O trem 15 é rápido.	u ˈtɾẽj̃ ˈkĩzi ˈɛ ˈʁapidu	upl@23898e1 o=W trem=M quinze=M é=W rápido=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-05	pt-BR	number	O lugar 7 é ali.	u luˈɡaɾ ˈsɛti ˈɛ aˈli	upl@23898e1 o=W lugar=M sete=M é=W ali=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-06	pt-BR	number	A porta 3 é aqui.	a ˈpɔɾtɐ ˈtɾes ˈɛ aˈki	upl@23898e1 a=M porta=M três=M é=W aqui=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-07	pt-BR	number	Foi em 1974.	ˈfoj ˈẽj̃ ˈmiw nɔveˈsẽtus i seˈtẽtɐ i ˈkwatɾu	upl@23898e1 foi=W em=M mil=M novecentos=M e=W setenta=M e=W quatro=M | reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)	gold
+pt-BR-number-08	pt-BR	number	O castelo é de 1147.	u kasˈtɛlu ˈɛ di ˈmiw ˈsẽtu i kwaˈɾẽtɐ i ˈsɛti	upl@23898e1 o=W castelo=M é=W de=M mil=M cento=M e=W quarenta=M e=W sete=M | reading: C&C p.386 (cento between cem and duzentos), p.387	gold
+pt-BR-number-09	pt-BR	number	O hotel é de 1888.	u oˈtɛw ˈɛ di ˈmiw ojtoˈsẽtus i ojˈtẽtɐ i ˈojtu	upl@23898e1 o=W hotel=M é=W de=M mil=M oitocentos=M e=W oitenta=M e=W oito=M | reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)	gold
+pt-BR-number-10	pt-BR	number	O museu é de 1950.	u muˈzew ˈɛ di ˈmiw nɔveˈsẽtus i sĩˈkwẽtɐ	upl@23898e1 o=W museu=M é=W de=M mil=M novecentos=M e=W cinquenta=M | reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)	gold
+pt-BR-number-11	pt-BR	number	O teatro é de 1793.	u teˈatɾu ˈɛ di ˈmiw sɛteˈsẽtus i noˈvẽtɐ i ˈtɾes	upl@23898e1 o=W teatro=M é=W de=M mil=M setecentos=M e=W noventa=M e=W três=M | reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)	gold
+pt-BR-number-12	pt-BR	number	O mercado é de 1882.	u meɾˈkadu ˈɛ di ˈmiw ojtoˈsẽtus i ojˈtẽtɐ i ˈdojs	upl@23898e1 o=W mercado=M é=W de=M mil=M oitocentos=M e=W oitenta=M e=W dois=M | reading: C&C p.387 (1892 = mil oitocentos e noventa e dois)	gold
+pt-BR-number-13	pt-BR	number	O carro é de 2015.	u ˈkaʁu ˈɛ di ˈdojs ˈmiw i ˈkĩzi	upl@23898e1 o=W carro=M é=W de=M dois=M mil=M e=W quinze=M | reading: C&C p.387	gold
+pt-BR-number-14	pt-BR	number	O castelo é do século XII.	u kasˈtɛlu ˈɛ du ˈsɛkulu ˈdozi	upl@23898e1 o=W castelo=M é=W do=M século=M doze=M | reading: C&C p.388 (ordinal to décimo, then cardinal after the noun)	gold
+pt-BR-number-15	pt-BR	number	O teatro é do século XVIII.	u teˈatɾu ˈɛ du ˈsɛkulu deˈzojtu	upl@23898e1 o=W teatro=M é=W do=M século=M dezoito=M | reading: C&C p.388 (ordinal to décimo, then cardinal after the noun)	gold
+pt-BR-number-16	pt-BR	number	O museu é do século XIX.	u muˈzew ˈɛ du ˈsɛkulu dezeˈnɔvi	upl@23898e1 o=W museu=M é=W do=M século=M dezenove=M | reading: C&C p.388 (cardinal after décimo), pp.390-391 (dezenove)	gold
+pt-BR-number-17	pt-BR	number	O quadro é do século XV.	u ˈkwadɾu ˈɛ du ˈsɛkulu ˈkĩzi	upl@23898e1 o=W quadro=M é=W do=M século=M quinze=M | reading: C&C p.388 (ordinal to décimo, then cardinal after the noun)	gold
+pt-BR-number-18	pt-BR	number	O jardim é do século V.	u ʒaɾˈdĩ ˈɛ du ˈsɛkulu ˈkĩtu	upl@23898e1 o=W jardim=M é=W do=M século=M quinto=M | reading: C&C p.388 (ordinal to décimo)	gold
+pt-BR-number-19	pt-BR	number	O castelo é do século X.	u kasˈtɛlu ˈɛ du ˈsɛkulu ˈdɛsimu	upl@23898e1 o=W castelo=M é=W do=M século=M décimo=M | reading: C&C p.388 (ordinal to décimo)	gold
+pt-BR-number-20	pt-BR	number	É o 2.º lugar.	ˈɛ u seˈɡũdu luˈɡaɾ	upl@23898e1 é=W o=W segundo=M lugar=M | reading: C&C pp.390-391 (ordinals)	gold
+pt-BR-number-21	pt-BR	number	O 4.º andar é aqui.	u ˈkwaɾtu ɐ̃ˈdaɾ ˈɛ aˈki	upl@23898e1 o=W quarto=M andar=M é=W aqui=M | reading: C&C pp.390-391 (ordinals)	gold
+pt-BR-number-22	pt-BR	number	É o 5.º capítulo.	ˈɛ u ˈkĩtu kaˈpitulu	upl@23898e1 é=W o=W quinto=M capítulo=M | reading: C&C pp.390-391 (ordinals)	gold
+pt-BR-number-23	pt-BR	number	É o 7.º dia.	ˈɛ u ˈsɛtimu ˈdiɐ	upl@23898e1 é=W o=W sétimo=M dia=M | reading: C&C pp.390-391 (ordinals)	gold
+pt-BR-number-24	pt-BR	number	É o 10.º ano.	ˈɛ u ˈdɛsimu ˈɐnu	upl@23898e1 é=W o=W décimo=M ano=M | reading: C&C pp.390-391 (ordinals)	gold
+pt-BR-number-25	pt-BR	number	É o 8.º lugar.	ˈɛ u ojˈtavu luˈɡaɾ	upl@23898e1 é=W o=W oitavo=M lugar=M | reading: C&C pp.390-391 (ordinals)	gold
+pt-BR-number-26	pt-BR	number	É o 20.º lugar.	ˈɛ u viˈʒɛzimu luˈɡaɾ	upl@23898e1 é=W o=W vigésimo=M lugar=M | reading: C&C pp.390-391 (ordinals)	gold
+pt-BR-number-27	pt-BR	number	É o 6.º andar.	ˈɛ u ˈsestu ɐ̃ˈdaɾ	upl@23898e1 é=W o=W sexto=M andar=M | reading: C&C pp.390-391 (ordinals)	gold
+pt-BR-number-28	pt-BR	number	O ônibus 100 é rápido.	u ˈonibus ˈsẽj̃ ˈɛ ˈʁapidu	upl@23898e1 o=W ônibus=M cem=M é=W rápido=M | reading: C&C p.386 (cem)	gold
+pt-BR-number-29	pt-BR	number	O quarto 101 é grande.	u ˈkwaɾtu ˈsẽtu i ˈũ ˈɛ ˈɡɾɐ̃di	upl@23898e1 o=W quarto=M cento=M e=W um=M é=W grande=M | reading: C&C p.386 (cento between cem and duzentos), p.387	gold
+pt-BR-number-30	pt-BR	number	A sala 400 é aqui.	a ˈsalɐ kwatɾoˈsẽtus ˈɛ aˈki	upl@23898e1 a=M sala=M quatrocentos=M é=W aqui=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-31	pt-BR	number	O ano 2000 foi bom.	u ˈɐnu ˈdojs ˈmiw ˈfoj ˈbõw̃	upl@23898e1 o=W ano=M dois=M mil=M foi=W bom=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-32	pt-BR	number	O lugar 17 é ali.	u luˈɡaɾ dezeˈsɛti ˈɛ aˈli	upl@23898e1 o=W lugar=M dezessete=M é=W ali=M | reading: C&C pp.390-391 (dezessete)	gold
+pt-BR-number-33	pt-BR	number	A porta 19 é aqui.	a ˈpɔɾtɐ dezeˈnɔvi ˈɛ aˈki	upl@23898e1 a=M porta=M dezenove=M é=W aqui=M | reading: C&C pp.390-391 (dezenove)	gold
+pt-BR-number-34	pt-BR	number	O trem 11 é rápido.	u ˈtɾẽj̃ ˈõzi ˈɛ ˈʁapidu	upl@23898e1 o=W trem=M onze=M é=W rápido=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-35	pt-BR	number	A sala 30 é grande.	a ˈsalɐ ˈtɾĩtɐ ˈɛ ˈɡɾɐ̃di	upl@23898e1 a=M sala=M trinta=M é=W grande=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-36	pt-BR	number	O quarto 60 é pequeno.	u ˈkwaɾtu seˈsẽtɐ ˈɛ peˈkenu	upl@23898e1 o=W quarto=M sessenta=M é=W pequeno=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-37	pt-BR	number	O ônibus 70 é novo.	u ˈonibus seˈtẽtɐ ˈɛ ˈnovu	upl@23898e1 o=W ônibus=M setenta=M é=W novo=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-38	pt-BR	number	O lugar 90 é ali.	u luˈɡaɾ noˈvẽtɐ ˈɛ aˈli	upl@23898e1 o=W lugar=M noventa=M é=W ali=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-39	pt-BR	number	O número 0 é redondo.	u ˈnumeɾu ˈzɛɾu ˈɛ ʁeˈdõdu	upl@23898e1 o=W número=M zero=M é=W redondo=M | reading: C&C p.386 (zero)	gold
+pt-BR-number-40	pt-BR	number	O quarto 13 é pequeno.	u ˈkwaɾtu ˈtɾezi ˈɛ peˈkenu	upl@23898e1 o=W quarto=M treze=M é=W pequeno=M | reading: C&C pp.390-391 (cardinals)	gold
+pt-BR-number-41	pt-BR	number	O quarto 16 é grande.	u ˈkwaɾtu dezeˈsejs ˈɛ ˈɡɾɐ̃di	upl@23898e1 o=W quarto=M dezesseis=M é=W grande=M | reading: C&C pp.390-391 (dezesseis)	gold
+pt-BR-number-42	pt-BR	number	O ano 1500 foi longo.	u ˈɐnu ˈmiw i kiˈɲẽtus ˈfoj ˈlõɡu	upl@23898e1 o=W ano=M mil=M e=W quinhentos=M foi=W longo=M | reading: C&C p.387 (1800 = mil e oitocentos)	gold
+pt-BR-date-01	pt-BR	date	Foi em 25 de abril de 1974.	ˈfoj ˈẽj̃ ˈvĩti i ˈsĩku di aˈbɾiw di ˈmiw nɔveˈsẽtus i seˈtẽtɐ i ˈkwatɾu	upl@23898e1 foi=W em=M vinte=M e=W cinco=M de=M abril=M de=M mil=M novecentos=M e=W setenta=M e=W quatro=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day and year); C&C p.387; AO1990 Base XIX 1.º b) (lowercase month)	gold
+pt-BR-date-02	pt-BR	date	O concerto é em 10 de junho.	u kõˈseɾtu ˈɛ ˈẽj̃ ˈdɛs di ˈʒuɲu	upl@23898e1 o=W concerto=M é=W em=M dez=M de=M junho=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-03	pt-BR	date	O jantar foi em 3 de agosto.	u ʒɐ̃ˈtaɾ ˈfoj ˈẽj̃ ˈtɾes di aˈɡostu	upl@23898e1 o=W jantar=M foi=W em=M três=M de=M agosto=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-04	pt-BR	date	Foi em 14 de julho de 1789.	ˈfoj ˈẽj̃ kwaˈtoɾzi di ˈʒuʎu di ˈmiw sɛteˈsẽtus i ojˈtẽtɐ i ˈnɔvi	upl@23898e1 foi=W em=M quatorze=M de=M julho=M de=M mil=M setecentos=M e=W oitenta=M e=W nove=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day and year); C&C p.387 (quatorze in Brazil)	gold
+pt-BR-date-05	pt-BR	date	O exame é em 20 de maio.	u eˈzɐmi ˈɛ ˈẽj̃ ˈvĩti di ˈmaju	upl@23898e1 o=W exame=M é=W em=M vinte=M de=M maio=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-06	pt-BR	date	A festa é em 13 de junho.	a ˈfɛstɐ ˈɛ ˈẽj̃ ˈtɾezi di ˈʒuɲu	upl@23898e1 a=M festa=M é=W em=M treze=M de=M junho=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-07	pt-BR	date	O dia 5 de outubro é feriado.	u ˈdiɐ ˈsĩku di owˈtubɾu ˈɛ feɾiˈadu	upl@23898e1 o=W dia=M cinco=M de=M outubro=M é=W feriado=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-08	pt-BR	date	O dia 8 de dezembro é feriado.	u ˈdiɐ ˈojtu di deˈzẽbɾu ˈɛ feɾiˈadu	upl@23898e1 o=W dia=M oito=M de=M dezembro=M é=W feriado=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-09	pt-BR	date	Foi em 5 de outubro de 1143.	ˈfoj ˈẽj̃ ˈsĩku di owˈtubɾu di ˈmiw ˈsẽtu i kwaˈɾẽtɐ i ˈtɾes	upl@23898e1 foi=W em=M cinco=M de=M outubro=M de=M mil=M cento=M e=W quarenta=M e=W três=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day and year); C&C p.387	gold
+pt-BR-date-10	pt-BR	date	O mercado é em 7 de novembro.	u meɾˈkadu ˈɛ ˈẽj̃ ˈsɛti di noˈvẽbɾu	upl@23898e1 o=W mercado=M é=W em=M sete=M de=M novembro=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-11	pt-BR	date	Foi em abril de 1974.	ˈfoj ˈẽj̃ aˈbɾiw di ˈmiw nɔveˈsẽtus i seˈtẽtɐ i ˈkwatɾu	upl@23898e1 foi=W em=M abril=M de=M mil=M novecentos=M e=W setenta=M e=W quatro=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal year); C&C p.387	gold
+pt-BR-date-12	pt-BR	date	Foi em 2 de maio.	ˈfoj ˈẽj̃ ˈdojs di ˈmaju	upl@23898e1 foi=W em=M dois=M de=M maio=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-13	pt-BR	date	O teatro foi em 30 de abril.	u teˈatɾu ˈfoj ˈẽj̃ ˈtɾĩtɐ di aˈbɾiw	upl@23898e1 o=W teatro=M foi=W em=M trinta=M de=M abril=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-14	pt-BR	date	A viagem foi em 11 de agosto.	a viˈaʒẽj̃ ˈfoj ˈẽj̃ ˈõzi di aˈɡostu	upl@23898e1 a=M viagem=M foi=W em=M onze=M de=M agosto=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-15	pt-BR	date	O festival é em 24 de junho.	u festiˈvaw ˈɛ ˈẽj̃ ˈvĩti i ˈkwatɾu di ˈʒuɲu	upl@23898e1 o=W festival=M é=W em=M vinte=M e=W quatro=M de=M junho=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387	gold
+pt-BR-date-16	pt-BR	date	O casamento foi em 12 de outubro.	u kazaˈmẽtu ˈfoj ˈẽj̃ ˈdozi di owˈtubɾu	upl@23898e1 o=W casamento=M foi=W em=M doze=M de=M outubro=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-17	pt-BR	date	Foi em 4 de julho de 1976.	ˈfoj ˈẽj̃ ˈkwatɾu di ˈʒuʎu di ˈmiw nɔveˈsẽtus i seˈtẽtɐ i ˈsejs	upl@23898e1 foi=W em=M quatro=M de=M julho=M de=M mil=M novecentos=M e=W setenta=M e=W seis=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day and year); C&C p.387	gold
+pt-BR-date-18	pt-BR	date	O exame foi em 19 de maio.	u eˈzɐmi ˈfoj ˈẽj̃ dezeˈnɔvi di ˈmaju	upl@23898e1 o=W exame=M foi=W em=M dezenove=M de=M maio=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); pp.390-391 (dezenove)	gold
+pt-BR-date-19	pt-BR	date	O aniversário é em 17 de dezembro.	u aniveɾˈsaɾju ˈɛ ˈẽj̃ dezeˈsɛti di deˈzẽbɾu	upl@23898e1 o=W aniversário=M é=W em=M dezessete=M de=M dezembro=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); pp.390-391 (dezessete)	gold
+pt-BR-date-20	pt-BR	date	Hoje é dia 9 de abril.	ˈoʒi ˈɛ ˈdiɐ ˈnɔvi di aˈbɾiw	upl@23898e1 hoje=M é=W dia=M nove=M de=M abril=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day)	gold
+pt-BR-date-21	pt-BR	date	Amanhã é dia 16 de novembro.	amaˈɲɐ̃ ˈɛ ˈdiɐ dezeˈsejs di noˈvẽbɾu	upl@23898e1 amanhã=M é=W dia=M dezesseis=M de=M novembro=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); pp.390-391 (dezesseis)	gold
+pt-BR-date-22	pt-BR	date	Ontem foi dia 27 de agosto.	ˈõtẽj̃ ˈfoj ˈdiɐ ˈvĩti i ˈsɛti di aˈɡostu	upl@23898e1 ontem=M foi=W dia=M vinte=M e=W sete=M de=M agosto=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387	gold
+pt-BR-date-23	pt-BR	date	O verão de 2003 foi quente.	u veˈɾɐ̃w̃ di ˈdojs ˈmiw i ˈtɾes ˈfoj ˈkẽti	upl@23898e1 o=W verão=M de=M dois=M mil=M e=W três=M foi=W quente=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal year)	gold
+pt-BR-date-24	pt-BR	date	Foi no inverno de 1941.	ˈfoj nu ĩˈvɛɾnu di ˈmiw nɔveˈsẽtus i kwaˈɾẽtɐ i ˈũ	upl@23898e1 foi=W no=M inverno=M de=M mil=M novecentos=M e=W quarenta=M e=W um=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal year); C&C p.387	gold
+pt-BR-date-25	pt-BR	date	O jantar é em 23 de julho.	u ʒɐ̃ˈtaɾ ˈɛ ˈẽj̃ ˈvĩti i ˈtɾes di ˈʒuʎu	upl@23898e1 o=W jantar=M é=W em=M vinte=M e=W três=M de=M julho=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387	gold
+pt-BR-date-26	pt-BR	date	A festa foi em 28 de maio.	a ˈfɛstɐ ˈfoj ˈẽj̃ ˈvĩti i ˈojtu di ˈmaju	upl@23898e1 a=M festa=M foi=W em=M vinte=M e=W oito=M de=M maio=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387	gold
+pt-BR-date-27	pt-BR	date	O concerto foi em 29 de outubro.	u kõˈseɾtu ˈfoj ˈẽj̃ ˈvĩti i ˈnɔvi di owˈtubɾu	upl@23898e1 o=W concerto=M foi=W em=M vinte=M e=W nove=M de=M outubro=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387	gold
+pt-BR-date-28	pt-BR	date	O dia 31 de dezembro é longo.	u ˈdiɐ ˈtɾĩtɐ i ˈũ di deˈzẽbɾu ˈɛ ˈlõɡu	upl@23898e1 o=W dia=M trinta=M e=W um=M de=M dezembro=M é=W longo=M | reading: C&C p.374 via Ciberdúvidas 32700 (cardinal day); C&C p.387	gold
+pt-BR-date-29	pt-BR	date	O feriado é em 1 de maio.	u feɾiˈadu ˈɛ ˈẽj̃ pɾiˈmejɾu di ˈmaju	upl@23898e1 o=W feriado=M é=W em=M primeiro=M de=M maio=M | reading: C&C p.374 via Ciberdúvidas 32700 (ordinal first day)	gold
+pt-BR-date-30	pt-BR	date	O feriado é em 1 de janeiro.	u feɾiˈadu ˈɛ ˈẽj̃ pɾiˈmejɾu di ʒaˈnejɾu	upl@23898e1 o=W feriado=M é=W em=M primeiro=M de=M janeiro=M | reading: C&C p.374 via Ciberdúvidas 32700 (ordinal first day)	gold
+pt-BR-date-31	pt-BR	date	Foi em 25/12/2023.	ˈfoj ˈẽj̃ ˈvĩti i ˈsĩku di deˈzẽbɾu di ˈdojs ˈmiw i ˈvĩti i ˈtɾes	upl@23898e1 foi=W em=M vinte=M e=W cinco=M de=M dezembro=M de=M dois=M mil=M e=W vinte=M e=W três=M | reading: C&C p.374 via Ciberdúvidas 32700; AO1990 Base XIX 1.º b)	gold
+pt-BR-date-32	pt-BR	date	Foi em 10/06/1880.	ˈfoj ˈẽj̃ ˈdɛs di ˈʒuɲu di ˈmiw ojtoˈsẽtus i ojˈtẽtɐ	upl@23898e1 foi=W em=M dez=M de=M junho=M de=M mil=M oitocentos=M e=W oitenta=M | reading: C&C p.374 via Ciberdúvidas 32700; C&C p.387	gold
+pt-BR-date-33	pt-BR	date	O exame é em 21/07/2025.	u eˈzɐmi ˈɛ ˈẽj̃ ˈvĩti i ˈũ di ˈʒuʎu di ˈdojs ˈmiw i ˈvĩti i ˈsĩku	upl@23898e1 o=W exame=M é=W em=M vinte=M e=W um=M de=M julho=M de=M dois=M mil=M e=W vinte=M e=W cinco=M | reading: C&C p.374 via Ciberdúvidas 32700; C&C p.387	gold
+pt-BR-date-34	pt-BR	date	O concerto é em 2025-05-30.	u kõˈseɾtu ˈɛ ˈẽj̃ ˈtɾĩtɐ di ˈmaju di ˈdojs ˈmiw i ˈvĩti i ˈsĩku	upl@23898e1 o=W concerto=M é=W em=M trinta=M de=M maio=M de=M dois=M mil=M e=W vinte=M e=W cinco=M | reading: C&C p.374 via Ciberdúvidas 32700; C&C p.387	gold
+pt-BR-abbreviation-01	pt-BR	abbreviation	O Sr. Costa é alto.	u seˈɲoɾ ˈkɔstɐ ˈɛ ˈawtu	upl@23898e1 o=W senhor=M costa=M é=W alto=M | reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun	gold
+pt-BR-abbreviation-02	pt-BR	abbreviation	O Sr. Machado é paciente.	u seˈɲoɾ maˈʃadu ˈɛ pasiˈẽti	upl@23898e1 o=W senhor=M machado=M é=W paciente=M | reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun	gold
+pt-BR-abbreviation-03	pt-BR	abbreviation	O Sr. Rocha foi médico.	u seˈɲoɾ ˈʁɔʃɐ ˈfoj ˈmɛdiku	upl@23898e1 o=W senhor=M rocha=M foi=W médico=M | reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun	gold
+pt-BR-abbreviation-04	pt-BR	abbreviation	O Sr. Cruz é feliz.	u seˈɲoɾ ˈkɾus ˈɛ feˈlis	upl@23898e1 o=W senhor=M cruz=M é=W feliz=M | reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun	gold
+pt-BR-abbreviation-05	pt-BR	abbreviation	O Sr. Rosa foi ao jardim.	u seˈɲoɾ ˈʁɔzɐ ˈfoj aw ʒaɾˈdĩ	upl@23898e1 o=W senhor=M rosa=M foi=W ao=M jardim=M | reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun	gold
+pt-BR-abbreviation-06	pt-BR	abbreviation	O Sr. Carvalho foi ao banco.	u seˈɲoɾ kaɾˈvaʎu ˈfoj aw ˈbɐ̃ku	upl@23898e1 o=W senhor=M carvalho=M foi=W ao=M banco=M | reading: Priberam DLPO 'Sr.' (abreviatura de senhor); surname read as the noun	gold
+pt-BR-abbreviation-07	pt-BR	abbreviation	O Dr. Carvalho é médico.	u dowˈtoɾ kaɾˈvaʎu ˈɛ ˈmɛdiku	upl@23898e1 o=W doutor=M carvalho=M é=W médico=M | reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun	gold
+pt-BR-abbreviation-08	pt-BR	abbreviation	O Dr. Costa foi simpático.	u dowˈtoɾ ˈkɔstɐ ˈfoj sĩˈpatiku	upl@23898e1 o=W doutor=M costa=M foi=W simpático=M | reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun	gold
+pt-BR-abbreviation-09	pt-BR	abbreviation	O Dr. Cruz é paciente.	u dowˈtoɾ ˈkɾus ˈɛ pasiˈẽti	upl@23898e1 o=W doutor=M cruz=M é=W paciente=M | reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun	gold
+pt-BR-abbreviation-10	pt-BR	abbreviation	O Dr. Rosa é alto.	u dowˈtoɾ ˈʁɔzɐ ˈɛ ˈawtu	upl@23898e1 o=W doutor=M rosa=M é=W alto=M | reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun	gold
+pt-BR-abbreviation-11	pt-BR	abbreviation	O Dr. Machado foi ao teatro.	u dowˈtoɾ maˈʃadu ˈfoj aw teˈatɾu	upl@23898e1 o=W doutor=M machado=M foi=W ao=M teatro=M | reading: Priberam DLPO 'Dr.' (abreviatura de doutor); surname read as the noun	gold
+pt-BR-abbreviation-12	pt-BR	abbreviation	A Dra. Cruz foi ao hospital.	a dowˈtoɾɐ ˈkɾus ˈfoj aw ospiˈtaw	upl@23898e1 a=M doutora=M cruz=M foi=W ao=M hospital=M | reading: Priberam DLPO 'Dra.' (abreviatura de doutora); surname read as the noun	gold
+pt-BR-abbreviation-13	pt-BR	abbreviation	A Dra. Costa foi ao museu.	a dowˈtoɾɐ ˈkɔstɐ ˈfoj aw muˈzew	upl@23898e1 a=M doutora=M costa=M foi=W ao=M museu=M | reading: Priberam DLPO 'Dra.' (abreviatura de doutora); surname read as the noun	gold
+pt-BR-abbreviation-14	pt-BR	abbreviation	A Dra. Rocha foi ao mercado.	a dowˈtoɾɐ ˈʁɔʃɐ ˈfoj aw meɾˈkadu	upl@23898e1 a=M doutora=M rocha=M foi=W ao=M mercado=M | reading: Priberam DLPO 'Dra.' (abreviatura de doutora); surname read as the noun	gold
+pt-BR-abbreviation-15	pt-BR	abbreviation	O Prof. Machado é paciente.	u pɾofeˈsoɾ maˈʃadu ˈɛ pasiˈẽti	upl@23898e1 o=W professor=M machado=M é=W paciente=M | reading: Priberam DLPO 'Prof.' (abreviatura de professor); surname read as the noun	gold
+pt-BR-abbreviation-16	pt-BR	abbreviation	O Prof. Rocha é famoso.	u pɾofeˈsoɾ ˈʁɔʃɐ ˈɛ faˈmozu	upl@23898e1 o=W professor=M rocha=M é=W famoso=M | reading: Priberam DLPO 'Prof.' (abreviatura de professor); surname read as the noun	gold
+pt-BR-abbreviation-17	pt-BR	abbreviation	O Prof. Cruz foi ao castelo.	u pɾofeˈsoɾ ˈkɾus ˈfoj aw kasˈtɛlu	upl@23898e1 o=W professor=M cruz=M foi=W ao=M castelo=M | reading: Priberam DLPO 'Prof.' (abreviatura de professor); surname read as the noun	gold
+pt-BR-abbreviation-18	pt-BR	abbreviation	O Eng. Costa é paciente.	u ẽʒeˈɲejɾu ˈkɔstɐ ˈɛ pasiˈẽti	upl@23898e1 o=W engenheiro=M costa=M é=W paciente=M | reading: Priberam DLPO 'Eng.' (abreviatura de engenheiro); surname read as the noun	gold
+pt-BR-abbreviation-19	pt-BR	abbreviation	O Eng. Rosa foi ao mercado.	u ẽʒeˈɲejɾu ˈʁɔzɐ ˈfoj aw meɾˈkadu	upl@23898e1 o=W engenheiro=M rosa=M foi=W ao=M mercado=M | reading: Priberam DLPO 'Eng.' (abreviatura de engenheiro); surname read as the noun	gold
+pt-BR-abbreviation-20	pt-BR	abbreviation	O Eng. Machado é alto.	u ẽʒeˈɲejɾu maˈʃadu ˈɛ ˈawtu	upl@23898e1 o=W engenheiro=M machado=M é=W alto=M | reading: Priberam DLPO 'Eng.' (abreviatura de engenheiro); surname read as the noun	gold
+pt-BR-abbreviation-21	pt-BR	abbreviation	É a Av. da Liberdade.	ˈɛ a aveˈnidɐ dɐ libeɾˈdadi	upl@23898e1 é=W a=M avenida=M da=M liberdade=M | reading: Priberam DLPO 'av.' (abreviatura de avenida)	gold
+pt-BR-abbreviation-22	pt-BR	abbreviation	O hotel é na Av. da Liberdade.	u oˈtɛw ˈɛ nɐ aveˈnidɐ dɐ libeɾˈdadi	upl@23898e1 o=W hotel=M é=W na=M avenida=M da=M liberdade=M | reading: Priberam DLPO 'av.' (abreviatura de avenida)	gold
+pt-BR-abbreviation-23	pt-BR	abbreviation	O museu é na Av. da República.	u muˈzew ˈɛ nɐ aveˈnidɐ dɐ ʁeˈpublikɐ	upl@23898e1 o=W museu=M é=W na=M avenida=M da=M república=M | reading: Priberam DLPO 'av.' (abreviatura de avenida)	gold
+pt-BR-abbreviation-24	pt-BR	abbreviation	O mapa é da pág. 7.	u ˈmapɐ ˈɛ dɐ ˈpaʒinɐ ˈsɛti	upl@23898e1 o=W mapa=M é=W da=M página=M sete=M | reading: Priberam DLPO 'pág.' (abreviatura de página); C&C pp.390-391	gold
+pt-BR-abbreviation-25	pt-BR	abbreviation	O quadro é da pág. 12.	u ˈkwadɾu ˈɛ dɐ ˈpaʒinɐ ˈdozi	upl@23898e1 o=W quadro=M é=W da=M página=M doze=M | reading: Priberam DLPO 'pág.' (abreviatura de página); C&C pp.390-391	gold
+pt-BR-abbreviation-26	pt-BR	abbreviation	O poema é da pág. 30.	u poˈemɐ ˈɛ dɐ ˈpaʒinɐ ˈtɾĩtɐ	upl@23898e1 o=W poema=M é=W da=M página=M trinta=M | reading: Priberam DLPO 'pág.' (abreviatura de página); C&C pp.390-391	gold
+pt-BR-abbreviation-27	pt-BR	abbreviation	O séc. XX foi difícil.	u ˈsɛkulu ˈvĩti ˈfoj diˈfisiw	upl@23898e1 o=W século=M vinte=M foi=W difícil=M | reading: Priberam DLPO 'séc.' (abreviatura de século); C&C p.388 (cardinal after décimo)	gold
+pt-BR-abbreviation-28	pt-BR	abbreviation	O castelo é do séc. XII.	u kasˈtɛlu ˈɛ du ˈsɛkulu ˈdozi	upl@23898e1 o=W castelo=M é=W do=M século=M doze=M | reading: Priberam DLPO 'séc.' (abreviatura de século); C&C p.388 (cardinal after décimo)	gold
+pt-BR-abbreviation-29	pt-BR	abbreviation	O teatro é do séc. XIX.	u teˈatɾu ˈɛ du ˈsɛkulu dezeˈnɔvi	upl@23898e1 o=W teatro=M é=W do=M século=M dezenove=M | reading: Priberam DLPO 'séc.' (abreviatura de século); C&C p.388; pp.390-391 (dezenove)	gold
+pt-BR-abbreviation-30	pt-BR	abbreviation	O cap. 2 é difícil.	u kaˈpitulu ˈdojs ˈɛ diˈfisiw	upl@23898e1 o=W capítulo=M dois=M é=W difícil=M | reading: Priberam DLPO 'cap.' (abreviatura de capítulo); C&C pp.390-391	gold
+pt-BR-abbreviation-31	pt-BR	abbreviation	O cap. 9 é curto.	u kaˈpitulu ˈnɔvi ˈɛ ˈkuɾtu	upl@23898e1 o=W capítulo=M nove=M é=W curto=M | reading: Priberam DLPO 'cap.' (abreviatura de capítulo); C&C pp.390-391	gold
+pt-BR-abbreviation-32	pt-BR	abbreviation	O cap. 4 é muito simples.	u kaˈpitulu ˈkwatɾu ˈɛ ˈmujtu ˈsĩplis	upl@23898e1 o=W capítulo=M quatro=M é=W muito=M simples=M | reading: Priberam DLPO 'cap.' (abreviatura de capítulo); C&C pp.390-391	gold
+pt-BR-abbreviation-33	pt-BR	abbreviation	O cap. 7 é longo.	u kaˈpitulu ˈsɛti ˈɛ ˈlõɡu	upl@23898e1 o=W capítulo=M sete=M é=W longo=M | reading: Priberam DLPO 'cap.' (abreviatura de capítulo); C&C pp.390-391	gold
+pt-BR-abbreviation-34	pt-BR	abbreviation	A Sr.ª Rosa foi ao mercado.	a seˈɲɔɾɐ ˈʁɔzɐ ˈfoj aw meɾˈkadu	upl@23898e1 a=M senhora=M rosa=M foi=W ao=M mercado=M | reading: VOLP-ACL abbreviation list via tests/test_honorific_abbreviations.py (Sr.ª senhora); surname read as the noun	gold
+pt-BR-abbreviation-35	pt-BR	abbreviation	A Sr.ª Costa foi ao hospital.	a seˈɲɔɾɐ ˈkɔstɐ ˈfoj aw ospiˈtaw	upl@23898e1 a=M senhora=M costa=M foi=W ao=M hospital=M | reading: VOLP-ACL abbreviation list via tests/test_honorific_abbreviations.py (Sr.ª senhora); surname read as the noun	gold
+pt-BR-homograph-01	pt-BR	homograph	O gosto do café é forte.	u ˈɡostu du kaˈfɛ ˈɛ ˈfɔɾti	upl@23898e1 o=W gosto=M do=M café=M é=W forte=M | homograph: gosto, sense taste (NOUN)	gold
+pt-BR-homograph-02	pt-BR	homograph	O jogo foi difícil.	u ˈʒoɡu ˈfoj diˈfisiw	upl@23898e1 o=W jogo=M foi=W difícil=M | homograph: jogo, sense game (NOUN)	gold
+pt-BR-homograph-03	pt-BR	homograph	O almoço foi bom.	u awˈmosu ˈfoj ˈbõw̃	upl@23898e1 o=W almoço=M foi=W bom=M | homograph: almoço, sense lunch (NOUN)	gold
+pt-BR-homograph-04	pt-BR	homograph	O olho do gato é azul.	u ˈoʎu du ˈɡatu ˈɛ aˈzuw	upl@23898e1 o=W olho=M do=M gato=M é=W azul=M | homograph: olho, sense eye (NOUN)	gold
+pt-BR-homograph-05	pt-BR	homograph	A sede do banco é ali.	a ˈsɛdi du ˈbɐ̃ku ˈɛ aˈli	upl@23898e1 a=M sede=M do=M banco=M é=W ali=M | homograph: sede, sense seat (NOUN), by the open stressed vowel	gold
+pt-BR-homograph-06	pt-BR	homograph	O peso do barco é grande.	u ˈpezu du ˈbaɾku ˈɛ ˈɡɾɐ̃di	upl@23898e1 o=W peso=M do=M barco=M é=W grande=M | homograph: peso, sense weight (NOUN)	gold
+pt-BR-homograph-07	pt-BR	homograph	O selo é antigo.	u ˈselu ˈɛ ɐ̃ˈtiɡu	upl@23898e1 o=W selo=M é=W antigo=M | homograph: selo, sense stamp (NOUN)	gold
+pt-BR-homograph-08	pt-BR	homograph	O gelo é frio.	u ˈʒelu ˈɛ ˈfɾiu	upl@23898e1 o=W gelo=M é=W frio=M | homograph: gelo, sense ice (NOUN)	gold
+pt-BR-homograph-09	pt-BR	homograph	O erro foi grave.	u ˈeʁu ˈfoj ˈɡɾavi	upl@23898e1 o=W erro=M foi=W grave=M | homograph: erro, sense error (NOUN)	gold
+pt-BR-homograph-10	pt-BR	homograph	O governo é novo.	u ɡoˈveɾnu ˈɛ ˈnovu	upl@23898e1 o=W governo=M é=W novo=M | homograph: governo, sense government (NOUN)	gold
+pt-BR-homograph-11	pt-BR	homograph	O emprego é bom.	u ẽˈpɾeɡu ˈɛ ˈbõw̃	upl@23898e1 o=W emprego=M é=W bom=M | homograph: emprego, sense job (NOUN)	gold
+pt-BR-homograph-12	pt-BR	homograph	A cor do carro é azul.	a ˈkoɾ du ˈkaʁu ˈɛ aˈzuw	upl@23898e1 a=M cor=W do=M carro=M é=W azul=M | homograph: cor, sense colour (NOUN)	gold
+pt-BR-homograph-13	pt-BR	homograph	A bola do filho é azul.	a ˈbɔlɐ du ˈfiʎu ˈɛ aˈzuw	upl@23898e1 a=M bola=M do=M filho=M é=W azul=M | homograph: bola, sense ball (NOUN)	gold
+pt-BR-homograph-14	pt-BR	homograph	O lobo é cinzento.	u ˈlobu ˈɛ sĩˈzẽtu	upl@23898e1 o=W lobo=M é=W cinzento=M | homograph: lobo, sense wolf (NOUN), by the closed stressed vowel	gold
+pt-BR-homograph-15	pt-BR	homograph	O porto é grande.	u ˈpoɾtu ˈɛ ˈɡɾɐ̃di	upl@23898e1 o=W porto=M é=W grande=M | homograph: porto, sense harbour (NOUN)	gold
+pt-BR-homograph-16	pt-BR	homograph	O posto é aqui.	u ˈpostu ˈɛ aˈki	upl@23898e1 o=W posto=M é=W aqui=M | homograph: posto, sense station (NOUN)	gold
+pt-BR-homograph-17	pt-BR	homograph	O começo foi difícil.	u koˈmesu ˈfoj diˈfisiw	upl@23898e1 o=W começo=M foi=W difícil=M | homograph: começo, sense beginning (NOUN)	gold
+pt-BR-homograph-18	pt-BR	homograph	O corte foi profundo.	u ˈkɔɾti ˈfoj pɾoˈfũdu	upl@23898e1 o=W corte=M foi=W profundo=M | homograph: corte, sense cut (NOUN)	gold
+pt-BR-homograph-19	pt-BR	homograph	O molho é picante.	u ˈmoʎu ˈɛ piˈkɐ̃ti	upl@23898e1 o=W molho=M é=W picante=M | homograph: molho, sense sauce (NOUN), by the closed stressed vowel	gold
+pt-BR-homograph-20	pt-BR	homograph	O conforto do hotel é total.	u kõˈfoɾtu du oˈtɛw ˈɛ toˈtaw	upl@23898e1 o=W conforto=M do=M hotel=M é=W total=M | homograph: conforto, sense comfort (NOUN)	gold
+pt-BR-homograph-21	pt-BR	homograph	O pão é seco.	u ˈpɐ̃w̃ ˈɛ ˈseku	upl@23898e1 o=W pão=M é=W seco=M | homograph: seco, sense dry (ADJ)	gold
+pt-BR-homograph-22	pt-BR	homograph	A torre é alta.	a ˈtoʁi ˈɛ ˈawtɐ	upl@23898e1 a=M torre=M é=W alta=M | homograph: torre, sense tower (NOUN)	gold
+pt-BR-homograph-23	pt-BR	homograph	O coro é bonito.	u ˈkoɾu ˈɛ boˈnitu	upl@23898e1 o=W coro=M é=W bonito=M | homograph: coro, sense choir (NOUN)	gold
+pt-BR-homograph-24	pt-BR	homograph	O troco foi certo.	u ˈtɾoku ˈfoj ˈsɛɾtu	upl@23898e1 o=W troco=M foi=W certo=M | homograph: troco, sense change (NOUN)	gold
+pt-BR-homograph-25	pt-BR	homograph	O sopro do vento é forte.	u ˈsopɾu du ˈvẽtu ˈɛ ˈfɔɾti	upl@23898e1 o=W sopro=M do=M vento=M é=W forte=M | homograph: sopro, sense breath (NOUN)	gold
+pt-BR-homograph-26	pt-BR	homograph	O preço é o dobro.	u ˈpɾesu ˈɛ u ˈdobɾu	upl@23898e1 o=W preço=M é=W o=W dobro=M | homograph: dobro, sense double (NOUN)	gold
+pt-BR-homograph-27	pt-BR	homograph	O topo do castelo é alto.	u ˈtopu du kasˈtɛlu ˈɛ ˈawtu	upl@23898e1 o=W topo=M do=M castelo=M é=W alto=M | homograph: topo, sense summit (NOUN)	gold
+pt-BR-homograph-28	pt-BR	homograph	O desemprego é grave.	u dezẽˈpɾeɡu ˈɛ ˈɡɾavi	upl@23898e1 o=W desemprego=M é=W grave=M | homograph: desemprego, sense noun (NOUN)	gold
+pt-BR-homograph-29	pt-BR	homograph	O sossego do campo é bom.	u soˈseɡu du ˈkɐ̃pu ˈɛ ˈbõw̃	upl@23898e1 o=W sossego=M do=M campo=M é=W bom=M | homograph: sossego, sense calm (NOUN)	gold
+pt-BR-homograph-30	pt-BR	homograph	A soma é simples.	a ˈsomɐ ˈɛ ˈsĩplis	upl@23898e1 a=M soma=M é=W simples=M | homograph: soma, sense sum (NOUN)	gold
+pt-BR-homograph-31	pt-BR	homograph	A força do vento é grande.	a ˈfoɾsɐ du ˈvẽtu ˈɛ ˈɡɾɐ̃di	upl@23898e1 a=M força=M do=M vento=M é=W grande=M | homograph: força, sense strength (NOUN)	gold
+pt-BR-homograph-32	pt-BR	homograph	A colher é de prata.	a koˈʎɛɾ ˈɛ di ˈpɾatɐ	upl@23898e1 a=M colher=M é=W de=M prata=M | homograph: colher, sense spoon (NOUN)	gold
+pt-BR-homograph-33	pt-BR	homograph	A forma do bolo é de metal.	a ˈfoɾmɐ du ˈbolu ˈɛ di meˈtaw	upl@23898e1 a=M forma=M do=M bolo=M é=W de=M metal=M | homograph: forma, sense mould (NOUN), by the closed stressed vowel	gold
+pt-BR-homograph-34	pt-BR	homograph	O esforço foi enorme.	u esˈfoɾsu ˈfoj eˈnɔɾmi	upl@23898e1 o=W esforço=M foi=W enorme=M | homograph: esforço, sense effort (NOUN)	gold
+pt-BR-homograph-35	pt-BR	homograph	Eu gosto de café.	ˈew ˈɡɔstu di kaˈfɛ	upl@23898e1 eu=M gosto=unsourced de=M café=M | silver: homograph: gosto, sense like (VERB); the verb reading has no human source in the lexicon	silver
+pt-BR-homograph-36	pt-BR	homograph	Eu jogo futebol.	ˈew ˈʒɔɡu futeˈbɔw	upl@23898e1 eu=M jogo=unsourced futebol=M | silver: homograph: jogo, sense play (VERB); the verb reading has no human source in the lexicon	silver
+pt-BR-homograph-37	pt-BR	homograph	Eu almoço cedo.	ˈew awˈmɔsu ˈsedu	upl@23898e1 eu=M almoço=unsourced cedo=M | silver: homograph: almoço, sense dine (VERB); the verb reading has no human source in the lexicon	silver
+pt-BR-homograph-38	pt-BR	homograph	Eu começo hoje.	ˈew koˈmɛsu ˈoʒi	upl@23898e1 eu=M começo=unsourced hoje=M | silver: homograph: começo, sense begin (VERB); the verb reading has no human source in the lexicon	silver
+pt-BR-homograph-39	pt-BR	homograph	Eu olho para o mar.	ˈew ˈɔʎu ˈpaɾɐ u ˈmaɾ	upl@23898e1 eu=M olho=W para=M o=W mar=M | homograph: olho, sense look (VERB), Wiktionary pt-BR reading	gold
+pt-BR-homograph-40	pt-BR	homograph	Eu troco o carro.	ˈew ˈtɾɔku u ˈkaʁu	upl@23898e1 eu=M troco=unsourced o=W carro=M | silver: homograph: troco, sense exchange (VERB); the verb reading has no human source in the lexicon	silver
+pt-BR-contact-01	pt-BR	contact	O jazz é bom.	u ˈdʒɛs ˈɛ ˈbõw̃	upl@23898e1 o=W jazz=M é=W bom=M	gold
+pt-BR-contact-02	pt-BR	contact	O show foi bom.	u ˈʃow ˈfoj ˈbõw̃	upl@23898e1 o=W show=M foi=W bom=M	gold
+pt-BR-contact-03	pt-BR	contact	O software é novo.	u ˈsɔftweɾ ˈɛ ˈnovu	upl@23898e1 o=W software=M é=W novo=M	gold
+pt-BR-contact-04	pt-BR	contact	O hardware é caro.	u ˈʁaɾdwɛɾ ˈɛ ˈkaɾu	upl@23898e1 o=W hardware=M é=W caro=M	gold
+pt-BR-contact-05	pt-BR	contact	O design é simples.	u diˈzajn ˈɛ ˈsĩplis	upl@23898e1 o=W design=M é=W simples=M	gold
+pt-BR-contact-06	pt-BR	contact	O croissant é fresco.	u kɾoaˈsɐ̃ ˈɛ ˈfɾesku	upl@23898e1 o=W croissant=M é=W fresco=M	gold
+pt-BR-contact-07	pt-BR	contact	O kiwi é verde.	u kiˈwi ˈɛ ˈveɾdi	upl@23898e1 o=W kiwi=M é=W verde=M	gold
+pt-BR-contact-08	pt-BR	contact	O karaokê foi divertido.	u kaɾaoˈke ˈfoj diveɾˈtidu	upl@23898e1 o=W karaokê=M foi=W divertido=M	gold
+pt-BR-contact-09	pt-BR	contact	O judô é difícil.	u ʒuˈdo ˈɛ diˈfisiw	upl@23898e1 o=W judô=M é=W difícil=M	gold
+pt-BR-contact-10	pt-BR	contact	O bar é pequeno.	u ˈbaɾ ˈɛ peˈkenu	upl@23898e1 o=W bar=M é=W pequeno=M	gold
+pt-BR-contact-11	pt-BR	contact	O bacon é caro.	u ˈbejkõw̃ ˈɛ ˈkaɾu	upl@23898e1 o=W bacon=M é=W caro=M	gold
+pt-BR-contact-12	pt-BR	contact	O site é novo.	u ˈsajti ˈɛ ˈnovu	upl@23898e1 o=W site=M é=W novo=M	gold
+pt-BR-contact-13	pt-BR	contact	O golfe é caro.	u ˈɡowfi ˈɛ ˈkaɾu	upl@23898e1 o=W golfe=M é=W caro=M	gold
+pt-BR-contact-14	pt-BR	contact	O suéter é azul.	u suˈɛteɾ ˈɛ aˈzuw	upl@23898e1 o=W suéter=M é=W azul=M	gold
+pt-BR-contact-15	pt-BR	contact	O coquetel é forte.	u kokeˈtɛw ˈɛ ˈfɔɾti	upl@23898e1 o=W coquetel=M é=W forte=M	gold
+pt-BR-contact-16	pt-BR	contact	A pizza é boa.	a ˈpitsɐ ˈɛ ˈboɐ	upl@23898e1 a=M pizza=M é=W boa=M	gold
+pt-BR-contact-17	pt-BR	contact	O hambúrguer é grande.	u ɐ̃ˈbuɾɡeɾ ˈɛ ˈɡɾɐ̃di	upl@23898e1 o=W hambúrguer=M é=W grande=M	gold
+pt-BR-contact-18	pt-BR	contact	O sanduíche é fresco.	u sɐ̃duˈiʃi ˈɛ ˈfɾesku	upl@23898e1 o=W sanduíche=M é=W fresco=M	gold
+pt-BR-contact-19	pt-BR	contact	O shopping é enorme.	u ˈʃɔpĩ ˈɛ eˈnɔɾmi	upl@23898e1 o=W shopping=M é=W enorme=M	gold
+pt-BR-contact-20	pt-BR	contact	O mouse é novo.	u mawz ˈɛ ˈnovu	upl@23898e1 o=W mouse=M é=W novo=M	gold
+pt-BR-contact-21	pt-BR	contact	O freezer é grande.	u ˈfɾizeɾ ˈɛ ˈɡɾɐ̃di	upl@23898e1 o=W freezer=M é=W grande=M	gold
+pt-BR-contact-22	pt-BR	contact	O xampu é barato.	u ʃɐ̃ˈpu ˈɛ baˈɾatu	upl@23898e1 o=W xampu=M é=W barato=M	gold
+pt-BR-contact-23	pt-BR	contact	O menu é simples.	u meˈnu ˈɛ ˈsĩplis	upl@23898e1 o=W menu=M é=W simples=M	gold
+pt-BR-contact-24	pt-BR	contact	O crepe é doce.	u ˈkɾɛpi ˈɛ ˈdosi	upl@23898e1 o=W crepe=W é=W doce=M	gold
+pt-BR-contact-25	pt-BR	contact	O suflê é leve.	u suˈfle ˈɛ ˈlɛvi	upl@23898e1 o=W suflê=M é=W leve=M	gold
+pt-BR-contact-26	pt-BR	contact	O abajur é branco.	u abaˈʒuɾ ˈɛ ˈbɾɐ̃ku	upl@23898e1 o=W abajur=M é=W branco=M	gold
+pt-BR-contact-27	pt-BR	contact	O iogurte é fresco.	u joˈɡuɾti ˈɛ ˈfɾesku	upl@23898e1 o=W iogurte=M é=W fresco=M	gold
+pt-BR-contact-28	pt-BR	contact	O balé é bonito.	u baˈlɛ ˈɛ boˈnitu	upl@23898e1 o=W balé=M é=W bonito=M	gold
+pt-BR-contact-29	pt-BR	contact	O blog é famoso.	u ˈblɔɡi ˈɛ faˈmozu	upl@23898e1 o=W blog=W é=W famoso=M	gold
+pt-BR-contact-30	pt-BR	contact	O design é moderno.	u diˈzajn ˈɛ moˈdɛɾnu	upl@23898e1 o=W design=M é=W moderno=M	gold
+pt-BR-contact-31	pt-BR	contact	O croissant é barato.	u kɾoaˈsɐ̃ ˈɛ baˈɾatu	upl@23898e1 o=W croissant=M é=W barato=M	gold
+pt-BR-contact-32	pt-BR	contact	O estresse é grande.	u esˈtɾɛsi ˈɛ ˈɡɾɐ̃di	upl@23898e1 o=W estresse=M é=W grande=M	gold
