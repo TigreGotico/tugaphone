@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.8.0a1](https://github.com/TigreGotico/tugaphone/tree/1.8.0a1) (2026-11-17)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1...1.8.0a1)
+
+**Merged pull requests:**
+
+- feat: convert old spellings with desacordo\_ortografico before G2P [\#240](https://github.com/TigreGotico/tugaphone/pull/240) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.7.1](https://github.com/TigreGotico/tugaphone/tree/1.7.1) (2026-11-16)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a9...1.7.1)
+
 ## [1.7.1a9](https://github.com/TigreGotico/tugaphone/tree/1.7.1a9) (2026-11-15)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a8...1.7.1a9)
@@ -380,10 +392,6 @@
 ## [1.4.2a2](https://github.com/TigreGotico/tugaphone/tree/1.4.2a2) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.2a1...1.4.2a2)
-
-**Merged pull requests:**
-
-- Update dependency python to 3.15 [\#132](https://github.com/TigreGotico/tugaphone/pull/132) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [1.4.2a1](https://github.com/TigreGotico/tugaphone/tree/1.4.2a1) (2026-10-29)
 
