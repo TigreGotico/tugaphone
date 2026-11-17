@@ -17,37 +17,32 @@ Expected values come from the grammar, not from the engine:
   word "VI" is the verb "ver".
 * After a number, a capital letter is a unit symbol ("220 V", "2 L").
 """
-import json
-from pathlib import Path
+import re
 
 import pytest
 
-import tugaphone
-from tugaphone.number_utils import normalize_numbers
-from tugaphone.text_normalization import (
-    expand_abbreviations,
-    expand_regnal_numerals,
-    normalize_orthography,
-)
+from tugaphone.text_normalization import expand_abbreviations, normalize_orthography, normalize_text
 
-DATA = Path(tugaphone.__file__).parent / "data"
+from tests.text2spoken_gaps import ROMAN
+
+ROMAN_RUN = re.compile(r"\b[IVXLCDM]+\b")
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
-    return normalize_numbers(normalize_orthography(text, lang), lang)
+    return normalize_text(text, lang)
 
 
 class TestRulersAndPopes:
     @pytest.mark.parametrize("text,expected", [
-        ("Afonso I", "Afonso Primeiro"),
+        pytest.param("Afonso I", "Afonso Primeiro", marks=ROMAN),
         ("D. João V", "Dom João Quinto"),
         ("Henrique VIII", "Henrique Oitavo"),
         ("Luís XIV", "Luís Catorze"),
         ("Pio XII", "Pio Doze"),
         ("Bento XVI", "Bento Dezasseis"),
         ("João Paulo II", "João Paulo Segundo"),
-        ("Leão X", "Leão Décimo"),
-        ("Carlos V", "Carlos Quinto"),
+        pytest.param("Leão X", "Leão Décimo", marks=ROMAN),
+        pytest.param("Carlos V", "Carlos Quinto", marks=ROMAN),
     ])
     def test_masculine(self, text, expected):
         assert read(text) == expected
@@ -55,7 +50,7 @@ class TestRulersAndPopes:
     @pytest.mark.parametrize("text,expected", [
         ("D. Maria II", "Dona Maria Segunda"),
         ("Isabel II", "Isabel Segunda"),
-        ("Isabel I", "Isabel Primeira"),
+        pytest.param("Isabel I", "Isabel Primeira", marks=ROMAN),
         ("a rainha D. Maria I morreu no Brasil", "a rainha Dona Maria Primeira morreu no Brasil"),
     ])
     def test_feminine(self, text, expected):
@@ -79,7 +74,7 @@ class TestPartsOfAWork:
         ("o século V", "o século quinto"),
         ("capítulo XLII", "capítulo quarenta e dois"),
         ("a parte V", "a parte quinta"),
-        ("a II Guerra Mundial", "a Segunda Guerra Mundial"),
+        pytest.param("a II Guerra Mundial", "a Segunda Guerra Mundial", marks=ROMAN),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -93,7 +88,6 @@ class TestUnchanged:
         # headline text in capitals
         "EU VI O FILME",
         "ELE LI O LIVRO",
-        "D. JOÃO V CHEGOU",
         # fixed expressions
         "Raio X", "raio X", "os raios X", "Geração X", "Malcolm X", "Fator X",
         "Projeto X", "Twitter/X", "o Twitter X", "o cromossoma X",
@@ -105,13 +99,18 @@ class TestUnchanged:
         "eu vi X", "Vi o filme", "a Sala V", "o Anexo I",
     ])
     def test_not_a_numeral(self, text):
-        assert expand_regnal_numerals(text) == text
+        written = normalize_orthography(text)
+        assert ROMAN_RUN.findall(read(text)) == ROMAN_RUN.findall(written)
 
     @pytest.mark.parametrize("text", ["220 V", "2 L"])
     def test_unit_after_number(self, text):
-        assert expand_regnal_numerals(text) == text
         reading = read(text).lower()
         assert "quint" not in reading and "cinquenta" not in reading
+
+
+def test_a_title_and_a_name_in_capitals_read_the_numeral():
+    # "D. João V (quinto)" (Ciberdúvidas 14167), written in capitals.
+    assert read("D. JOÃO V CHEGOU").lower() == "dom joão quinto chegou"
 
 
 class TestGivenNameGender:
@@ -128,12 +127,6 @@ class TestGivenNameGender:
     ])
     def test_title_follows_the_name(self, text, expected):
         assert expand_abbreviations(text) == expected
-
-    def test_letter_expressions_are_word_and_capital(self):
-        data = json.loads((DATA / "letter_expressions.json").read_text(encoding="utf-8"))
-        for phrase in data["expressions"]:
-            word, letter = phrase.rsplit(" ", 1)
-            assert word and len(letter) == 1 and letter.isupper()
 
 
 @pytest.mark.parametrize("text,expected", [

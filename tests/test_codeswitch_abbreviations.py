@@ -14,7 +14,9 @@ import pytest
 from tugaphone import TugaPhonemizer
 import tugaphone.codeswitch as codeswitch
 from tugaphone.codeswitch import _classify, _is_contact, split_runs
-from tugaphone.text_normalization import normalize_orthography
+from tugaphone.text_normalization import normalize_orthography, normalize_text
+
+from tests.text2spoken_gaps import BR_TENTH, ROMAN
 
 SENTENCE = "Tenho 23 anos, Sr. Silva; li o Cap. XII."
 # The sentence as a reader says it, written out by hand.
@@ -59,7 +61,9 @@ def _router_reading(ph, monkeypatch, text, lect, contact):
     ("de D. Maria I no baú", "de Dona Maria Primeira no baú"),
     ("S. Ex.ª o Presidente", "Sua Excelência o Presidente"),
 ])
-def test_reads_as_spoken(ph, lect, contact, written, spoken):
+def test_reads_as_spoken(request, ph, lect, contact, written, spoken):
+    if lect == "pt-BR" and written == "li o Cap. X.":
+        request.applymarker(BR_TENTH)
     expected = ph.phonemize_sentence(spoken, lect, contact="none")
     assert ph.phonemize_sentence(written, lect, contact=contact) == expected
 
@@ -142,19 +146,19 @@ def test_period_final_contact_word_routes(classifier, contact):
 
 
 @pytest.mark.parametrize("text,expected", [
-    ("li o Cap. XII.", "li o Capítulo Doze."),
+    ("li o Cap. XII.", "li o Capítulo XII."),
     ("Cap. 3 descreve", "Capítulo 3 descreve"),
     ("Art. 5 da lei", "Artigo 5 da lei"),
     ("Fig. 2 mostra", "Figura 2 mostra"),
-    ("Séc. XIX", "Século Dezanove"),
+    ("Séc. XIX", "Século XIX"),
     ("Tel. 21 000 000", "Telefone 21 000 000"),
     ("o N.º 4", "o número 4"),
-    ("ver (Cap. XII)", "ver (Capítulo Doze)"),
-    ("«Cap. XII»", "«Capítulo Doze»"),
+    ("ver (Cap. XII)", "ver (Capítulo XII)"),
+    ("«Cap. XII»", "«Capítulo XII»"),
     ("(art. 5.º)", "(artigo 5.º)"),
-    ("ver Fig. II", "ver Figura Segunda"),
-    ("a Pág. IV", "a Página Quarta"),
-    ("ver fig. XII", "ver figura doze"),
+    ("ver Fig. II", "ver Figura II"),
+    ("a Pág. IV", "a Página IV"),
+    ("ver fig. XII", "ver figura XII"),
     # a capitalised marker that no number follows is left as written
     ("O Cap. Salgueiro Maia saiu", "O Cap. Salgueiro Maia saiu"),
     ("Conheci o Art.", "Conheci o Art."),
@@ -162,6 +166,19 @@ def test_period_final_contact_word_routes(classifier, contact):
 ])
 def test_capitalised_abbreviation_expands(text, expected):
     assert normalize_orthography(text) == expected
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("li o Cap. XII.", "li o capítulo doze."),
+    ("Séc. XIX", "século dezanove"),
+    ("ver (Cap. XII)", "ver (capítulo doze)"),
+    ("«Cap. XII»", "«capítulo doze»"),
+    ("ver Fig. II", "ver figura segunda"),
+    ("a Pág. IV", "a página quarta"),
+    pytest.param("ver fig. XII", "ver figura doze", marks=ROMAN),
+])
+def test_numeral_after_an_expanded_marker_reads(text, expected):
+    assert normalize_text(text).lower() == expected
 
 
 @pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])

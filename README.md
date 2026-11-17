@@ -36,7 +36,7 @@ pip install tugaphone
 ```
 
 Its runtime dependencies (`orthography2ipa`, `o2i-lexicons`, `silabificador`,
-`tugalex`, `bifonia`, `ovos-number-parser`) install automatically. The `pt-PT`
+`tugalex`, `bifonia`, `text2spoken`) install automatically. The `pt-PT`
 and `pt-BR` lexicons ride in through [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons).
 
 ---
@@ -207,37 +207,39 @@ JSON-serialisable `AccentOverlay`, and `examples/12_synthetic_corpus.py`
 generates a parallel `(sentence, lect, ipa, respelled_text)` training corpus.
 See [docs/accent_forcing.md](docs/accent_forcing.md).
 
-### Number normalization
+### Numbers, dates and abbreviations
 
-`phonemize_sentence` spells digits out itself. `normalize_numbers` exposes
-that step on its own, for a TTS front-end that needs the text. It applies
-gender agreement and the long or short scale of the dialect:
+`phonemize_sentence` reads numbers, dates, clock times, money, measures,
+Roman numerals and abbreviations with
+[text2spoken](https://github.com/TigreGotico/text2spoken). `normalize_numbers`
+exposes that step on its own, for a TTS front-end that needs the text:
 
 ```python
 from tugaphone.number_utils import normalize_numbers
 
+normalize_numbers("Nasceu a 25/12/2023.")
+# 'Nasceu a vinte e cinco de dezembro de dois mil e vinte e três.'
+normalize_numbers("A reunião é às 19h30.")
+# 'A reunião é às dezanove horas e trinta minutos.'
+normalize_numbers("A reunião é às 19h30.", "pt-BR")
+# 'A reunião é às dezenove horas e trinta minutos.'
 normalize_numbers("vou comprar 1 casa")   # 'vou comprar uma casa'
-normalize_numbers("vou adotar 1 cão")     # 'vou adotar um cão'
-normalize_numbers("comprei 2 casas")      # 'comprei duas casas'
-normalize_numbers("aprovou 1 lei")        # 'aprovou uma lei'
-normalize_numbers("passou 1 dia")         # 'passou um dia'
 ```
 
-A form with digits that tugaphone cannot read, such as "COVID-19" or "3D", gives an `UnreadFormWarning` that names the form and the text, because the phoneme lattice drops its digits.
+The European lects and the African and Asian lects read the `pt-PT` variety
+("dezanove"). The Brazilian lects and `pt-UY` read the `pt-BR` variety
+("dezenove"). A form with digits that text2spoken cannot read, such as "3D",
+gives an `UnreadFormWarning` that names the form and the text, because the
+phoneme lattice drops its digits. See [docs/numbers.md](docs/numbers.md).
 
-### Text normalization
-
-Written text contains conventions that a phonemizer cannot read as they are: digit ranges, clock times, thousands separators, abbreviations, Roman numerals and acronyms. The `tugaphone.text_normalization` module rewrites each of them into words before the number rules run.
-
-A dash between two numbers is a range. "1139-1185" reads as "1139 a 1185". A colon between digits is a clock time. "16:00" reads as "16 horas", "9:05" as "9 e 5" and "24:00" as "24 horas".
-
-European number separators are kept. The dot in "92.073" groups thousands and is dropped. The comma in "10,4" is a decimal mark and reads as "10 vírgula 4".
-
-Abbreviations expand in two ways. Common ones such as "vs.", "pág." and "Av." always expand, so "vs." reads as "versus". Honorifics such as "Sr." and "Dr." expand only before a capitalised name, so "Sr. Silva" reads as "Senhor Silva" and a lone "Sr." at the end of a sentence stays as it is.
-
-A Roman numeral after a name or a century reads as an ordinal up to ten and as a cardinal above ten: "Afonso I" reads as "Afonso Primeiro" and "o século XIX" as "o século dezanove". The ordinal takes the gender of the name, so "D. Maria II" reads as "Dona Maria Segunda". A capital in a fixed expression such as "raio X" or "vitamina C" stays a letter. A letter-digit code reads as its letters and a number, so "T2" reads as "tê dois". Acronyms are spelled with Portuguese letter names, so "IA" reads as "i á", while lowercase words such as "ia" are left alone.
-
-The numbers themselves are then spelled out by `normalize_numbers` in standard European Portuguese, for example "vinte e cinco". The full rule list with examples is in [docs/text_normalization.md](docs/text_normalization.md).
+tugaphone rewrites the forms that text2spoken leaves as written. Abbreviations
+such as "vs.", "pág." and "n.º" expand, so "vs." reads as "versus". A title
+such as "Sr." or "Dr." expands everywhere, so "o Sr. presidente" reads as "o
+Senhor presidente". A letter-digit code reads as its letters and a number, so
+"T2" reads as "tê dois". Acronyms are spelled with Portuguese letter names, so
+"IA" reads as "i á", while lowercase words such as "ia" are left alone. The
+full rule list with examples is in
+[docs/text_normalization.md](docs/text_normalization.md).
 
 ### Syllabification and stress
 
@@ -297,7 +299,7 @@ o2i's own extension points, and relies on o2i for syllabification:
 | Concern | Owner |
 |---------|-------|
 | Base phonology, dialect phenomena, sandhi, stress | orthography2ipa lect spec |
-| Number / ordinal verbalization | tugaphone (`number_utils`, via `Pipeline.expand`) |
+| Number, date and time reading | text2spoken, called by tugaphone (`number_utils`, via `Pipeline.expand`) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via `Pipeline.mark`) |
 | `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, passed by tugaphone through `Pipeline` |
 | Syllabification | orthography2ipa (the bundled splitter) |
@@ -324,8 +326,8 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 | [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) | The candidate lattice and the Portuguese lect specs |
 | [o2i-lexicons](https://github.com/TigreGotico/o2i-lexicons) | The `pt-PT` and `pt-BR` residual lexicons |
 | [bifonia](https://github.com/TigreGotico/bifonia) | Heterophone sense disambiguation, the pipeline's `mark` stage |
-| [ovos-number-parser](https://github.com/OpenVoiceOS/ovos-number-parser) | Number words for `normalize_numbers` |
-| [tugalex](https://github.com/TigreGotico/tugalex) | Noun and given-name gender for number and ordinal agreement |
+| [text2spoken](https://github.com/TigreGotico/text2spoken) | Numbers, dates, times, money and abbreviations for `normalize_numbers` |
+| [tugalex](https://github.com/TigreGotico/tugalex) | Given-name gender for `D.` (Dom or Dona) |
 | [silabificador](https://github.com/TigreGotico/silabificador) | Syllabifier of the deprecated token tree |
 
 ---
@@ -339,7 +341,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 - [docs/homographs.md](docs/homographs.md), meaning-based disambiguation
 - [docs/codeswitch.md](docs/codeswitch.md), embedded es/fr/en detection and nativization
 - [docs/numbers.md](docs/numbers.md), number normalization and gender agreement
-- [docs/text_normalization.md](docs/text_normalization.md), ranges, clock times, separators, abbreviations, Roman numerals, acronyms, letter-digit codes
+- [docs/text_normalization.md](docs/text_normalization.md), abbreviations, acronyms, letter-digit codes and the text2spoken step
 - [docs/api.md](docs/api.md), full class and function reference
 - [docs/tokenizer.md](docs/tokenizer.md), the token-tree feature model
 - [docs/advanced.md](docs/advanced.md), the pipeline internals and integration
@@ -385,8 +387,7 @@ network: only a maintainer refreshes the gold fixtures, with
 
 ## Acknowledgements
 
-The clock-time, number-separator, abbreviation, and regnal-numeral reading
-rules in `tugaphone/text_normalization.py` are ported from
+The abbreviation rules in `tugaphone/text_normalization.py` are ported from
 [tts_eu_pt](https://github.com/logus2k/tts_eu_pt), a European-Portuguese TTS
 front-end by Antonio Cruz, released under the Apache License 2.0. The rules
 were reimplemented in tugaphone's own idiom rather than copied verbatim.

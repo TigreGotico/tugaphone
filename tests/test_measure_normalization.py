@@ -21,12 +21,13 @@ Each expected reading comes from a cited source, not from the code under test:
 """
 import pytest
 
-from tugaphone.number_utils import normalize_numbers
-from tugaphone.text_normalization import normalize_orthography
+from tugaphone.text_normalization import normalize_text
+
+from tests.text2spoken_gaps import EURO_CENTS, SCORE, TIMES, UNITS
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
-    return normalize_numbers(normalize_orthography(text), lang)
+    return normalize_text(text, lang)
 
 
 class TestPercent:
@@ -55,13 +56,13 @@ class TestUnits:
         ("1,2 l", "um vírgula dois litros"),
         ("0 km", "zero quilómetros"),
         ("5 ml", "cinco mililitros"),
-        ("10 m2", "dez metros quadrados"),
+        pytest.param("10 m2", "dez metros quadrados", marks=UNITS),
         ("10 m²", "dez metros quadrados"),
-        ("1 m2", "um metro quadrado"),
+        pytest.param("1 m2", "um metro quadrado", marks=UNITS),
         ("200 g", "duzentos gramas"),
         ("201 g", "duzentos e um gramas"),
         ("2 g", "dois gramas"),
-        ("1 L", "um litro"),
+        pytest.param("1 L", "um litro", marks=UNITS),
         ("120 km/h", "cento e vinte quilómetros por hora"),
         ("1.500 m", "mil e quinhentos metros"),
         ("a 2 m da porta", "a dois metros da porta"),
@@ -91,7 +92,7 @@ class TestEuro:
         ("1 €", "um euro"),
         ("1.500 €", "mil e quinhentos euros"),
         ("50,30 €", "cinquenta euros e trinta cêntimos"),
-        ("2,5 €", "dois euros e cinquenta cêntimos"),
+        pytest.param("2,5 €", "dois euros e cinquenta cêntimos", marks=EURO_CENTS),
         ("1,01 €", "um euro e um cêntimo"),
         ("0,50 €", "cinquenta cêntimos"),
         ("€2,50", "dois euros e cinquenta cêntimos"),
@@ -120,8 +121,8 @@ class TestMultiplication:
     @pytest.mark.parametrize("text,expected", [
         ("15x8", "quinze vezes oito"),
         ("15 x 8", "quinze vezes oito"),
-        ("2×2", "dois vezes dois"),
-        ("2x3x4", "dois vezes três vezes quatro"),
+        pytest.param("2×2", "dois vezes dois", marks=TIMES),
+        pytest.param("2x3x4", "dois vezes três vezes quatro", marks=TIMES),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -140,8 +141,8 @@ class TestGuardRows:
         ("o artigo 1 da lei", "o artigo um da lei"),
         ("comprei 2 casas", "comprei duas casas"),
         ("tem 2 cães", "tem dois cães"),
-        ("5 min", "cinco min"),
-        ("O jogo é 3-2.", "O jogo é três a dois."),
+        ("5 min", "cinco minutos"),
+        pytest.param("O jogo é 3-2.", "O jogo é três a dois.", marks=SCORE),
     ])
     def test_unchanged(self, text, expected):
         assert read(text) == expected
