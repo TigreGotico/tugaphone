@@ -171,6 +171,49 @@ engine = G2P(lect, pipeline=tugaphone.pipeline(lect))
 engine.transcribe("Tenho 3 gatos.")   # same as tugaphone.phonemize("Tenho 3 gatos.", lect)
 ```
 
+## `tugaphone.revision`
+
+```python
+revision(lang: str = "pt-PT") -> str
+```
+
+Returns a string that changes when the output of `phonemize(text, lang)` can
+change, for some text. A voice records the revision of the lect it was trained
+on. At load time, an equal revision tells that the running tugaphone gives the
+same output, even when the version differs.
+
+The value is `tp1:` and a SHA-256 in hex. The hash covers:
+
+- `unicodedata.unidata_version` of the running Python. The Unicode database
+  decides how the text stages normalise and classify characters.
+- `orthography2ipa.spec_revision(lect)`, and `lexicon_revision(lect, patches=True)`
+  for `pt-PT` and `pt-BR`, the lects that take a packaged lexicon.
+- Each other distribution that a probe call of `phonemize` for the lect imports,
+  in a fresh process. The distribution counts whole: the code tokens of each of
+  its Python modules, also the modules that the probe does not load, and the
+  bytes of each of its data files.
+
+A comment, a docstring, a blank line, the width of an indent, and a `version.py`
+or `_version.py` at the top of a package do not count. A version string does not
+count, with one exception. A distribution that ships a compiled module, such as
+`numpy`, counts by its name and version, because its files differ by platform.
+
+A distribution whose files cannot be read from the file system, such as a
+package imported from a zip, raises `RuntimeError`. A hash of no files would
+stay equal across every edit of that distribution.
+
+`lang` resolves as `phonemize` resolves it, with the same warning for a code that
+is not a lect. So `revision("pt")` equals `revision("pt-PT")`. The first call for
+a lect in a process runs the probe and reads the files, which takes some seconds.
+Later calls return the kept value.
+
+```python
+import tugaphone
+
+tugaphone.revision("pt-PT")   # 'tp1:' and 64 hex digits
+tugaphone.revision("pt-BR")   # another value: the specs differ
+```
+
 ## `tugaphone.registry`
 
 The dialect registry behind code resolution. `list_dialects` and `resolve_lect`

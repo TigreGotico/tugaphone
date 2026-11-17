@@ -16,6 +16,7 @@ from tugaphone.lattice_core import pipeline
 from tugaphone.lattice_core import phonemize as _phonemize
 from tugaphone.lattice_core import phonemize
 from tugaphone.registry import is_supported, list_dialects, resolve_lect
+from tugaphone.content_revision import revision
 from tugaphone.accent import (
     force_accent,
     respell,
@@ -125,6 +126,7 @@ __all__ = [
     "RespellRule",
     "DEFAULT_RESPELL_RULES",
     "pipeline",
+    "revision",
     "__version__",
 ]
 
