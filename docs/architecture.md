@@ -36,13 +36,15 @@ from orthography2ipa itself:
 
 ### 1. Normalization / verbalization
 
-Orthographic rewrites (`tugaphone.text_normalization.normalize_orthography`:
+The spelling step (`tugaphone.lattice_core.normalize_spelling`) rewrites old
+spellings in the AO1990 spelling of the lect (*pharmacia* → *farmácia*). Then
+orthographic rewrites (`tugaphone.text_normalization.normalize_orthography`:
 ranges, clock times, separators, abbreviations, Roman numerals, acronyms),
 gender-aware number and ordinal expansion
 (`tugaphone.number_utils.normalize_numbers`) and sense-based
 heterophonic-homograph marking (`bifonia.add_extra_diacritics`, e.g. *sede*
 thirst `/ˈsedɨ/` vs seat `/ˈsɛdɨ/`) run in that order before the lattice sees the
-text. The rewrites and the numbers are the `expand` field of the orthography2ipa
+text. The spelling step, the rewrites and the numbers are the `expand` field of the orthography2ipa
 `Pipeline`, and the homograph marks are its `mark` field. Numbers are verbalized before homograph marking, so their spelled-out
 words are available to it. All three are orthographic, pre-lattice
 transformations.

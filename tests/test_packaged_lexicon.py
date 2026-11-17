@@ -52,10 +52,26 @@ def test_a_packaged_entry_reaches_the_pt_br_output():
     assert phonemize("táxi", "pt-BR") == "ˈtaksi"
 
 
+# VOP lemma 56027: "fractura - nome feminino ... Brasil ... variante AO de : fratura". The
+# pt-PT lexicon keys fractura, fracturamento and fracturar are pre-AO1990 spellings, so the
+# spelling step reads them as fratura, fraturamento and fraturar before the lexicon.
+PRE_AO1990_KEYS = {"pt-PT": {"fractura": "fratura", "fracturamento": "fraturamento",
+                             "fracturar": "fraturar"}, "pt-BR": {}}
+
+
 @pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
 def test_every_entry_reaches_the_output(lect):
-    entries = packaged(lect)
+    entries = {word: ipa for word, ipa in packaged(lect).items()
+               if word not in PRE_AO1990_KEYS[lect]}
     assert {word: phonemize(word, lect) for word in entries} == entries
+
+
+@pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
+def test_a_pre_ao1990_key_reads_as_its_ao1990_form(lect):
+    rewritten = {word: lattice_core.normalize_spelling(word, lect) for word in packaged(lect)}
+    assert {word: new for word, new in rewritten.items() if new != word} == PRE_AO1990_KEYS[lect]
+    for old, new in PRE_AO1990_KEYS[lect].items():
+        assert phonemize(old, lect) == phonemize(new, lect)
 
 
 @pytest.mark.parametrize(

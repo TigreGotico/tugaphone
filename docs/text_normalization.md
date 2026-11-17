@@ -16,6 +16,36 @@ normalize_numbers(normalize_orthography(text), "pt-PT")
 `normalize_orthography(text)` runs every rule below, in an order chosen so
 they don't interfere with each other.
 
+## Old spellings
+
+Before these rules run, the spelling step rewrites spellings from before the
+1990 Orthographic Agreement (AO1990), so the phoneme rules read the modern
+form. It calls [desacordo_ortografico](https://github.com/TigreGotico/desacordo_ortografico)
+with the AO1990 norm of the lect: `ao1990-br` for the Brazilian lects and
+`pt-UY`, `ao1990-pt` for every other lect.
+
+```python
+from tugaphone.lattice_core import normalize_spelling
+
+normalize_spelling("A acção da pharmacia foi rápida.", "pt-PT")
+# 'A ação da farmácia foi rápida.'
+normalize_spelling("O manda-chuva chegou.", "pt-BR")
+# 'O mandachuva chegou.'
+```
+
+Text that is already in the AO1990 spelling stays as written. That includes
+the forms the agreement keeps in two spellings, such as *sector* in Portugal
+and *facto* in Brazil:
+
+```python
+normalize_spelling("O facto e o contacto ficam.", "pt-BR")
+# 'O facto e o contacto ficam.'
+```
+
+Each word stays one word, and case and punctuation stay. The Brazilian lects
+keep the trema (*freqüente*), because in a text from before AO1990 it is the
+only mark of a pronounced *u*.
+
 ---
 
 ## Unit symbols, percent, euros and multiplication
