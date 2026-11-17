@@ -5,9 +5,10 @@ by running the phonemizer.
 """
 
 import pytest
-from orthography2ipa import resolve
+from orthography2ipa import available_codes, resolve
 
-from tugaphone.registry import (normalize_dialect_code, resolve_lect,
+from tugaphone.registry import (_OWN_ORTHOGRAPHY, _PT_PREFIXES,
+                                normalize_dialect_code, resolve_lect,
                                 resolve_dialect, PACKAGED_LEXICON_LECTS, lexicon_region,
                                 list_dialects,
                                 get_dialect_inventory)
@@ -116,6 +117,15 @@ class TestListDialects:
             assert expected in codes
         # aliases are not canonical codes
         assert "pt" not in codes and "pt-PT-x-lisboa" not in codes
+
+    def test_no_portuguese_family_spec_is_a_clade(self):
+        # The lect list keeps clade nodes because no Portuguese-family spec is
+        # one. A clade among them would surface as a dialect.
+        without_clades = sorted(
+            c for c in available_codes()
+            if c.startswith(_PT_PREFIXES) and c not in _OWN_ORTHOGRAPHY
+        )
+        assert list_dialects() == without_clades
 
     def test_resolve_dialect_deprecated(self):
         with pytest.deprecated_call():
