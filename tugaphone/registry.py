@@ -17,6 +17,7 @@ resolve to their orthography2ipa equivalents through :data:`_ALIASES`.
 """
 from __future__ import annotations
 
+import functools
 import warnings
 from typing import Dict, List, Optional
 
@@ -177,6 +178,7 @@ def list_dialects() -> List[str]:
 _SPELLING_NORMS: Dict[str, str] = {"pt-PT": "ao1990-pt", "pt-BR": "ao1990-br"}
 
 
+@functools.lru_cache(maxsize=None)
 def spelling_norm(lect: str) -> str:
     """The AO1990 norm whose spelling ``lect`` reads: ``ao1990-pt`` or ``ao1990-br``.
 

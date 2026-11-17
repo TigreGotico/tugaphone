@@ -51,20 +51,28 @@ _VALID_CONTACT = ("auto", "es", "fr", "en", "none")
 #: The desacordo_ortografico features of the spelling step, per AO1990 norm. The
 #: Brazilian group keeps the trema: in a 1943 or 1971 text it is the only mark of
 #: a pronounced u (sangüíneo), and G2P cannot recover that u from the AO1990 form.
+#: It also leaves out ptbr-divergence, which picks one form of a VOLP dual
+#: (epilético → epiléptico); AO1990 Base IV 1.º c) leaves that choice to the writer.
 SPELLING_FEATURES = {
     "ao1990-pt": frozenset({"1911-word-map", "trema", "ao-map-consonant", "base-iv",
                             "initial-sc", "ao-map-diacritic"}),
-    "ao1990-br": frozenset({"1911-word-map", "base-iv", "initial-sc", "ptbr-divergence",
-                            "hyphen-lexical"}),
+    "ao1990-br": frozenset({"1911-word-map", "base-iv", "initial-sc", "hyphen-lexical"}),
 }
 
 
 def normalize_spelling(text: str, lect: str) -> str:
     """Rewrite the old spellings of ``text`` in the AO1990 norm of ``lect``.
 
-    "A acção da pharmacia" reads as "A ação da farmácia". Text already in the
-    AO1990 spelling, the dual forms included (pt-PT sector, pt-BR facto), stays
-    as written. Each word stays one word, and case and punctuation stay.
+    "A acção da pharmacia" reads as "A ação da farmácia". Case and punctuation
+    stay. Modern text stays as written, the dual forms included (pt-PT sector,
+    pt-BR facto), with these changes:
+
+    * a name in an old spelling takes the AO1990 spelling (Sophia → Sofia,
+      Rachel → Raquel), although AO1990 Base XXI lets a name keep its spelling;
+    * for the Brazilian lects, the hyphen rules of AO1990 change the word count
+      (há-de → há de, manda-chuva → mandachuva);
+    * for the Brazilian lects, óptica becomes ótica, although the VOLP lists
+      both as separate words.
     """
     norm = spelling_norm(lect)
     return convert_spelling(text, "etymological", norm, features=SPELLING_FEATURES[norm])

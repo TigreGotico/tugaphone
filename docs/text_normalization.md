@@ -42,9 +42,19 @@ normalize_spelling("O facto e o contacto ficam.", "pt-BR")
 # 'O facto e o contacto ficam.'
 ```
 
-Each word stays one word, and case and punctuation stay. The Brazilian lects
-keep the trema (*freqüente*), because in a text from before AO1990 it is the
-only mark of a pronounced *u*.
+Case and punctuation stay. Modern text changes in three ways:
+
+- A name in an old spelling takes the AO1990 spelling (*Sophia* → *Sofia*,
+  *Rachel* → *Raquel*), although AO1990 Base XXI lets a name keep its spelling.
+- For the Brazilian lects, the hyphen rules of AO1990 change the word count
+  (*há-de* → *há de*, *manda-chuva* → *mandachuva*).
+- For the Brazilian lects, *óptica* becomes *ótica*, although the VOLP lists
+  both as separate words.
+
+The Brazilian lects keep the trema (*freqüente*), because in a text from
+before AO1990 it is the only mark of a pronounced *u*. They also keep both
+forms of a VOLP dual as written (*epilético* and *epiléptico*), because the
+form carries the pronunciation of the writer.
 
 ---
 

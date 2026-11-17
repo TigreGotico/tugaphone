@@ -83,10 +83,79 @@ def test_br_group_joins_a_base_xv_compound(lect, old, new):
     assert lattice_core._expander(lect)(old) == new
 
 
+# One word per feature of each group, which that feature alone rewrites in the group.
+FEATURE_WORDS = [
+    # AO1990 Base XIV: "O trema, sinal de diérese, é inteiramente suprimido em palavras
+    # portuguesas ou aportuguesadas. [...] cinquenta, equestre, frequentar, tranquilo,
+    # ubiquidade."
+    ("pt", "trema", "cinqüenta", "cinquenta"),
+    ("pt", "trema", "tranqüilo", "tranquilo"),
+    # AO1990 Base IV 1.º b), quoted above: "aflição".
+    ("pt", "base-iv", "aflicção", "aflição"),
+    # Formulário Ortográfico de 1943 (ABL), 19.: "Elimina-se o s do grupo inicial sc:
+    # celerado, cena, cenografia, ciência, cientista, cindir, cintilar, ciografia, cisão, etc."
+    ("pt", "initial-sc", "scena", "cena"),
+    ("pt", "initial-sc", "scisão", "cisão"),
+    ("br", "initial-sc", "scena", "cena"),
+    ("br", "initial-sc", "scisão", "cisão"),
+    # AO1990 Base IX 3.º: "Não se acentuam graficamente os ditongos representados por ei e oi
+    # da sílaba tónica/tônica das palavras paroxítonas [...]: [...] heroico, introito, jiboia,
+    # moina, paranoico, zoina."
+    ("pt", "ao-map-diacritic", "heróico", "heroico"),
+    ("pt", "ao-map-diacritic", "jibóia", "jiboia"),
+]
+
+# The European-norm lects outside Europe, which descend from pt-PT in orthography2ipa.
+AFRICAN_ASIAN_LECTS = ["pt-AO", "pt-CV", "pt-GW", "pt-MO", "pt-MZ", "pt-ST", "pt-TL"]
+
+# VOLP dual forms that the br group keeps. AO1990 Base IV 1.º c): "Conservam-se ou
+# eliminam-se, facultativamente, quando se proferem numa pronúncia culta, quer geral, quer
+# restritamente, ou então quando oscilam entre a prolação e o emudecimento"; Base IV 2.º
+# names "o g da sequência gd, em amígdala". VOLP: "conjetura s.f. | conjectura s.f.;
+# epilético adj. s.m. | epiléptico adj. s.m.".
+BR_DUALS = ["epilética", "conjetura", "amígdala"]
+
+
 @pytest.mark.parametrize("lect", LECTS["pt"] + LECTS["br"])
-def test_step_runs_before_the_other_stages(lect):
+def test_step_runs_before_the_other_stages(lect, monkeypatch):
+    seen = []
+
+    def spy(text, lang):
+        seen.append(text)
+        return text
+
+    monkeypatch.setattr(lattice_core, "normalize_orthography", spy)
     expand = lattice_core._expander(lect)
     assert expand(" A acção da pharmacia. ") == " A ação da farmácia. "
+    assert seen == ["A ação da farmácia."]
+
+
+@pytest.mark.parametrize("group, feature, old, new", [
+    pytest.param(*row, id=f"{row[0]}-{row[1]}-{row[2]}") for row in FEATURE_WORDS])
+def test_each_feature_of_a_group_rewrites_its_word(group, feature, old, new):
+    for lect in LECTS[group]:
+        assert lattice_core.normalize_spelling(old, lect) == new, lect
+
+
+@pytest.mark.parametrize("lect", AFRICAN_ASIAN_LECTS)
+def test_african_and_asian_lects_follow_the_european_norm(lect):
+    assert registry.spelling_norm(lect) == "ao1990-pt"
+    assert lattice_core.normalize_spelling("cinqüenta", lect) == "cinquenta"
+
+
+@pytest.mark.parametrize("lect", LECTS["br"])
+def test_br_group_keeps_the_trema(lect):
+    # table-v2.md, "Decision after the Michaelis measurement": "In a 1943 or 1971 text the
+    # trema is the only mark of a pronounced u, so removing it before G2P throws that
+    # information away."
+    assert lattice_core.normalize_spelling("cinqüenta", lect) == "cinqüenta"
+
+
+@pytest.mark.parametrize("lect, word", [
+    pytest.param(lect, word, id=f"{lect}-{word}") for lect in LECTS["br"] for word in BR_DUALS])
+def test_br_group_keeps_a_volp_dual(lect, word):
+    assert lattice_core.normalize_spelling(word, lect) == word
+    assert lattice_core.normalize_spelling(f"A {word}, disse.", lect) == f"A {word}, disse."
 
 
 @pytest.mark.parametrize("lect, word", [
@@ -100,7 +169,8 @@ def test_modern_dual_form_stays(lect, word):
 # VOLP: ótica s.f. "ciência da audição"; cf. óptica | óptica s.f. "ciência da visão";
 # cf. ótica. The two are different words, so pt-BR óptica stays. desacordo's base-iv
 # map drops the p, and its own test marks the same row (p04-013) as a strict xfail.
-@pytest.mark.xfail(strict=True, reason="desacordo base_iv.json drops the p of óptica")
+@pytest.mark.xfail(strict=True, raises=AssertionError,
+                   reason="desacordo#69: base_iv.json drops the p of óptica")
 @pytest.mark.parametrize("lect", LECTS["br"])
 def test_br_group_keeps_optica(lect):
     assert lattice_core.normalize_spelling("A fibra óptica.", lect) == "A fibra óptica."
