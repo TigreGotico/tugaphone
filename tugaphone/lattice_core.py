@@ -14,9 +14,10 @@ What tugaphone adds sits in the stages orthography2ipa leaves to the caller,
 wired through orthography2ipa's own extension points rather than bolted on after
 the fact:
 
-* **expansion** — orthographic rewrites (:mod:`tugaphone.text_normalization`)
-  and gender-aware number/ordinal expansion (:mod:`tugaphone.number_utils`) run
-  as the pipeline's ``expand``, before the lattice sees the text;
+* **expansion** — the spelling step (:mod:`desacordo_ortografico`), orthographic
+  rewrites (:mod:`tugaphone.text_normalization`) and gender-aware number/ordinal
+  expansion (:mod:`tugaphone.number_utils`) run as the pipeline's ``expand``,
+  before the lattice sees the text;
 * **marks** — sense-based heterophone marking (:mod:`bifonia`) runs as the
   pipeline's ``mark``, on the whole sentence after ``expand``. It adds marks
   and keeps every letter, and the engine checks that;
@@ -36,23 +37,55 @@ import functools
 from typing import List
 
 from bifonia import add_extra_diacritics
+from desacordo_ortografico import convert as convert_spelling
 from orthography2ipa import G2P, Pipeline, packaged_lexicon
 
 from tugaphone.codeswitch import split_runs, transcribe_contact
 from tugaphone.number_utils import normalize_numbers
 from tugaphone.registry import (PACKAGED_LEXICON_LECTS, default_contact,
-                                list_dialects, resolve_lect)
+                                list_dialects, resolve_lect, spelling_norm)
 from tugaphone.text_normalization import normalize_orthography
 
 _VALID_CONTACT = ("auto", "es", "fr", "en", "none")
 
+#: The desacordo_ortografico features of the spelling step, per AO1990 norm. The
+#: Brazilian group keeps the trema: in a 1943 or 1971 text it is the only mark of
+#: a pronounced u (sangüíneo), and G2P cannot recover that u from the AO1990 form.
+#: It also leaves out ptbr-divergence, which picks one form of a VOLP dual
+#: (epilético → epiléptico); AO1990 Base IV 1.º c) leaves that choice to the writer.
+SPELLING_FEATURES = {
+    "ao1990-pt": frozenset({"1911-word-map", "trema", "ao-map-consonant", "base-iv",
+                            "initial-sc", "ao-map-diacritic"}),
+    "ao1990-br": frozenset({"1911-word-map", "base-iv", "initial-sc", "hyphen-lexical"}),
+}
+
+
+def normalize_spelling(text: str, lect: str) -> str:
+    """Rewrite the old spellings of ``text`` in the AO1990 norm of ``lect``.
+
+    "A acção da pharmacia" reads as "A ação da farmácia". Case and punctuation
+    stay. Modern text stays as written, the dual forms included (pt-PT sector,
+    pt-BR facto), with these changes:
+
+    * a name in an old spelling takes the AO1990 spelling (Sophia → Sofia,
+      Rachel → Raquel), although AO1990 Base XXI lets a name keep its spelling;
+    * for the Brazilian lects, the hyphen rules of AO1990 change the word count
+      (há-de → há de, manda-chuva → mandachuva);
+    * for the Brazilian lects, óptica becomes ótica, although the VOLP lists
+      both as separate words.
+    """
+    norm = spelling_norm(lect)
+    return convert_spelling(text, "etymological", norm, features=SPELLING_FEATURES[norm])
+
+
 def _expander(lect: str):
     """The orthography2ipa ``expand`` callable tugaphone supplies for ``lect``.
 
-    Orthographic rewrites (ranges, clock times, European number separators,
-    abbreviations, regnal numerals, letter-spelled acronyms) run first, since
-    they produce the digit tokens and words number verbalization then reads.
-    Numbers and ordinals are verbalized next, so ``mark`` sees their
+    The spelling step (:func:`normalize_spelling`) runs first, so the stages
+    after it read AO1990 text. Orthographic rewrites (ranges, clock times,
+    European number separators, abbreviations, regnal numerals, letter-spelled
+    acronyms) run next, since they produce the digit tokens and words number
+    verbalization then reads. Numbers and ordinals are verbalized last, so ``mark`` sees their
     spelled-out words.
 
     The engine joins the expanded runs and the forced words back into one
@@ -66,6 +99,7 @@ def _expander(lect: str):
             return text
         lead = text[:len(text) - len(text.lstrip())]
         trail = text[len(text.rstrip()):]
+        words = normalize_spelling(words, lect)
         return lead + normalize_numbers(normalize_orthography(words, lect), lect) + trail
 
     return expand

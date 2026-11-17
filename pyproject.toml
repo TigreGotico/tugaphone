@@ -31,6 +31,7 @@ dependencies = [
     "bifonia>=0.3.9a1",
     "orthography2ipa>=7.122.11a4",
     "o2i-lexicons>=0.7.0a1",
+    "desacordo_ortografico>=0.3.16a1",
 ]
 
 [project.optional-dependencies]
