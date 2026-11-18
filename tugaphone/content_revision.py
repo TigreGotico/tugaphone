@@ -18,8 +18,10 @@ A comment, a docstring, a blank line, the width of an indent and a ``version.py`
 package do not count. No version string counts, with one exception: a distribution that ships a compiled module
 counts by its name and version, because its files differ by platform and by Python build.
 
+The revision covers ``contact="none"``, the default. See :func:`revision`.
+
 A distribution whose files cannot be read from the file system, as a package imported from a zip, raises
-``RuntimeError``: a hash of no files would stay equal across every edit of it.
+:class:`RevisionError`: a hash of no files would stay equal across every edit of it.
 """
 from __future__ import annotations
 
@@ -28,6 +30,8 @@ import io
 import json
 import os
 import re
+import secrets
+import site
 import subprocess
 import sys
 import sysconfig
@@ -49,6 +53,10 @@ FORMAT = "tp1"
 #: The text of the probe call: a title, a cardinal, an ordinal, a year, a time and a homograph.
 PROBE_TEXT = "O Sr. Silva leu 23 livros no 1.º dia de 2024, às 10:30, e a sede da sede é longe."
 
+#: The seconds that the probe process can run. A cold probe takes 4 to 5.5 s on a laptop, nearly all of it in
+#: ``import tugaphone``. A small board or a cold disk can be ten times slower. The limit only ends a hung process.
+PROBE_TIMEOUT = 120
+
 _PROBE = """
 import sys
 before = set(sys.modules)
@@ -56,9 +64,14 @@ import json, warnings
 warnings.simplefilter("ignore")
 import tugaphone
 tugaphone.phonemize(sys.argv[2], sys.argv[1])
-print(json.dumps({name: getattr(module, "__file__", None) for name, module in list(sys.modules.items())
-                  if name not in before and name.split(".")[0] not in sys.stdlib_module_names}))
+loaded = {name: getattr(module, "__file__", None) for name, module in list(sys.modules.items())
+          if name not in before and name.split(".")[0] not in sys.stdlib_module_names}
+print(sys.argv[3], json.dumps(loaded), sep="\\n", flush=True)
 """
+
+
+class RevisionError(RuntimeError):
+    """``revision`` cannot give a revision: the probe fails, or the files of a distribution cannot be read."""
 
 _NATIVE = frozenset({".so", ".pyd", ".dll", ".dylib"})
 _VERSION_FILES = frozenset({"version.py", "_version.py"})
@@ -87,9 +100,13 @@ def revision(lang: str = "pt-PT") -> str:
     is computed at the first call for a lect in a process and kept. The first call runs a probe in a fresh process
     and reads the files of each distribution on the output path.
 
+    The revision covers ``contact="none"``, the default and the path that scriptconv uses. Another ``contact`` value
+    also reads the ``en-US``, ``es-ES`` and ``fr-FR`` specs of orthography2ipa and, for ``"auto"``, the optional
+    markovonnx detector. The revision covers neither, so it can stay equal while that output changes.
+
     Raises
     ------
-    RuntimeError
+    RevisionError
         The probe process fails, or the files of a distribution on the output path cannot be read.
     """
     return _revision(resolve_lect(lang))
@@ -109,14 +126,26 @@ def _revision(lect: str) -> str:
 def probe(lect: str) -> FrozenSet[str]:
     """The modules outside the standard library that ``phonemize(PROBE_TEXT, lect)`` imports.
 
-    The call runs in a fresh process with the import path of this one.
+    The call runs in a fresh process with the import path of this one. The process prints a marker line and then
+    the result, so text that a library prints to stdout, also at exit, does not mix with the result.
     """
     path = os.pathsep.join(entry or os.getcwd() for entry in sys.path)
-    done = subprocess.run([sys.executable, "-P", "-c", _PROBE, lect, PROBE_TEXT], capture_output=True, text=True,
-                          env={**os.environ, "PYTHONPATH": path})
+    marker = f"tugaphone-revision-probe-{secrets.token_hex(8)}"
+    try:
+        done = subprocess.run([sys.executable, "-P", "-c", _PROBE, lect, PROBE_TEXT, marker], capture_output=True,
+                              text=True, env={**os.environ, "PYTHONPATH": path}, timeout=PROBE_TIMEOUT)
+    except subprocess.TimeoutExpired as e:
+        raise RevisionError(f"the revision probe for {lect!r} did not finish in {PROBE_TIMEOUT} s") from e
     if done.returncode:
-        raise RuntimeError(f"the revision probe for {lect!r} failed:\n{done.stderr}")
-    return outside_stdlib(json.loads(done.stdout.splitlines()[-1]))
+        raise RevisionError(f"the revision probe for {lect!r} failed:\n{done.stderr}")
+    _, found, after = done.stdout.rpartition(f"{marker}\n")
+    if not found:
+        raise RevisionError(f"the revision probe for {lect!r} gave no result:\n{done.stdout}{done.stderr}")
+    result = after.partition("\n")[0]
+    try:
+        return outside_stdlib(json.loads(result))
+    except json.JSONDecodeError as e:
+        raise RevisionError(f"the revision probe for {lect!r} gave a result that is not JSON: {result!r}") from e
 
 
 def outside_stdlib(modules: Dict[str, Optional[str]]) -> FrozenSet[str]:
@@ -125,11 +154,13 @@ def outside_stdlib(modules: Dict[str, Optional[str]]) -> FrozenSet[str]:
     A module of the standard library can have a name that :data:`sys.stdlib_module_names` does not hold, as the
     platform-named ``_sysconfigdata`` module or a copy of ``calendar`` that a dependency loads under another name.
     Its file is in the standard library directory. A module with no file was made at run time by code that is hashed
-    with its own distribution.
+    with its own distribution. A site-packages directory can also be under the standard library directory, as
+    ``/usr/lib/python3.X/site-packages`` is on Arch and on Fedora, so a file in the site-packages of the venv, of
+    the base interpreter or of the user is installed, not standard library.
     """
     paths = sysconfig.get_paths()
     stdlib = (paths["stdlib"], paths["platstdlib"])
-    installed = (paths["purelib"], paths["platlib"])
+    installed = (paths["purelib"], paths["platlib"], *site.getsitepackages(), site.getusersitepackages())
     return frozenset(name for name, where in modules.items()
                      if where and (not where.startswith(stdlib) or where.startswith(installed)))
 
@@ -163,7 +194,7 @@ def distribution_digest(distribution: str, top_levels: Set[str]) -> str:
     for name in sorted(top_levels):
         files.extend(_top_level_files(name))
     if not files:
-        raise RuntimeError(f"no file of the distribution {distribution!r} can be read, so no edit of it would "
+        raise RevisionError(f"no file of the distribution {distribution!r} can be read, so no edit of it would "
                            "change the revision")
     if any(path.suffix in _NATIVE for _, path in files):
         try:
@@ -194,7 +225,7 @@ def _top_level_files(name: str) -> List[Tuple[str, Path]]:
         return [(f"{name}/{relative}", path) for relative, path in _package_files(roots)]
     if not roots and spec.origin and Path(spec.origin).is_file():
         return [(Path(spec.origin).name, Path(spec.origin))]
-    raise RuntimeError(f"the files of {name!r} cannot be read from the file system (found at {spec.origin!r}), "
+    raise RevisionError(f"the files of {name!r} cannot be read from the file system (found at {spec.origin!r}), "
                        "so no edit of it would change the revision")
 
 
