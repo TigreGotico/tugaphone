@@ -126,7 +126,7 @@ class TestLetterDigitCodes:
 
 class TestLetterDigitGuardRows:
     @pytest.mark.parametrize("text,expected", [
-        # after a number the letters are a unit symbol, not a code
+        # a unit symbol is a unit, not a code, whatever comes before it
         ("10 m2", "10 m2"),
         ("5 km2", "5 km2"),
         ("4G", "4G"),
@@ -146,3 +146,32 @@ class TestLetterDigitGuardRows:
     ])
     def test_pipeline_unchanged(self, text, expected):
         assert read(text) == expected
+
+
+class TestCodeAfterANumber:
+    """A letter-digit code after a number is still a code, so its letters are
+    spelled by name; only a known unit symbol is left as written."""
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    @pytest.mark.parametrize("text,expected", [
+        ("Imprimi 2 A4.", "Imprimi dois á quatro."),
+        ("Imprimi 1.2 A4.", "Imprimi um vírgula dois á quatro."),
+        ("Lote 12.3 B2.", "Lote doze vírgula três bê dois."),
+        ("1.500 RTP2", "mil e quinhentos érre tê pê dois"),
+        ("Ficou em -5 F1.", "Ficou em menos cinco éfe um."),
+    ])
+    def test_a_code_after_a_number_spells_out(self, text, expected, lang):
+        assert read(text, lang) == expected
+
+    @pytest.mark.parametrize("lang,expected", [
+        ("pt-PT", "um vírgula cinco milímetros quadrados"),
+        ("pt-BR", "um vírgula cinco milímetro quadrado"),
+    ])
+    def test_mm2_reads_as_a_unit(self, lang, expected):
+        assert read("1,5 mm2", lang) == expected
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    def test_a_unit_symbol_with_no_number_before_it_is_spelled(self, lang):
+        # The unit reader reads a symbol only after digits, so elsewhere "m2" is
+        # spelled rather than left with its digit unread.
+        assert read("O m2 custa 2 euros.", lang) == "O éme dois custa dois euros."
