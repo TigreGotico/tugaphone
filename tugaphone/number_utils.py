@@ -436,19 +436,20 @@ def read_dot_decimals(text: str) -> str:
 # varia muito"): the mark does not end the pair, and a verb that ends in -a
 # ("varia", "ajuda") reads as a feminine noun.
 # https://github.com/TigreGotico/text2spoken/issues/272
-# When a punctuation mark follows the second number, no noun counts the pair,
+# When a comma or a stop follows the second number, no noun counts the pair,
 # and both numbers read in the masculine: "Venceu por 2 a 0, nesta
 # terça-feira" -> "dois a zero" (text2spoken#272 and its pt-512 row).
 # This rewrite runs on what text2spoken read, so a pair that text2spoken reads
 # keeps its reading.
 # ---------------------------------------------------------------------------
 _OPENING_MARK = r"[(«\"“']?"
+_PAUSE = r"[)»\"”']?[,;.!?](?![\dºª])"
 _PAIR = re.compile(
     rf"(?<![\w.,])(?:(?<=\b[Ee]ntre\s)|(?<=\bENTRE\s))(?P<first>{_DIGIT_NUMBER.pattern})"
-    rf"(?P<link>\s+(?:e|E)\s+{_OPENING_MARK})(?P<second>{_DIGIT_NUMBER.pattern})(?P<pause>[)»\"”']?[,;:.!?])?"
+    rf"(?P<link>\s+[eE]\s+{_OPENING_MARK})(?P<second>{_DIGIT_NUMBER.pattern})(?P<pause>{_PAUSE})?"
     rf"|(?<![\w.,])(?P<first2>{_DIGIT_NUMBER.pattern})"
     rf"(?P<link2>\s+(?i:a|à|às|ao|aos)\s+{_OPENING_MARK})(?P<second2>{_DIGIT_NUMBER.pattern})"
-    rf"(?P<pause2>[)»\"”']?[,;:.!?])?")
+    rf"(?P<pause2>{_PAUSE})?")
 
 
 def read_number_pairs(text: str, lang: str = "pt-PT", scale: Optional[str] = None) -> str:

@@ -5,7 +5,7 @@ import warnings
 import pytest
 from text2spoken import normalize
 
-from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, UnreadFormWarning, normalize_numbers
+from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, UnreadFormWarning, normalize_numbers, read_number_pairs
 
 from tests.text2spoken_gaps import SPELLED_DECIMAL
 
@@ -551,6 +551,14 @@ class TestNumberPairs:
     ])
     def test_a_pair_text2spoken_reads_keeps_its_reading(self, text, lang):
         assert normalize_numbers(text, lang) == normalize(text.replace("—", " a "), lang)
+
+    @pytest.mark.parametrize("text, expected", [
+        # a stop that a digit or an ordinal mark follows is no pause
+        ("do 1 ao 2.º ano", "do um ao segundo ano"),
+        ("das 9:00 às 10:00", "das 9:00 às 10:00"),
+    ])
+    def test_a_stop_inside_a_number_is_no_pause(self, text, expected):
+        assert read_number_pairs(text) == expected
 
 
 class TestBracketedNumberPhonemes:
