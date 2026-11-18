@@ -46,6 +46,19 @@ def test_closed_ei_stays_closed_in_pt_br(word, expected):
     assert phonemize(word, "pt-BR") == expected
 
 
+def test_areia_reads_with_a_closed_ei():
+    # Michaelis transcribes areia closed; the ABL VOLP gives it no "(é)" mark.
+    ipa = phonemize("areia", "pt-BR")
+    assert "ej" in ipa
+    assert "ɛj" not in ipa
+
+
+def test_ideia_still_reads_with_an_open_ei():
+    # The control: an AO1990 open-éi paroxytone still reads open.
+    ipa = phonemize("ideia", "pt-BR")
+    assert "ɛj" in ipa
+
+
 def test_pt_pt_output_does_not_change():
     # The step runs for the Brazilian lects only; the pt-PT reading is unchanged.
     assert phonemize("ideia", "pt-PT") == "iˈdejɐ"
@@ -57,6 +70,12 @@ def test_normalize_spelling_restores_the_accent_in_the_br_group():
 
 def test_normalize_spelling_restores_the_accent_in_the_br_plural():
     assert lattice_core.normalize_spelling("As Ideias.", "pt-BR") == "As Idéias."
+
+
+def test_normalize_spelling_leaves_areia_unaccented():
+    # areia reads closed (Michaelis, ABL VOLP), so the step leaves it as written.
+    assert lattice_core.normalize_spelling("areia", "pt-BR") == "areia"
+    assert lattice_core.normalize_spelling("areias", "pt-BR") == "areias"
 
 
 def test_guard_rejects_a_two_change_rewrite():
