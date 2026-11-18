@@ -1,20 +1,26 @@
 # Text normalization
 
-Written text contains conventions that the phoneme rules cannot read: unit symbols, number ranges, clock times, European thousands and decimal separators, honorific abbreviations, regnal Roman numerals and acronyms. `tugaphone.text_normalization` rewrites them into plain words or plain digit tokens so that [`normalize_numbers`](numbers.md) can read the result. It runs on the text before any lattice or phoneme work, in the engine's `expand` step, ahead of `normalize_numbers`. Number words follow standard European Portuguese ("vinte e cinco").
+Written text holds forms that the phoneme rules cannot read: numbers, dates, clock times, money, abbreviations, Roman numerals and acronyms. The engine's `expand` step rewrites them as words before any lattice or phoneme work. `tugaphone.text_normalization.normalize_text` is that step after the spelling step:
 
 ```python
-from tugaphone.text_normalization import normalize_orthography
-from tugaphone.number_utils import normalize_numbers
+from tugaphone.text_normalization import normalize_text
 
-text = "A reunião é às 16:00 com 25 pessoas."
-normalize_orthography(text)
-# 'A reunião é às 16 horas com 25 pessoas.'
-normalize_numbers(normalize_orthography(text), "pt-PT")
+normalize_text("A reunião é às 16:00 com 25 pessoas.")
 # 'A reunião é às dezasseis horas com vinte e cinco pessoas.'
+normalize_text("O Sr. presidente falou com o Dr.")
+# 'O Senhor presidente falou com o Doutor'
 ```
 
-`normalize_orthography(text)` runs every rule below, in an order chosen so
-they don't interfere with each other.
+`normalize_text` runs four steps:
+
+1. It expands the [abbreviations](#abbreviations), [acronyms](#acronyms) and [letter-digit codes](#letter-digit-codes), which text2spoken leaves as written.
+2. [text2spoken](numbers.md) reads numbers, dates, clock times, ranges, money, measures, percentages and Roman numerals, in the `pt-PT` or `pt-BR` variety of the lect.
+3. The [fallback rewrites](#fallback-rewrites) read the forms that text2spoken leaves as written, and text2spoken reads the digits that they leave.
+4. The [Roman numeral rules](#roman-numerals) read the numerals that text2spoken leaves.
+
+`normalize_orthography(text, lang)` runs the rewrites alone, in the order of
+tugaphone 1.7, and leaves the digits for
+[`normalize_numbers`](numbers.md).
 
 ## Old spellings
 
@@ -58,13 +64,60 @@ form carries the pronunciation of the writer.
 
 ---
 
-## Unit symbols, percent, euros and multiplication
+## Forms that text2spoken reads
+
+text2spoken reads most unit symbols, percentages, money, ranges with "a" or
+an en dash, clock times after a time word, European separators and Roman
+numerals after a title, a century or a ruler. Its
+[Portuguese page](https://github.com/TigreGotico/text2spoken/blob/dev/docs/languages/pt.md)
+gives the rules and their sources.
+
+```python
+normalize_text("Pesa 7kg e custa €20.")
+# 'Pesa sete quilogramas e custa vinte euros.'
+normalize_text("Viveu de 1139-1185.")
+# 'Viveu de mil cento e trinta e nove a mil cento e oitenta e cinco.'
+normalize_text("Abre das 12:00 às 14:00.")
+# 'Abre do meio-dia às catorze horas.'
+normalize_text("No século XIX, Luís XIV já era história.")
+# 'No século dezanove, Luís Catorze já era história.'
+normalize_text("o século XIX", "pt-BR")
+# 'o século dezenove'
+```
+
+## Fallback rewrites
+
+text2spoken reads first, and its reading stands. The rewrites below read only
+the forms that text2spoken leaves as written: a range with an em dash or a
+hyphen ("3-2"), a clock time with no time word ("São 16:30."), `24:00`, a
+glued unit, a unit symbol such as `m2` or `L` after a number in digits, a
+multiplication sign, a decimal with a dot, scientific notation, and a number
+between two marks. In "Escreve-se com dois L." the `L` is a letter and stays. Each
+fallback names its text2spoken issue in the code, and it goes when
+text2spoken reads its form.
+
+```python
+normalize_text("O jogo é 3-2.")
+# 'O jogo é três a dois.'
+normalize_text("São 16:30.")
+# 'São dezasseis e trinta.'
+normalize_text("Uma casa de 80m2.")
+# 'Uma casa de oitenta metros quadrados.'
+normalize_text("Mede 15x8 metros.")
+# 'Mede quinze vezes oito metros.'
+normalize_text("1e6")
+# 'um vezes dez elevado a seis'
+```
+
+The rewrites that 1.7 made public stay public. Each one leaves its digits for
+a number reader.
+
+### Unit symbols, percent, euros and multiplication
 
 The SI puts a space between a number and its unit symbol, and between a
 number and `%`. A symbol glued to the digits (`7kg`, `20%`) gets that space
 back, and a leading euro sign moves after the number (`€20` → `20 €`), so
-that `normalize_numbers` reads the unit name with number agreement (see
-[Units, percent and euros](numbers.md#units-percent-and-euros)). A symbol
+that a number reader reads the unit name with number agreement. A symbol
 counts only right after digits, so the letter `m` in running text is left
 alone. An amount in euros with one or two decimals is read as euros and
 cents. A `x` or `×` between two numbers is read *vezes*; a hex literal such
@@ -81,7 +134,7 @@ separate_unit_symbols("15x8")
 # '15 vezes 8'
 ```
 
-## Number ranges
+### Number ranges
 
 A dash directly between two digits is a numeric range, read " a ". A word
 hyphen (`chamo-me`, `guarda-chuva`) has a letter on at least one side and is
@@ -94,7 +147,7 @@ split_number_ranges("As páginas 1139-1185 falam disso.")
 # 'As páginas 1139 a 1185 falam disso.'
 ```
 
-## Clock times
+### Clock times
 
 `HH:00` is read as the hour plus "hora"/"horas"; the digit token is left for
 `normalize_numbers`, which already picks the feminine form ("uma", "duas",
@@ -120,12 +173,13 @@ expand_clock_times("A loja fecha às 24:00")
 # 'A loja fecha às 24 horas'
 ```
 
-## European separators
+### European separators
 
 A `.` between two digits groups thousands and is dropped; a `,` between two
 digits is the decimal mark, read "vírgula". Both only fire between two
 digits, so a sentence-final period, a list comma, or an ordinal mark like
-`3.º` are untouched.
+`3.º` are untouched. text2spoken reads both separators, so `normalize_text`
+does not run this rewrite; `normalize_orthography` does.
 
 ```python
 from tugaphone.text_normalization import normalize_number_separators
@@ -193,6 +247,10 @@ expand_abbreviations("D. Maria I")
 
 ## Roman numerals
 
+text2spoken reads a Roman numeral after a title, a century, a ruler or a
+part of a work. `expand_regnal_numerals` reads the numerals that it leaves,
+such as "Afonso I" and "a II Guerra Mundial", by these rules.
+
 A Roman numeral after a century, a ruler, a pope or a part of a work reads
 as an ordinal up to ten and as a cardinal above ten: "D. João V" is "Dom
 João Quinto", "o século XIX" is "o século dezanove", "Pio XII" is "Pio
@@ -253,16 +311,14 @@ expand_regnal_numerals("Fez um raio X.")
 
 ## Letter-digit codes
 
-`normalize_orthography(text, lang)` passes `lang` to the Roman-numeral and
-letter-digit rules, so the numbers they read follow pt-PT or pt-BR spelling.
-
 A code of one to three capitals or one or two lowercase letters followed by
 digits reads as the letter names and then the number as a masculine
 cardinal: "T2" is "tê dois", "A3" is "á três", "RTP2" is "érre tê pê dois",
 "mp3" is "éme pê três". A number that labels something is invariable, so
-"o T2 na cidade" reads "tê dois", not "duas". The reading does not depend on
-what the code stands for, so no context is needed. Right after a number the
-letters are a unit symbol, so "10 m2" is left alone.
+"o T2 na cidade" reads "tê dois", not "duas". text2spoken reads the digits
+alone, in the variety of the lect, so they take the masculine. Right after a
+number in digits the letters are a unit symbol, so "10 m2" is left for the
+unit rule.
 
 ```python
 from tugaphone.text_normalization import expand_letter_digit_codes
@@ -294,7 +350,7 @@ expand_acronyms("ia ao mercado")
 
 ## Where next
 
-- [numbers.md](numbers.md), `normalize_numbers` and gender agreement
+- [numbers.md](numbers.md), `normalize_numbers` and the variety of each lect
 - [quickstart.md](quickstart.md), the pipeline in context
 
 

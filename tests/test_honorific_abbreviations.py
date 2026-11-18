@@ -10,8 +10,9 @@ professora), and from two Ciberdúvidas answers that quote the vocabularies:
 """
 import pytest
 
-from tugaphone.number_utils import normalize_numbers
-from tugaphone.text_normalization import expand_abbreviations, normalize_orthography
+from tugaphone.text_normalization import expand_abbreviations, normalize_text
+
+from tests.text2spoken_gaps import LETTER_AS_TITLE
 
 
 @pytest.mark.parametrize("text,expected", [
@@ -52,7 +53,7 @@ def test_expansion(text, expected):
 
 
 def test_full_pipeline_numbers_after_plural_numero():
-    assert normalize_numbers(normalize_orthography("os n.os 3 e 4"), "pt-PT") == \
+    assert normalize_text("os n.os 3 e 4", "pt-PT") == \
         "os números três e quatro"
 
 
@@ -71,5 +72,13 @@ def test_guard_rows(text, expected):
     assert expand_abbreviations(text) == expected
 
 
+@pytest.mark.parametrize("text", [
+    pytest.param("a vitamina D. Depois", marks=LETTER_AS_TITLE),
+    pytest.param("A vitamina D. Boa noite.", marks=LETTER_AS_TITLE),
+])
+def test_a_letter_after_its_label_noun_stays(text):
+    assert normalize_text(text) == text
+
+
 def test_regnal_numeral_after_dom_still_reads():
-    assert normalize_orthography("D. João V reinou") == "Dom João Quinto reinou"
+    assert normalize_text("D. João V reinou") == "Dom João Quinto reinou"

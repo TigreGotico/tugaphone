@@ -124,7 +124,7 @@ def test_step_runs_before_the_other_stages(lect, monkeypatch):
         seen.append(text)
         return text
 
-    monkeypatch.setattr(lattice_core, "normalize_orthography", spy)
+    monkeypatch.setattr(lattice_core, "normalize_text", spy)
     expand = lattice_core._expander(lect)
     assert expand(" A acção da pharmacia. ") == " A ação da farmácia. "
     assert seen == ["A ação da farmácia."]

@@ -15,9 +15,10 @@ wired through orthography2ipa's own extension points rather than bolted on after
 the fact:
 
 * **expansion** — the spelling step (:mod:`desacordo_ortografico`), orthographic
-  rewrites (:mod:`tugaphone.text_normalization`) and gender-aware number/ordinal
-  expansion (:mod:`tugaphone.number_utils`) run as the pipeline's ``expand``,
-  before the lattice sees the text;
+  rewrites (:mod:`tugaphone.text_normalization`) and text2spoken, which reads
+  numbers, dates, times, money, measures and abbreviations
+  (:mod:`tugaphone.number_utils`), run as the pipeline's ``expand``, before the
+  lattice sees the text;
 * **marks** — sense-based heterophone marking (:mod:`bifonia`) runs as the
   pipeline's ``mark``, on the whole sentence after ``expand``. It adds marks
   and keeps every letter, and the engine checks that;
@@ -42,10 +43,9 @@ from desacordo_ortografico import convert as convert_spelling
 from orthography2ipa import G2P, Pipeline, packaged_lexicon
 
 from tugaphone.codeswitch import split_runs, transcribe_contact
-from tugaphone.number_utils import normalize_numbers
 from tugaphone.registry import (PACKAGED_LEXICON_LECTS, default_contact,
                                 list_dialects, resolve_lect, spelling_norm)
-from tugaphone.text_normalization import normalize_orthography
+from tugaphone.text_normalization import normalize_text
 
 _VALID_CONTACT = ("auto", "es", "fr", "en", "none")
 
@@ -133,11 +133,14 @@ def _expander(lect: str):
     """The orthography2ipa ``expand`` callable tugaphone supplies for ``lect``.
 
     The spelling step (:func:`normalize_spelling`) runs first, so the stages
-    after it read AO1990 text. Orthographic rewrites (ranges, clock times,
-    European number separators, abbreviations, regnal numerals, letter-spelled
-    acronyms) run next, since they produce the digit tokens and words number
-    verbalization then reads. Numbers and ordinals are verbalized last, so ``mark`` sees their
-    spelled-out words.
+    after it read AO1990 text. :func:`tugaphone.text_normalization.normalize_text`
+    runs next: tugaphone's rewrites of the forms that text2spoken leaves as
+    written (abbreviations, acronyms, letter-digit codes), then text2spoken, in
+    the ``pt-PT`` or ``pt-BR`` variety of the lect
+    (:func:`tugaphone.number_utils.text2spoken_tag`), then the fallback
+    rewrites of what it left. So ``mark`` sees spelled-out words. text2spoken
+    leaves spelled-out text as written, so text that a caller has already
+    normalised comes through unchanged.
 
     The engine joins the expanded runs and the forced words back into one
     sentence for ``mark``, so the spaces at the ends of a run are kept: the
@@ -151,7 +154,7 @@ def _expander(lect: str):
         lead = text[:len(text) - len(text.lstrip())]
         trail = text[len(text.rstrip()):]
         words = normalize_spelling(words, lect)
-        return lead + normalize_numbers(normalize_orthography(words, lect), lect) + trail
+        return lead + normalize_text(words, lect) + trail
 
     return expand
 

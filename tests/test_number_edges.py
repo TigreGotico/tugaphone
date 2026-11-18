@@ -11,15 +11,20 @@ import pytest
 
 from tugaphone import phonemize
 from tugaphone.number_utils import UnreadFormWarning, normalize_numbers
-from tugaphone.text_normalization import normalize_orthography
+from tugaphone.text_normalization import normalize_text
+
+from tests.text2spoken_gaps import NUMBER_SIGN
+
 
 
 def spoken(text, lang):
-    return normalize_numbers(normalize_orthography(text, lang), lang)
+    return normalize_text(text, lang)
 
 
 class TestNumberTouchingPunctuation:
-    @pytest.mark.parametrize("mark", list("'\"#*_@/\\&[]{}<>‹›«»—–;:!?…“”‘’"))
+    @pytest.mark.parametrize("mark", [
+        *"'\"*_@/\\&[]{}<>‹›«»—–;:!?…“”‘’",
+        pytest.param("#", marks=NUMBER_SIGN)])
     @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
     def test_number_keeps_its_reading(self, mark, lang):
         for text in (f"casa {mark}7{mark} casa", f"casa {mark}7 casa", f"casa 7{mark} casa"):
@@ -33,19 +38,16 @@ class TestNumberTouchingPunctuation:
             assert phonemize("-5 graus", "pt-PT") == phonemize("menos cinco graus", "pt-PT")
 
     def test_a_glued_percent_stays_with_its_number(self):
-        # The unit rule reads "20 %" as "vinte por cento"; the number rule
-        # alone must not split the "%" off and lose its reading.
-        with pytest.warns(UnreadFormWarning, match="20%"):
-            assert normalize_numbers("subiu 20%", "pt-PT") == "subiu 20%"
+        assert normalize_numbers("subiu 20%", "pt-PT") == "subiu vinte por cento"
         assert spoken("subiu 20%", "pt-PT") == "subiu vinte por cento"
 
 
 class TestUnreadFormWarning:
     def test_the_warning_names_the_form_and_the_text(self):
         with pytest.warns(UnreadFormWarning) as caught:
-            spoken("o vírus COVID-19 chegou", "pt-PT")
+            spoken("um filme 3D chegou", "pt-PT")
         assert [str(w.message) for w in caught] == [
-            "pt-PT: no reading for 'COVID-19' in 'o vírus COVID-19 chegou'; its digits are dropped"]
+            "pt-PT: no reading for '3D' in 'um filme 3D chegou'; its digits are dropped"]
 
     def test_the_public_path_warns_too(self):
         with pytest.warns(UnreadFormWarning, match="3D"):

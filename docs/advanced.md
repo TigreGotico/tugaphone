@@ -18,8 +18,9 @@ orthography2ipa's own extension points, and takes syllabification from
 orthography2ipa:
 
 1. **Normalization**, orthographic rewrites
-   (`tugaphone.text_normalization.normalize_orthography`), number/ordinal
-   verbalization (`tugaphone.number_utils.normalize_numbers`) and sense-based
+   (`tugaphone.text_normalization.normalize_orthography`), the reading of
+   numbers, dates and times by text2spoken
+   (`tugaphone.number_utils.normalize_numbers`) and sense-based
    homograph marking (`bifonia.add_extra_diacritics`) run before the lattice
    sees the text. The rewrites and the numbers are the pipeline's `expand`, and
    the homograph marks are its `mark`.
@@ -56,27 +57,23 @@ and a rules reading share one notation.
 
 ## Number normalization
 
-`normalize_numbers` spells digits out before transcription and is independently
-useful for any TTS front-end:
+`normalize_numbers` reads numbers, dates, clock times, money and measures with
+[text2spoken](https://github.com/TigreGotico/text2spoken), in the `pt-PT` or
+`pt-BR` variety of the lect:
 
 ```python
 from tugaphone.number_utils import normalize_numbers
 
-normalize_numbers("vou comprar 1 casa")      # 'vou comprar uma casa'  (feminine)
-normalize_numbers("vou adotar 1 cão")        # 'vou adotar um cão'      (masculine)
+normalize_numbers("vou comprar 1 casa")        # 'vou comprar uma casa'
+normalize_numbers("vou adotar 1 cão")          # 'vou adotar um cão'
 normalize_numbers("897654356789098", "pt-PT")  # long scale (biliões)
 normalize_numbers("897654356789098", "pt-BR")  # short scale (trilhões)
 ```
 
-Gender comes first from an ordinal marker (`º`, `ª`) and from a label head
-before the number (`artigo 1`). Next comes the gender of the following noun in
-tugalex (`TugaLexicon.get_noun_gender`), then a preceding article (`a`, `as`,
-`o`, `os` and their contractions with `de`). Last, for a word that tugalex does
-not know, the ending decides (`-a`, `-dade`, `-age`, `-agem` endings are
-feminine). [numbers.md](numbers.md#gender-inference) gives the full rule list. Pass
-`strict=False` to leave unparseable tokens in place instead of raising. Inside
-the pipeline this runs in the engine's `expand` step, so a bare digit in the
-input sentence is verbalized before the lattice transcribes it.
+text2spoken owns the reading rules, gender agreement included.
+[numbers.md](numbers.md) shows which lect reads which variety. Inside the
+pipeline this runs in the engine's `expand` step, so a bare digit in the
+input sentence is read before the lattice transcribes it.
 
 ## Integration with sibling libraries
 

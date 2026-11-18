@@ -1,19 +1,28 @@
 """The sentence sets of the scriptconv gate meet the gate's contract.
 
 Each set has at least 200 rows and at least 30 gold rows in each category. Each
-row names its sources, and pt-PT gold carries no Lisbon trait.
+row names its sources, and pt-PT gold carries no Lisbon trait. The phonemizer
+reads each number, date and abbreviation row as the reading of its spec row.
 """
 import csv
 import importlib.util
+import re
 from collections import Counter
 from pathlib import Path
 
 import pytest
 
+from tugaphone import phonemize, pipeline
+
 HERE = Path(__file__).parent / "data" / "sentences"
 COLUMNS = ["id", "lang", "category", "text", "expected_ipa", "source", "tier"]
 CATEGORIES = {"plain", "number", "date", "abbreviation", "homograph", "contact"}
 LANGS = ["pt-PT", "pt-BR"]
+# The reading column of pt-BR-number-19 cites Cunha & Cintra p. 388,
+# "século décimo". The text2spoken ruling keeps "século dez" in pt-BR after
+# Ciberdúvidas 9067, which gives the ordinal "no Brasil até ao nono". The row
+# is not checked against either reading.
+UNPINNED = {"pt-BR-number-19"}
 
 
 def _build():
@@ -28,6 +37,32 @@ def read(name):
         reader = csv.reader(f, delimiter="\t", quoting=csv.QUOTE_NONE)
         header = next(reader)
         return header, [dict(zip(header, fields)) for fields in reader]
+
+
+def _words(text):
+    """The words of a text or a spec reading, lowercase, with no punctuation and
+    no IPA note ("dezoito@dɨˈzojtu", "doutora~doˈtoɾɐ")."""
+    return [re.split("[@~]", word)[0] for word in re.sub(r"[.,;:!?«»\"()]", " ", text.lower()).split()]
+
+
+def _spec_cases():
+    cases = []
+    for lang in ("pt-PT", "pt-BR"):
+        _, rows = read(f"{lang}.spec.tsv")
+        for row in rows:
+            if (row["category"] not in ("number", "date", "abbreviation") or row["reading"] == "-"
+                    or row["id"] in UNPINNED):
+                continue
+            cases.append(pytest.param(lang, row["text"], row["reading"], id=row["id"]))
+    return cases
+
+
+@pytest.mark.parametrize("lang,text,reading", _spec_cases())
+def test_sentence_set_rows_read_as_the_spec(lang, text, reading):
+    # Plan row 2.4: the phonemizer reads each number, date and abbreviation row
+    # as the reading column of the spec, whose cite column names the source.
+    assert _words(pipeline(lang).expand(text)) == _words(reading)
+    assert phonemize(text, lang) == phonemize(" ".join(_words(reading)), lang)
 
 
 @pytest.mark.parametrize("lang", LANGS)
