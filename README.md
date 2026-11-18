@@ -232,7 +232,12 @@ The European lects and the African and Asian lects read the `pt-PT` variety
 gives an `UnreadFormWarning` that names the form and the text, because the
 phoneme lattice drops its digits. See [docs/numbers.md](docs/numbers.md).
 
-tugaphone rewrites the forms that text2spoken leaves as written. Abbreviations
+text2spoken reads first, and its reading stands. A form that it leaves as
+written, such as "3-2", "São 16:30." or "80m2", goes to a fallback rewrite of
+tugaphone, so "80m2" reads as "oitenta metros quadrados". Each fallback goes
+when text2spoken reads its form.
+
+tugaphone also expands the forms that text2spoken does not read. Abbreviations
 such as "vs.", "pág." and "n.º" expand, so "vs." reads as "versus". A title
 such as "Sr." or "Dr." expands everywhere, so "o Sr. presidente" reads as "o
 Senhor presidente". A letter-digit code reads as its letters and a number, so

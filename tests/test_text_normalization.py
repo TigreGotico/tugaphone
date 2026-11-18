@@ -1,6 +1,7 @@
-"""Tests for tugaphone.text_normalization and the reading after it: ranges,
-clock times, European separators and regnal numerals read by text2spoken,
-and the abbreviations and letter-spelled acronyms that tugaphone rewrites.
+"""Tests for tugaphone.text_normalization: the public rewrites, and the
+reading of ranges, clock times, European separators and regnal numerals
+through normalize_text, where text2spoken reads first and the rewrites read
+what it leaves.
 
 Expected strings are computed by hand from the rules, not read back from the
 code under test.
@@ -8,21 +9,77 @@ code under test.
 import pytest
 
 from tugaphone import TugaPhonemizer
-from tugaphone.text_normalization import expand_abbreviations, expand_acronyms, normalize_text
+from tugaphone.text_normalization import (
+    expand_abbreviations,
+    expand_acronyms,
+    expand_clock_times,
+    expand_regnal_numerals,
+    normalize_number_separators,
+    normalize_text,
+    separate_unit_symbols,
+    split_number_ranges,
+)
 
-from tests.text2spoken_gaps import CLOCK, DASH_RANGE, ROMAN, SCORE
+from tests.text2spoken_gaps import MINUS_RANGE
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
     return normalize_text(text, lang)
 
 
+class TestPublicRewrites:
+    """The rewrites that normalize_text runs on what text2spoken leaves, called
+    alone. They leave the digits for a number reader."""
+
+    def test_split_number_ranges(self):
+        assert split_number_ranges("1139-1185") == "1139 a 1185"
+        assert split_number_ranges("10–20") == "10 a 20"
+        assert split_number_ranges("10—20") == "10 a 20"
+        assert split_number_ranges("10−20") == "10 a 20"
+        assert split_number_ranges("chamo-me") == "chamo-me"
+
+    @pytest.mark.parametrize("text,expected", [
+        ("16:00", "16 horas"), ("1:00", "1 hora"), ("21:00", "21 horas"),
+        ("16:54", "16 e 54"), ("9:05", "9 e 5"), ("9:05, sala 2.", "9 e 5, sala 2."),
+        ("24:00", "24 horas"), ("25:00", "25:00"), ("Nota: importante", "Nota: importante"),
+        ("O comboio parte às 16:54.", "O comboio parte às 16 e 54."),
+    ])
+    def test_expand_clock_times(self, text, expected):
+        assert expand_clock_times(text) == expected
+
+    def test_normalize_number_separators(self):
+        assert normalize_number_separators("92.073") == "92073"
+        assert normalize_number_separators("10,4") == "10 vírgula 4"
+        assert normalize_number_separators("3.º lugar") == "3.º lugar"
+
+    def test_separate_unit_symbols(self):
+        assert separate_unit_symbols("Pesa 7kg e custa €20.") == "Pesa 7 kg e custa 20 €."
+        assert separate_unit_symbols("Custa 2,50 €.") == "Custa 2 € e 50 cêntimos."
+        assert separate_unit_symbols("15x8") == "15 vezes 8"
+
+    @pytest.mark.parametrize("text,expected", [
+        ("Afonso I reinou", "Afonso Primeiro reinou"),
+        ("João VI", "João Sexto"),
+        ("XX", "Vigésimo"),
+        ("eu vi X", "eu vi X"),
+        ("a I entrada", "a I entrada"),
+        ("Afonso I.", "Afonso Primeiro."),
+        ("o século XIX", "o século dezanove"),
+        ("Isabel II", "Isabel Segunda"),
+    ])
+    def test_expand_regnal_numerals(self, text, expected):
+        assert expand_regnal_numerals(text) == expected
+
+    def test_expand_regnal_numerals_follows_the_variety(self):
+        assert expand_regnal_numerals("o século XIX", "pt-BR") == "o século dezenove"
+
+
 class TestNumberRanges:
     @pytest.mark.parametrize("text,expected", [
         ("1139-1185", "mil cento e trinta e nove a mil cento e oitenta e cinco"),
         ("10–20", "dez a vinte"),
-        pytest.param("10—20", "dez a vinte", marks=DASH_RANGE),
-        pytest.param("10−20", "dez a vinte", marks=DASH_RANGE),
+        ("10—20", "dez a vinte"),
+        pytest.param("10−20", "dez a vinte", marks=MINUS_RANGE),
     ])
     def test_range_between_digits(self, text, expected):
         assert read(text) == expected
@@ -31,7 +88,6 @@ class TestNumberRanges:
         assert read("chamo-me") == "chamo-me"
         assert read("guarda-chuva") == "guarda-chuva"
 
-    @SCORE
     def test_full_pipeline_score_reading(self):
         # "3-2" is "três a dois": the "a" is the preposition "to", not the
         # feminine article, so "2" stays masculine ("dois", not "duas").
@@ -48,11 +104,11 @@ class TestClockTimes:
         ("às 16:54", "às dezasseis e cinquenta e quatro"),
         ("às 9:05", "às nove e cinco"),
         ("às 9:05, sala 2.", "às nove e cinco, sala dois."),
-        pytest.param("às 24:00", "às vinte e quatro horas", marks=CLOCK),
-        pytest.param("São 16:30.", "São dezasseis e trinta.", marks=CLOCK),
+        ("às 24:00", "às vinte e quatro horas"),
+        ("São 16:30.", "São dezasseis e trinta."),
         ("Reunião às 9:05, sala 2.", "Reunião às nove e cinco, sala dois."),
         ("O comboio parte às 16:54.", "O comboio parte às dezasseis e cinquenta e quatro."),
-        pytest.param("24:00", "vinte e quatro horas", marks=CLOCK),
+        ("24:00", "vinte e quatro horas"),
     ])
     def test_clock_time(self, text, expected):
         assert read(text) == expected
@@ -136,7 +192,6 @@ class TestAbbreviations:
 
 
 class TestRegnalNumerals:
-    @ROMAN
     def test_single_i_after_capitalised_name(self):
         assert read("Afonso I reinou").lower() == "afonso primeiro reinou"
 
@@ -150,7 +205,6 @@ class TestRegnalNumerals:
         # "a" is length 1: not a name-like word.
         assert read("a I entrada") == "a I entrada"
 
-    @ROMAN
     def test_trailing_punctuation_preserved(self):
         assert read("Afonso I.").lower() == "afonso primeiro."
 
@@ -205,7 +259,6 @@ class TestFullPipelineEndToEnd:
         assert "pɾiˈmɐjɾu" in ps   # Primeiro
         assert ps.count("ˈmiɫ") == 2   # "mil" for both range endpoints
 
-    @CLOCK
     def test_clock_time_pt_lisbon(self):
         # "São 16:30." normalizes to "São 16 e 30." -> "dezasseis e trinta";
         # without the clock-time rule the colon splits the utterance and
@@ -224,7 +277,6 @@ class TestFullPipelineEndToEnd:
         assert "ˈnɔv" in ps    # nove
         assert "ˈsĩku" in ps   # cinco
 
-    @CLOCK
     def test_whole_hour_24_pt_lisbon_no_empty_output(self):
         ps = TugaPhonemizer().phonemize_sentence("24:00.", "pt-PT-x-lisbon")
         assert ps

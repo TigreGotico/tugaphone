@@ -4,7 +4,7 @@ The expand stage of the pipeline reads numbers, dates, times, money, measures
 and abbreviations with text2spoken, in the ``pt-PT`` or ``pt-BR`` variety of
 the lect. Each expected value comes from the source named next to it, not from
 tugaphone output. "t2s pt-NNN" names a row of text2spoken
-``tests/data/pt.tsv`` at 0.0.2a68, and the row names its own source.
+``tests/data/pt.tsv`` at 0.0.2a69, and the row names its own source.
 """
 import csv
 from pathlib import Path

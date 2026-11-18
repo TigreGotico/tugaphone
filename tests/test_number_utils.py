@@ -1,8 +1,8 @@
 """Tests for tugaphone.number_utils public API."""
 import pytest
-from tugaphone.number_utils import normalize_numbers
+from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, normalize_numbers
 
-from tests.text2spoken_gaps import DOT_DECIMAL, HOURS, LABEL, PLURAL_HEAD, RANGE, SCIENTIFIC, TIMES
+from tests.text2spoken_gaps import HOURS, LABEL, PLURAL_HEAD, RANGE, SPELLED_DECIMAL, TIMES
 
 
 class TestNormalizeNumbers:
@@ -212,6 +212,109 @@ class TestCountedNounGender:
         assert normalize_numbers(text) == expected
 
 
+@pytest.fixture
+def NumberParser():
+    with pytest.warns(DeprecationWarning, match=f"removed in tugaphone {NUMBER_PARSER_REMOVAL_VERSION}"):
+        from tugaphone.number_utils import NumberParser
+    return NumberParser
+
+
+def test_number_parser_removal_version_is_the_next_major():
+    from tugaphone.version import VERSION_MAJOR
+    assert NUMBER_PARSER_REMOVAL_VERSION == f"{VERSION_MAJOR + 1}.0.0"
+
+
+class TestNumberParserPronounce:
+    """The deprecated NumberParser reads through text2spoken."""
+
+    def test_cardinal_masculine_default(self, NumberParser):
+        result = NumberParser.pronounce_number_word("1", gender="masculine")
+        assert result == "um"
+
+    def test_cardinal_feminine(self, NumberParser):
+        result = NumberParser.pronounce_number_word("1", gender="feminine")
+        assert result == "uma"
+
+    def test_ordinal_masculine(self, NumberParser):
+        result = NumberParser.pronounce_number_word("1", as_ordinal=True, gender="masculine")
+        assert result == "primeiro"
+
+    def test_ordinal_feminine(self, NumberParser):
+        result = NumberParser.pronounce_number_word("1", as_ordinal=True, gender="feminine")
+        assert result == "primeira"
+
+    def test_nineteen_pt(self, NumberParser):
+        assert NumberParser.pronounce_number_word("19") == "dezanove"
+
+    def test_nineteen_br(self, NumberParser):
+        assert NumberParser.pronounce_number_word("19", is_brazilian=True) == "dezenove"
+
+
+class TestNumberParserPredicates:
+    def test_is_int(self, NumberParser):
+        assert NumberParser.is_int("42")
+        assert not NumberParser.is_int("abc")
+        assert not NumberParser.is_int("3.14")
+
+    def test_is_float(self, NumberParser):
+        assert NumberParser.is_float("3.14")
+        assert NumberParser.is_float("42")
+        assert not NumberParser.is_float("abc")
+
+    def test_is_ordinal_attached(self, NumberParser):
+        assert NumberParser.is_ordinal("1º")
+        assert NumberParser.is_ordinal("1ª")
+
+    def test_is_ordinal_separated(self, NumberParser):
+        assert NumberParser.is_ordinal("1", "º")
+
+    def test_not_ordinal(self, NumberParser):
+        assert not NumberParser.is_ordinal("1")
+
+    def test_get_number_gender_feminine(self, NumberParser):
+        assert NumberParser.get_number_gender("1", next_word="casa") == "feminine"
+
+    def test_get_number_gender_masculine_default(self, NumberParser):
+        assert NumberParser.get_number_gender("2", next_word="cães") == "masculine"
+
+    def test_get_number_gender_preposition_a_not_article(self, NumberParser):
+        # "3 a 2." (a score/range reading): the "a" before "2" is the
+        # preposition "to", not the feminine article "a" -- there is no
+        # following noun for it to introduce, so the number stays masculine.
+        assert NumberParser.get_number_gender("2", prev_word="a", next_word=".") == "masculine"
+        assert NumberParser.get_number_gender("2", prev_word="a", next_word=None) == "masculine"
+
+    def test_get_number_gender_article_a_before_noun(self, NumberParser):
+        # "a 1 casa": here "a" really is the feminine article.
+        assert NumberParser.get_number_gender("1", prev_word="a", next_word="casa") == "feminine"
+
+    def test_to_int(self, NumberParser):
+        assert NumberParser.to_int("42") == 42
+        assert NumberParser.to_int("1º") == 1
+
+    def test_to_float(self, NumberParser):
+        assert NumberParser.to_float("3.14") == pytest.approx(3.14)
+
+    def test_to_float_comma_decimal(self, NumberParser):
+        assert NumberParser.to_float("10,4") == pytest.approx(10.4)
+
+    def test_to_int_rejects_comma_decimal(self, NumberParser):
+        assert NumberParser.to_int("10,4") is None
+
+    def test_is_decimal(self, NumberParser):
+        assert NumberParser.is_decimal("10,4")
+        assert NumberParser.is_decimal("10.4")
+        assert not NumberParser.is_decimal("42")
+        assert not NumberParser.is_decimal("1e6")
+
+    def test_is_scientific_notation_comma_mantissa(self, NumberParser):
+        assert NumberParser.is_scientific_notation("2,5e3")
+
+
+    def test_pronounce_number_word_scale_kwarg(self, NumberParser):
+        assert NumberParser.pronounce_number_word("1000000000000", scale="short") == "um trilião"
+
+
 class TestLargeNumbers:
     """
     Large numbers read in both scales; there is no ceiling. The expected
@@ -310,7 +413,6 @@ class TestScaleParameter:
 
 
 
-@SCIENTIFIC
 class TestScientificNotation:
     def test_simple_exponent(self):
         assert normalize_numbers("1e6") == "um vezes dez elevado a seis"
@@ -332,7 +434,6 @@ class TestDecimalCommaReading(object):
     def test_comma_decimal_in_sentence(self):
         assert normalize_numbers("tem 10,4 graus") == "tem dez vírgula quatro graus"
 
-    @DOT_DECIMAL
     def test_dot_decimal_still_works(self):
         assert normalize_numbers("tem 10.4 graus") == "tem dez vírgula quatro graus"
 
@@ -355,6 +456,14 @@ class TestNumberInsideBracketsOrQuotes:
         ("¿5?", "¿cinco?"),
         ("¡5!", "¡cinco!"),
         ("tem de 1 a (2 cães)", "tem de um a (dois cães)"),
+        pytest.param("a taxa subiu (0 vírgula 02)", "a taxa subiu (zero vírgula zero dois)",
+                     marks=SPELLED_DECIMAL),
+        pytest.param("(1) vírgula 5 m", "(um) vírgula cinco metros", marks=SPELLED_DECIMAL),
+        pytest.param("«1» vírgula 5 m", "«um» vírgula cinco metros", marks=SPELLED_DECIMAL),
+        pytest.param("a medida (1) vírgula 5 m", "a medida (um) vírgula cinco metros", marks=SPELLED_DECIMAL),
+        ("(0, vírgula 5 m)", "(zero, vírgula cinco metros)"),
+        pytest.param("1) vírgula 5 m", "um) vírgula cinco metros", marks=SPELLED_DECIMAL),
+        ("0, vírgula 5 m", "zero, vírgula cinco metros"),
         pytest.param("de 1 a (2) casas", "de uma a (duas) casas", marks=RANGE),
         pytest.param("de 1 a «2» casas", "de uma a «duas» casas", marks=RANGE),
         pytest.param('de 1 a "2" casas', 'de uma a "duas" casas', marks=RANGE),

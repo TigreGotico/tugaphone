@@ -31,7 +31,7 @@ dependencies = [
     "orthography2ipa>=7.122.11a4",
     "o2i-lexicons>=0.7.0a1",
     "desacordo_ortografico>=0.3.16a1",
-    "text2spoken[pt]>=0.0.2a68",
+    "text2spoken[pt]>=0.0.2a69",
 ]
 
 [project.optional-dependencies]
@@ -57,7 +57,7 @@ Repository = "https://github.com/TigreGotico/tugaphone"
 packages = ["tugaphone"]
 
 [tool.setuptools.package-data]
-tugaphone = ["data/langdetect/*.json.gz", "data/loanwords.json"]
+tugaphone = ["data/langdetect/*.json.gz", "data/loanwords.json", "data/letter_expressions.json"]
 
 [tool.setuptools.dynamic]
 version = {attr = "tugaphone.version.__version__"}

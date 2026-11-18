@@ -13,7 +13,8 @@ from tugaphone import phonemize
 from tugaphone.number_utils import UnreadFormWarning, normalize_numbers
 from tugaphone.text_normalization import normalize_text
 
-from tests.text2spoken_gaps import JOINED
+from tests.text2spoken_gaps import NUMBER_SIGN
+
 
 
 def spoken(text, lang):
@@ -22,8 +23,8 @@ def spoken(text, lang):
 
 class TestNumberTouchingPunctuation:
     @pytest.mark.parametrize("mark", [
-        *"'\"*_@\\&[]{}<>‹›«»—–;!?…“”‘’",
-        pytest.param("/", marks=JOINED), pytest.param(":", marks=JOINED)])
+        *"'\"*_@/\\&[]{}<>‹›«»—–;:!?…“”‘’",
+        pytest.param("#", marks=NUMBER_SIGN)])
     @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
     def test_number_keeps_its_reading(self, mark, lang):
         for text in (f"casa {mark}7{mark} casa", f"casa {mark}7 casa", f"casa 7{mark} casa"):

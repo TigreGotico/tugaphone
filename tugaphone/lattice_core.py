@@ -83,12 +83,11 @@ def _expander(lect: str):
 
     The spelling step (:func:`normalize_spelling`) runs first, so the stages
     after it read AO1990 text. :func:`tugaphone.text_normalization.normalize_text`
-    runs next: the orthographic rewrites that text2spoken does not cover (the
-    multiplication sign, the abbreviations of tugaphone's tables,
-    letter-spelled acronyms, letter-digit codes), then text2spoken, in the
-    ``pt-PT`` or ``pt-BR`` variety of the lect
-    (:func:`tugaphone.number_utils.text2spoken_tag`). So ``mark`` sees
-    spelled-out words. text2spoken leaves spelled-out text as written, so text
+    runs next: tugaphone's rewrites of the forms that text2spoken leaves as
+    written (abbreviations, acronyms, letter-digit codes), then text2spoken, in
+    the ``pt-PT`` or ``pt-BR`` variety of the lect
+    (:func:`tugaphone.number_utils.text2spoken_tag`), then the fallback
+    rewrites of what it left. So ``mark`` sees spelled-out words. text2spoken leaves spelled-out text as written, so text
     that a caller has already normalised comes through unchanged.
 
     The engine joins the expanded runs and the forced words back into one

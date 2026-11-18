@@ -11,11 +11,16 @@ normalize_text("O Sr. presidente falou com o Dr.")
 # 'O Senhor presidente falou com o Doutor'
 ```
 
-`normalize_text` runs three steps:
+`normalize_text` runs four steps:
 
-1. `normalize_orthography` rewrites the forms that text2spoken leaves as written: the multiplication sign, the abbreviations of the tables below, acronyms and letter-digit codes.
-2. [text2spoken](numbers.md) reads numbers, dates, clock times, ranges, money, measures, percentages, Roman numerals and its own abbreviations, in the `pt-PT` or `pt-BR` variety of the lect.
-3. The titles that text2spoken reads only before a name (`Sr.`, `Dr.`, `D.` and others) expand where text2spoken leaves them, as in "o Sr. presidente".
+1. It expands the [abbreviations](#abbreviations), [acronyms](#acronyms) and [letter-digit codes](#letter-digit-codes), which text2spoken leaves as written.
+2. [text2spoken](numbers.md) reads numbers, dates, clock times, ranges, money, measures, percentages and Roman numerals, in the `pt-PT` or `pt-BR` variety of the lect.
+3. The [fallback rewrites](#fallback-rewrites) read the forms that text2spoken leaves as written, and text2spoken reads the digits that they leave.
+4. The [Roman numeral rules](#roman-numerals) read the numerals that text2spoken leaves.
+
+`normalize_orthography(text, lang)` runs the rewrites alone, in the order of
+tugaphone 1.7, and leaves the digits for
+[`normalize_numbers`](numbers.md).
 
 ## Old spellings
 
@@ -61,8 +66,9 @@ form carries the pronunciation of the writer.
 
 ## Forms that text2spoken reads
 
-text2spoken reads unit symbols, percentages, money, ranges, clock times,
-European separators and Roman numerals. Its
+text2spoken reads most unit symbols, percentages, money, ranges with "a" or
+an en dash, clock times after a time word, European separators and Roman
+numerals after a title, a century or a ruler. Its
 [Portuguese page](https://github.com/TigreGotico/text2spoken/blob/dev/docs/languages/pt.md)
 gives the rules and their sources.
 
@@ -79,17 +85,109 @@ normalize_text("o século XIX", "pt-BR")
 # 'o século dezenove'
 ```
 
-## Multiplication
+## Fallback rewrites
 
-A `x` or `×` between two numbers is read *vezes*: "dois vezes dois são
-quatro" (Priberam DLPO, "vezes"). A hex literal such as `0x1F` and the word
-in "o x da questão" are left alone.
+text2spoken reads first, and its reading stands. The rewrites below read only
+the forms that text2spoken leaves as written: a range with an em dash or a
+hyphen ("3-2"), a clock time with no time word ("São 16:30."), `24:00`, a
+glued unit, a unit symbol such as `m2` or `L`, a multiplication sign, a
+decimal with a dot, scientific notation, and a number between two marks. Each
+fallback names its text2spoken issue in the code, and it goes when
+text2spoken reads its form.
 
 ```python
-from tugaphone.text_normalization import read_multiplication_signs
+normalize_text("O jogo é 3-2.")
+# 'O jogo é três a dois.'
+normalize_text("São 16:30.")
+# 'São dezasseis e trinta.'
+normalize_text("Uma casa de 80m2.")
+# 'Uma casa de oitenta metros quadrados.'
+normalize_text("Mede 15x8 metros.")
+# 'Mede quinze vezes oito metros.'
+normalize_text("1e6")
+# 'um vezes dez elevado a seis'
+```
 
-read_multiplication_signs("Mede 15x8 metros.")
-# 'Mede 15 vezes 8 metros.'
+The rewrites that 1.7 made public stay public. Each one leaves its digits for
+a number reader.
+
+### Unit symbols, percent, euros and multiplication
+
+The SI puts a space between a number and its unit symbol, and between a
+number and `%`. A symbol glued to the digits (`7kg`, `20%`) gets that space
+back, and a leading euro sign moves after the number (`€20` → `20 €`), so
+that a number reader reads the unit name with number agreement. A symbol
+counts only right after digits, so the letter `m` in running text is left
+alone. An amount in euros with one or two decimals is read as euros and
+cents. A `x` or `×` between two numbers is read *vezes*; a hex literal such
+as `0x1F` and the word in "o x da questão" are left alone.
+
+```python
+from tugaphone.text_normalization import separate_unit_symbols
+
+separate_unit_symbols("Pesa 7kg e custa €20.")
+# 'Pesa 7 kg e custa 20 €.'
+separate_unit_symbols("Custa 2,50 €.")
+# 'Custa 2 € e 50 cêntimos.'
+separate_unit_symbols("15x8")
+# '15 vezes 8'
+```
+
+### Number ranges
+
+A dash directly between two digits is a numeric range, read " a ". A word
+hyphen (`chamo-me`, `guarda-chuva`) has a letter on at least one side and is
+left alone.
+
+```python
+from tugaphone.text_normalization import split_number_ranges
+
+split_number_ranges("As páginas 1139-1185 falam disso.")
+# 'As páginas 1139 a 1185 falam disso.'
+```
+
+### Clock times
+
+`HH:00` is read as the hour plus "hora"/"horas"; the digit token is left for
+`normalize_numbers`, which already picks the feminine form ("uma", "duas",
+"vinte e uma", …) from the following noun. Any other `HH:MM` is read "H e MM"
+— the leading zero of the minutes is dropped, so "9:05" reads "9 e 5", not
+"9 e 05". Whole hours also accept `24:00` ("24 horas"); non-whole
+times keep the ordinary 0-23 hour range.
+
+```python
+from tugaphone.text_normalization import expand_clock_times
+
+expand_clock_times("A reunião é às 16:00")
+# 'A reunião é às 16 horas'
+expand_clock_times("O comboio parte às 16:54")
+# 'O comboio parte às 16 e 54'
+expand_clock_times("O comboio parte às 16:54.")
+# 'O comboio parte às 16 e 54.'
+expand_clock_times("Combinámos para a 1:00")
+# 'Combinámos para a 1 hora'
+expand_clock_times("O despertador tocou às 9:05")
+# 'O despertador tocou às 9 e 5'
+expand_clock_times("A loja fecha às 24:00")
+# 'A loja fecha às 24 horas'
+```
+
+### European separators
+
+A `.` between two digits groups thousands and is dropped; a `,` between two
+digits is the decimal mark, read "vírgula". Both only fire between two
+digits, so a sentence-final period, a list comma, or an ordinal mark like
+`3.º` are untouched.
+
+```python
+from tugaphone.text_normalization import normalize_number_separators
+
+normalize_number_separators("O total foi 92.073 euros.")
+# 'O total foi 92073 euros.'
+normalize_number_separators("A nota foi 10,4 valores.")
+# 'A nota foi 10 vírgula 4 valores.'
+normalize_number_separators("Ele ficou em 3.º lugar.")
+# 'Ele ficou em 3.º lugar.'
 ```
 
 ## Abbreviations
@@ -145,11 +243,69 @@ expand_abbreviations("D. Maria I")
 # 'Dona Maria I'
 ```
 
-In `normalize_text`, the titles `Sr.`, `Sra.`, `Sr.ª`, `Dr.`, `Dra.`, `Dr.ª`,
-`Eng.`, `Prof.`, `D.` and the address `Av.` wait until text2spoken has read
-the text. Before a name, text2spoken reads them, and the title tells it the
-gender of a Roman numeral after the name: "D. Maria I" is "Dona Maria
-Primeira". Where text2spoken leaves them as written, tugaphone expands them.
+## Roman numerals
+
+text2spoken reads a Roman numeral after a title, a century, a ruler or a
+part of a work. `expand_regnal_numerals` reads the numerals that it leaves,
+such as "Afonso I" and "a II Guerra Mundial", by these rules.
+
+A Roman numeral after a century, a ruler, a pope or a part of a work reads
+as an ordinal up to ten and as a cardinal above ten: "D. João V" is "Dom
+João Quinto", "o século XIX" is "o século dezanove", "Pio XII" is "Pio
+Doze". A numeral before its noun keeps the ordinal, with the gender of the
+article: "a II Guerra Mundial" is "a Segunda Guerra Mundial". The rule is
+Cunha & Cintra's, as quoted by Ciberdúvidas (answers 14284, 14167 and
+11716). The numeral takes the case of the name it belongs to and is
+lowercase after a common noun such as "século". The cardinals follow `lang`
+("dezanove" in pt-PT, "dezenove" in pt-BR).
+
+An ordinal agrees in gender with its name or noun: "Isabel II" is "Isabel
+Segunda", "D. Maria I" is "Dona Maria Primeira", "a parte V" is "a parte
+quinta". After a word that is not a given name, the ordinal takes the gender
+of that noun in tugalex (`TugaLexicon.get_noun_gender`): "a figura II" is "a
+figura segunda". A cardinal above ten is a label and stays masculine. A name
+of both genders, or a word that tugalex does not know, reads as masculine.
+
+These rules decide when a capital letter is a numeral:
+
+- After a part-of-work noun (`século`, `capítulo`, `livro`, `parte`, ...),
+  matched case-insensitively, a numeral always converts: "O SÉCULO XIX"
+  converts.
+- Inside a run of all-caps words, as in a headline, a numeral does not
+  convert: in "EU VI O FILME", "VI" is the verb.
+- After the word of a fixed expression in `tugaphone/data/letter_expressions.json`,
+  the letter stays: "Raio X", "Geração X", "Malcolm X", "vitamina C".
+  The word is matched case-insensitively.
+- A multi-letter numeral of `I`, `V` and `X` converts anywhere else.
+- A single `I`, `V` or `X` converts only after a given name, so "eu vi X
+  pessoas", "a Sala V" and "o Anexo I" are left alone.
+- A numeral with `L`, `C`, `D` or `M` converts only after a part-of-work
+  noun, so "tamanho XL", "o CD" and "o MDC" are left alone.
+
+tugaphone converts only tokens written wholly in capitals, so lowercase
+words such as "vi", "li" and "mix" are never numerals.
+
+The rules take a given name and its gender from tugalex
+(`TugaLexicon.get_given_name_gender`). A name before a Roman numeral reads the
+numeral as regnal, and a feminine name after `D.` reads `Dona`. A name borne by
+both genders reads as masculine.
+
+```python
+from tugaphone.text_normalization import expand_regnal_numerals
+
+expand_regnal_numerals("D. Afonso I fundou o reino.")
+# 'D. Afonso Primeiro fundou o reino.'
+expand_regnal_numerals("No século XIX, Luís XIV já era história.")
+# 'No século dezanove, Luís Catorze já era história.'
+expand_regnal_numerals("o século XIX", lang="pt-BR")
+# 'o século dezenove'
+expand_regnal_numerals("Isabel II")
+# 'Isabel Segunda'
+expand_regnal_numerals("Eu vi X pessoas.")
+# 'Eu vi X pessoas.'
+expand_regnal_numerals("Fez um raio X.")
+# 'Fez um raio X.'
+```
 
 ## Letter-digit codes
 
@@ -158,8 +314,9 @@ digits reads as the letter names and then the number as a masculine
 cardinal: "T2" is "tê dois", "A3" is "á três", "RTP2" is "érre tê pê dois",
 "mp3" is "éme pê três". A number that labels something is invariable, so
 "o T2 na cidade" reads "tê dois", not "duas". text2spoken reads the digits
-alone, in the variety of the lect, so they take the masculine. Right after a
-number the letters are a unit symbol, so "10 m2" is left alone.
+alone, in the variety of the lect, so they take the masculine. After a number,
+in digits or in words, a unit symbol is a unit, so "10 m2" and "oitenta m2"
+are left for the unit rule.
 
 ```python
 from tugaphone.text_normalization import expand_letter_digit_codes

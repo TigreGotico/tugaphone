@@ -243,17 +243,20 @@ resolve_lect("pt-PT-x-lisboa")   # 'pt-PT-x-lisbon'  (alias)
 ### `normalize_numbers`
 
 ```python
-normalize_numbers(text: str, lang: str = "pt-PT", strict: bool = False,
+normalize_numbers(text: str, lang: str = "pt-PT", strict: bool = True,
                   scale: str | None = None) -> str
 ```
 
 Reads the numbers, dates, clock times, money, measures and abbreviations of
-`text` with text2spoken, in the variety of `lang`. The rest of the text stays
-as written. `pt-PT` uses the long scale (biliões) and `pt-BR` the short scale
-(trilhões); `scale="long"` or `scale="short"` overrides the scale. With
-`strict=True`, a form that text2spoken cannot read raises
-`text2spoken.UnreadFormError`. Otherwise the form stays as written, and a
-form with digits gives an `UnreadFormWarning`. See [numbers.md](numbers.md).
+`text` with text2spoken, in the variety of `lang`, and reads the forms that
+text2spoken leaves as written with the
+[fallback rewrites](text_normalization.md#fallback-rewrites). The rest of the
+text stays as written. `pt-PT` uses the long scale (biliões) and `pt-BR` the
+short scale (trilhões); `scale="long"` or `scale="short"` overrides the scale.
+A form that is still unread stays as written, and a form with digits gives an
+`UnreadFormWarning`. With `strict=True`, the default, an error in text2spoken
+raises; with `strict=False`, `text` comes back as written. See
+[numbers.md](numbers.md).
 
 ```python
 from tugaphone.number_utils import normalize_numbers
@@ -277,6 +280,31 @@ text2spoken_tag("pt-AO")   # 'pt-PT'
 text2spoken_tag("pt-UY")   # 'pt-BR'
 ```
 
+### `NumberParser`
+
+**Deprecated.** The token helper of tugaphone 1.7. Its readings come from
+text2spoken. Importing it emits a `DeprecationWarning` that names the removal
+release, tugaphone 2.0.0. Use `normalize_numbers` instead.
+
+| Method | Returns |
+|--------|---------|
+| `pronounce_number_word(word, prev_word=None, next_word=None, gender=None, as_ordinal=None, is_brazilian=False, scale=None)` | Spelled-out form of one numeric token. |
+| `to_int(word)` / `is_int(word)` | Integer value (ordinal markers stripped) / membership test. |
+| `to_float(word)` / `is_float(word)` | Float value / membership test. |
+| `is_decimal(word)` | `True` for a non-scientific decimal like `"10,4"`. |
+| `is_scientific_notation(word)` | `True` for forms like `"1.5e10"`. |
+| `pronounce_scientific(word, is_brazilian=False, scale=None)` | Spoken form of scientific notation. |
+| `is_ordinal(word, next_word=None)` | Detects `º`/`ª` markers, attached or separate. |
+| `get_number_gender(word, prev_word=None, next_word=None)` | `"feminine"` or `"masculine"`. |
+
+```python
+from tugaphone.number_utils import NumberParser
+NumberParser.pronounce_number_word("19", is_brazilian=True)                    # 'dezenove'
+NumberParser.pronounce_number_word("19", is_brazilian=False)                   # 'dezanove'
+NumberParser.pronounce_number_word("1", as_ordinal=True, gender="masculine")   # 'primeiro'
+NumberParser.get_number_gender("1", next_word="casa")                          # 'feminine'
+```
+
 ## `tugaphone.text_normalization`
 
 ### `normalize_text`
@@ -286,14 +314,25 @@ normalize_text(text: str, lang: str = "pt-PT") -> str
 ```
 
 The words a speaker of `lang` says for `text`: the `expand` step of the
-pipeline after the spelling step. It runs `normalize_orthography`, then
-`normalize_numbers`, then expands the titles that text2spoken leaves as
-written. See [text_normalization.md](text_normalization.md).
+pipeline after the spelling step. It expands abbreviations, acronyms and
+letter-digit codes, then reads the numbers as `normalize_numbers` does, then
+reads the Roman numerals that text2spoken leaves. See
+[text_normalization.md](text_normalization.md).
 
 ```python
 from tugaphone.text_normalization import normalize_text
 normalize_text("O Sr. presidente pagou 20%.")   # 'O Senhor presidente pagou vinte por cento.'
 ```
+
+### The rewrites
+
+`normalize_orthography(text, lang="pt-PT")` runs the rewrites of tugaphone 1.7
+and leaves the digits for `normalize_numbers`. Each rewrite is public:
+`separate_unit_symbols`, `split_number_ranges`, `expand_clock_times`,
+`normalize_number_separators`, `expand_abbreviations`,
+`expand_regnal_numerals(text, lang)`, `expand_acronyms` and
+`expand_letter_digit_codes(text, lang)`. See
+[text_normalization.md](text_normalization.md) for each one.
 
 ## `tugaphone.tokenizer` and `tugaphone.dialects`
 

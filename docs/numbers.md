@@ -77,17 +77,19 @@ normalize_numbers("1000000000000", "pt-BR", scale="long")   # 'um bilhão'
 
 ## A form with no reading
 
-text2spoken leaves a form that it cannot read as written. The phoneme
-lattice drops digits, so a form with digits gives a
-`tugaphone.number_utils.UnreadFormWarning` that names the form and the text:
+text2spoken leaves some forms as written. tugaphone reads most of them with
+its [fallback rewrites](text_normalization.md#fallback-rewrites). A form that
+is still unread stays as written. The phoneme lattice drops digits, so a form
+with digits gives a `tugaphone.number_utils.UnreadFormWarning` that names the
+form and the text:
 
 ```python
 normalize_numbers("um filme 3D")
 # UnreadFormWarning: pt-PT: no reading for '3D' in 'um filme 3D'; its digits are dropped
 ```
 
-With `strict=True`, a form that text2spoken cannot read raises
-`text2spoken.UnreadFormError` instead.
+With `strict=True`, the default, an error in text2spoken raises. With
+`strict=False`, the text comes back as written.
 
 ---
 
@@ -103,7 +105,7 @@ and its source.
 
 ## Where next
 
-- [text_normalization.md](text_normalization.md), the rewrites that run before text2spoken
+- [text_normalization.md](text_normalization.md), the rewrites that run around text2spoken
 - [quickstart.md](quickstart.md), `normalize_numbers` in context
 - [api.md](api.md), the function reference
 

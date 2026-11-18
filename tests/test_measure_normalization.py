@@ -23,7 +23,7 @@ import pytest
 
 from tugaphone.text_normalization import normalize_text
 
-from tests.text2spoken_gaps import EURO_CENTS, SCORE, TIMES, UNITS
+from tests.text2spoken_gaps import EURO_CENTS
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
@@ -56,13 +56,13 @@ class TestUnits:
         ("1,2 l", "um vírgula dois litros"),
         ("0 km", "zero quilómetros"),
         ("5 ml", "cinco mililitros"),
-        pytest.param("10 m2", "dez metros quadrados", marks=UNITS),
+        ("10 m2", "dez metros quadrados"),
         ("10 m²", "dez metros quadrados"),
-        pytest.param("1 m2", "um metro quadrado", marks=UNITS),
+        ("1 m2", "um metro quadrado"),
         ("200 g", "duzentos gramas"),
         ("201 g", "duzentos e um gramas"),
         ("2 g", "dois gramas"),
-        pytest.param("1 L", "um litro", marks=UNITS),
+        ("1 L", "um litro"),
         ("120 km/h", "cento e vinte quilómetros por hora"),
         ("1.500 m", "mil e quinhentos metros"),
         ("a 2 m da porta", "a dois metros da porta"),
@@ -121,8 +121,8 @@ class TestMultiplication:
     @pytest.mark.parametrize("text,expected", [
         ("15x8", "quinze vezes oito"),
         ("15 x 8", "quinze vezes oito"),
-        pytest.param("2×2", "dois vezes dois", marks=TIMES),
-        pytest.param("2x3x4", "dois vezes três vezes quatro", marks=TIMES),
+        ("2×2", "dois vezes dois"),
+        ("2x3x4", "dois vezes três vezes quatro"),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -142,7 +142,7 @@ class TestGuardRows:
         ("comprei 2 casas", "comprei duas casas"),
         ("tem 2 cães", "tem dois cães"),
         ("5 min", "cinco minutos"),
-        pytest.param("O jogo é 3-2.", "O jogo é três a dois.", marks=SCORE),
+        ("O jogo é 3-2.", "O jogo é três a dois."),
     ])
     def test_unchanged(self, text, expected):
         assert read(text) == expected

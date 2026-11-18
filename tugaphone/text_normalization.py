@@ -1,43 +1,43 @@
-"""Orthographic rewrites that run before text2spoken reads the text.
+"""Text rewrites around text2spoken, the reader of numbers, dates and times.
 
-text2spoken (:func:`tugaphone.number_utils.normalize_numbers`) reads numbers,
-dates, clock times, money, measures, ranges, Roman numerals and the
-abbreviations of its own tables. These rules rewrite the written forms that it
-leaves as written: the multiplication sign between two numbers, the
-abbreviations of the tables below, letter-spelled acronyms and letter-digit
-codes. They run in :func:`tugaphone.lattice_core._expander` ahead of
-``normalize_numbers``, and the digits that they leave are read by text2spoken.
+:func:`normalize_text` is the ``expand`` step of the pipeline after the
+spelling step. It expands the abbreviations of the tables below,
+letter-spelled acronyms and letter-digit codes, which text2spoken leaves as
+written. :func:`tugaphone.number_utils.read_numbers` then reads the numbers:
+text2spoken first, and tugaphone's fallback rewrites for the forms that it
+leaves as written. Last, Roman numerals that text2spoken left are read.
 
-The abbreviation rules are ported from the European-Portuguese TTS front-end
+The digit rewrites (:func:`split_number_ranges`, :func:`expand_clock_times`,
+:func:`normalize_number_separators`, :func:`separate_unit_symbols`) live in
+:mod:`tugaphone.number_utils` and are importable from here too.
+:func:`normalize_orthography` runs every rewrite and leaves the digits for
+:func:`tugaphone.number_utils.normalize_numbers`.
+
+The reading rules for ranges, clock times, separators, abbreviations, and
+regnal numerals are ported from the European-Portuguese TTS front-end
 tts_eu_pt (https://github.com/logus2k/tts_eu_pt), written by Antonio Cruz
 and released under the Apache License 2.0. The rules from that project's
-``tts_eu_pt/g2p.py`` were reimplemented here in tugaphone's own idiom.
+``tts_eu_pt/g2p.py`` were reimplemented here in tugaphone's own idiom; one
+rule was deliberately left out: the original elides "vinte e cinco" to
+"vinte cinco" in the twenties, but standard European Portuguese keeps the
+conjunction, so tugaphone always reads "vinte e cinco".
 """
 from __future__ import annotations
 
+import functools
+import json
 import re
 from collections.abc import Callable
+from pathlib import Path
 
 from tugalex import TugaLexicon
 
-from tugaphone.number_utils import normalize_numbers
+from tugaphone.number_utils import (  # noqa: F401  (public at their 1.7.1 paths)
+    UNIT_NAMES, expand_clock_times, is_number_word, normalize_number_separators,
+    read_multiplication_signs, read_numbers, separate_unit_symbols, split_number_ranges,
+    text2spoken_reading, warn_unread_digits)
 
-# ---------------------------------------------------------------------------
-# A "x" or "×" between two numbers is multiplication, read "vezes": "dois
-# vezes dois são quatro" (Priberam DLPO, "vezes"). Hex literals ("0x1F")
-# and words ("o x da questão") have a letter on one side and are untouched.
-# ---------------------------------------------------------------------------
-_TIMES = re.compile(r"(?<![\w.,])(\d+(?:,\d+)?) ?[x×] ?(?=\d+(?:,\d+)?(?:[x×]\d|(?!\w)))")
-
-
-def read_multiplication_signs(text: str) -> str:
-    """"15x8" -> "15 vezes 8"; "2 x 2" -> "2 vezes 2"."""
-    while True:
-        expanded = _TIMES.sub(r"\1 vezes ", text)
-        if expanded == text:
-            return text
-        text = expanded
-
+_DATA = Path(__file__).parent / "data"
 
 # ---------------------------------------------------------------------------
 # Given names and their grammatical gender come from tugalex:
@@ -248,27 +248,16 @@ def stays_portuguese(words: list[str], i: int,
             and _is_portuguese_abbreviation(words, i - 1, is_foreign))
 
 
-# The abbreviations that text2spoken reads before a name ("Sr. Silva", "D.
-# João V", "Av. Liberdade"). They expand after text2spoken, so that it sees
-# the title, which gives the gender of a Roman numeral after the name ("A
-# Dra. IV saiu"). tugaphone expands them where text2spoken leaves them as
-# written ("o Sr. presidente", "falei com o Dr.").
-_READ_BY_TEXT2SPOKEN = frozenset({
-    "Sr.", "Sra.", "Sr.ª", "Dr.", "Dra.", "Dr.ª", "Eng.", "Prof.", "D.", "Av.",
-})
-
-
-def expand_abbreviations(text: str, keep: frozenset[str] = frozenset()) -> str:
+def expand_abbreviations(text: str) -> str:
     """"Sr. Silva" -> "Senhor Silva"; "D. Maria" -> "Dona Maria"; "n.º 4" ->
     "número 4"; "Av. Liberdade"
     or a bare "R." at sentence end both -> "Avenida"/"Rua" regardless of
     capitalisation, since these stand for the same word either way.
-    "Cap. 3" -> "Capítulo 3"; "(art. 5.º)" -> "(artigo 5.º)". The
-    abbreviations in ``keep`` stay as written."""
+    "Cap. 3" -> "Capítulo 3"; "(art. 5.º)" -> "(artigo 5.º)"."""
     words = text.split()
     out = []
     for i, w in enumerate(words):
-        expansion = None if _abbreviation_edges(w)[1] in keep else _expansion(words, i)
+        expansion = _expansion(words, i)
         if expansion is None:
             out.append(w)
             continue
@@ -278,11 +267,69 @@ def expand_abbreviations(text: str, keep: frozenset[str] = frozenset()) -> str:
 
 
 # ---------------------------------------------------------------------------
-# A reference marker counts as one before its number in Roman numerals too
-# ("cap. XIX", "séc. XX"). text2spoken reads the numeral.
+# Roman numerals after centuries, rulers, popes and parts of a work. After
+# its noun, a numeral up to ten reads as an ordinal and above ten as a
+# cardinal: "até 10 (Celso Cunha e Lindley Cintra) inclusive, usam-se os
+# ordinais e depois os cardinais, sempre que o numeral vier depois do
+# substantivo" (Ciberdúvidas 14284) -- "D. João V (quinto)", "Luís XIV é
+# «catorze»", "o século XV é o século «quinze»" (Ciberdúvidas 14167). The
+# Nova Gramática applies the rule to every part of a work, and a numeral
+# before its noun keeps the ordinal above ten (Ciberdúvidas 11716).
+#
+# An ordinal agrees with its noun or name: "D. Maria II" is "Dona Maria
+# Segunda", "a parte V" is "a parte quinta". A cardinal above ten is a label
+# and stays masculine, "sente-se a omissão da palavra número" (Cunha &
+# Cintra, quoted by Ciberdúvidas 33468).
+#
+# When a numeral converts:
+# * after a part-of-work noun, matched case-insensitively ("O SÉCULO XIX");
+# * never inside a run of all-caps words ("EU VI O FILME"), or after the
+#   word of a fixed expression in data/letter_expressions.json ("raio X");
+# * a multi-letter numeral of I, V and X converts anywhere else;
+# * a single I, V or X converts only after a given name ("Isabel I"), so
+#   "eu vi X" and "Raio X" stay untouched;
+# * a numeral with L, C, D or M converts only after a part-of-work noun, so
+#   "tamanho XL" and "o CD" stay untouched.
+#
+# text2spoken reads a numeral after a title ("D. João V"), a part of a
+# work ("século XIX") or a pope's name ("Pio XII"). It leaves a numeral
+# after a name with no title ("Afonso I") and one before its noun ("a II
+# Guerra Mundial") as written. TODO(text2spoken issue)
 # ---------------------------------------------------------------------------
 _ROMAN = re.compile(r"M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
 _ROMAN_VALUES = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
+_WORK_PARTS = {
+    "século": "masculine", "capítulo": "masculine", "tomo": "masculine",
+    "volume": "masculine", "livro": "masculine", "canto": "masculine",
+    "ato": "masculine", "título": "masculine",
+    "parte": "feminine", "secção": "feminine", "seção": "feminine",
+}
+# Articles and contractions before a numeral that precedes its noun, and the
+# gender of the noun they announce.
+_PRENOMINAL = {
+    "o": "masculine", "os": "masculine", "do": "masculine", "dos": "masculine",
+    "no": "masculine", "nos": "masculine", "ao": "masculine", "aos": "masculine",
+    "pelo": "masculine", "pelos": "masculine",
+    "a": "feminine", "as": "feminine", "da": "feminine", "das": "feminine",
+    "na": "feminine", "nas": "feminine", "à": "feminine", "às": "feminine",
+    "pela": "feminine", "pelas": "feminine",
+}
+_TRAIL_PUNCT = ".,;:!?)\"”»"
+
+
+@functools.lru_cache(maxsize=1)
+def _letter_expressions() -> frozenset[tuple[str, str]]:
+    """(lowercase word, letter) pairs of data/letter_expressions.json."""
+    data = json.loads((_DATA / "letter_expressions.json").read_text(encoding="utf-8"))
+    pairs = (phrase.rsplit(" ", 1) for phrase in data["expressions"])
+    return frozenset((word.lower(), letter) for word, letter in pairs)
+
+
+def _split_trailing_punct(w: str) -> tuple[str, str]:
+    i = len(w)
+    while i > 0 and w[i - 1] in _TRAIL_PUNCT:
+        i -= 1
+    return w[:i], w[i:]
 
 
 def _roman_value(numeral: str) -> int | None:
@@ -290,6 +337,90 @@ def _roman_value(numeral: str) -> int | None:
         return None
     values = [_ROMAN_VALUES[c] for c in numeral]
     return sum(-v if v < nxt else v for v, nxt in zip(values, values[1:] + [0]))
+
+
+def _is_caps_word(core: str) -> bool:
+    return any(c.isalpha() for c in core) and core == core.upper()
+
+
+def _in_caps_run(cores: list[str], i: int) -> bool:
+    """Whether cores[i] stands in a run of all-caps words that holds a word
+    of two or more letters other than a Roman numeral ("EU VI O FILME").
+    "O XIX Congresso" is not such a run."""
+    start, end = i, i
+    while start > 0 and _is_caps_word(cores[start - 1]):
+        start -= 1
+    while end + 1 < len(cores) and _is_caps_word(cores[end + 1]):
+        end += 1
+    return any(sum(c.isalpha() for c in w) >= 2 and _roman_value(w) is None
+               for w in cores[start:end + 1])
+
+
+def _converts(numeral: str, prev_word: str | None, cores: list[str], i: int) -> bool:
+    if prev_word is not None and (prev_word.lower(), numeral) in _letter_expressions():
+        return False
+    if prev_word is not None and prev_word.lower() in _WORK_PARTS:
+        return True
+    if _in_caps_run(cores, i) or not set(numeral) <= set("IVX"):
+        return False
+    return len(numeral) >= 2 or (prev_word is not None and TugaLexicon.get_given_name_gender(prev_word) is not None)
+
+
+def _head_gender(word: str) -> str:
+    """The gender of the name or noun a numeral follows: "Isabel II" and
+    "a figura II" take the feminine ordinal. A word of both genders, or one
+    tugalex does not know, gives masculine."""
+    if TugaLexicon.get_given_name_gender(word) is not None:
+        return _name_gender(word)
+    return "feminine" if TugaLexicon.get_noun_gender(word.lower()) == "f" else "masculine"
+
+
+def _read_roman(value: int, prev_word: str | None, lang: str) -> str:
+    article = _PRENOMINAL.get(prev_word.lower()) if prev_word else "masculine"
+    if article is not None:
+        gender, as_ordinal = article, True
+    elif value <= 10:
+        gender = _WORK_PARTS.get(prev_word.lower()) or _head_gender(prev_word)
+        as_ordinal = True
+    else:
+        gender, as_ordinal = "masculine", False
+    if as_ordinal:
+        return text2spoken_reading(f"{value}{'ª' if gender == 'feminine' else 'º'}", lang)
+    return text2spoken_reading(str(value), lang, gender=gender)
+
+
+def _title(reading: str) -> str:
+    return " ".join(w if w == "e" else w.capitalize() for w in reading.split())
+
+
+def expand_regnal_numerals(text: str, lang: str = "pt-PT") -> str:
+    """"Afonso I" -> "Afonso Primeiro"; "Isabel II" -> "Isabel Segunda";
+    "o século XIX" -> "o século dezanove"; "a II Guerra Mundial" -> "a
+    Segunda Guerra Mundial"; "eu vi X", "Raio X" and "EU VI O FILME" are
+    untouched."""
+    words = text.split()
+    cores = [_split_edges(w)[1] for w in words]
+    out = []
+    for i, w in enumerate(words):
+        core, trail = _split_trailing_punct(w)
+        value = _roman_value(core)
+        prev_core = _split_edges(words[i - 1])[1] if i > 0 else None
+        if value is None or not _converts(core, prev_core, cores, i):
+            out.append(w)
+            continue
+        reading = _read_roman(value, prev_core, lang)
+        # The numeral takes the case of the name it belongs to: the name
+        # before it ("Pio Doze") or, before its noun, the name after it ("a
+        # Segunda Guerra Mundial"). After a common noun it is lowercase ("o
+        # século dezanove").
+        if prev_core is None or prev_core.lower() in _PRENOMINAL:
+            name = words[i + 1] if i + 1 < len(words) else None
+            capitalised = name is None or _is_capitalised(name)
+        else:
+            capitalised = prev_core[:1].isupper()
+        out.append((_title(reading) if capitalised else reading) + trail)
+    return " ".join(out)
+
 
 # ---------------------------------------------------------------------------
 # Acronyms spoken as Portuguese letter names, matched case-SENSITIVELY so
@@ -344,10 +475,6 @@ def _split_edges(w: str) -> tuple[str, str, str]:
     return w[:i], w[i:j], w[j:]
 
 
-def _is_caps_word(core: str) -> bool:
-    return any(c.isalpha() for c in core) and core == core.upper()
-
-
 def _in_caps_text(cores: list[str], i: int) -> bool:
     """Whether cores[i] stands in a run of all-caps words that holds another
     word of two or more letters ("ELA E EU"), so the run is all-caps text and
@@ -380,12 +507,12 @@ def expand_acronyms(text: str) -> str:
 # the letters by their names, then the number as a cardinal. A number that
 # labels something is invariable, "sente-se a omissão da palavra número"
 # (Cunha & Cintra, quoted by Ciberdúvidas 33468), so it is masculine even
-# before a feminine word ("o T2 na cidade" -> "tê dois"). text2spoken reads
-# the digits alone, with no context, so they take its default gender, the
-# masculine. Codes take one to three capitals or one or two lowercase
-# letters, so longer capitalised words ("COVID19") and ordinary lowercase
-# words are left alone.
-# Right after a number the letters are a unit symbol ("10 m2"), not a code.
+# before a feminine word ("o T2 na cidade" -> "tê dois"). The reading is the
+# same whatever the code stands for, so no context is needed. Codes take
+# one to three capitals or one or two lowercase letters, so longer
+# capitalised words ("COVID19") and ordinary lowercase words are left alone.
+# Right after a number the letters are a unit symbol ("10 m2"), not a code,
+# and so is a unit symbol after a number in words ("oitenta m2").
 # ---------------------------------------------------------------------------
 _LETTER_DIGIT_CODE = re.compile(r"([A-Z]{1,3}|[a-z]{1,2})(\d+)")
 
@@ -397,23 +524,31 @@ def expand_letter_digit_codes(text: str, lang: str = "pt-PT") -> str:
     for i, w in enumerate(words):
         lead, core, trail = _split_edges(w)
         match = _LETTER_DIGIT_CODE.fullmatch(core)
-        after_number = i > 0 and _split_edges(words[i - 1])[1].isdigit()
+        previous = _split_edges(words[i - 1])[1] if i > 0 else ""
+        after_number = previous.isdigit() or (core in UNIT_NAMES and is_number_word(previous))
         if match is None or after_number:
             out.append(w)
             continue
         letters, digits = match.groups()
-        number = normalize_numbers(digits, lang)
+        number = text2spoken_reading(digits, lang, gender="masculine")
         out.append(f"{lead}{_spell_letters(letters.upper())} {number}{trail}")
     return " ".join(out)
 
 
+
+
 def normalize_orthography(text: str, lang: str = "pt-PT") -> str:
-    """Apply the rules above that run before text2spoken, in the order that
-    keeps them from interfering: the multiplication sign first (digit-only),
-    then abbreviations, acronyms and letter-digit codes (word-token rules).
-    The abbreviations that text2spoken reads before a name stay as written."""
-    text = read_multiplication_signs(text)
-    text = expand_abbreviations(text, keep=_READ_BY_TEXT2SPOKEN)
+    """Apply every rewrite, with the digits left for
+    :func:`tugaphone.number_utils.normalize_numbers`: unit symbols first (the
+    euro-cents rule needs the decimal comma), then separators and ranges
+    (digit-only), then clock times (also digit-only), then abbreviations,
+    regnal numerals, acronyms and letter-digit codes (word-token rules)."""
+    text = separate_unit_symbols(text)
+    text = normalize_number_separators(text)
+    text = split_number_ranges(text)
+    text = expand_clock_times(text)
+    text = expand_abbreviations(text)
+    text = expand_regnal_numerals(text, lang)
     text = expand_acronyms(text)
     text = expand_letter_digit_codes(text, lang)
     return text
@@ -422,11 +557,17 @@ def normalize_orthography(text: str, lang: str = "pt-PT") -> str:
 def normalize_text(text: str, lang: str = "pt-PT") -> str:
     """The words a speaker of ``lang`` says for ``text``.
 
-    :func:`normalize_orthography` runs first, then text2spoken
-    (:func:`tugaphone.number_utils.normalize_numbers`). Last, the titles that
-    text2spoken leaves as written expand: "Nasceu a 25/12/2023." reads "Nasceu
-    a vinte e cinco de dezembro de dois mil e vinte e três.", and "falei com o
-    Dr." reads "falei com o Doutor". Text that is already spelled out comes
-    back unchanged.
+    The rewrites before text2spoken run first, then text2spoken, then the
+    fallback rewrites of the forms that it left as written.
+    "Nasceu a 25/12/2023." reads "Nasceu a vinte e cinco de dezembro de dois
+    mil e vinte e três.", "São 16:30." reads "São dezasseis e trinta.", and
+    "falei com o Dr." reads "falei com o Doutor". Text that is already
+    spelled out comes back unchanged. A form with digits that is still
+    unread gives an :class:`tugaphone.number_utils.UnreadFormWarning`.
     """
-    return expand_abbreviations(normalize_numbers(normalize_orthography(text, lang), lang))
+    spoken = expand_abbreviations(text)
+    spoken = expand_acronyms(spoken)
+    spoken = expand_letter_digit_codes(spoken, lang)
+    spoken = expand_regnal_numerals(read_numbers(spoken, lang), lang)
+    warn_unread_digits(spoken, text, lang)
+    return spoken

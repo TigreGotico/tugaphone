@@ -24,9 +24,8 @@ cardinal label, which is invariable: "sente-se a omissão da palavra número"
 """
 import pytest
 
-from tugaphone.text_normalization import expand_letter_digit_codes, normalize_text
+from tugaphone.text_normalization import expand_letter_digit_codes, expand_regnal_numerals, normalize_text
 
-from tests.text2spoken_gaps import ROMAN
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
@@ -51,7 +50,7 @@ class TestRomanAfterNoun:
         ("João XXII era francês", "João Vinte e Dois era francês"),
         ("João Paulo II", "João Paulo Segundo"),
         ("Paulo VI", "Paulo Sexto"),
-        pytest.param("Clemente X", "Clemente Décimo", marks=ROMAN),
+        ("Clemente X", "Clemente Décimo"),
         ("D. Pedro IV", "Dom Pedro Quarto"),
         ("D. João V reinou", "Dom João Quinto reinou"),
         ("D. Afonso I.", "Dom Afonso Primeiro."),
@@ -68,9 +67,9 @@ class TestRomanAfterNoun:
 
 class TestRomanBeforeNoun:
     @pytest.mark.parametrize("text,expected", [
-        pytest.param("o XIX Congresso", "o Décimo Nono Congresso", marks=ROMAN),
-        pytest.param("a II Guerra Mundial", "a Segunda Guerra Mundial", marks=ROMAN),
-        pytest.param("na XXI edição", "na vigésima primeira edição", marks=ROMAN),
+        ("o XIX Congresso", "o Décimo Nono Congresso"),
+        ("a II Guerra Mundial", "a Segunda Guerra Mundial"),
+        ("na XXI edição", "na vigésima primeira edição"),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -84,10 +83,22 @@ class TestRomanGuardRows:
         ("um CD novo", "um CD novo"),
         ("o DL 10", "o DL dez"),
         ("o MIX", "o MIX"),
-        pytest.param("Afonso I reinou", "Afonso Primeiro reinou", marks=ROMAN),
+        ("Afonso I reinou", "Afonso Primeiro reinou"),
     ])
     def test_unchanged_or_as_before(self, text, expected):
         assert read(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        ("eu vi X pessoas", "eu vi X pessoas"),
+        ("a I entrada", "a I entrada"),
+        ("Pizza Grande XL", "Pizza Grande XL"),
+        ("um CD novo", "um CD novo"),
+        ("o DL 10", "o DL 10"),
+        ("o MIX", "o MIX"),
+        ("Afonso I reinou", "Afonso Primeiro reinou"),
+    ])
+    def test_expand_regnal_numerals_alone(self, text, expected):
+        assert expand_regnal_numerals(text) == expected
 
 
 class TestLetterDigitCodes:

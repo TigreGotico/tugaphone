@@ -17,14 +17,17 @@ Expected values come from the grammar, not from the engine:
   word "VI" is the verb "ver".
 * After a number, a capital letter is a unit symbol ("220 V", "2 L").
 """
+import json
 import re
+from pathlib import Path
 
 import pytest
 
+import tugaphone
 from tugaphone.text_normalization import expand_abbreviations, normalize_orthography, normalize_text
 
-from tests.text2spoken_gaps import ROMAN
 
+DATA = Path(tugaphone.__file__).parent / "data"
 ROMAN_RUN = re.compile(r"\b[IVXLCDM]+\b")
 
 
@@ -34,15 +37,15 @@ def read(text: str, lang: str = "pt-PT") -> str:
 
 class TestRulersAndPopes:
     @pytest.mark.parametrize("text,expected", [
-        pytest.param("Afonso I", "Afonso Primeiro", marks=ROMAN),
+        ("Afonso I", "Afonso Primeiro"),
         ("D. João V", "Dom João Quinto"),
         ("Henrique VIII", "Henrique Oitavo"),
         ("Luís XIV", "Luís Catorze"),
         ("Pio XII", "Pio Doze"),
         ("Bento XVI", "Bento Dezasseis"),
         ("João Paulo II", "João Paulo Segundo"),
-        pytest.param("Leão X", "Leão Décimo", marks=ROMAN),
-        pytest.param("Carlos V", "Carlos Quinto", marks=ROMAN),
+        ("Leão X", "Leão Décimo"),
+        ("Carlos V", "Carlos Quinto"),
     ])
     def test_masculine(self, text, expected):
         assert read(text) == expected
@@ -50,7 +53,7 @@ class TestRulersAndPopes:
     @pytest.mark.parametrize("text,expected", [
         ("D. Maria II", "Dona Maria Segunda"),
         ("Isabel II", "Isabel Segunda"),
-        pytest.param("Isabel I", "Isabel Primeira", marks=ROMAN),
+        ("Isabel I", "Isabel Primeira"),
         ("a rainha D. Maria I morreu no Brasil", "a rainha Dona Maria Primeira morreu no Brasil"),
     ])
     def test_feminine(self, text, expected):
@@ -74,7 +77,7 @@ class TestPartsOfAWork:
         ("o século V", "o século quinto"),
         ("capítulo XLII", "capítulo quarenta e dois"),
         ("a parte V", "a parte quinta"),
-        pytest.param("a II Guerra Mundial", "a Segunda Guerra Mundial", marks=ROMAN),
+        ("a II Guerra Mundial", "a Segunda Guerra Mundial"),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -141,3 +144,9 @@ class TestGivenNameGender:
 ])
 def test_acronyms_that_spell_a_word(text, expected):
     assert normalize_orthography(text) == expected
+
+    def test_letter_expressions_are_word_and_capital(self):
+        data = json.loads((DATA / "letter_expressions.json").read_text(encoding="utf-8"))
+        for phrase in data["expressions"]:
+            word, letter = phrase.rsplit(" ", 1)
+            assert word and len(letter) == 1 and letter.isupper()
