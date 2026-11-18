@@ -102,10 +102,8 @@ python examples/12_synthetic_corpus.py                 # quick demo to stdout
 python examples/12_synthetic_corpus.py --full out.tsv  # full corpus
 ```
 
-`--full` reads the gold from orthography2ipa's source tree, so it needs an
-editable orthography2ipa install. With the virtual environment inside the
-tugaphone checkout it loads the wrong module and fails
-([#179](https://github.com/TigreGotico/tugaphone/issues/179)).
+`--full` reads the gold from orthography2ipa's source tree. Set `O2I_ROOT` to
+an orthography2ipa checkout, or install orthography2ipa editable.
 
 ---
 
@@ -160,8 +158,7 @@ python scripts/roundtrip_eval.py pt-BR pt-PT-x-porto
 ```
 
 The script reads orthography2ipa's benchmark module from its source tree, like
-`--full` above, and has the same limit
-([#179](https://github.com/TigreGotico/tugaphone/issues/179)).
+`--full` above.
 
 One caveat the numbers carry: words are respelled independently, so
 cross-word sandhi is not modelled during respelling, which can leave a
