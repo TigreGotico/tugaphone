@@ -59,18 +59,34 @@ def test_normalize_spelling_restores_the_accent_in_the_br_plural():
     assert lattice_core.normalize_spelling("As Ideias.", "pt-BR") == "As Idéias."
 
 
-def test_single_accent_guard_rejects_a_multi_change_rewrite(monkeypatch):
-    # A conversion that changes more than one ``e`` → ``é`` must be rejected, so the
-    # word stays as written. desacordo would rewrite ``autoestreia`` to ``auto-estréia``.
-    real = lattice_core.convert_spelling
+def test_guard_rejects_a_two_change_rewrite():
+    # desacordo converts "sarigueia" to "sarigüéia": that is two changes, not one
+    # e → é, so the guard leaves the word as written.
+    assert lattice_core.normalize_spelling("sarigueia", "pt-BR") == "sarigueia"
 
-    def wrapper(word, *args, **kwargs):
-        if word == "autoestreia" and args == ("ao1990-br", "br_1971"):
-            return "auto-estréia"
-        return real(word, *args, **kwargs)
 
-    monkeypatch.setattr(lattice_core, "convert_spelling", wrapper)
-    assert lattice_core.normalize_spelling("autoestreia", "pt-BR") == "autoestreia"
+def test_guard_rejects_a_change_that_is_not_e_to_acute():
+    # desacordo converts "feiura" to "feiúra": the change is not e → é.
+    assert lattice_core.normalize_spelling("feiura", "pt-BR") == "feiura"
+
+
+@pytest.mark.parametrize("word, restored, expected", [
+    ("ideia", "idéia", True),
+    ("IDEIA", "IDÉIA", True),
+    ("ideia", "ideia", False),
+    ("sarigueia", "sarigüéia", False),
+    ("feiura", "feiúra", False),
+    ("ideia", "idéias", False),
+    ("ideia", "idêia", False),
+    ("ideia", "édeia", False),
+])
+def test_is_single_e_acute(word, restored, expected):
+    assert lattice_core._is_single_e_acute(word, restored) is expected
+
+
+def test_normalize_spelling_restores_the_accent_in_a_capital_plural():
+    # The stem of "IDEIAS" converts to "IDÉIA"; the final S is reattached.
+    assert lattice_core.normalize_spelling("IDEIAS", "pt-BR") == "IDÉIAS"
 
 
 def test_token_count_stays():
