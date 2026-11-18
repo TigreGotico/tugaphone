@@ -87,8 +87,9 @@ def _expander(lect: str):
     written (abbreviations, acronyms, letter-digit codes), then text2spoken, in
     the ``pt-PT`` or ``pt-BR`` variety of the lect
     (:func:`tugaphone.number_utils.text2spoken_tag`), then the fallback
-    rewrites of what it left. So ``mark`` sees spelled-out words. text2spoken leaves spelled-out text as written, so text
-    that a caller has already normalised comes through unchanged.
+    rewrites of what it left. So ``mark`` sees spelled-out words. text2spoken
+    leaves spelled-out text as written, so text that a caller has already
+    normalised comes through unchanged.
 
     The engine joins the expanded runs and the forced words back into one
     sentence for ``mark``, so the spaces at the ends of a run are kept: the
