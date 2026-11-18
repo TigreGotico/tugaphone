@@ -7,6 +7,7 @@ import path computes the revision.
 import os
 import re
 import shutil
+import site
 import subprocess
 import sys
 import sysconfig
@@ -21,7 +22,7 @@ import pytest
 import tugaphone
 from tugaphone import phonemize, revision
 from tugaphone import content_revision
-from tugaphone.content_revision import distribution_digest, outside_stdlib, probe, tree_digest
+from tugaphone.content_revision import RevisionError, distribution_digest, outside_stdlib, probe, tree_digest
 
 PACKAGE = Path(tugaphone.__file__).parent
 
@@ -169,12 +170,12 @@ def test_a_package_imported_from_a_zip_raises_and_does_not_hash_nothing(tmp_path
         zipped.writestr("zipped_dependency/__init__.py", "VALUE = 1\n")
     monkeypatch.syspath_prepend(str(archive))
     assert find_spec("zipped_dependency").origin.startswith(str(archive))
-    with pytest.raises(RuntimeError, match="cannot be read from the file system"):
+    with pytest.raises(RevisionError, match="cannot be read from the file system"):
         distribution_digest("zipped-dependency", {"zipped_dependency"})
 
 
 def test_a_distribution_with_no_file_raises():
-    with pytest.raises(RuntimeError, match="no file of the distribution"):
+    with pytest.raises(RevisionError, match="no file of the distribution"):
         distribution_digest("absent", {"no_module_of_this_name"})
 
 
@@ -188,3 +189,89 @@ def test_a_standard_library_file_under_another_name_is_not_on_the_output_path():
         "desacordo_ortografico": find_spec("desacordo_ortografico").origin,
     }
     assert outside_stdlib(modules) == {"tugaphone", "desacordo_ortografico"}
+
+
+def test_a_distribution_in_a_site_packages_directory_under_the_standard_library_counts(tmp_path, monkeypatch):
+    stdlib = tmp_path / "usr" / "lib" / "python3"
+    base_site = stdlib / "site-packages"
+    user_site = stdlib / "user-site-packages"
+    monkeypatch.setattr(sysconfig, "get_paths", lambda *args, **kwargs: {
+        "stdlib": str(stdlib), "platstdlib": str(stdlib),
+        "purelib": str(tmp_path / "venv" / "site-packages"), "platlib": str(tmp_path / "venv" / "site-packages")})
+    monkeypatch.setattr(site, "getsitepackages", lambda *args: [str(base_site)])
+    monkeypatch.setattr(site, "getusersitepackages", lambda: str(user_site))
+    modules = {
+        "base_distribution": str(base_site / "base_distribution" / "__init__.py"),
+        "user_distribution": str(user_site / "user_distribution.py"),
+        "json_copy": str(stdlib / "json" / "__init__.py"),
+    }
+    assert outside_stdlib(modules) == {"base_distribution", "user_distribution"}
+
+
+def test_a_module_level_string_constant_edit_changes_the_revision(tugaphone_copy):
+    edit(tugaphone_copy / "text_normalization.py", '_NUMBER = r"\\d+(?:[.,]\\d+)*"', '_NUMBER = r"\\d*(?:[.,]\\d+)*"')
+    assert revision_in_process("pt-PT", tugaphone_copy.parent) != revision("pt-PT")
+
+
+def compiled_distribution(root: Path, init: str, binary: bytes) -> Path:
+    package = root / "compiled_dependency"
+    package.mkdir(exist_ok=True)
+    (package / "__init__.py").write_text(init, encoding="utf-8")
+    (package / "_speedups.cpython-314-x86_64-linux-gnu.so").write_bytes(binary)
+    metadata = root / "compiled_dependency-1.2.3.dist-info"
+    metadata.mkdir(exist_ok=True)
+    (metadata / "METADATA").write_text("Metadata-Version: 2.1\nName: compiled-dependency\nVersion: 1.2.3\n",
+                                       encoding="utf-8")
+    return package
+
+
+def test_a_compiled_distribution_counts_by_name_and_version_and_not_by_its_files(tmp_path, monkeypatch):
+    package = compiled_distribution(tmp_path, "VALUE = 1\n", b"\x7fELF one build")
+    monkeypatch.syspath_prepend(str(tmp_path))
+    assert distribution_digest("compiled-dependency", {"compiled_dependency"}) == "compiled 1.2.3"
+    (package / "_speedups.cpython-314-x86_64-linux-gnu.so").write_bytes(b"\x7fELF another platform")
+    (package / "__init__.py").write_text("VALUE = 2\n", encoding="utf-8")
+    assert distribution_digest("compiled-dependency", {"compiled_dependency"}) == "compiled 1.2.3"
+
+
+FAKE_MODULE = "/opt/fake/site-packages/fake_distribution/__init__.py"
+
+
+def fake_probe(monkeypatch, script: str) -> None:
+    """Make the probe child run ``script``. The child gets the lect, the text and the marker as arguments."""
+    monkeypatch.setattr(content_revision, "_PROBE", script)
+
+
+def test_output_after_the_result_does_not_corrupt_the_probe(monkeypatch):
+    fake_probe(monkeypatch, f"""
+import atexit, json, sys
+print("a library writes to stdout before the result")
+print(sys.argv[3])
+print(json.dumps({{"fake_distribution": {FAKE_MODULE!r}}}))
+print("{{not json, after the result")
+atexit.register(print, "a library writes to stdout at exit")
+""")
+    assert probe("probe-test-junk") == {"fake_distribution"}
+
+
+def test_a_probe_that_prints_nothing_raises_a_revision_error(monkeypatch):
+    fake_probe(monkeypatch, "pass")
+    with pytest.raises(RevisionError, match="gave no result"):
+        probe("probe-test-silent")
+
+
+def test_a_probe_result_that_is_not_json_raises_a_revision_error(monkeypatch):
+    fake_probe(monkeypatch, "import sys; print(sys.argv[3]); print('{not json')")
+    with pytest.raises(RevisionError, match="not JSON"):
+        probe("probe-test-bad-json")
+
+
+def test_a_probe_that_hangs_past_the_timeout_raises_a_revision_error(monkeypatch):
+    fake_probe(monkeypatch, "import time; time.sleep(60)")
+    monkeypatch.setattr(content_revision, "PROBE_TIMEOUT", 1)
+    with pytest.raises(RevisionError, match="did not finish in 1 s"):
+        probe("probe-test-hang")
+
+
+def test_a_revision_error_is_a_runtime_error():
+    assert issubclass(RevisionError, RuntimeError)

@@ -182,6 +182,11 @@ change, for some text. A voice records the revision of the lect it was trained
 on. At load time, an equal revision tells that the running tugaphone gives the
 same output, even when the version differs.
 
+The revision covers `contact="none"`, the default and the path that scriptconv
+uses. Another `contact` value also reads the `en-US`, `es-ES` and `fr-FR` specs
+of orthography2ipa and, for `"auto"`, the optional markovonnx detector. The
+revision covers neither, so it can stay equal while that output changes.
+
 The value is `tp1:` and a SHA-256 in hex. The hash covers:
 
 - `unicodedata.unidata_version` of the running Python. The Unicode database
@@ -199,8 +204,12 @@ count, with one exception. A distribution that ships a compiled module, such as
 `numpy`, counts by its name and version, because its files differ by platform.
 
 A distribution whose files cannot be read from the file system, such as a
-package imported from a zip, raises `RuntimeError`. A hash of no files would
+package imported from a zip, raises `RevisionError`. A hash of no files would
 stay equal across every edit of that distribution.
+
+The probe also raises `RevisionError` when its process fails, prints no
+result, prints a result that is not JSON, or runs longer than 120 s.
+`RevisionError` is a subclass of `RuntimeError`.
 
 `lang` resolves as `phonemize` resolves it, with the same warning for a code that
 is not a lect. So `revision("pt")` equals `revision("pt-PT")`. The first call for
