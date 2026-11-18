@@ -36,8 +36,10 @@ _OWN_ORTHOGRAPHY = frozenset({"pt-PT-x-medieval"})
 
 
 def _canonical_codes() -> List[str]:
+    # No Portuguese-family spec is a clade node, so the list keeps clades:
+    # filtering them out loads every spec orthography2ipa ships.
     return sorted(
-        c for c in available_codes()
+        c for c in available_codes(include_clades=True)
         if c.startswith(_PT_PREFIXES) and c not in _OWN_ORTHOGRAPHY
     )
 
