@@ -101,8 +101,8 @@ def revision(lang: str = "pt-PT") -> str:
     and reads the files of each distribution on the output path.
 
     The revision covers ``contact="none"``, the default and the path that scriptconv uses. Another ``contact`` value
-    also reads the ``en-US``, ``es-ES`` and ``fr-FR`` specs of orthography2ipa and, for ``"auto"``, the optional
-    markovonnx detector. The revision covers neither, so it can stay equal while that output changes.
+    also reads the ``en-US``, ``es-ES`` and ``fr-FR`` specs of orthography2ipa and the optional markovonnx detector.
+    The revision covers neither, so it can stay equal while that output changes.
 
     Raises
     ------
@@ -160,7 +160,9 @@ def outside_stdlib(modules: Dict[str, Optional[str]]) -> FrozenSet[str]:
     """
     paths = sysconfig.get_paths()
     stdlib = (paths["stdlib"], paths["platstdlib"])
-    installed = (paths["purelib"], paths["platlib"], *site.getsitepackages(), site.getusersitepackages())
+    site_packages = tuple(entry for entry in site.getsitepackages()
+                          if os.path.basename(os.path.normpath(entry)) in ("site-packages", "dist-packages"))
+    installed = (paths["purelib"], paths["platlib"], *site_packages, site.getusersitepackages())
     return frozenset(name for name, where in modules.items()
                      if where and (not where.startswith(stdlib) or where.startswith(installed)))
 

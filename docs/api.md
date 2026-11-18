@@ -184,7 +184,7 @@ same output, even when the version differs.
 
 The revision covers `contact="none"`, the default and the path that scriptconv
 uses. Another `contact` value also reads the `en-US`, `es-ES` and `fr-FR` specs
-of orthography2ipa and, for `"auto"`, the optional markovonnx detector. The
+of orthography2ipa and the optional markovonnx detector. The
 revision covers neither, so it can stay equal while that output changes.
 
 The value is `tp1:` and a SHA-256 in hex. The hash covers:
