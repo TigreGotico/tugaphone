@@ -165,6 +165,17 @@ class TestMultiplication:
         room = normalize("4 x 5 m", lang)
         assert read(text, lang) == text.replace("4 x 5 m", room).replace("2 x 3", "dois vezes três")
 
+    @pytest.mark.parametrize("text,expected", [
+        # A product the author wrote in words keeps its "x"; only the product
+        # in digits reads "vezes", whichever comes first.
+        ("dois x três e 2 x 3", "dois x três e dois vezes três"),
+        ("2 x 3 e dois x três", "dois vezes três e dois x três"),
+        ("dois x três, 2 x 3 e dois x três", "dois x três, dois vezes três e dois x três"),
+        ("2 x 3, dois x três e 2 x 3", "dois vezes três, dois x três e dois vezes três"),
+    ])
+    def test_product_in_words_keeps_its_x(self, text, expected):
+        assert read(text) == expected
+
     @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
     def test_products_text2spoken_reads_keep_its_reading(self, lang):
         text = "A sala tem 4 x 5 m e a outra 3 x 6 m."
