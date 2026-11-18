@@ -294,7 +294,7 @@ def expand_abbreviations(text: str) -> str:
 # text2spoken reads a numeral after a title ("D. João V"), a part of a
 # work ("século XIX") or a pope's name ("Pio XII"). It leaves a numeral
 # after a name with no title ("Afonso I") and one before its noun ("a II
-# Guerra Mundial") as written. TODO(text2spoken issue)
+# Guerra Mundial") as written: https://github.com/TigreGotico/text2spoken/issues/248
 # ---------------------------------------------------------------------------
 _ROMAN = re.compile(r"M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
 _ROMAN_VALUES = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}

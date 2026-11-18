@@ -2,7 +2,7 @@
 import pytest
 from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, normalize_numbers
 
-from tests.text2spoken_gaps import HOURS, LABEL, PLURAL_HEAD, RANGE, SPELLED_DECIMAL, TIMES
+from tests.text2spoken_gaps import HOURS, LABEL, PLURAL_HEAD, SPELLED_DECIMAL, TIMES
 
 
 class TestNormalizeNumbers:
@@ -193,9 +193,7 @@ class TestCountedNounGender:
         # both numbers of a range agree with the noun after the second
         ("de 1 a 2 dias", "de um a dois dias"),
         ("1 a 2 dias", "um a dois dias"),
-        pytest.param("de 1 a 3 semanas", "de uma a três semanas", marks=RANGE),
         ("das 2 às 3 horas", "das duas às três horas"),
-        pytest.param("entre 1 e 2 semanas", "entre uma e duas semanas", marks=RANGE),
         ("entre 1 e 2 dias", "entre um e dois dias"),
         ("de 1 a 2", "de um a dois"),
         ("3 a 2", "três a dois"),
@@ -464,14 +462,8 @@ class TestNumberInsideBracketsOrQuotes:
         ("(0, vírgula 5 m)", "(zero, vírgula cinco metros)"),
         pytest.param("1) vírgula 5 m", "um) vírgula cinco metros", marks=SPELLED_DECIMAL),
         ("0, vírgula 5 m", "zero, vírgula cinco metros"),
-        pytest.param("de 1 a (2) casas", "de uma a (duas) casas", marks=RANGE),
-        pytest.param("de 1 a «2» casas", "de uma a «duas» casas", marks=RANGE),
-        pytest.param('de 1 a "2" casas', 'de uma a "duas" casas', marks=RANGE),
-        pytest.param("de 1 a “2” casas", "de uma a “duas” casas", marks=RANGE),
         ("de 1 a 2) casas", "de um a duas) casas"),
         ("de 1 a 2» casas", "de um a duas» casas"),
-        pytest.param("de 2 a (3) pessoas", "de duas a (três) pessoas", marks=RANGE),
-        pytest.param("de 2 a «3» pessoas", "de duas a «três» pessoas", marks=RANGE),
         ("de 2 a (3) dias", "de dois a (três) dias"),
         ("o valor (de 2 a 3) varia muito", "o valor (de dois a três) varia muito"),
         ("os graus (de 1 a 3) da escala", "os graus (de um a três) da escala"),

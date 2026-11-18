@@ -66,8 +66,9 @@ def warn_unread_digits(spoken: str, text: str, lang: str) -> None:
 # Unit symbols read after a number, as (singular, plural) names. Symbols
 # and names follow the SI brochure ("Sistema Internacional de Unidades
 # (SI)", Inmetro/IPQ, 2021, ISBN 978-85-86920-28-8, §5.2-5.3): the symbol
-# is invariable, "l" and "L" are both the litre, "%" reads "por cento". The names are the dictionary
-# forms ("quilómetro", "quilograma"); pt-BR writes "quilômetro". Every
+# is invariable, "l" and "L" are both the litre, "%" reads "por cento". The
+# names are the dictionary forms ("quilómetro", "quilograma"); pt-BR writes
+# "quilômetro". Every
 # name is masculine -- "o grama", "duzentos gramas" (Inmetro, "Unidades
 # Legais de Medida") -- so the number before a symbol is masculine.
 UNIT_NAMES = {
@@ -105,7 +106,7 @@ UNIT_NAMES = {
 # ---------------------------------------------------------------------------
 # Number ranges: a dash BETWEEN two digits is a numeric range, read " a ".
 # text2spoken leaves a score ("3-2") and a range with an em dash ("10—20")
-# as written. TODO(text2spoken issue)
+# as written: https://github.com/TigreGotico/text2spoken/issues/250
 # Word hyphens ("chamo-me", "guarda-chuva") have letters on at least one side
 # and are untouched.
 # ---------------------------------------------------------------------------
@@ -141,7 +142,7 @@ def normalize_number_separators(text: str) -> str:
 # normalize_numbers then reads with the unit name and number agreement.
 # A symbol counts only right after digits, so the letter "m" or a word
 # such as "kg" in running text is never touched. text2spoken leaves a glued
-# symbol ("80m2") as written. TODO(text2spoken issue)
+# symbol ("80m2") as written: https://github.com/TigreGotico/text2spoken/issues/249
 # ---------------------------------------------------------------------------
 _NUMBER = r"\d+(?:[.,]\d+)*"
 _SYMBOLS = "|".join(re.escape(s) for s in
@@ -186,7 +187,7 @@ def separate_unit_symbols(text: str) -> str:
 # "vinte e uma", ...) from the following "hora"/"horas" noun, so no separate
 # gender table is needed here. Any other "HH:MM" is read "<hora> e <minutos>".
 # text2spoken leaves a clock time with no time word before it ("São 16:30.")
-# and "24:00" as written. TODO(text2spoken issue)
+# and "24:00" as written: https://github.com/TigreGotico/text2spoken/issues/251
 # Whole hours additionally accept 24 ("24:00" -> "vinte e quatro horas");
 # 25+ is not a clock hour and is left alone. Non-whole times keep the
 # ordinary 0-23 range.
@@ -268,7 +269,8 @@ def _split_trailing_marks(word: str) -> tuple[str, str]:
 # A "x" between two numbers is multiplication, read "vezes": "dois vezes dois
 # são quatro" (Priberam DLPO, "vezes"). Each factor reads alone, as a
 # masculine cardinal. text2spoken reads "2×2". It leaves "15x8" as written,
-# and reads "2 x 2" as "dois x dois", leaving the "x". TODO(text2spoken issue)
+# and reads "2 x 2" as "dois x dois", leaving the "x":
+# https://github.com/TigreGotico/text2spoken/issues/240
 # ---------------------------------------------------------------------------
 _FACTOR = r"\d+(?:,\d+)?"
 _PRODUCT_X = re.compile(rf"(?<![\w.,]){_FACTOR}(?: ?x ?{_FACTOR})+(?!\w)")
@@ -329,8 +331,8 @@ def read_spoken_times(spoken: str, written: str, lang: str = "pt-PT") -> str:
 
 # ---------------------------------------------------------------------------
 # Scientific notation: "1e6" is "um vezes dez elevado a seis". Mantissa and
-# exponent read alone. text2spoken leaves the notation as written.
-# TODO(text2spoken issue)
+# exponent read alone. text2spoken leaves the notation as written:
+# https://github.com/TigreGotico/text2spoken/issues/249
 # ---------------------------------------------------------------------------
 _SCIENTIFIC = re.compile(r"(?<![\w.,])(\d+(?:[.,]\d+)?)[eE]([+\-−]?\d+)(?!\w)")
 
@@ -347,10 +349,12 @@ def read_scientific_notation(text: str, lang: str = "pt-PT") -> str:
 
 # ---------------------------------------------------------------------------
 # Unit symbols after a number that text2spoken reads but whose symbol it leaves
-# as written ("dez m2"). The names follow the SI brochure (Inmetro/IPQ 2021)
-# in UNIT_NAMES. European Portuguese uses the plural after every number but
-# "um"; Brazilian usage keeps the singular up to one ("zero grau", "zero
-# vírgula vinte e cinco mol"), as UNIT_NAMES states. TODO(text2spoken issue)
+# as written ("dez m2"): https://github.com/TigreGotico/text2spoken/issues/249
+# The names follow the SI brochure (Inmetro/IPQ 2021) in UNIT_NAMES. The
+# number takes the singular as in the CLDR 49 plural rules, which text2spoken
+# follows for "metro": pt-PT only for "um" ("one: i = 1 and v = 0"), pt-BR
+# for an integer part of zero or one ("one: i = 0..1"), so "um vírgula oito
+# litro" in pt-BR.
 # ---------------------------------------------------------------------------
 _UNREAD_UNITS = frozenset({"cm2", "m2", "km2", "cm3", "m3", "mg", "mL", "cl", "cL", "dl", "dL", "L"})
 
@@ -376,7 +380,8 @@ def read_unit_symbols(spoken: str, written: str, lang: str = "pt-PT") -> str:
         symbol, trail = _split_trailing_marks(words[i])
         number = _number_before(words, i)
         if brazilian:
-            plural = not (number[:1] == ["zero"] or number in (["um"], ["uma"]))
+            integer = number[:number.index("vírgula")] if "vírgula" in number else number
+            plural = integer not in (["zero"], ["um"], ["uma"])
         else:
             plural = number not in (["um"], ["uma"])
         name = UNIT_NAMES[symbol][plural]
@@ -386,7 +391,8 @@ def read_unit_symbols(spoken: str, written: str, lang: str = "pt-PT") -> str:
 
 # ---------------------------------------------------------------------------
 # A number between marks ("/7/", ":7:") reads alone, as a masculine cardinal.
-# A mark is punctuation or a math or modifier symbol. TODO(text2spoken issue)
+# A mark is punctuation or a math or modifier symbol. text2spoken reads it
+# wrong or leaves it as written: https://github.com/TigreGotico/text2spoken/issues/250
 # ---------------------------------------------------------------------------
 def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
     """"casa /7/ casa" -> "casa /sete/ casa"; "25:00" is untouched."""
@@ -407,7 +413,7 @@ def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
 # ---------------------------------------------------------------------------
 # A dot between digits that is not followed by groups of three digits is a
 # decimal mark: "10.4" is "dez vírgula quatro". text2spoken leaves it as
-# written. TODO(text2spoken issue)
+# written: https://github.com/TigreGotico/text2spoken/issues/242
 # ---------------------------------------------------------------------------
 _DOT_DECIMAL = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w.,])")
 

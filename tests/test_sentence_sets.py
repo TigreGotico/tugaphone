@@ -14,12 +14,15 @@ import pytest
 
 from tugaphone import phonemize, pipeline
 
-from tests.text2spoken_gaps import BR_TENTH
-
 HERE = Path(__file__).parent / "data" / "sentences"
 COLUMNS = ["id", "lang", "category", "text", "expected_ipa", "source", "tier"]
 CATEGORIES = {"plain", "number", "date", "abbreviation", "homograph", "contact"}
 LANGS = ["pt-PT", "pt-BR"]
+# The reading column of pt-BR-number-19 cites Cunha & Cintra p. 388,
+# "século décimo". The text2spoken ruling keeps "século dez" in pt-BR after
+# Ciberdúvidas 9067, which gives the ordinal "no Brasil até ao nono". The row
+# is not checked against either reading.
+UNPINNED = {"pt-BR-number-19"}
 
 
 def _build():
@@ -47,10 +50,10 @@ def _spec_cases():
     for lang in ("pt-PT", "pt-BR"):
         _, rows = read(f"{lang}.spec.tsv")
         for row in rows:
-            if row["category"] not in ("number", "date", "abbreviation") or row["reading"] == "-":
+            if (row["category"] not in ("number", "date", "abbreviation") or row["reading"] == "-"
+                    or row["id"] in UNPINNED):
                 continue
-            marks = BR_TENTH if row["id"] == "pt-BR-number-19" else ()
-            cases.append(pytest.param(lang, row["text"], row["reading"], id=row["id"], marks=marks))
+            cases.append(pytest.param(lang, row["text"], row["reading"], id=row["id"]))
     return cases
 
 

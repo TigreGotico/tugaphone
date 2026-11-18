@@ -16,8 +16,6 @@ import tugaphone.codeswitch as codeswitch
 from tugaphone.codeswitch import _classify, _is_contact, split_runs
 from tugaphone.text_normalization import normalize_orthography, normalize_text
 
-from tests.text2spoken_gaps import BR_TENTH
-
 SENTENCE = "Tenho 23 anos, Sr. Silva; li o Cap. XII."
 # The sentence as a reader says it, written out by hand.
 SPOKEN = "Tenho vinte e três anos, Senhor Silva; li o capítulo doze."
@@ -61,9 +59,11 @@ def _router_reading(ph, monkeypatch, text, lect, contact):
     ("de D. Maria I no baú", "de Dona Maria Primeira no baú"),
     ("S. Ex.ª o Presidente", "Sua Excelência o Presidente"),
 ])
-def test_reads_as_spoken(request, ph, lect, contact, written, spoken):
+def test_reads_as_spoken(ph, lect, contact, written, spoken):
     if lect == "pt-BR" and written == "li o Cap. X.":
-        request.applymarker(BR_TENTH)
+        # Brazilian usage reads the ordinal only up to the ninth: "no Brasil
+        # até ao nono" (Ciberdúvidas 9067).
+        spoken = "li o capítulo dez."
     expected = ph.phonemize_sentence(spoken, lect, contact="none")
     assert ph.phonemize_sentence(written, lect, contact=contact) == expected
 

@@ -85,7 +85,7 @@ def test_every_fallback_names_its_text2spoken_issue():
 # Unit names: the SI brochure (Inmetro/IPQ 2021, §5.2-5.3), as in UNIT_NAMES.
 # The plural rules are the ones that test_measure_normalization quotes: the
 # plural after every number but "um" in European Portuguese, and the singular
-# up to one in Brazilian usage.
+# for an integer part of zero or one in Brazilian usage.
 @pytest.mark.parametrize("text,lang,expected", [
     ("80m2", "pt-PT", "oitenta metros quadrados"),
     ("2,5m2", "pt-PT", "dois vírgula cinco metros quadrados"),

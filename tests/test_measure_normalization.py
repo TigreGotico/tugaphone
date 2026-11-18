@@ -16,6 +16,11 @@ Each expected reading comes from a cited source, not from the code under test:
   litros" (Peres & Móia, Áreas Críticas da Língua Portuguesa, pp. 512-517, as
   quoted by FLiP, "concordâncias com unidades (II)"). In Brazil the singular
   is usual after zero ("zero vírgula vinte e cinco mol", same FLiP answer).
+* A decimal from one to two: the CLDR 49 plural rules give pt "one: i =
+  0..1" and pt_PT "one: i = 1 and v = 0", so "1,8 m" is "um vírgula oito
+  metro" in Brazil and "um vírgula oito metros" in Portugal. The Senado
+  Federal, Manual de Comunicação, "Números", writes "de 1,1 milhão a 1,7
+  milhão de pessoas".
 * Euro amounts: "cinquenta euros e trinta cêntimos" (Ciberdúvidas 25561).
 * "vezes" between two numerals marks multiplication: "dois vezes dois são
   quatro" (Priberam DLPO, "vezes").
@@ -25,7 +30,7 @@ from text2spoken import normalize
 
 from tugaphone.text_normalization import normalize_text
 
-from tests.text2spoken_gaps import BR_DECIMAL_SINGULAR, DROPPED_ZERO, EURO_CENTS, SPACE_THOUSANDS
+from tests.text2spoken_gaps import DROPPED_ZERO, EURO_CENTS, SPACE_THOUSANDS
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
@@ -81,10 +86,18 @@ class TestUnits:
         ("0 km", "zero quilômetro"),
         ("0,25 l", "zero vírgula vinte e cinco litro"),
         ("2 g", "dois gramas"),
-        pytest.param("1,8 m", "um vírgula oito metros", marks=BR_DECIMAL_SINGULAR),
     ])
     def test_reading_pt_br(self, text, expected):
         assert read(text, "pt-BR") == expected
+
+    @pytest.mark.parametrize("text,lang,expected", [
+        ("1,8 m", "pt-PT", "um vírgula oito metros"),
+        ("1,8 m", "pt-BR", "um vírgula oito metro"),
+        ("1,8 L", "pt-PT", "um vírgula oito litros"),
+        ("1,8 L", "pt-BR", "um vírgula oito litro"),
+    ])
+    def test_a_decimal_from_one_to_two(self, text, lang, expected):
+        assert read(text, lang) == expected
 
 
 @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
