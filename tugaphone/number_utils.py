@@ -64,9 +64,9 @@ def warn_unread_digits(spoken: str, text: str, lang: str) -> None:
 
 
 # Unit symbols read after a number, as (singular, plural) names. Symbols
-# and names follow the SI brochure ("Tradução luso-brasileira de 2021 do
-# SI", IPQ/Inmetro, §5.2-5.3): the symbol is invariable, "l" and "L" are
-# both the litre, "%" reads "por cento". The names are the dictionary
+# and names follow the SI brochure ("Sistema Internacional de Unidades
+# (SI)", Inmetro/IPQ, 2021, ISBN 978-85-86920-28-8, §5.2-5.3): the symbol
+# is invariable, "l" and "L" are both the litre, "%" reads "por cento". The names are the dictionary
 # forms ("quilómetro", "quilograma"); pt-BR writes "quilômetro". Every
 # name is masculine -- "o grama", "duzentos gramas" (Inmetro, "Unidades
 # Legais de Medida") -- so the number before a symbol is masculine.
@@ -135,7 +135,7 @@ def normalize_number_separators(text: str) -> str:
 
 # ---------------------------------------------------------------------------
 # Unit symbols. The SI writes a space between a number and its unit symbol
-# (SI brochure, IPQ/Inmetro 2021, §5.4.3) and between a number and "%"
+# (SI brochure, Inmetro/IPQ 2021, §5.4.3) and between a number and "%"
 # (same brochure, p. 28). Text often glues them ("7kg", "20%") or puts the
 # euro sign first ("€20"). These rules restore "<number> <symbol>", which
 # normalize_numbers then reads with the unit name and number agreement.
@@ -282,17 +282,12 @@ def read_multiplication_signs(text: str, lang: str = "pt-PT") -> str:
     return _PRODUCT_X.sub(read, text)
 
 
-def _written_after_digits(text: str, symbols: frozenset[str], digits_after: bool = False) -> list[bool]:
+def _written_after_digits(text: str, symbols: frozenset[str]) -> list[bool]:
     """For each word of ``text`` in ``symbols``, in order: whether a number in
-    digits comes before it (and after it, with ``digits_after``)."""
+    digits comes before it."""
     words = text.split()
-    flags = []
-    for i, w in enumerate(words):
-        if _split_trailing_marks(w)[0] in symbols:
-            before = i > 0 and _DIGIT_NUMBER.fullmatch(words[i - 1]) is not None
-            after = not digits_after or (i + 1 < len(words) and words[i + 1][:1].isdigit())
-            flags.append(before and after)
-    return flags
+    return [i > 0 and _DIGIT_NUMBER.fullmatch(words[i - 1]) is not None
+            for i, w in enumerate(words) if _split_trailing_marks(w)[0] in symbols]
 
 
 def _read_flagged(text: str, symbols: frozenset[str], flags: list[bool], read) -> str:
@@ -309,11 +304,27 @@ def _read_flagged(text: str, symbols: frozenset[str], flags: list[bool], read) -
     return " ".join(words)
 
 
+_SPACED_PRODUCT = re.compile(rf"(?<![\w.,]){_DIGIT_NUMBER.pattern}(?: x {_DIGIT_NUMBER.pattern})+(?!\w)")
+
+
 def read_spoken_times(spoken: str, written: str, lang: str = "pt-PT") -> str:
-    """The "x" that text2spoken leaves between two numbers it read: "2 x 2",
-    read "dois x dois", gives "dois vezes dois"."""
-    flags = _written_after_digits(written, frozenset({"x"}), digits_after=True)
-    return _read_flagged(spoken, frozenset({"x"}), flags, lambda words, i: "vezes")
+    """The "x" that text2spoken leaves in a product written in digits: "2 x 2",
+    read "dois x dois", gives "dois vezes dois". Each product of ``written`` is
+    found in ``spoken`` by the readings of its factors, in either gender, so a
+    product that text2spoken read ("4 x 5 m", "quatro por cinco metros") does
+    not stop the next one."""
+    start = 0
+    for product in _SPACED_PRODUCT.finditer(written):
+        factors = ["|".join(re.escape(text2spoken_reading(factor, lang, gender=gender))
+                            for gender in ("masculine", "feminine"))
+                   for factor in product.group().split(" x ")]
+        spoken_product = re.compile(r"(?<!\w)" + " x ".join(f"(?:{f})" for f in factors) + r"(?!\w)")
+        match = spoken_product.search(spoken, start)
+        if match:
+            reading = match.group().replace(" x ", " vezes ")
+            spoken = spoken[:match.start()] + reading + spoken[match.end():]
+            start = match.start() + len(reading)
+    return spoken
 
 
 # ---------------------------------------------------------------------------
@@ -336,7 +347,7 @@ def read_scientific_notation(text: str, lang: str = "pt-PT") -> str:
 
 # ---------------------------------------------------------------------------
 # Unit symbols after a number that text2spoken reads but whose symbol it leaves
-# as written ("dez m2"). The names follow the SI brochure (IPQ/Inmetro 2021)
+# as written ("dez m2"). The names follow the SI brochure (Inmetro/IPQ 2021)
 # in UNIT_NAMES. European Portuguese uses the plural after every number but
 # "um"; Brazilian usage keeps the singular up to one ("zero grau", "zero
 # vírgula vinte e cinco mol"), as UNIT_NAMES states. TODO(text2spoken issue)

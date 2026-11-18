@@ -58,6 +58,7 @@ def test_text2spoken_still_leaves_the_fallback_form(text, kept, variety):
     ("mede 2 x 2 metros", "2 x 2", "dois por dois"),
     ("tem 80 m2", "80 m2", "oitenta metros"),
     ("São 16:30.", "16:30", "quatro e meia"),
+    ("Comprei 2 L. Escreve-se com dois L.", "2 L", "dois litros"),
 ])
 def test_text2spoken_reading_wins_over_a_fallback(monkeypatch, text, form, reading):
     # The day text2spoken reads a fallback form, its reading stands and the
@@ -81,7 +82,7 @@ def test_every_fallback_names_its_text2spoken_issue():
     assert marked == []
 
 
-# Unit names: the SI brochure (IPQ/Inmetro 2021, §5.2-5.3), as in UNIT_NAMES.
+# Unit names: the SI brochure (Inmetro/IPQ 2021, §5.2-5.3), as in UNIT_NAMES.
 # The plural rules are the ones that test_measure_normalization quotes: the
 # plural after every number but "um" in European Portuguese, and the singular
 # up to one in Brazilian usage.

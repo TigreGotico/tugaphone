@@ -46,7 +46,7 @@ DROPPED_ZERO = _misreading(
     "text2spoken drops the final zero of a decimal part: '1,80 m' gives 'um vírgula oito metros'; "
     "the text2spoken owner rules that the decimal part reads as written, 'um vírgula oitenta'")
 SPACE_THOUSANDS = _misreading(
-    "text2spoken leaves '100 000' as written; SI brochure (IPQ/Inmetro 2021) §5.4.4: 'os números "
+    "text2spoken leaves '100 000' as written; SI brochure (Inmetro/IPQ 2021) §5.4.4: 'os números "
     "com muitos algarismos podem ser divididos em grupos de três algarismos, separados por um espaço'")
 # Pending a ruling of the text2spoken owner on the Brazilian singular below 2.
 # Drop this mark and its rows if the source backs the singular.

@@ -2,7 +2,8 @@
 
 Each expected reading comes from a cited source, not from the code under test:
 
-* SI brochure, "Tradução luso-brasileira de 2021 do SI" (IPQ/Inmetro):
+* SI brochure, "Sistema Internacional de Unidades (SI)", Inmetro/IPQ, 2021,
+  ISBN 978-85-86920-28-8:
   unit symbols are invariable and are not abbreviations (§5.2, p. 23), unit
   names are common nouns (§5.3, p. 24), "%" reads "por cento" (p. 28).
 * Inmetro, "Unidades Legais de Medida": "O grama pertence ao gênero
@@ -20,6 +21,7 @@ Each expected reading comes from a cited source, not from the code under test:
   quatro" (Priberam DLPO, "vezes").
 """
 import pytest
+from text2spoken import normalize
 
 from tugaphone.text_normalization import normalize_text
 
@@ -136,6 +138,22 @@ class TestMultiplication:
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    @pytest.mark.parametrize("text", [
+        "A sala tem 4 x 5 m e comprei 2 x 3 caixas.",
+        "Comprei 2 x 3 caixas e a sala tem 4 x 5 m.",
+    ])
+    def test_each_product_reads_alone(self, text, lang):
+        # text2spoken reads "4 x 5 m"; its reading stands, and "2 x 3" still
+        # reads "vezes".
+        room = normalize("4 x 5 m", lang)
+        assert read(text, lang) == text.replace("4 x 5 m", room).replace("2 x 3", "dois vezes três")
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    def test_products_text2spoken_reads_keep_its_reading(self, lang):
+        text = "A sala tem 4 x 5 m e a outra 3 x 6 m."
+        assert read(text, lang) == normalize(text, lang)
 
 
 class TestGuardRows:
