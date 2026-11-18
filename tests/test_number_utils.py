@@ -1,8 +1,13 @@
 """Tests for tugaphone.number_utils public API."""
-import pytest
-from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, normalize_numbers
+import re
+import warnings
 
-from tests.text2spoken_gaps import HOURS, LABEL, PLURAL_HEAD, SPELLED_DECIMAL, TIMES
+import pytest
+from text2spoken import normalize
+
+from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, UnreadFormWarning, normalize_numbers
+
+from tests.text2spoken_gaps import SPELLED_DECIMAL
 
 
 class TestNormalizeNumbers:
@@ -46,9 +51,9 @@ class TestNormalizeNumbers:
         # "custa 25." -> the period stays glued to the spelled number
         assert normalize_numbers("custa 25.") == "custa vinte e cinco."
 
-    @LABEL
     def test_trailing_comma_glued(self):
-        # "sala 2" is a label numeral, so it stays "dois" whatever follows.
+        # "sala 2" is a label numeral, so it stays "dois" whatever follows
+        # (Gulbenkian Gramática do Português via Ciberdúvidas 33468).
         assert normalize_numbers("sala 2, porta 4") == "sala dois, porta quatro"
 
     def test_trailing_exclamation_glued(self):
@@ -83,7 +88,8 @@ class TestLabelNumeralGender:
         ("o capítulo 2 da obra", "o capítulo dois da obra"),
         ("o artigo 22 da lei", "o artigo vinte e dois da lei"),
         ("o artigo 200 da lei", "o artigo duzentos da lei"),
-        pytest.param("o artigo 2 das disposições", "o artigo dois das disposições", marks=LABEL),
+        # "das" is a function word, not the noun the numeral counts
+        ("o artigo 2 das disposições", "o artigo dois das disposições"),
         ("o n.º 2 da lista", "o número dois da lista"),
         ("Artigo 1 da lei", "Artigo um da lei"),
     ])
@@ -105,12 +111,13 @@ class TestLabelNumeralGender:
         ("tenho 2 cães", "tenho dois cães"),
         ("na sala 2 pessoas esperam", "na sala duas pessoas esperam"),
         # with a plural head the cardinal agrees: "a páginas vinte e uma"
-        pytest.param("a páginas 21 da obra", "a páginas vinte e uma da obra", marks=PLURAL_HEAD),
+        ("a páginas 21 da obra", "a páginas vinte e uma da obra"),
         # ordinals inflect: "página primeira"
         ("na página 1ª do livro", "na página primeira do livro"),
         ("a 1ª página", "a primeira página"),
         ("a página 1 do livro", "a página um do livro"),
-        pytest.param("são 2 da tarde", "são duas da tarde", marks=HOURS),
+        # the number counts the feminine "horas"
+        ("são 2 da tarde", "são duas da tarde"),
         ("custa 25.", "custa vinte e cinco."),
     ])
     def test_unaffected_rows(self, text, expected):
@@ -171,9 +178,11 @@ class TestCountedNounGender:
         ("a 1ª vez", "a primeira vez"),
         ("o 1º dia", "o primeiro dia"),
         ("as 2 artistas", "as duas artistas"),
-        pytest.param("são 2 da tarde", "são duas da tarde", marks=HOURS),
+        # the number counts the feminine "horas"
+        ("são 2 da tarde", "são duas da tarde"),
         # "vezes" between two numbers is the multiplication sign
-        pytest.param("2 vezes 2 são 4", "dois vezes dois são quatro", marks=TIMES),
+        # Priberam DLPO "vezes": "dois vezes dois são quatro"
+        ("2 vezes 2 são 4", "dois vezes dois são quatro"),
     ])
     def test_unchanged_rows(self, text, expected):
         assert normalize_numbers(text) == expected
@@ -456,11 +465,12 @@ class TestNumberInsideBracketsOrQuotes:
         ("tem de 1 a (2 cães)", "tem de um a (dois cães)"),
         pytest.param("a taxa subiu (0 vírgula 02)", "a taxa subiu (zero vírgula zero dois)",
                      marks=SPELLED_DECIMAL),
-        pytest.param("(1) vírgula 5 m", "(um) vírgula cinco metros", marks=SPELLED_DECIMAL),
-        pytest.param("«1» vírgula 5 m", "«um» vírgula cinco metros", marks=SPELLED_DECIMAL),
-        pytest.param("a medida (1) vírgula 5 m", "a medida (um) vírgula cinco metros", marks=SPELLED_DECIMAL),
+        # "vírgula" after a digit is the decimal mark, not the counted noun
+        ("(1) vírgula 5 m", "(um) vírgula cinco metros"),
+        ("«1» vírgula 5 m", "«um» vírgula cinco metros"),
+        ("a medida (1) vírgula 5 m", "a medida (um) vírgula cinco metros"),
         ("(0, vírgula 5 m)", "(zero, vírgula cinco metros)"),
-        pytest.param("1) vírgula 5 m", "um) vírgula cinco metros", marks=SPELLED_DECIMAL),
+        ("1) vírgula 5 m", "um) vírgula cinco metros"),
         ("0, vírgula 5 m", "zero, vírgula cinco metros"),
         ("de 1 a 2) casas", "de um a duas) casas"),
         ("de 1 a 2» casas", "de um a duas» casas"),
@@ -503,6 +513,36 @@ class TestNumberInsideBracketsOrQuotes:
     ])
     def test_bracketed_words_unchanged(self, text):
         assert normalize_numbers(text) == text
+
+
+class TestNumberPairs:
+    """Both numbers of a pair are read. text2spoken leaves a pair as written
+    when the noun after it may give the first number another gender
+    (https://github.com/TigreGotico/text2spoken/issues/134). No source gives
+    that gender, so the first number is not asserted when the noun is
+    feminine. The second number agrees with the noun after it."""
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    @pytest.mark.parametrize("text, pattern", [
+        ("de 1 a 2 casas", r"de uma? a duas casas"),
+        ("entre 1 e 2 casas", r"entre uma? e duas casas"),
+        ("Entre 1 e 2 casas", r"Entre uma? e duas casas"),
+        ("de 21 a 22 casas", r"de vinte e uma? a vinte e duas casas"),
+        ("1—2 casas", r"uma? a duas casas"),
+        ("o valor (de 2 a 3) varia muito", r"o valor \(de dois a três\) varia muito"),
+    ])
+    def test_both_numbers_are_read(self, text, pattern, lang):
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", UnreadFormWarning)
+            spoken = normalize_numbers(text, lang)
+        assert re.fullmatch(pattern, spoken), spoken
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    @pytest.mark.parametrize("text", [
+        "entre 2 e 5 anos", "de 10 a 20 km", "(de 2 a 3)", "das 2 às 3 horas", "das 2—3 horas",
+    ])
+    def test_a_pair_text2spoken_reads_keeps_its_reading(self, text, lang):
+        assert normalize_numbers(text, lang) == normalize(text.replace("—", " a "), lang)
 
 
 class TestBracketedNumberPhonemes:

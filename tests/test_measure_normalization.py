@@ -30,7 +30,7 @@ from text2spoken import normalize
 
 from tugaphone.text_normalization import normalize_text
 
-from tests.text2spoken_gaps import DROPPED_ZERO, EURO_CENTS, SPACE_THOUSANDS
+from tests.text2spoken_gaps import SPACE_THOUSANDS
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
@@ -75,7 +75,8 @@ class TestUnits:
         ("a 2 m da porta", "a dois metros da porta"),
         ("pesa 7kg.", "pesa sete quilogramas."),
         ("2,5 anos", "dois vírgula cinco anos"),
-        pytest.param("Mede 1,80 m.", "Mede um vírgula oitenta metros.", marks=DROPPED_ZERO),
+        # the decimal part reads as written, with its final zero
+        ("Mede 1,80 m.", "Mede um vírgula oitenta metros."),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -117,7 +118,8 @@ class TestEuro:
         ("1 €", "um euro"),
         ("1.500 €", "mil e quinhentos euros"),
         ("50,30 €", "cinquenta euros e trinta cêntimos"),
-        pytest.param("2,5 €", "dois euros e cinquenta cêntimos", marks=EURO_CENTS),
+        # one decimal is tens of cents (Ciberdúvidas 25561)
+        ("2,5 €", "dois euros e cinquenta cêntimos"),
         ("1,01 €", "um euro e um cêntimo"),
         ("0,50 €", "cinquenta cêntimos"),
         ("€2,50", "dois euros e cinquenta cêntimos"),
