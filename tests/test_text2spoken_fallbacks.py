@@ -96,9 +96,27 @@ def test_every_fallback_names_its_text2spoken_issue():
     ("0,5 L", "pt-PT", "zero vírgula cinco litros"),
     ("0,5 L", "pt-BR", "zero vírgula cinco litro"),
     ("2 km2", "pt-BR", "dois quilômetros quadrados"),
+    ("Terreno com 1.200 m2.", "pt-PT", "Terreno com mil e duzentos metros quadrados."),
+    ("Terreno com 1.200 m2.", "pt-BR", "Terreno com mil e duzentos metros quadrados."),
+    ("Tem 72,5 m2.", "pt-PT", "Tem setenta e dois vírgula cinco metros quadrados."),
+    ("Tem 72,5 m2.", "pt-BR", "Tem setenta e dois vírgula cinco metros quadrados."),
+    ("2,5 m3", "pt-PT", "dois vírgula cinco metros cúbicos"),
+    ("2,5 m3", "pt-BR", "dois vírgula cinco metros cúbicos"),
+    ("0,5 km2", "pt-PT", "zero vírgula cinco quilómetros quadrados"),
+    ("0,5 km2", "pt-BR", "zero vírgula cinco quilômetro quadrado"),
+    ("3,5 cm3", "pt-PT", "três vírgula cinco centímetros cúbicos"),
+    ("3,5 cm3", "pt-BR", "três vírgula cinco centímetros cúbicos"),
+    ("-1,5 L", "pt-PT", "menos um vírgula cinco litros"),
+    ("-1,5 L", "pt-BR", "menos um vírgula cinco litro"),
 ])
 def test_unit_symbols_read(text, lang, expected):
     assert normalize_text(text, lang) == expected
+
+
+@pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+def test_a_letter_digit_code_after_a_word_still_spells_out(lang):
+    # "RTP2" and "T2" are codes, not units: the letters are spelled by name.
+    assert normalize_text("A RTP2 e a T2", lang) == "A érre tê pê dois e a tê dois"
 
 
 @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])

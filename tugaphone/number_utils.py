@@ -256,6 +256,7 @@ def _is_mark(ch: str) -> bool:
 
 
 _DIGIT_NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
+_SIGNED_NUMBER = re.compile(r"[-−]?\d+(?:[.,]\d+)*")
 
 
 def _split_trailing_marks(word: str) -> tuple[str, str]:
@@ -288,7 +289,7 @@ def _written_after_digits(text: str, symbols: frozenset[str]) -> list[bool]:
     """For each word of ``text`` in ``symbols``, in order: whether a number in
     digits comes before it."""
     words = text.split()
-    return [i > 0 and _DIGIT_NUMBER.fullmatch(words[i - 1]) is not None
+    return [i > 0 and _SIGNED_NUMBER.fullmatch(words[i - 1]) is not None
             for i, w in enumerate(words) if _split_trailing_marks(w)[0] in symbols]
 
 

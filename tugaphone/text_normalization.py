@@ -525,7 +525,7 @@ def expand_letter_digit_codes(text: str, lang: str = "pt-PT") -> str:
         lead, core, trail = _split_edges(w)
         match = _LETTER_DIGIT_CODE.fullmatch(core)
         previous = _split_edges(words[i - 1])[1] if i > 0 else ""
-        after_number = previous.isdigit()
+        after_number = re.fullmatch(r"[-−]?\d+(?:[.,]\d+)*", previous) is not None
         if match is None or after_number:
             out.append(w)
             continue
