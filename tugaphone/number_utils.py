@@ -79,6 +79,7 @@ UNIT_NAMES = {
     "m": ("metro", "metros"),
     "km": ("quilómetro", "quilómetros"),
     "km/h": ("quilómetro por hora", "quilómetros por hora"),
+    "mm2": ("milímetro quadrado", "milímetros quadrados"),
     "cm2": ("centímetro quadrado", "centímetros quadrados"),
     "cm²": ("centímetro quadrado", "centímetros quadrados"),
     "m2": ("metro quadrado", "metros quadrados"),
@@ -357,7 +358,7 @@ def read_scientific_notation(text: str, lang: str = "pt-PT") -> str:
 # for an integer part of zero or one ("one: i = 0..1"), so "um vírgula oito
 # litro" in pt-BR.
 # ---------------------------------------------------------------------------
-_UNREAD_UNITS = frozenset({"cm2", "m2", "km2", "cm3", "m3", "mg", "mL", "cl", "cL", "dl", "dL", "L"})
+_UNREAD_UNITS = frozenset({"mm2", "cm2", "m2", "km2", "cm3", "m3", "mg", "mL", "cl", "cL", "dl", "dL", "L"})
 
 
 def _number_before(words: list[str], i: int) -> list[str]:

@@ -511,8 +511,8 @@ def expand_acronyms(text: str) -> str:
 # same whatever the code stands for, so no context is needed. Codes take
 # one to three capitals or one or two lowercase letters, so longer
 # capitalised words ("COVID19") and ordinary lowercase words are left alone.
-# Right after a number the letters are a unit symbol ("10 m2"), not a code,
-# and so is a unit symbol after a number in words ("oitenta m2").
+# A known unit symbol that contains a digit ("m2", "m3", "km2", "cm3") is a
+# unit symbol whatever comes before it, so it is left as written.
 # ---------------------------------------------------------------------------
 _LETTER_DIGIT_CODE = re.compile(r"([A-Z]{1,3}|[a-z]{1,2})(\d+)")
 
@@ -521,12 +521,10 @@ def expand_letter_digit_codes(text: str, lang: str = "pt-PT") -> str:
     """"T2" -> "tê dois"; "RTP2" -> "érre tê pê dois"; "10 m2" is untouched."""
     words = text.split()
     out = []
-    for i, w in enumerate(words):
+    for w in words:
         lead, core, trail = _split_edges(w)
         match = _LETTER_DIGIT_CODE.fullmatch(core)
-        previous = _split_edges(words[i - 1])[1] if i > 0 else ""
-        after_number = re.fullmatch(r"[-−]?\d+(?:[.,]\d+)*", previous) is not None
-        if match is None or after_number:
+        if match is None or core in UNIT_NAMES:
             out.append(w)
             continue
         letters, digits = match.groups()
