@@ -1,8 +1,8 @@
 # Changelog
 
-## [1.10.7a1](https://github.com/TigreGotico/tugaphone/tree/1.10.7a1) (2026-11-18)
+## [1.10.8a1](https://github.com/TigreGotico/tugaphone/tree/1.10.8a1) (2026-11-18)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.5a1...1.10.7a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.5a1...1.10.8a1)
 
 **Merged pull requests:**
 
