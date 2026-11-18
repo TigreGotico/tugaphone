@@ -177,7 +177,8 @@ expand_clock_times("A loja fecha às 24:00")
 A `.` between two digits groups thousands and is dropped; a `,` between two
 digits is the decimal mark, read "vírgula". Both only fire between two
 digits, so a sentence-final period, a list comma, or an ordinal mark like
-`3.º` are untouched.
+`3.º` are untouched. text2spoken reads both separators, so `normalize_text`
+does not run this rewrite; `normalize_orthography` does.
 
 ```python
 from tugaphone.text_normalization import normalize_number_separators
