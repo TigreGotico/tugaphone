@@ -18,6 +18,8 @@ A comment, a docstring, a blank line, the width of an indent and a ``version.py`
 package do not count. No version string counts, with one exception: a distribution that ships a compiled module
 counts by its name and version, because its files differ by platform and by Python build.
 
+The revision covers ``contact="none"``, the default. See :func:`revision`.
+
 A distribution whose files cannot be read from the file system, as a package imported from a zip, raises
 ``RuntimeError``: a hash of no files would stay equal across every edit of it.
 """
@@ -28,6 +30,7 @@ import io
 import json
 import os
 import re
+import site
 import subprocess
 import sys
 import sysconfig
@@ -87,6 +90,10 @@ def revision(lang: str = "pt-PT") -> str:
     is computed at the first call for a lect in a process and kept. The first call runs a probe in a fresh process
     and reads the files of each distribution on the output path.
 
+    The revision covers ``contact="none"``, the default and the path that scriptconv uses. Another ``contact`` value
+    also reads the ``en-US``, ``es-ES`` and ``fr-FR`` specs of orthography2ipa and, for ``"auto"``, the optional
+    markovonnx detector. The revision covers neither, so it can stay equal while that output changes.
+
     Raises
     ------
     RuntimeError
@@ -125,11 +132,13 @@ def outside_stdlib(modules: Dict[str, Optional[str]]) -> FrozenSet[str]:
     A module of the standard library can have a name that :data:`sys.stdlib_module_names` does not hold, as the
     platform-named ``_sysconfigdata`` module or a copy of ``calendar`` that a dependency loads under another name.
     Its file is in the standard library directory. A module with no file was made at run time by code that is hashed
-    with its own distribution.
+    with its own distribution. A site-packages directory can also be under the standard library directory, as
+    ``/usr/lib/python3.X/site-packages`` is on Arch and on Fedora, so a file in the site-packages of the venv, of
+    the base interpreter or of the user is installed, not standard library.
     """
     paths = sysconfig.get_paths()
     stdlib = (paths["stdlib"], paths["platstdlib"])
-    installed = (paths["purelib"], paths["platlib"])
+    installed = (paths["purelib"], paths["platlib"], *site.getsitepackages(), site.getusersitepackages())
     return frozenset(name for name, where in modules.items()
                      if where and (not where.startswith(stdlib) or where.startswith(installed)))
 

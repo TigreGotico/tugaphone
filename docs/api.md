@@ -182,6 +182,11 @@ change, for some text. A voice records the revision of the lect it was trained
 on. At load time, an equal revision tells that the running tugaphone gives the
 same output, even when the version differs.
 
+The revision covers `contact="none"`, the default and the path that scriptconv
+uses. Another `contact` value also reads the `en-US`, `es-ES` and `fr-FR` specs
+of orthography2ipa and, for `"auto"`, the optional markovonnx detector. The
+revision covers neither, so it can stay equal while that output changes.
+
 The value is `tp1:` and a SHA-256 in hex. The hash covers:
 
 - `unicodedata.unidata_version` of the running Python. The Unicode database
