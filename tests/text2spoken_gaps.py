@@ -28,4 +28,6 @@ NUMBER_SIGN = _misreading(
 SPACE_THOUSANDS = _misreading(
     "text2spoken leaves '100 000' as written; SI brochure (Inmetro/IPQ 2021) §5.4.4: 'os números "
     "com muitos algarismos podem ser divididos em grupos de três algarismos, separados por um espaço'", 252)
-
+SCALE_PAIR = _misreading(
+    "text2spoken reads 'entre 1 e 2 mil pessoas' as 'entre um e 2 mil pessoas': before a scale word it "
+    "reads the first number of a pair and leaves the second as written", 283)

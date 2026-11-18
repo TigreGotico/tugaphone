@@ -7,7 +7,7 @@ from text2spoken import normalize
 
 from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, UnreadFormWarning, normalize_numbers, read_number_pairs
 
-from tests.text2spoken_gaps import SPELLED_DECIMAL
+from tests.text2spoken_gaps import SCALE_PAIR, SPELLED_DECIMAL
 
 
 class TestNormalizeNumbers:
@@ -536,8 +536,15 @@ class TestNumberPairs:
         # a score, with the text2spoken#272 row and its pt-512 reading
         ("Venceu por 2 a 0, nesta terça-feira.", r"Venceu por dois a zero, nesta terça-feira\."),
         ("o River Plate venceu por 2 a 1, nesta terça-feira", r"o River Plate venceu por dois a um, nesta terça-feira"),
+        ("venceu por 2 a 1 nesta terça-feira", r"venceu por dois a um nesta terça-feira"),
         ("ENTRE 1 E 2 CASAS", r"ENTRE uma? E duas CASAS"),
         ("de 1\xa0a\xa02 casas", r"de uma?\s+a\s+duas casas"),
+        # "dois"/"duas" takes the gender of the noun it counts and "mil" is
+        # invariable: "duas mil pessoas" (standard, e.g. Cunha & Cintra;
+        # edition not consulted).
+        pytest.param("entre 1 e 2 mil pessoas", r"entre uma? e duas mil pessoas", marks=SCALE_PAIR),
+        pytest.param("de 1 a 2 mil casas", r"de uma? a duas mil casas", marks=SCALE_PAIR),
+        ("de 1 a 2 mil livros", r"de um a dois mil livros"),
     ])
     def test_both_numbers_are_read(self, text, pattern, lang):
         with warnings.catch_warnings():
