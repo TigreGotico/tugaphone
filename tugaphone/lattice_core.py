@@ -34,6 +34,7 @@ the fact:
 from __future__ import annotations
 
 import functools
+import re
 from typing import List
 
 from bifonia import add_extra_diacritics
@@ -59,6 +60,50 @@ SPELLING_FEATURES = {
     "ao1990-br": frozenset({"1911-word-map", "base-iv", "initial-sc", "hyphen-lexical"}),
 }
 
+#: A word token, the same shape desacordo_ortografico's rules use, so the extra
+#: Brazilian step below rewrites words without touching punctuation or spacing.
+_WORD_RE = re.compile(r"[0-9A-Za-zÀ-ɏ]+(?:[-'’][0-9A-Za-zÀ-ɏ]+)*")
+
+
+def _is_single_e_acute(word: str, restored: str) -> bool:
+    """Whether ``restored`` differs from ``word`` only by one ``e`` → ``é``."""
+    if len(word) != len(restored):
+        return False
+    diffs = [(a, b) for a, b in zip(word, restored) if a != b]
+    if len(diffs) != 1:
+        return False
+    a, b = diffs[0]
+    return a.lower() == "e" and b.lower() == "é"
+
+
+def _open_ei_diphthong(text: str) -> str:
+    """Re-accent the open ``éi`` AO1990 Base IX 3.º dropped in Brazilian paroxytones.
+
+    For each word that holds an unaccented ``ei``, the backward conversion toward
+    ``br_1971`` gives the pre-AO1990 spelling, which marks the open diphthong. The
+    result replaces the word only when it differs from it by exactly one ``e`` → ``é``:
+    a closed ``ei`` word (``feia``) and any word whose conversion changes more than
+    that accent stay as written. desacordo_ortografico holds only the singular of these
+    words, so a plural that ends in ``s`` (``ideias``) converts unchanged: its stem is
+    tried instead, and the final letter is reattached to the restored stem.
+    """
+
+    def rewrite(match: re.Match) -> str:
+        word = match.group(0)
+        if "ei" not in word.lower():
+            return word
+        restored = convert_spelling(word, "ao1990-br", "br_1971")
+        if _is_single_e_acute(word, restored):
+            return restored
+        if restored == word and word.endswith(("s", "S")):
+            stem = word[:-1]
+            stem_restored = convert_spelling(stem, "ao1990-br", "br_1971")
+            if _is_single_e_acute(stem, stem_restored):
+                return stem_restored + word[-1]
+        return word
+
+    return _WORD_RE.sub(rewrite, text)
+
 
 def normalize_spelling(text: str, lect: str) -> str:
     """Rewrite the old spellings of ``text`` in the AO1990 norm of ``lect``.
@@ -72,10 +117,16 @@ def normalize_spelling(text: str, lect: str) -> str:
     * for the Brazilian lects, the hyphen rules of AO1990 change the word count
       (há-de → há de, manda-chuva → mandachuva);
     * for the Brazilian lects, óptica becomes ótica, although the VOLP lists
-      both as separate words.
+      both as separate words;
+    * for the Brazilian lects, an AO1990 paroxytone that lost the accent of an
+      open ``éi`` (Base IX 3.º) reads with the open vowel, as before AO1990
+      (ideia reads as idéia).
     """
     norm = spelling_norm(lect)
-    return convert_spelling(text, "etymological", norm, features=SPELLING_FEATURES[norm])
+    text = convert_spelling(text, "etymological", norm, features=SPELLING_FEATURES[norm])
+    if norm == "ao1990-br":
+        text = _open_ei_diphthong(text)
+    return text
 
 
 def _expander(lect: str):
