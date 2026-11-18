@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.10.5a1](https://github.com/TigreGotico/tugaphone/tree/1.10.5a1) (2026-11-18)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.4a2...1.10.5a1)
+
+**Merged pull requests:**
+
+- fix: read a number pair before a punctuation mark in the masculine [\#270](https://github.com/TigreGotico/tugaphone/pull/270) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.10.4a2](https://github.com/TigreGotico/tugaphone/tree/1.10.4a2) (2026-11-18)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.4a1...1.10.4a2)
+
+## [1.10.4a1](https://github.com/TigreGotico/tugaphone/tree/1.10.4a1) (2026-11-18)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.3a1...1.10.4a1)
+
+**Merged pull requests:**
+
+- docs: sync README and docs with dev [\#265](https://github.com/TigreGotico/tugaphone/pull/265) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- fix: spell a letter-digit code after a number unless it is a unit [\#263](https://github.com/TigreGotico/tugaphone/pull/263) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.10.3a1](https://github.com/TigreGotico/tugaphone/tree/1.10.3a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.2a1...1.10.3a1)
