@@ -209,7 +209,7 @@ stay equal across every edit of that distribution.
 
 The probe also raises `RevisionError` when its process fails, prints no
 result, prints a result that is not JSON, or runs longer than 120 s.
-`RevisionError` is a subclass of `RuntimeError`.
+`tugaphone.RevisionError` is a subclass of `RuntimeError`.
 
 `lang` resolves as `phonemize` resolves it, with the same warning for a code that
 is not a lect. So `revision("pt")` equals `revision("pt-PT")`. The first call for
@@ -245,6 +245,27 @@ from tugaphone import resolve_lect, list_dialects
 
 resolve_lect("pt-PT-x-lisboa")   # 'pt-PT-x-lisbon'  (alias)
 "pt-BR-x-sp" in list_dialects()  # True
+```
+
+## `tugaphone.lattice_core.normalize_spelling`
+
+```python
+normalize_spelling(text: str, lect: str) -> str
+```
+
+The spelling step, the first part of the `expand` step of the pipeline. It
+rewrites the old spellings of `text` in the AO1990 norm of `lect` with
+desacordo_ortografico: `ao1990-br` for the Brazilian lects and `pt-UY`,
+`ao1990-pt` for every other lect. Pass a code of `list_dialects()`: a loose tag
+such as `"pt"` raises `ValueError`, so resolve it with `resolve_lect` first. Text
+that is already in the AO1990 spelling stays as written. See
+[text_normalization.md](text_normalization.md#old-spellings) for the changes
+it makes to modern text.
+
+```python
+from tugaphone.lattice_core import normalize_spelling
+normalize_spelling("A acção da pharmacia foi rápida.", "pt-PT")   # 'A ação da farmácia foi rápida.'
+normalize_spelling("Tive uma ideia.", "pt-BR")                    # 'Tive uma idéia.'
 ```
 
 ## `tugaphone.number_utils`

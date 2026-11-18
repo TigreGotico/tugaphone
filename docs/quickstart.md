@@ -18,7 +18,7 @@ pip install -e .                 # from a source checkout
 ```
 
 Runtime dependencies (`text2spoken`, `silabificador`, `tugalex`,
-`bifonia`, `orthography2ipa`, `o2i-lexicons`) install automatically. The `pt-PT`
+`bifonia`, `orthography2ipa`, `o2i-lexicons`, `desacordo_ortografico`) install automatically. The `pt-PT`
 and `pt-BR` lexicons ship inside [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons),
 so a phonemization call needs no network. See
 [advanced.md](advanced.md#the-lexicon-boundary).
