@@ -23,7 +23,7 @@ import pytest
 
 from tugaphone.text_normalization import normalize_text
 
-from tests.text2spoken_gaps import EURO_CENTS
+from tests.text2spoken_gaps import BR_DECIMAL_SINGULAR, DROPPED_ZERO, EURO_CENTS, SPACE_THOUSANDS
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
@@ -68,6 +68,7 @@ class TestUnits:
         ("a 2 m da porta", "a dois metros da porta"),
         ("pesa 7kg.", "pesa sete quilogramas."),
         ("2,5 anos", "dois vírgula cinco anos"),
+        pytest.param("Mede 1,80 m.", "Mede um vírgula oitenta metros.", marks=DROPPED_ZERO),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -78,9 +79,18 @@ class TestUnits:
         ("0 km", "zero quilômetro"),
         ("0,25 l", "zero vírgula vinte e cinco litro"),
         ("2 g", "dois gramas"),
+        pytest.param("1,8 m", "um vírgula oito metros", marks=BR_DECIMAL_SINGULAR),
     ])
     def test_reading_pt_br(self, text, expected):
         assert read(text, "pt-BR") == expected
+
+
+@pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+@pytest.mark.parametrize("text,expected", [
+    pytest.param("Há 100 000 pessoas.", "Há cem mil pessoas.", marks=SPACE_THOUSANDS),
+])
+def test_a_space_groups_thousands(text, expected, lang):
+    assert read(text, lang) == expected
 
 
 class TestEuro:

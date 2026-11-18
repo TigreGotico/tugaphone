@@ -52,16 +52,23 @@ def test_text2spoken_still_leaves_the_fallback_form(text, kept, variety):
     assert kept in normalize(text, variety)
 
 
-def test_text2spoken_reading_wins_over_a_fallback(monkeypatch):
-    # The day text2spoken reads "10—20", its reading stands and the range
+@pytest.mark.parametrize("text,form,reading", [
+    ("de 10—20 metros", "10—20", "dez até vinte"),
+    ("mede 15x8 metros", "15x8", "quinze por oito"),
+    ("mede 2 x 2 metros", "2 x 2", "dois por dois"),
+    ("tem 80 m2", "80 m2", "oitenta metros"),
+    ("São 16:30.", "16:30", "quatro e meia"),
+])
+def test_text2spoken_reading_wins_over_a_fallback(monkeypatch, text, form, reading):
+    # The day text2spoken reads a fallback form, its reading stands and the
     # fallback has nothing left to rewrite.
     read = number_utils.text2spoken_reading
 
-    def reads_the_dash(text, lang, scale=None, gender=None):
-        return read(text.replace("10—20", "dez até vinte"), lang, scale, gender)
+    def reads_the_form(text, lang, scale=None, gender=None):
+        return read(text.replace(form, reading), lang, scale, gender)
 
-    monkeypatch.setattr(number_utils, "text2spoken_reading", reads_the_dash)
-    assert normalize_text("de 10—20 metros") == "de dez até vinte metros"
+    monkeypatch.setattr(number_utils, "text2spoken_reading", reads_the_form)
+    assert normalize_text(text) == text.replace(form, reading)
 
 
 def test_every_fallback_names_its_text2spoken_issue():
@@ -74,11 +81,10 @@ def test_every_fallback_names_its_text2spoken_issue():
     assert marked == []
 
 
-# Unit names: the SI brochure (IPQ/Inmetro 2021, §5.2-5.3). European
-# Portuguese puts the plural after every number but "um", decimals included;
-# Brazilian usage keeps the singular up to one: "zero vírgula vinte e cinco
-# mol" (Peres & Móia, Áreas Críticas da Língua Portuguesa, pp. 512-517, as
-# quoted by FLiP, "concordâncias com unidades (II)").
+# Unit names: the SI brochure (IPQ/Inmetro 2021, §5.2-5.3), as in UNIT_NAMES.
+# The plural rules are the ones that test_measure_normalization quotes: the
+# plural after every number but "um" in European Portuguese, and the singular
+# up to one in Brazilian usage.
 @pytest.mark.parametrize("text,lang,expected", [
     ("80m2", "pt-PT", "oitenta metros quadrados"),
     ("2,5m2", "pt-PT", "dois vírgula cinco metros quadrados"),
@@ -94,35 +100,50 @@ def test_unit_symbols_read(text, lang, expected):
     assert normalize_text(text, lang) == expected
 
 
+@pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+@pytest.mark.parametrize("text", [
+    "Escreve-se com dois L.", "Desenhou um L no quadro.", "Comprei um mg de paciência.",
+])
+def test_a_unit_symbol_after_a_number_word_is_a_letter(text, lang):
+    # Only a number written in digits makes the symbol a unit.
+    assert normalize_text(text, lang) == text
+
+
 @pytest.mark.parametrize("text", ["80 m2", "Uma casa de 80 m2.", "10 m3", "80m2", "10 mL", "1e6", "2x3x4"])
 def test_reading_twice_changes_nothing(text):
     once = normalize_text(text)
     assert normalize_text(once) == once
 
 
-# Ciberdúvidas 14648: "16:30" reads "dezasseis e trinta".
-def test_a_clock_time_with_no_time_word_keeps_its_words():
-    assert phonemize("São 16:30.", "pt-PT") == phonemize("São dezasseis e trinta.", "pt-PT")
+@pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+def test_a_clock_time_with_no_time_word_keeps_its_words(lang):
+    # The reading is the one text2spoken gives the same time after "às".
+    time = normalize("às 16:30", lang).removeprefix("às ")
+    assert normalize_text("São 16:30.", lang) == f"São {time}."
+    assert phonemize("São 16:30.", lang) == phonemize(f"São {time}.", lang)
 
 
-@pytest.mark.parametrize("text", [
-    "São 16:30.", "O jogo é 3-2.", "Tem 80m2.", "casa /7/ casa", "1e6", "às 24:00",
-    "Afonso I reinou", "um filme 3D chegou", "o código XK-99 chegou", "Ligue 21 000 0000.",
+@pytest.mark.parametrize("text,words", [
+    ("São 16:30.", "dezasseis e trinta"), ("O jogo é 3-2.", "três a dois"),
+    ("Tem 80m2.", "oitenta"), ("casa /7/ casa", "sete"), ("1e6", "um vezes dez elevado a seis"),
+    ("às 24:00", "vinte e quatro"), ("Afonso I reinou", "Primeiro"), ("mede 15x8", "quinze vezes oito"),
+    ("um filme 3D chegou", ""), ("o código XK-99 chegou", ""), ("Ligue 21 000 0000.", "dois um zero"),
 ])
-def test_no_digit_goes_silently(text):
+def test_no_digit_goes_silently(text, words):
     # A form whose digits survive the expand step gives a warning that names
-    # it; a form that loses its digits there has a spoken reading.
+    # it; a form that loses its digits there has their reading.
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
         spoken = normalize_text(text)
     unread = [str(w.message) for w in caught if issubclass(w.category, UnreadFormWarning)]
     for form in re.findall(r"\S*\d\S*", spoken):
         assert any(form.strip(".,;:!?") in message for message in unread), (form, unread)
+    assert words in spoken
     assert phonemize(text, "pt-PT").strip()
 
 
-# Priberam DLPO "D.": the abbreviation of "Dom" (men) and "Dona" (women). The
-# gender of the given name chooses it.
+# Priberam DLPO "D.": "Abreviatura de dom e de dona." The gender of the given
+# name chooses between them.
 @pytest.mark.parametrize("text,expected", [
     ("A D. Raquel chegou.", "A Dona Raquel chegou."),
     ("A D. Carmen chegou.", "A Dona Carmen chegou."),

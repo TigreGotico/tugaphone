@@ -254,11 +254,21 @@ def _is_mark(ch: str) -> bool:
     return category[0] == "P" or category in ("Sm", "Sk")
 
 
+_DIGIT_NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
+
+
+def _split_trailing_marks(word: str) -> tuple[str, str]:
+    i = len(word)
+    while i > 0 and _is_mark(word[i - 1]):
+        i -= 1
+    return word[:i], word[i:]
+
+
 # ---------------------------------------------------------------------------
 # A "x" between two numbers is multiplication, read "vezes": "dois vezes dois
 # são quatro" (Priberam DLPO, "vezes"). Each factor reads alone, as a
-# masculine cardinal. text2spoken reads "2×2" and leaves "15x8" and "2 x 2" as
-# written. TODO(text2spoken issue)
+# masculine cardinal. text2spoken reads "2×2". It leaves "15x8" as written,
+# and reads "2 x 2" as "dois x dois", leaving the "x". TODO(text2spoken issue)
 # ---------------------------------------------------------------------------
 _FACTOR = r"\d+(?:,\d+)?"
 _PRODUCT_X = re.compile(rf"(?<![\w.,]){_FACTOR}(?: ?x ?{_FACTOR})+(?!\w)")
@@ -270,6 +280,40 @@ def read_multiplication_signs(text: str, lang: str = "pt-PT") -> str:
         factors = re.split(r" ?x ?", match.group())
         return " vezes ".join(text2spoken_reading(f, lang, gender="masculine") for f in factors)
     return _PRODUCT_X.sub(read, text)
+
+
+def _written_after_digits(text: str, symbols: frozenset[str], digits_after: bool = False) -> list[bool]:
+    """For each word of ``text`` in ``symbols``, in order: whether a number in
+    digits comes before it (and after it, with ``digits_after``)."""
+    words = text.split()
+    flags = []
+    for i, w in enumerate(words):
+        if _split_trailing_marks(w)[0] in symbols:
+            before = i > 0 and _DIGIT_NUMBER.fullmatch(words[i - 1]) is not None
+            after = not digits_after or (i + 1 < len(words) and words[i + 1][:1].isdigit())
+            flags.append(before and after)
+    return flags
+
+
+def _read_flagged(text: str, symbols: frozenset[str], flags: list[bool], read) -> str:
+    """Rewrite the words of ``text`` in ``symbols`` whose flag is set, with
+    ``read(words, i)``. text2spoken leaves these words as written, so they come
+    in the same order as in the input; if their count differs, none is read."""
+    words = text.split()
+    positions = [i for i, w in enumerate(words) if _split_trailing_marks(w)[0] in symbols]
+    if len(positions) != len(flags):
+        return text
+    for i, flag in zip(positions, flags):
+        if flag:
+            words[i] = read(words, i)
+    return " ".join(words)
+
+
+def read_spoken_times(spoken: str, written: str, lang: str = "pt-PT") -> str:
+    """The "x" that text2spoken leaves between two numbers it read: "2 x 2",
+    read "dois x dois", gives "dois vezes dois"."""
+    flags = _written_after_digits(written, frozenset({"x"}), digits_after=True)
+    return _read_flagged(spoken, frozenset({"x"}), flags, lambda words, i: "vezes")
 
 
 # ---------------------------------------------------------------------------
@@ -310,32 +354,23 @@ def _number_before(words: list[str], i: int) -> list[str]:
     return [w.lower() for w in words[j:i]]
 
 
-def _split_trailing_marks(word: str) -> tuple[str, str]:
-    i = len(word)
-    while i > 0 and _is_mark(word[i - 1]):
-        i -= 1
-    return word[:i], word[i:]
-
-
-def read_unit_symbols(text: str, lang: str = "pt-PT") -> str:
-    """"dez m2" -> "dez metros quadrados"; "um L" -> "um litro"."""
+def read_unit_symbols(spoken: str, written: str, lang: str = "pt-PT") -> str:
+    """The unit symbols of ``spoken`` that follow a number written in digits in
+    ``written``: "10 mg", read "dez mg", gives "dez miligramas". In "dois L"
+    the "L" is a letter and stays."""
     brazilian = text2spoken_tag(lang) == "pt-BR"
-    words = text.split()
-    out = []
-    for i, w in enumerate(words):
-        symbol, trail = _split_trailing_marks(w)
+    flags = _written_after_digits(separate_unit_symbols(written), _UNREAD_UNITS)
+
+    def read(words: list[str], i: int) -> str:
+        symbol, trail = _split_trailing_marks(words[i])
         number = _number_before(words, i)
-        if symbol not in _UNREAD_UNITS or not number:
-            out.append(w)
-            continue
         if brazilian:
-            plural = not (number[0] == "zero" or number in (["um"], ["uma"]))
+            plural = not (number[:1] == ["zero"] or number in (["um"], ["uma"]))
         else:
             plural = number not in (["um"], ["uma"])
         name = UNIT_NAMES[symbol][plural]
-        out.append(name.replace("quilómetro", "quilômetro") if brazilian else name)
-        out[-1] += trail
-    return " ".join(out)
+        return (name.replace("quilómetro", "quilômetro") if brazilian else name) + trail
+    return _read_flagged(spoken, _UNREAD_UNITS, flags, read)
 
 
 # ---------------------------------------------------------------------------
@@ -375,15 +410,16 @@ def read_numbers(text: str, lang: str = "pt-PT", scale: Optional[str] = None) ->
     """:func:`normalize_numbers` with no warning: text2spoken reads ``text``,
     the fallback rewrites above read the forms that it leaves as written, and
     text2spoken reads the digits that they leave."""
-    spoken = text2spoken_reading(read_multiplication_signs(text, lang), lang, scale)
-    exposed = read_scientific_notation(spoken, lang)
+    spoken = text2spoken_reading(text, lang, scale)
+    exposed = read_spoken_times(read_multiplication_signs(spoken, lang), text, lang)
+    exposed = read_scientific_notation(exposed, lang)
     exposed = read_dot_decimals(exposed)
     exposed = separate_unit_symbols(exposed)
     exposed = split_number_ranges(exposed)
     exposed = expand_clock_times(exposed)
     if exposed != spoken:
         exposed = text2spoken_reading(exposed, lang, scale)
-    exposed = read_unit_symbols(exposed, lang)
+    exposed = read_unit_symbols(exposed, text, lang)
     return read_joined_numbers(exposed, lang)
 
 

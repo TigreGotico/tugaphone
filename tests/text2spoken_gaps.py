@@ -13,8 +13,9 @@ def _misreading(reason: str):
 
 
 LABEL = _misreading(
-    "text2spoken makes a label numeral agree with its noun ('sala duas'); Cunha & Cintra via "
-    "Ciberdúvidas 33468: the label numeral is invariable")
+    "text2spoken makes a label numeral agree with its noun ('sala duas'); the Gulbenkian "
+    "Gramática do Português, quoted by Ciberdúvidas 33468: 'ocorrem geralmente em forma invariável "
+    "à direita do nome'")
 PLURAL_HEAD = _misreading(
     "text2spoken reads 'a páginas 21' as 'vinte e um'; Bechara via Ciberdúvidas 33527: "
     "'a páginas vinte e uma'")
@@ -41,6 +42,17 @@ SPELLED_DECIMAL = _misreading(
 NUMBER_SIGN = _misreading(
     "text2spoken reads the '#' of '#7#' as the word 'número' and keeps the closing '#' "
     "('número sete#'); a number between two marks reads alone ('#sete#')")
+DROPPED_ZERO = _misreading(
+    "text2spoken drops the final zero of a decimal part: '1,80 m' gives 'um vírgula oito metros'; "
+    "the text2spoken owner rules that the decimal part reads as written, 'um vírgula oitenta'")
+SPACE_THOUSANDS = _misreading(
+    "text2spoken leaves '100 000' as written; SI brochure (IPQ/Inmetro 2021) §5.4.4: 'os números "
+    "com muitos algarismos podem ser divididos em grupos de três algarismos, separados por um espaço'")
+# Pending a ruling of the text2spoken owner on the Brazilian singular below 2.
+# Drop this mark and its rows if the source backs the singular.
+BR_DECIMAL_SINGULAR = _misreading(
+    "pending a ruling: pt-BR '1,8 m' gives the singular 'um vírgula oito metro'; the FLiP answer "
+    "quoted in test_measure_normalization keeps the Brazilian singular up to one, and 1,8 is above one")
 
 # Not a text2spoken defect: the sources disagree, and the reading waits for a ruling.
 BR_TENTH = pytest.mark.xfail(strict=True, reason=(

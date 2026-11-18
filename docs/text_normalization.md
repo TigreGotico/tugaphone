@@ -90,8 +90,9 @@ normalize_text("o século XIX", "pt-BR")
 text2spoken reads first, and its reading stands. The rewrites below read only
 the forms that text2spoken leaves as written: a range with an em dash or a
 hyphen ("3-2"), a clock time with no time word ("São 16:30."), `24:00`, a
-glued unit, a unit symbol such as `m2` or `L`, a multiplication sign, a
-decimal with a dot, scientific notation, and a number between two marks. Each
+glued unit, a unit symbol such as `m2` or `L` after a number in digits, a
+multiplication sign, a decimal with a dot, scientific notation, and a number
+between two marks. In "Escreve-se com dois L." the `L` is a letter and stays. Each
 fallback names its text2spoken issue in the code, and it goes when
 text2spoken reads its form.
 
@@ -315,9 +316,9 @@ digits reads as the letter names and then the number as a masculine
 cardinal: "T2" is "tê dois", "A3" is "á três", "RTP2" is "érre tê pê dois",
 "mp3" is "éme pê três". A number that labels something is invariable, so
 "o T2 na cidade" reads "tê dois", not "duas". text2spoken reads the digits
-alone, in the variety of the lect, so they take the masculine. After a number,
-in digits or in words, a unit symbol is a unit, so "10 m2" and "oitenta m2"
-are left for the unit rule.
+alone, in the variety of the lect, so they take the masculine. Right after a
+number in digits the letters are a unit symbol, so "10 m2" is left for the
+unit rule.
 
 ```python
 from tugaphone.text_normalization import expand_letter_digit_codes

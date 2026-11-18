@@ -16,7 +16,9 @@ from tugaphone import lattice_core, list_dialects, phonemize, pipeline
 SENTENCES = Path(__file__).parent / "data" / "sentences"
 
 # Plan row 2.4: the readings of text2spoken 0.0.2a61 for 25/12/2023 and 19h30.
-# t2s pt-080 and pt-090 cite Ciberdúvidas 32700 (Cunha & Cintra) and 14648.
+# t2s pt-080 and pt-090. Ciberdúvidas 32700 quotes Cunha & Cintra p. 374:
+# "nas referências aos dias do mês usam-se os cardinais [...] Também na
+# indicação dos anos e das horas se empregam os cardinais."
 PLAN_ROWS = [
     ("pt-PT", "Nasceu a 25/12/2023.",
      "Nasceu a vinte e cinco de dezembro de dois mil e vinte e três."),
@@ -54,8 +56,8 @@ FORMS = [
 ]
 
 # The scriptconv contract: raw text with "Dr." and "20%" reads through tugaphone
-# alone. t2s pt-021 (Priberam: por cento); "Dr." is "Doutor" (Vocabulário
-# Ortográfico of the Academia das Ciências de Lisboa).
+# alone. t2s pt-021 (Priberam: por cento); "Dr." is "Doutor" (Priberam DLPO
+# "Dr.": "Abreviatura de doutor").
 RAW = [
     ("pt-PT", "O Dr. Silva subiu 20%.", "O Doutor Silva subiu vinte por cento."),
     ("pt-BR", "O Dr. Silva subiu 20%.", "O Doutor Silva subiu vinte por cento."),
