@@ -257,10 +257,10 @@ The spelling step, the first part of the `expand` step of the pipeline. It
 rewrites the old spellings of `text` in the AO1990 norm of `lect` with
 desacordo_ortografico: `ao1990-br` for the Brazilian lects and `pt-UY`,
 `ao1990-pt` for every other lect. Pass a code of `list_dialects()`: a loose tag
-such as `"pt"` raises `ValueError`, so resolve it with `resolve_lect` first. Text
-that is already in the AO1990 spelling stays as written. See
-[text_normalization.md](text_normalization.md#old-spellings) for the changes
-it makes to modern text.
+such as `"pt"` raises `ValueError`, so resolve it with `resolve_lect` first. Most
+text that is already in the AO1990 spelling stays as written.
+[text_normalization.md](text_normalization.md#old-spellings) lists the changes
+it makes to modern text, such as *ideia* → *idéia* for the Brazilian lects.
 
 ```python
 from tugaphone.lattice_core import normalize_spelling

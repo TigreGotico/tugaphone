@@ -13,7 +13,7 @@ pt-BR → u ˈɡatu ˈdoɾmi
 ## 1. Install
 
 ```bash
-pip install tugaphone            # from PyPI
+pip install --pre tugaphone      # from PyPI
 pip install -e .                 # from a source checkout
 ```
 

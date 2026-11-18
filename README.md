@@ -32,7 +32,7 @@ orthography2ipa's own extension points. See
 ## Install
 
 ```bash
-pip install tugaphone
+pip install --pre tugaphone
 ```
 
 Its runtime dependencies (`orthography2ipa`, `o2i-lexicons`, `silabificador`,

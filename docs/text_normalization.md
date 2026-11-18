@@ -54,14 +54,14 @@ Case and punctuation stay. Modern text changes in four ways:
 
 - A name in an old spelling takes the AO1990 spelling (*Sophia* → *Sofia*,
   *Rachel* → *Raquel*), although AO1990 Base XXI lets a name keep its spelling.
-- For the Brazilian lects, the hyphen rules of AO1990 change the word count
+- For the Brazilian lects and `pt-UY`, the hyphen rules of AO1990 change the word count
   (*há-de* → *há de*, *manda-chuva* → *mandachuva*).
-- For the Brazilian lects, *óptica* becomes *ótica*, although the VOLP lists
+- For the Brazilian lects and `pt-UY`, *óptica* becomes *ótica*, although the VOLP lists
   both as separate words.
-- For the Brazilian lects, a paroxytone that lost the accent of an open *éi*
+- For the Brazilian lects and `pt-UY`, a paroxytone that lost the accent of an open *éi*
   (AO1990 Base IX 3.º) takes the accent back, so it reads with the open
-  vowel (*ideia* → *idéia*, *estreia* → *estréia*). Michaelis transcribes
-  these words with an open *e*. A closed *ei* stays (*areia*, *baleia*).
+  vowel (*ideia* → *idéia*, *estreia* → *estréia*). Michaelis marks these
+  words with an open *e*, "(éi)". A closed *ei* stays (*areia*, *baleia*).
 
 The Brazilian lects keep the trema (*freqüente*), because in a text from
 before AO1990 it is the only mark of a pronounced *u*. They also keep both
