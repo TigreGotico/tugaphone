@@ -171,7 +171,7 @@ class TestCodeAfterANumber:
         assert read("1,5 mm2", lang) == expected
 
     @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
-    def test_a_unit_symbol_with_no_number_before_it_stays_as_written(self, lang):
-        # "m2" is a unit symbol, so it is left as written even with no number
-        # before it; only the number it labels is read.
-        assert read("O m2 custa 2 euros.", lang) == "O m2 custa dois euros."
+    def test_a_unit_symbol_with_no_number_before_it_is_spelled(self, lang):
+        # The unit reader reads a symbol only after digits, so elsewhere "m2" is
+        # spelled rather than left with its digit unread.
+        assert read("O m2 custa 2 euros.", lang) == "O éme dois custa dois euros."
