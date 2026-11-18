@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.1a1](https://github.com/TigreGotico/tugaphone/tree/1.9.1a1) (2026-11-18)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.0a1...1.9.1a1)
+
+**Merged pull requests:**
+
+- fix: count system site-packages in the content revision [\#249](https://github.com/TigreGotico/tugaphone/pull/249) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.9.0a1](https://github.com/TigreGotico/tugaphone/tree/1.9.0a1) (2026-11-17)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.8.0a1...1.9.0a1)
