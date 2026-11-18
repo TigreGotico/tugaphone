@@ -316,14 +316,20 @@ def read_spoken_times(spoken: str, written: str, lang: str = "pt-PT") -> str:
     read "dois x dois", gives "dois vezes dois". Each product of ``written`` is
     found in ``spoken`` by the readings of its factors, in either gender, so a
     product that text2spoken read ("4 x 5 m", "quatro por cinco metros") does
-    not stop the next one."""
-    start = 0
+    not stop the next one. A product that the author wrote in words reads the
+    same and keeps its "x": as many matches as ``written`` has between this
+    product and the one before are skipped."""
+    start = written_start = 0
     for product in _SPACED_PRODUCT.finditer(written):
         factors = ["|".join(re.escape(text2spoken_reading(factor, lang, gender=gender))
                             for gender in ("masculine", "feminine"))
                    for factor in product.group().split(" x ")]
         spoken_product = re.compile(r"(?<!\w)" + " x ".join(f"(?:{f})" for f in factors) + r"(?!\w)")
+        in_words = len(spoken_product.findall(written, written_start, product.start()))
+        written_start = product.end()
         match = spoken_product.search(spoken, start)
+        for _ in range(in_words):
+            match = match and spoken_product.search(spoken, match.end())
         if match:
             reading = match.group().replace(" x ", " vezes ")
             spoken = spoken[:match.start()] + reading + spoken[match.end():]
