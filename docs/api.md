@@ -204,8 +204,12 @@ count, with one exception. A distribution that ships a compiled module, such as
 `numpy`, counts by its name and version, because its files differ by platform.
 
 A distribution whose files cannot be read from the file system, such as a
-package imported from a zip, raises `RuntimeError`. A hash of no files would
+package imported from a zip, raises `RevisionError`. A hash of no files would
 stay equal across every edit of that distribution.
+
+The probe also raises `RevisionError` when its process fails, prints no
+result, prints a result that is not JSON, or runs longer than 120 s.
+`RevisionError` is a subclass of `RuntimeError`.
 
 `lang` resolves as `phonemize` resolves it, with the same warning for a code that
 is not a lect. So `revision("pt")` equals `revision("pt-PT")`. The first call for
