@@ -208,12 +208,13 @@ def test_a_distribution_in_a_site_packages_directory_under_the_standard_library_
     assert outside_stdlib(modules) == {"base_distribution", "user_distribution"}
 
 
-def test_a_standard_library_file_under_the_bare_prefix_is_not_on_the_output_path(tmp_path, monkeypatch):
+@pytest.mark.parametrize("packages_dir", ["site-packages", "dist-packages"])
+def test_a_standard_library_file_under_the_bare_prefix_is_not_on_the_output_path(tmp_path, monkeypatch, packages_dir):
     stdlib = tmp_path / "opt" / "py" / "Lib"
-    site_packages = stdlib / "site-packages"
+    site_packages = stdlib / packages_dir
     monkeypatch.setattr(sysconfig, "get_paths", lambda *args, **kwargs: {
         "stdlib": str(stdlib), "platstdlib": str(stdlib),
-        "purelib": str(site_packages), "platlib": str(site_packages)})
+        "purelib": str(tmp_path / "venv" / "site-packages"), "platlib": str(tmp_path / "venv" / "site-packages")})
     monkeypatch.setattr(site, "getsitepackages", lambda *args: [str(stdlib.parent), str(site_packages)])
     monkeypatch.setattr(site, "getusersitepackages", lambda: str(tmp_path / "user" / "site-packages"))
     modules = {
