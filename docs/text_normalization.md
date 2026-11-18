@@ -97,10 +97,12 @@ text2spoken reads first, and its reading stands. The rewrites below read only
 the forms that text2spoken leaves as written: a range with an em dash or a
 hyphen ("3-2"), a clock time with no time word ("São 16:30."), `24:00`, a
 glued unit, a unit symbol such as `m2` or `L` after a number in digits, a
-multiplication sign, a decimal with a dot, scientific notation, and a number
-between two marks. In "Escreve-se com dois L." the `L` is a letter and stays. Each
-fallback names its text2spoken issue in the code, and it goes when
-text2spoken reads its form.
+multiplication sign, a decimal with a dot, scientific notation, a number
+between two marks, and a pair of numbers whose noun may give the first number
+another gender ("de 1 a 2 casas"). The first number of such a pair reads in the
+masculine, and the second agrees with its noun. In "Escreve-se com dois L."
+the `L` is a letter and stays. Each fallback names its text2spoken issue in
+the code, and it goes when text2spoken reads its form.
 
 ```python
 normalize_text("O jogo é 3-2.")
@@ -113,6 +115,8 @@ normalize_text("Mede 15x8 metros.")
 # 'Mede quinze vezes oito metros.'
 normalize_text("1e6")
 # 'um vezes dez elevado a seis'
+normalize_text("de 1 a 2 casas")
+# 'de um a duas casas'
 ```
 
 The rewrites that 1.7 made public stay public. Each one leaves its digits for

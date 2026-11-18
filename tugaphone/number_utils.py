@@ -424,6 +424,35 @@ def read_dot_decimals(text: str) -> str:
     return _DOT_DECIMAL.sub(lambda m: m.group() if len(m.group(2)) == 3 else f"{m.group(1)},{m.group(2)}", text)
 
 
+# ---------------------------------------------------------------------------
+# A pair of numbers in digits, "de 1 a 2 casas" or "entre 1 e 2 casas", whose
+# noun may give the first number another gender. text2spoken leaves the pair
+# as written: https://github.com/TigreGotico/text2spoken/issues/134
+# No source gives the gender of the first number, so it reads in the
+# masculine, and text2spoken then reads the second number with its noun.
+# text2spoken also leaves a pair that it should read when a comma or a closing
+# bracket follows the second number ("de 1 a 2, casas", "o valor (de 2 a 3)
+# varia muito"): the mark does not end the pair, and a verb that ends in -a
+# ("varia", "ajuda") reads as a feminine noun.
+# https://github.com/TigreGotico/text2spoken/issues/272
+# This rewrite runs on what text2spoken read, so a pair that text2spoken reads
+# keeps its reading.
+# ---------------------------------------------------------------------------
+_OPENING_MARK = r"[(«\"“']?"
+_PAIR_FIRST = re.compile(
+    rf"(?<![\w.,])(?:(?<=\b[Ee]ntre ){_DIGIT_NUMBER.pattern}(?= e {_OPENING_MARK}\d)"
+    rf"|{_DIGIT_NUMBER.pattern}(?= (?:a|à|às|ao|aos) {_OPENING_MARK}\d))")
+
+
+def read_number_pairs(text: str, lang: str = "pt-PT", scale: Optional[str] = None) -> str:
+    """The pairs of numbers that text2spoken leaves as written, read: "de 1 a 2
+    casas" -> "de um a duas casas"; "entre 1 e 2 casas" -> "entre um e duas
+    casas"."""
+    first_read = _PAIR_FIRST.sub(
+        lambda m: text2spoken_reading(m.group(), lang, scale, gender="masculine"), text)
+    return text2spoken_reading(first_read, lang, scale) if first_read != text else text
+
+
 def read_numbers(text: str, lang: str = "pt-PT", scale: Optional[str] = None) -> str:
     """:func:`normalize_numbers` with no warning: text2spoken reads ``text``,
     the fallback rewrites above read the forms that it leaves as written, and
@@ -437,6 +466,7 @@ def read_numbers(text: str, lang: str = "pt-PT", scale: Optional[str] = None) ->
     exposed = expand_clock_times(exposed)
     if exposed != spoken:
         exposed = text2spoken_reading(exposed, lang, scale)
+    exposed = read_number_pairs(exposed, lang, scale)
     exposed = read_unit_symbols(exposed, text, lang)
     return read_joined_numbers(exposed, lang)
 
