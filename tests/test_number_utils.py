@@ -485,13 +485,15 @@ class TestNumberInsideBracketsOrQuotes:
     def test_number_is_spelled_out(self, text, expected):
         assert normalize_numbers(text) == expected
 
-    @pytest.mark.parametrize("text", [
-        "de 1 a 2, casas",
-        "de 1 a (2), casas",
-        "de 1 a (2). Casas",
+    # A mark after the second number ends the pair, so no noun counts it:
+    # https://github.com/TigreGotico/text2spoken/issues/272
+    @pytest.mark.parametrize("text, expected", [
+        ("de 1 a 2, casas", "de um a dois, casas"),
+        ("de 1 a (2), casas", "de um a (dois), casas"),
+        ("de 1 a (2). Casas", "de um a (dois). Casas"),
     ])
-    def test_range_noun_after_a_break_does_not_agree(self, text):
-        assert normalize_numbers(text).startswith("de um a ")
+    def test_range_noun_after_a_break_does_not_agree(self, text, expected):
+        assert normalize_numbers(text) == expected
 
     @pytest.mark.parametrize("text, first", [
         ('ele deu "de 1 a 2" a Maria', '"de um a '),
@@ -531,6 +533,11 @@ class TestNumberPairs:
         ("1—2 casas", r"uma? a duas casas"),
         # the bracket and the verb in -a: https://github.com/TigreGotico/text2spoken/issues/272
         ("o valor (de 2 a 3) varia muito", r"o valor \(de dois a três\) varia muito"),
+        # a score, with the text2spoken#272 row and its pt-512 reading
+        ("Venceu por 2 a 0, nesta terça-feira.", r"Venceu por dois a zero, nesta terça-feira\."),
+        ("o River Plate venceu por 2 a 1, nesta terça-feira", r"o River Plate venceu por dois a um, nesta terça-feira"),
+        ("ENTRE 1 E 2 CASAS", r"ENTRE uma? E duas CASAS"),
+        ("de 1\xa0a\xa02 casas", r"de uma?\s+a\s+duas casas"),
     ])
     def test_both_numbers_are_read(self, text, pattern, lang):
         with warnings.catch_warnings():

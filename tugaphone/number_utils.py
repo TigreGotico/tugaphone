@@ -436,21 +436,33 @@ def read_dot_decimals(text: str) -> str:
 # varia muito"): the mark does not end the pair, and a verb that ends in -a
 # ("varia", "ajuda") reads as a feminine noun.
 # https://github.com/TigreGotico/text2spoken/issues/272
+# When a punctuation mark follows the second number, no noun counts the pair,
+# and both numbers read in the masculine: "Venceu por 2 a 0, nesta
+# terça-feira" -> "dois a zero" (text2spoken#272 and its pt-512 row).
 # This rewrite runs on what text2spoken read, so a pair that text2spoken reads
 # keeps its reading.
 # ---------------------------------------------------------------------------
 _OPENING_MARK = r"[(«\"“']?"
-_PAIR_FIRST = re.compile(
-    rf"(?<![\w.,])(?:(?<=\b[Ee]ntre ){_DIGIT_NUMBER.pattern}(?= e {_OPENING_MARK}\d)"
-    rf"|{_DIGIT_NUMBER.pattern}(?= (?:a|à|às|ao|aos) {_OPENING_MARK}\d))")
+_PAIR = re.compile(
+    rf"(?<![\w.,])(?:(?<=\b[Ee]ntre\s)|(?<=\bENTRE\s))(?P<first>{_DIGIT_NUMBER.pattern})"
+    rf"(?P<link>\s+(?:e|E)\s+{_OPENING_MARK})(?P<second>{_DIGIT_NUMBER.pattern})(?P<pause>[)»\"”']?[,;:.!?])?"
+    rf"|(?<![\w.,])(?P<first2>{_DIGIT_NUMBER.pattern})"
+    rf"(?P<link2>\s+(?i:a|à|às|ao|aos)\s+{_OPENING_MARK})(?P<second2>{_DIGIT_NUMBER.pattern})"
+    rf"(?P<pause2>[)»\"”']?[,;:.!?])?")
 
 
 def read_number_pairs(text: str, lang: str = "pt-PT", scale: Optional[str] = None) -> str:
     """The pairs of numbers that text2spoken leaves as written, read: "de 1 a 2
     casas" -> "de um a duas casas"; "entre 1 e 2 casas" -> "entre um e duas
     casas"."""
-    first_read = _PAIR_FIRST.sub(
-        lambda m: text2spoken_reading(m.group(), lang, scale, gender="masculine"), text)
+    def read(m):
+        first, link, second, pause = (m.group("first", "link", "second", "pause") if m.group("first")
+                                      else m.group("first2", "link2", "second2", "pause2"))
+        if pause:
+            second = text2spoken_reading(second, lang, scale, gender="masculine")
+        return text2spoken_reading(first, lang, scale, gender="masculine") + link + second + (pause or "")
+
+    first_read = _PAIR.sub(read, text)
     return text2spoken_reading(first_read, lang, scale) if first_read != text else text
 
 
