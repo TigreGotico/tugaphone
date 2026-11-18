@@ -21,9 +21,9 @@ Under the hood it drives the
 [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) candidate
 lattice: a dialect **is** an orthography2ipa lect spec, and the spec's grapheme
 table, allophone rules and cross-word sandhi produce that dialect's phonology
-directly. tugaphone adds the stages orthography2ipa leaves to the caller: text
-normalization, gender- and scale-aware number expansion, meaning-based homograph
-marking and the residual lexicon of `pt-PT` and `pt-BR`, wired through
+directly. tugaphone adds the stages orthography2ipa leaves to the caller: old-spelling
+conversion, text normalization, gender- and scale-aware number expansion,
+meaning-based homograph marking and the residual lexicon of `pt-PT` and `pt-BR`, wired through
 orthography2ipa's own extension points. See
 [docs/architecture.md](docs/architecture.md).
 
@@ -32,11 +32,11 @@ orthography2ipa's own extension points. See
 ## Install
 
 ```bash
-pip install tugaphone
+pip install --pre tugaphone
 ```
 
 Its runtime dependencies (`orthography2ipa`, `o2i-lexicons`, `silabificador`,
-`tugalex`, `bifonia`, `text2spoken`) install automatically. The `pt-PT`
+`tugalex`, `bifonia`, `text2spoken`, `desacordo_ortografico`) install automatically. The `pt-PT`
 and `pt-BR` lexicons ride in through [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons).
 
 ---
@@ -304,6 +304,7 @@ o2i's own extension points, and relies on o2i for syllabification:
 | Concern | Owner |
 |---------|-------|
 | Base phonology, dialect phenomena, sandhi, stress | orthography2ipa lect spec |
+| Old spellings to the AO1990 spelling of the lect | desacordo_ortografico, called by tugaphone (`lattice_core.normalize_spelling`, via `Pipeline.expand`) |
 | Number, date and time reading | text2spoken, called by tugaphone (`number_utils`, via `Pipeline.expand`) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via `Pipeline.mark`) |
 | `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, passed by tugaphone through `Pipeline` |
@@ -332,6 +333,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 | [o2i-lexicons](https://github.com/TigreGotico/o2i-lexicons) | The `pt-PT` and `pt-BR` residual lexicons |
 | [bifonia](https://github.com/TigreGotico/bifonia) | Heterophone sense disambiguation, the pipeline's `mark` stage |
 | [text2spoken](https://github.com/TigreGotico/text2spoken) | Numbers, dates, times, money and abbreviations for `normalize_numbers` |
+| [desacordo_ortografico](https://github.com/TigreGotico/desacordo_ortografico) | Old spellings to AO1990, the spelling step of `expand` |
 | [tugalex](https://github.com/TigreGotico/tugalex) | Given-name gender for `D.` (Dom or Dona) |
 | [silabificador](https://github.com/TigreGotico/silabificador) | Syllabifier of the deprecated token tree |
 
@@ -346,7 +348,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 - [docs/homographs.md](docs/homographs.md), meaning-based disambiguation
 - [docs/codeswitch.md](docs/codeswitch.md), embedded es/fr/en detection and nativization
 - [docs/numbers.md](docs/numbers.md), number normalization and gender agreement
-- [docs/text_normalization.md](docs/text_normalization.md), abbreviations, acronyms, letter-digit codes and the text2spoken step
+- [docs/text_normalization.md](docs/text_normalization.md), old spellings, abbreviations, acronyms, letter-digit codes and the text2spoken step
 - [docs/api.md](docs/api.md), full class and function reference
 - [docs/tokenizer.md](docs/tokenizer.md), the token-tree feature model
 - [docs/advanced.md](docs/advanced.md), the pipeline internals and integration
