@@ -167,10 +167,7 @@ def test_modern_dual_form_stays(lect, word):
 
 
 # VOLP: ótica s.f. "ciência da audição"; cf. óptica | óptica s.f. "ciência da visão";
-# cf. ótica. The two are different words, so pt-BR óptica stays. desacordo's base-iv
-# map drops the p, and its own test marks the same row (p04-013) as a strict xfail.
-@pytest.mark.xfail(strict=True, raises=AssertionError,
-                   reason="desacordo#69: base_iv.json drops the p of óptica")
+# cf. ótica. The two are different words, so pt-BR óptica stays.
 @pytest.mark.parametrize("lect", LECTS["br"])
 def test_br_group_keeps_optica(lect):
     assert lattice_core.normalize_spelling("A fibra óptica.", lect) == "A fibra óptica."
