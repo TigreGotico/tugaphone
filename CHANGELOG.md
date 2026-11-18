@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.2a1](https://github.com/TigreGotico/tugaphone/tree/1.9.2a1) (2026-11-18)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.1a1...1.9.2a1)
+
+**Merged pull requests:**
+
+- perf: build the lect list without loading every spec [\#250](https://github.com/TigreGotico/tugaphone/pull/250) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.9.1a1](https://github.com/TigreGotico/tugaphone/tree/1.9.1a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.0a1...1.9.1a1)
