@@ -12,8 +12,6 @@ import pytest
 
 from tugaphone.text_normalization import expand_abbreviations, normalize_text
 
-from tests.text2spoken_gaps import LETTER_AS_TITLE
-
 
 @pytest.mark.parametrize("text,expected", [
     ("a Sr.ª Ana chegou", "a Senhora Ana chegou"),
@@ -72,10 +70,9 @@ def test_guard_rows(text, expected):
     assert expand_abbreviations(text) == expected
 
 
-@pytest.mark.parametrize("text", [
-    pytest.param("a vitamina D. Depois", marks=LETTER_AS_TITLE),
-    pytest.param("A vitamina D. Boa noite.", marks=LETTER_AS_TITLE),
-])
+# After a label noun, "D." is the letter that the noun labels, not the title
+# "Dom" or "Dona", whatever capital word follows it.
+@pytest.mark.parametrize("text", ["a vitamina D. Depois", "A vitamina D. Boa noite."])
 def test_a_letter_after_its_label_noun_stays(text):
     assert normalize_text(text) == text
 
