@@ -121,8 +121,7 @@ def split_number_ranges(text: str) -> str:
 # European number separators: "." groups thousands and is dropped;
 # "," is the decimal mark, read "vírgula". Both only between two digits, so
 # sentence-final periods, list commas and ordinal marks ("3.º") are unaffected.
-# text2spoken leaves a decimal with a dot ("10.4") as written.
-# TODO(text2spoken issue)
+# text2spoken reads both, so normalize_numbers does not run this rewrite.
 # ---------------------------------------------------------------------------
 _THOUSANDS_DOT = re.compile(r"(?<=\d)\.(?=\d)")
 _DECIMAL_COMMA = re.compile(r"(?<=\d),(?=\d)")
@@ -380,7 +379,6 @@ def read_numbers(text: str, lang: str = "pt-PT", scale: Optional[str] = None) ->
     exposed = read_scientific_notation(spoken, lang)
     exposed = read_dot_decimals(exposed)
     exposed = separate_unit_symbols(exposed)
-    exposed = normalize_number_separators(exposed)
     exposed = split_number_ranges(exposed)
     exposed = expand_clock_times(exposed)
     if exposed != spoken:

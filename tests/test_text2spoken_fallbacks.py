@@ -81,6 +81,7 @@ def test_every_fallback_names_its_text2spoken_issue():
 # quoted by FLiP, "concordâncias com unidades (II)").
 @pytest.mark.parametrize("text,lang,expected", [
     ("80m2", "pt-PT", "oitenta metros quadrados"),
+    ("2,5m2", "pt-PT", "dois vírgula cinco metros quadrados"),
     ("1 m2", "pt-PT", "um metro quadrado"),
     ("10 mg", "pt-PT", "dez miligramas"),
     ("2 cm3", "pt-PT", "dois centímetros cúbicos"),
