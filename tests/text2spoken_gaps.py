@@ -33,7 +33,8 @@ PRENOMINAL_CARDINAL = _misreading(
     "text2spoken reads 'O XXV Congresso' as 'O Vinte e cinco Congresso'; a numeral before its noun "
     "is an ordinal (Ciberdúvidas 11716)")
 LETTER_AS_TITLE = _misreading(
-    "text2spoken reads the letter in 'a vitamina D. Boa noite' as the title 'Dona'")
+    "text2spoken reads the letter after a label noun as a title: 'a vitamina D. Boa noite' gives "
+    "'Dona Boa', 'a vitamina D. Depois' gives 'Dom Depois'")
 SPELLED_DECIMAL = _misreading(
     "text2spoken reads 'vírgula' after a digit as the counted noun ('1 vírgula 5' gives 'uma "
     "vírgula cinco') and leaves a fraction with a leading zero ('0 vírgula 02') as written")

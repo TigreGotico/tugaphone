@@ -26,6 +26,7 @@ import pytest
 
 from tugaphone.text_normalization import expand_letter_digit_codes, expand_regnal_numerals, normalize_text
 
+from tests.text2spoken_gaps import PRENOMINAL_CARDINAL
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
@@ -70,6 +71,8 @@ class TestRomanBeforeNoun:
         ("o XIX Congresso", "o Décimo Nono Congresso"),
         ("a II Guerra Mundial", "a Segunda Guerra Mundial"),
         ("na XXI edição", "na vigésima primeira edição"),
+        pytest.param("O XXV Congresso decorreu em Lisboa.", "O Vigésimo Quinto Congresso decorreu em Lisboa.",
+                     marks=PRENOMINAL_CARDINAL),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
