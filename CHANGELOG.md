@@ -1,8 +1,24 @@
 # Changelog
 
+## [1.10.9a1](https://github.com/TigreGotico/tugaphone/tree/1.10.9a1) (2026-11-18)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.8a1...1.10.9a1)
+
+**Merged pull requests:**
+
+- fix: require orthography2ipa 7.123.0a2, the first published release with spec\_revision [\#275](https://github.com/TigreGotico/tugaphone/pull/275) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.10.8a1](https://github.com/TigreGotico/tugaphone/tree/1.10.8a1) (2026-11-18)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.5a1...1.10.8a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.7a1...1.10.8a1)
+
+## [1.10.7a1](https://github.com/TigreGotico/tugaphone/tree/1.10.7a1) (2026-11-18)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.6a1...1.10.7a1)
+
+## [1.10.6a1](https://github.com/TigreGotico/tugaphone/tree/1.10.6a1) (2026-11-18)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.5a1...1.10.6a1)
 
 **Merged pull requests:**
 
