@@ -42,8 +42,8 @@ LEFT_AS_WRITTEN = [
     ("80m2", "80m2"),
     ("de 1 a 2 casas", "1 a 2"),
     ("entre 1 e 2 casas", "1 e 2"),
-    # text2spoken bugs whose issues are pending: a closing bracket does not
-    # end the pair, and a verb in -a reads as a feminine noun
+    # A closing bracket does not end the pair, and a verb in -a reads as a
+    # feminine noun: https://github.com/TigreGotico/text2spoken/issues/272
     ("o valor (de 2 a 3) varia muito", "2 a 3"),
     ("a escala (de 1 a 5) ajuda a medir", "1 a 5"),
     *[(f"dez {unit}", f" {unit}") for unit in

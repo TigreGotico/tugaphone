@@ -430,12 +430,13 @@ def read_dot_decimals(text: str) -> str:
 # as written: https://github.com/TigreGotico/text2spoken/issues/134
 # No source gives the gender of the first number, so it reads in the
 # masculine, and text2spoken then reads the second number with its noun.
-# text2spoken also leaves two pairs that it should read: a pair in brackets
-# ("o valor (de 2 a 3) varia muito"), because a closing bracket does not end
-# the pair, and a pair before a verb that ends in -a ("varia", "ajuda"), which
-# reads as a feminine noun. Their text2spoken issues are pending, and #134
-# stands for them. This rewrite runs on what text2spoken read, so a pair that
-# text2spoken reads keeps its reading.
+# text2spoken also leaves a pair that it should read when a comma or a closing
+# bracket follows the second number ("de 1 a 2, casas", "o valor (de 2 a 3)
+# varia muito"): the mark does not end the pair, and a verb that ends in -a
+# ("varia", "ajuda") reads as a feminine noun.
+# https://github.com/TigreGotico/text2spoken/issues/272
+# This rewrite runs on what text2spoken read, so a pair that text2spoken reads
+# keeps its reading.
 # ---------------------------------------------------------------------------
 _OPENING_MARK = r"[(«\"“']?"
 _PAIR_FIRST = re.compile(

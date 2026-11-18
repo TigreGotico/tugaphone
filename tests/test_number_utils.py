@@ -529,6 +529,7 @@ class TestNumberPairs:
         ("Entre 1 e 2 casas", r"Entre uma? e duas casas"),
         ("de 21 a 22 casas", r"de vinte e uma? a vinte e duas casas"),
         ("1—2 casas", r"uma? a duas casas"),
+        # the bracket and the verb in -a: https://github.com/TigreGotico/text2spoken/issues/272
         ("o valor (de 2 a 3) varia muito", r"o valor \(de dois a três\) varia muito"),
     ])
     def test_both_numbers_are_read(self, text, pattern, lang):
