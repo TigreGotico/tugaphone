@@ -18,11 +18,16 @@ HERE = Path(__file__).parent / "data" / "sentences"
 COLUMNS = ["id", "lang", "category", "text", "expected_ipa", "source", "tier"]
 CATEGORIES = {"plain", "number", "date", "abbreviation", "homograph", "contact"}
 LANGS = ["pt-PT", "pt-BR"]
-# The reading column of pt-BR-number-19 cites Cunha & Cintra p. 388,
-# "século décimo". The text2spoken ruling keeps "século dez" in pt-BR after
-# Ciberdúvidas 9067, which gives the ordinal "no Brasil até ao nono". The row
-# is not checked against either reading.
-UNPINNED = {"pt-BR-number-19"}
+# pt-BR-number-19, "século X", reads "décimo" in Brazil too. Migalhas,
+# Gramatigalhas "Numeral", quotes two Brazilian authors with their pages:
+# "para indicar a ordem dos séculos, ou a ordem de sucessão de soberanos,
+# usa-se o ordinal até dez e o cardinal de onze em diante" (Luís A. P.
+# Vitória, Dicionário de Dificuldades, Erros e Definições de Português, 4th
+# ed., 1969, p. 174), and from 1 to 10 the ordinal, "Pio X (décimo), século
+# VIII (oitavo)" (Silveira Bueno, Questões de Português, vol. II, 1957,
+# p. 318). Ciberdúvidas 9067 gives "no Brasil até ao nono" with no source.
+# text2spoken reads "século dez" in pt-BR.
+TEXT2SPOKEN_MISREADS = {"pt-BR-number-19": 'text2spoken reads "século X" as "século dez" in pt-BR'}
 
 
 def _build():
@@ -50,10 +55,11 @@ def _spec_cases():
     for lang in ("pt-PT", "pt-BR"):
         _, rows = read(f"{lang}.spec.tsv")
         for row in rows:
-            if (row["category"] not in ("number", "date", "abbreviation") or row["reading"] == "-"
-                    or row["id"] in UNPINNED):
+            if row["category"] not in ("number", "date", "abbreviation") or row["reading"] == "-":
                 continue
-            cases.append(pytest.param(lang, row["text"], row["reading"], id=row["id"]))
+            marks = ([pytest.mark.xfail(strict=True, reason=TEXT2SPOKEN_MISREADS[row["id"]])]
+                     if row["id"] in TEXT2SPOKEN_MISREADS else [])
+            cases.append(pytest.param(lang, row["text"], row["reading"], id=row["id"], marks=marks))
     return cases
 
 
