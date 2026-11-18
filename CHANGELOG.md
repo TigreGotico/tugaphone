@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.0a1](https://github.com/TigreGotico/tugaphone/tree/1.10.0a1) (2026-11-18)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.3a1...1.10.0a1)
+
+**Merged pull requests:**
+
+- feat: read numbers, dates and abbreviations through text2spoken [\#245](https://github.com/TigreGotico/tugaphone/pull/245) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.9.3a1](https://github.com/TigreGotico/tugaphone/tree/1.9.3a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.2a1...1.9.3a1)
@@ -385,17 +393,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.4a2...1.4.5a1)
 
-**Merged pull requests:**
-
-- fix: read Roman numerals by grammar and guard capitals, letter-digit codes [\#144](https://github.com/TigreGotico/tugaphone/pull/144) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.4.4a2](https://github.com/TigreGotico/tugaphone/tree/1.4.4a2) (2026-10-29)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.4.4a1...1.4.4a2)
-
-**Merged pull requests:**
-
-- test\(bench\): score stress accuracy next to PER per dialect [\#143](https://github.com/TigreGotico/tugaphone/pull/143) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.4.4a1](https://github.com/TigreGotico/tugaphone/tree/1.4.4a1) (2026-10-29)
 
