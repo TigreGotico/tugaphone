@@ -26,8 +26,12 @@ LANGS = ["pt-PT", "pt-BR"]
 # ed., 1969, p. 174), and from 1 to 10 the ordinal, "Pio X (décimo), século
 # VIII (oitavo)" (Silveira Bueno, Questões de Português, vol. II, 1957,
 # p. 318). Ciberdúvidas 9067 gives "no Brasil até ao nono" with no source.
-# text2spoken reads "século dez" in pt-BR.
-TEXT2SPOKEN_MISREADS = {"pt-BR-number-19": 'text2spoken reads "século X" as "século dez" in pt-BR'}
+# text2spoken reads "século dez" in pt-BR:
+# https://github.com/TigreGotico/text2spoken/issues/306
+TEXT2SPOKEN_MISREADS = {
+    "pt-BR-number-19": 'text2spoken reads "século X" as "século dez" in pt-BR '
+                       "(https://github.com/TigreGotico/text2spoken/issues/306)",
+}
 
 
 def _build():
