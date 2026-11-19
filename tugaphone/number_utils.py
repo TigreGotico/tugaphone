@@ -421,8 +421,9 @@ def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
 
 # ---------------------------------------------------------------------------
 # A dot between digits that is not followed by groups of three digits is a
-# decimal mark: "10.4" is "dez vírgula quatro". text2spoken leaves it as
-# written: https://github.com/TigreGotico/text2spoken/issues/242
+# decimal mark, so "3.14159" reads as "3,14159". text2spoken reads "10.4" and
+# leaves a longer fraction as written:
+# https://github.com/TigreGotico/text2spoken/issues/242
 # ---------------------------------------------------------------------------
 _DOT_DECIMAL = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w.,])")
 
