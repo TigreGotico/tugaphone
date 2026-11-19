@@ -11,10 +11,12 @@ spec, whose ⟨x⟩ rows hold no ⟨ex⟩ + consonant context, so the glide is l
 The Lisbon dictionary of the Portal da Língua Portuguesa, read through tugalex
 (``TugaLexicon().get_phonemes(word, "lbx")``), disagrees for medial ⟨ex⟩: texto
 tˈɐʃ·tu, contexto kõ·tˈɐʃ·tu, pretexto pɾɨ·tˈɐʃ·tu, sexta sˈɐʃ·tɐ, with no
-glide. The pt-PT-x-lisbon spec produces that on purpose: the rule
-LX_STRESSED_E_PREPALATAL gives [ɐ] before a palatal (Cunha & Cintra, Nova
-Gramática do Português Contemporâneo, 7th ed., p. 49). The Lisbon rows below
-pin that output. The same dictionary gives extra ˈiʃ·tɾɐ, and for word-initial
+glide. The Lisbon rows below pin that output on the strength of this
+dictionary. The vowel comes from the pt-PT-x-lisbon rule
+LX_STRESSED_E_PREPALATAL, [ɐ] before a palatal (Cunha & Cintra, Nova Gramática
+do Português Contemporâneo, 7th ed., p. 49). No Lisbon rule removes the glide:
+it is absent because pt-PT has no ⟨ex⟩ + consonant rule, and a pt-PT rule
+reaches pt-PT-x-lisbon unless the Lisbon spec limits it. The same dictionary gives extra ˈiʃ·tɾɐ, and for word-initial
 ⟨ex⟩ it gives ɐjʃ·pli·kˈaɾ, ɐjʃ·sɨ·lˈẽt and ɐjʃ·tɨ·ɾjˈoɾ.
 
 Infopédia writes the pretonic ⟨a⟩ as the reduced vowel: magistratura
@@ -28,8 +30,8 @@ from tugaphone import phonemize
 LECTS = ["pt-PT", "pt-PT-x-lisbon"]
 
 EX_GLIDE_CAUSE = (
-    "orthography2ipa pt-PT.json has no ⟨ex⟩ + consonant rule: ⟨x⟩ becomes [ʃ] with no [j] "
-    "and the vowel is not [ɐ]. Infopédia: texto ˈtɐjʃtu. TigreGotico/tugaphone#135"
+    "orthography2ipa pt-PT.json has no ⟨ex⟩ + consonant rule: ⟨x⟩ becomes [ʃ] with no [j]. "
+    "Infopédia: texto ˈtɐjʃtu. TigreGotico/tugaphone#135"
 )
 ex_glide = pytest.mark.xfail(strict=True, reason=EX_GLIDE_CAUSE)
 
