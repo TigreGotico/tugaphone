@@ -233,7 +233,7 @@ gives an `UnreadFormWarning` that names the form and the text, because the
 phoneme lattice drops its digits. See [docs/numbers.md](docs/numbers.md).
 
 text2spoken reads first, and its reading stands. A form that it leaves as
-written, such as "3-2", "São 16:30." or "2L", goes to a fallback rewrite of
+written, such as "3-2", "Chegou 16:54." or "2L", goes to a fallback rewrite of
 tugaphone, so "2L" reads as "dois litros". Each fallback goes
 when text2spoken reads its form.
 

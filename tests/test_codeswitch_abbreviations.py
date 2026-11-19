@@ -4,9 +4,10 @@ The normalizer expands an abbreviation and reads a Roman numeral after a
 part-of-work noun from its neighbours. After its noun, a numeral up to ten is
 an ordinal and from eleven on a cardinal, for kings, popes, centuries and
 chapters (Silveira Bueno, Questões de Português, 1957, vol. II, p. 318, quoted
-by José Maria da Costa in Migalhas "Gramatigalhas: Numeral"), so "Cap. XII" is
-"capítulo doze". Code-switch routing splits the text into words before the
-normalizer runs. An abbreviation that only Portuguese reads in its context
+by José Maria da Costa in Migalhas "Gramatigalhas: Numeral": "Estas regras
+servem somente para a enumeração de reis, papas, capítulos, séculos"), so
+"Cap. X" is "capítulo décimo" in both varieties and "Cap. XII" is "capítulo
+doze". Code-switch routing splits the text into words before the normalizer runs. An abbreviation that only Portuguese reads in its context
 stays Portuguese; every other token is left to the router.
 """
 import pytest
@@ -60,10 +61,6 @@ def _router_reading(ph, monkeypatch, text, lect, contact):
     ("S. Ex.ª o Presidente", "Sua Excelência o Presidente"),
 ])
 def test_reads_as_spoken(ph, lect, contact, written, spoken):
-    if lect == "pt-BR" and written == "li o Cap. X.":
-        # Brazilian usage reads the ordinal only up to the ninth: "no Brasil
-        # até ao nono" (Ciberdúvidas 9067).
-        spoken = "li o capítulo dez."
     expected = ph.phonemize_sentence(spoken, lect, contact="none")
     assert ph.phonemize_sentence(written, lect, contact=contact) == expected
 

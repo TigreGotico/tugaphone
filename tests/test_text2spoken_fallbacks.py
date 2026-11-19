@@ -32,7 +32,6 @@ LEFT_AS_WRITTEN = [
     ("tem 10.4 graus", "10.4"),
     ("O jogo é 3-2.", "3-2"),
     ("10—20", "10—20"),
-    ("São 16:30.", "16:30"),
     ("9:05", "9:05"),
     ("24:00", "24:00"),
     ("Afonso I reinou", " I "),
@@ -64,7 +63,7 @@ def test_text2spoken_still_leaves_the_fallback_form(text, kept, variety):
     ("mede 15x8 metros", "15x8", "quinze por oito"),
     ("mede 2 x 2 metros", "2 x 2", "dois por dois"),
     ("tem 80 m2", "80 m2", "oitenta metros"),
-    ("São 16:30.", "16:30", "quatro e meia"),
+    ("Chegou 16:54.", "16:54", "dezasseis e cinquenta e quatro"),
     ("Comprei 2 L. Escreve-se com dois L.", "2 L", "dois litros"),
 ])
 def test_text2spoken_reading_wins_over_a_fallback(monkeypatch, text, form, reading):
@@ -154,7 +153,7 @@ def test_a_clock_time_with_no_time_word_keeps_its_words(lang):
 @pytest.mark.parametrize("text,words", [
     ("São 16:30.", "dezasseis e trinta"), ("O jogo é 3-2.", "três a dois"),
     ("Tem 80m2.", "oitenta"), ("casa /7/ casa", "sete"), ("1e6", "um vezes dez elevado a seis"),
-    ("às 24:00", "vinte e quatro"), ("Afonso I reinou", "Primeiro"), ("mede 15x8", "quinze vezes oito"),
+    ("24:00", "vinte e quatro"), ("às 24:00", "meia-noite"), ("Afonso I reinou", "Primeiro"), ("mede 15x8", "quinze vezes oito"),
     ("um filme 3D chegou", ""), ("o código XK-99 chegou", ""), ("Ligue 21 000 0000.", "dois um zero"),
 ])
 def test_no_digit_goes_silently(text, words):
