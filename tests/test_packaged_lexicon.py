@@ -111,3 +111,22 @@ def test_a_plain_engine_stays_on_the_rules_in_a_fresh_process():
     assert (after_br, after_pt) == (rules_br, rules_pt)
     assert (lexicon_br, lexicon_pt) == (packaged("pt-BR")["táxi"], packaged("pt-PT")["basebol"])
     assert (rules_br, rules_pt) != (lexicon_br, lexicon_pt)
+
+
+# AO1990 Nota Explicativa 4.2 b): a mute c or p does not keep the vowel before it open
+# (corar, padeiro stay open with no consonant; accionar, actual reduce beside it), so the
+# vowel is lexical and comes from the o2i-lexicons entry. The readings are Infopédia's in the
+# spec's symbols: afetar ɐfɛˈtar, receção ʀəsɛˈsɐ̃w̃, respetivo ʀəʃpɛˈtivu. The spelling step
+# gives the pre-AO1990 spellings the same reading.
+@pytest.mark.xfail(strict=True, reason="needs the o2i-lexicons alpha with "
+                                       "TigreGotico/o2i-lexicons#95")
+@pytest.mark.parametrize("word, reading", [
+    ("afetar", "ɐfɛˈtaɾ"),
+    ("receção", "ʁɨsɛˈsɐ̃w̃"),
+    ("respetivo", "ʁɨʃpɛˈtivu"),
+    ("afectar", "ɐfɛˈtaɾ"),
+    ("recepção", "ʁɨsɛˈsɐ̃w̃"),
+    ("respectivo", "ʁɨʃpɛˈtivu"),
+])
+def test_the_vowel_before_a_dropped_c_or_p_reads_open(word, reading):
+    assert phonemize(word, "pt-PT") == reading
