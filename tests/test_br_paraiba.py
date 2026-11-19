@@ -38,7 +38,12 @@ def test_the_lect_is_listed():
     ("dois", "ˈdojs"),
     ("mesmo", "ˈmezmu"),
     ("texto", "ˈteʃtu"),
-    ("desde", "ˈdeʒdi"),
 ])
 def test_paraiba_reading(ph, word, ipa):
     assert ph.phonemize_sentence(word, "pt-BR-x-paraiba") == ipa
+
+
+def test_desde_has_a_palatal_coda_before_the_stop(ph):
+    # p. 283 gives [ʒ] before [d]. After that [ʒ] the /d/ before [i] is an
+    # affricate 56.4% of the time (Gráfico 6, p. 293), so only the coda is pinned.
+    assert ph.phonemize_sentence("desde", "pt-BR-x-paraiba").startswith("ˈdeʒd")
