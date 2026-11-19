@@ -1,8 +1,25 @@
 # Changelog
 
+## [1.10.11a1](https://github.com/TigreGotico/tugaphone/tree/1.10.11a1) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.10a1...1.10.11a1)
+
+**Merged pull requests:**
+
+- test\(pt-PT\): pin the open vowel before a dropped c or p [\#284](https://github.com/TigreGotico/tugaphone/pull/284) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- docs: say that normalize\_spelling rewrites ideia, not that it reads it [\#283](https://github.com/TigreGotico/tugaphone/pull/283) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.10.10a1](https://github.com/TigreGotico/tugaphone/tree/1.10.10a1) (2026-11-19)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.9a1...1.10.10a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.9a3...1.10.10a1)
+
+## [1.10.9a3](https://github.com/TigreGotico/tugaphone/tree/1.10.9a3) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.9a2...1.10.9a3)
+
+## [1.10.9a2](https://github.com/TigreGotico/tugaphone/tree/1.10.9a2) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.9a1...1.10.9a2)
 
 **Merged pull requests:**
 
