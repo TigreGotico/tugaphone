@@ -101,9 +101,12 @@ class TestUnits:
         assert read(text, lang) == expected
 
 
-@pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+@pytest.mark.parametrize("lang", [
+    "pt-PT",
+    pytest.param("pt-BR", marks=SPACE_THOUSANDS),
+])
 @pytest.mark.parametrize("text,expected", [
-    pytest.param("Há 100 000 pessoas.", "Há cem mil pessoas.", marks=SPACE_THOUSANDS),
+    ("Há 100 000 pessoas.", "Há cem mil pessoas."),
 ])
 def test_a_space_groups_thousands(text, expected, lang):
     assert read(text, lang) == expected
