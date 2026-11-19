@@ -105,8 +105,8 @@ class TestClockTimes:
         ("às 9:05", "às nove e cinco"),
         ("às 9:05, sala 2.", "às nove e cinco, sala dois."),
         # Priberam, "meia-noite": "Fim da vigésima quarta hora do dia civil que
-        # acaba às 24h00 (ou 00h00 ...)"; Michaelis (pt-BR): "A hora zero ou as
-        # 24 horas do dia civil". "às 24:00" reads "à meia-noite" in both varieties.
+        # acaba às 24h00 (ou 00h00 ...)". "às 24:00" reads "à meia-noite" in both
+        # varieties.
         ("às 24:00", "à meia-noite"),
         ("São 16:30.", "São dezasseis e trinta."),
         ("Reunião às 9:05, sala 2.", "Reunião às nove e cinco, sala dois."),

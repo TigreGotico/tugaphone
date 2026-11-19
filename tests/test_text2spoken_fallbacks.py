@@ -34,6 +34,7 @@ LEFT_AS_WRITTEN = [
     ("10—20", "10—20"),
     ("9:05", "9:05"),
     ("24:00", "24:00"),
+    ("Chegou 16:54.", "16:54"),
     ("Afonso I reinou", " I "),
     ("a II Guerra Mundial", "II"),
     ("o XIX Congresso", "XIX"),
