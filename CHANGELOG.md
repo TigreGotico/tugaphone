@@ -1,8 +1,20 @@
 # Changelog
 
+## [1.11.1a1](https://github.com/TigreGotico/tugaphone/tree/1.11.1a1) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.0a2...1.11.1a1)
+
+**Merged pull requests:**
+
+- fix: track o2i-lexicons 0.7.20a1 and text2spoken 0.0.2a90 readings [\#294](https://github.com/TigreGotico/tugaphone/pull/294) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.0a2](https://github.com/TigreGotico/tugaphone/tree/1.11.0a2) (2026-11-19)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.12a1...1.11.0a2)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.0a1...1.11.0a2)
+
+## [1.11.0a1](https://github.com/TigreGotico/tugaphone/tree/1.11.0a1) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.12a1...1.11.0a1)
 
 **Merged pull requests:**
 
