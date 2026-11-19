@@ -108,7 +108,7 @@ def _open_ei_diphthong(text: str) -> str:
 def normalize_spelling(text: str, lect: str) -> str:
     """Rewrite the old spellings of ``text`` in the AO1990 norm of ``lect``.
 
-    "A acção da pharmacia" reads as "A ação da farmácia". Case and punctuation
+    "A acção da pharmacia" becomes "A ação da farmácia". Case and punctuation
     stay. Modern text stays as written, the dual forms included (pt-PT sector,
     pt-BR facto), with these changes:
 
@@ -116,11 +116,9 @@ def normalize_spelling(text: str, lect: str) -> str:
       Rachel → Raquel), although AO1990 Base XXI lets a name keep its spelling;
     * for the Brazilian lects, the hyphen rules of AO1990 change the word count
       (há-de → há de, manda-chuva → mandachuva);
-    * for the Brazilian lects, óptica becomes ótica, although the VOLP lists
-      both as separate words;
     * for the Brazilian lects, an AO1990 paroxytone that lost the accent of an
-      open ``éi`` (Base IX 3.º) reads with the open vowel, as before AO1990
-      (ideia reads as idéia).
+      open ``éi`` (Base IX 3.º) takes its pre-AO1990 spelling, which marks the
+      open vowel (ideia becomes idéia).
     """
     norm = spelling_norm(lect)
     text = convert_spelling(text, "etymological", norm, features=SPELLING_FEATURES[norm])
