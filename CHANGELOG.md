@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.2a2](https://github.com/TigreGotico/tugaphone/tree/1.11.2a2) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.2a1...1.11.2a2)
+
+**Merged pull requests:**
+
+- test: pin pt-PT ex+consonant glide and pretonic a reduction [\#296](https://github.com/TigreGotico/tugaphone/pull/296) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.2a1](https://github.com/TigreGotico/tugaphone/tree/1.11.2a1) (2026-11-19)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.1a1...1.11.2a1)
