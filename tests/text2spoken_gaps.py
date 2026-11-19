@@ -19,9 +19,6 @@ MINUS_RANGE = _misreading("text2spoken reads '10−20' between two numbers as 'd
 PRENOMINAL_CARDINAL = _misreading(
     "text2spoken reads 'O XXV Congresso' as 'O Vinte e cinco Congresso'; a numeral before its noun "
     "is an ordinal (Ciberdúvidas 11716)", 248)
-SPELLED_DECIMAL = _misreading(
-    "text2spoken reads '0 vírgula 02' as 'zero vírgula 02': it leaves a fraction with a leading zero "
-    "as written", 242)
 NUMBER_SIGN = _misreading(
     "text2spoken reads the '#' of '#7#' as the word 'número' and keeps the closing '#' "
     "('número sete#'); a number between two marks reads alone ('#sete#')", 250)

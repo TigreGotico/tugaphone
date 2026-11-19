@@ -7,7 +7,7 @@ from text2spoken import normalize
 
 from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, UnreadFormWarning, normalize_numbers, read_number_pairs
 
-from tests.text2spoken_gaps import SCALE_PAIR, SPELLED_DECIMAL
+from tests.text2spoken_gaps import SCALE_PAIR
 
 
 class TestNormalizeNumbers:
@@ -442,7 +442,7 @@ class TestDecimalCommaReading(object):
         assert normalize_numbers("tem 10,4 graus") == "tem dez vírgula quatro graus"
 
     def test_dot_decimal_still_works(self):
-        assert normalize_numbers("tem 10.4 graus") == "tem dez vírgula quatro graus"
+        assert normalize_numbers("o valor é 10.4") == "o valor é dez vírgula quatro"
 
 
 class TestNumberInsideBracketsOrQuotes:
@@ -463,8 +463,7 @@ class TestNumberInsideBracketsOrQuotes:
         ("¿5?", "¿cinco?"),
         ("¡5!", "¡cinco!"),
         ("tem de 1 a (2 cães)", "tem de um a (dois cães)"),
-        pytest.param("a taxa subiu (0 vírgula 02)", "a taxa subiu (zero vírgula zero dois)",
-                     marks=SPELLED_DECIMAL),
+        ("a taxa subiu (0 vírgula 02)", "a taxa subiu (zero vírgula zero dois)"),
         # "vírgula" after a digit is the decimal mark, not the counted noun
         ("(1) vírgula 5 m", "(um) vírgula cinco metros"),
         ("«1» vírgula 5 m", "«um» vírgula cinco metros"),

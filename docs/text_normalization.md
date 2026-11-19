@@ -99,9 +99,9 @@ normalize_text("o século XIX", "pt-BR")
 
 text2spoken reads first, and its reading stands. The rewrites below read only
 the forms that text2spoken leaves as written: a range with an em dash or a
-hyphen ("3-2"), a clock time with no time word ("São 16:30."), `24:00`, a
-glued unit, a unit symbol such as `m2` or `L` after a number in digits, a
-multiplication sign, a decimal with a dot, scientific notation, a number
+hyphen ("3-2"), a clock time with no time word ("Chegou 16:54."), `24:00`, a
+litre symbol with a capital L after a number in digits, glued or not ("2L",
+"10 mL"), a multiplication sign, a decimal with a dot, scientific notation, a number
 between two marks, and a pair of numbers whose noun may give the first number
 another gender ("de 1 a 2 casas"). The first number of such a pair reads in the
 masculine, and the second agrees with its noun. When a comma, a semicolon, a
@@ -114,10 +114,10 @@ the code, and it goes when text2spoken reads its form.
 ```python
 normalize_text("O jogo é 3-2.")
 # 'O jogo é três a dois.'
-normalize_text("São 16:30.")
-# 'São dezasseis e trinta.'
-normalize_text("Uma casa de 80m2.")
-# 'Uma casa de oitenta metros quadrados.'
+normalize_text("Chegou 16:54.")
+# 'Chegou dezasseis e cinquenta e quatro.'
+normalize_text("Bebi 2L de água.")
+# 'Bebi dois litros de água.'
 normalize_text("Mede 15x8 metros.")
 # 'Mede quinze vezes oito metros.'
 normalize_text("1e6")
