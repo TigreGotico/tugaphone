@@ -50,14 +50,12 @@ normalize_spelling("O facto e o contacto ficam.", "pt-BR")
 # 'O facto e o contacto ficam.'
 ```
 
-Case and punctuation stay. Modern text changes in four ways:
+Case and punctuation stay. Modern text changes in three ways:
 
 - A name in an old spelling takes the AO1990 spelling (*Sophia* → *Sofia*,
   *Rachel* → *Raquel*), although AO1990 Base XXI lets a name keep its spelling.
 - For the Brazilian lects and `pt-UY`, the hyphen rules of AO1990 change the word count
   (*há-de* → *há de*, *manda-chuva* → *mandachuva*).
-- For the Brazilian lects and `pt-UY`, *óptica* becomes *ótica*, although the VOLP lists
-  both as separate words.
 - For the Brazilian lects and `pt-UY`, a paroxytone that lost the accent of an open *éi*
   (AO1990 Base IX 3.º) takes the accent back, so it reads with the open
   vowel (*ideia* → *idéia*, *estreia* → *estréia*). Michaelis marks these
@@ -66,7 +64,13 @@ Case and punctuation stay. Modern text changes in four ways:
 The Brazilian lects keep the trema (*freqüente*), because in a text from
 before AO1990 it is the only mark of a pronounced *u*. They also keep both
 forms of a VOLP dual as written (*epilético* and *epiléptico*), because the
-form carries the pronunciation of the writer.
+form carries the pronunciation of the writer. *Óptica* also stays, because the
+VOLP lists *óptica* and *ótica* as two different words:
+
+```python
+normalize_spelling("A fibra óptica.", "pt-BR")
+# 'A fibra óptica.'
+```
 
 ---
 
@@ -100,7 +104,10 @@ glued unit, a unit symbol such as `m2` or `L` after a number in digits, a
 multiplication sign, a decimal with a dot, scientific notation, a number
 between two marks, and a pair of numbers whose noun may give the first number
 another gender ("de 1 a 2 casas"). The first number of such a pair reads in the
-masculine, and the second agrees with its noun. In "Escreve-se com dois L."
+masculine, and the second agrees with its noun. When a comma, a semicolon, a
+stop, a question mark or an exclamation mark follows the second number or its
+closing bracket, no noun counts the pair, and both numbers read in the
+masculine. In "Escreve-se com dois L."
 the `L` is a letter and stays. Each fallback names its text2spoken issue in
 the code, and it goes when text2spoken reads its form.
 
@@ -117,6 +124,8 @@ normalize_text("1e6")
 # 'um vezes dez elevado a seis'
 normalize_text("de 1 a 2 casas")
 # 'de um a duas casas'
+normalize_text("de 1 a 2, casas")
+# 'de um a dois, casas'
 ```
 
 The rewrites that 1.7 made public stay public. Each one leaves its digits for
@@ -131,7 +140,9 @@ that a number reader reads the unit name with number agreement. A symbol
 counts only right after digits, so the letter `m` in running text is left
 alone. An amount in euros with one or two decimals is read as euros and
 cents. A `x` or `×` between two numbers is read *vezes*; a hex literal such
-as `0x1F` and the word in "o x da questão" are left alone.
+as `0x1F` and the word in "o x da questão" are left alone. Only a product in
+digits reads *vezes*: a product that the author wrote in words keeps its `x`
+(`normalize_text("dois x três e 2 x 3")` gives "dois x três e dois vezes três").
 
 ```python
 from tugaphone.text_normalization import separate_unit_symbols
