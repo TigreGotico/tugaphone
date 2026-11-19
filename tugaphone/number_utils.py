@@ -187,8 +187,8 @@ def separate_unit_symbols(text: str) -> str:
 # normalize_numbers, which already picks the feminine form ("uma", "duas",
 # "vinte e uma", ...) from the following "hora"/"horas" noun, so no separate
 # gender table is needed here. Any other "HH:MM" is read "<hora> e <minutos>".
-# text2spoken leaves a clock time with no time word before it ("São 16:30.")
-# and "24:00" as written: https://github.com/TigreGotico/text2spoken/issues/251
+# text2spoken leaves a clock time with no time word before it ("Chegou 16:54.",
+# "9:05") and "24:00" as written: https://github.com/TigreGotico/text2spoken/issues/251
 # Whole hours additionally accept 24 ("24:00" -> "vinte e quatro horas");
 # 25+ is not a clock hour and is left alone. Non-whole times keep the
 # ordinary 0-23 range.
