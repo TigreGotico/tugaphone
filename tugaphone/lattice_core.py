@@ -116,8 +116,6 @@ def normalize_spelling(text: str, lect: str) -> str:
       Rachel → Raquel), although AO1990 Base XXI lets a name keep its spelling;
     * for the Brazilian lects, the hyphen rules of AO1990 change the word count
       (há-de → há de, manda-chuva → mandachuva);
-    * for the Brazilian lects, óptica becomes ótica, although the VOLP lists
-      both as separate words;
     * for the Brazilian lects, an AO1990 paroxytone that lost the accent of an
       open ``éi`` (Base IX 3.º) takes its pre-AO1990 spelling, which marks the
       open vowel (ideia becomes idéia).
