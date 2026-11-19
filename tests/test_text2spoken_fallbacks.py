@@ -39,7 +39,8 @@ LEFT_AS_WRITTEN = [
     ("a II Guerra Mundial", "II"),
     ("o XIX Congresso", "XIX"),
     ("figura XII", "XII"),
-    ("80m2", "80m2"),
+    ("10mL", "10mL"),
+    ("2L", "2L"),
     ("de 1 a 2 casas", "1 a 2"),
     ("entre 1 e 2 casas", "1 e 2"),
     # A closing bracket does not end the pair, and a verb in -a reads as a

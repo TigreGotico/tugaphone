@@ -118,8 +118,6 @@ def test_a_plain_engine_stays_on_the_rules_in_a_fresh_process():
 # vowel is lexical and comes from the o2i-lexicons entry. The readings are Infopédia's in the
 # spec's symbols: afetar ɐfɛˈtar, receção ʀəsɛˈsɐ̃w̃, respetivo ʀəʃpɛˈtivu. The spelling step
 # gives the pre-AO1990 spellings the same reading.
-@pytest.mark.xfail(strict=True, reason="needs the o2i-lexicons alpha with "
-                                       "TigreGotico/o2i-lexicons#95")
 @pytest.mark.parametrize("word, reading", [
     ("afetar", "ɐfɛˈtaɾ"),
     ("receção", "ʁɨsɛˈsɐ̃w̃"),
