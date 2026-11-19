@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.2a1](https://github.com/TigreGotico/tugaphone/tree/1.11.2a1) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.1a1...1.11.2a1)
+
+**Merged pull requests:**
+
+- fix: track text2spoken 0.0.2a91, which reads pt-PT space-grouped numbers [\#298](https://github.com/TigreGotico/tugaphone/pull/298) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.1a1](https://github.com/TigreGotico/tugaphone/tree/1.11.1a1) (2026-11-19)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.0a2...1.11.1a1)
