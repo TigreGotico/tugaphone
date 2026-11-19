@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.10.9a2](https://github.com/TigreGotico/tugaphone/tree/1.10.9a2) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.9a1...1.10.9a2)
+
+**Merged pull requests:**
+
+- test: drop the óptica xfail now that desacordo keeps the p [\#282](https://github.com/TigreGotico/tugaphone/pull/282) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- test: mark the number pair before a scale word against text2spoken\#283 [\#281](https://github.com/TigreGotico/tugaphone/pull/281) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- test: name the text2spoken issue of the século X xfail [\#280](https://github.com/TigreGotico/tugaphone/pull/280) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.10.9a1](https://github.com/TigreGotico/tugaphone/tree/1.10.9a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.8a1...1.10.9a1)
