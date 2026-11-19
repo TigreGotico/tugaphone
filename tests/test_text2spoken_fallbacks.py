@@ -115,6 +115,8 @@ def test_every_fallback_names_its_text2spoken_issue():
     ("3,5 cm3", "pt-BR", "três vírgula cinco centímetros cúbicos"),
     ("-1,5 L", "pt-PT", "menos um vírgula cinco litros"),
     ("-1,5 L", "pt-BR", "menos um vírgula cinco litro"),
+    ("10mL", "pt-PT", "dez mililitros"),
+    ("2L", "pt-BR", "dois litros"),
 ])
 def test_unit_symbols_read(text, lang, expected):
     assert normalize_text(text, lang) == expected

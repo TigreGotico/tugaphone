@@ -143,7 +143,8 @@ def normalize_number_separators(text: str) -> str:
 # normalize_numbers then reads with the unit name and number agreement.
 # A symbol counts only right after digits, so the letter "m" or a word
 # such as "kg" in running text is never touched. text2spoken leaves a glued
-# litre symbol ("10mL", "2L") as written: https://github.com/TigreGotico/text2spoken/issues/249
+# litre symbol with a capital L ("10mL", "2L") as written:
+# https://github.com/TigreGotico/text2spoken/issues/249
 # ---------------------------------------------------------------------------
 _NUMBER = r"\d+(?:[.,]\d+)*"
 _SYMBOLS = "|".join(re.escape(s) for s in
