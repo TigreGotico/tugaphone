@@ -442,7 +442,7 @@ class TestDecimalCommaReading(object):
         assert normalize_numbers("tem 10,4 graus") == "tem dez vírgula quatro graus"
 
     def test_dot_decimal_still_works(self):
-        assert normalize_numbers("tem 10.4 graus") == "tem dez vírgula quatro graus"
+        assert normalize_numbers("o valor é 10.4") == "o valor é dez vírgula quatro"
 
 
 class TestNumberInsideBracketsOrQuotes:

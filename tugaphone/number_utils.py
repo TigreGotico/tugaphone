@@ -421,8 +421,9 @@ def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
 
 # ---------------------------------------------------------------------------
 # A dot between digits that is not followed by groups of three digits is a
-# decimal mark, so "3.14159" reads as "3,14159". text2spoken reads "10.4" and
-# leaves a longer fraction as written:
+# decimal mark, so "10.4" reads as "10,4". text2spoken reads a dot decimal
+# before a unit ("tem 10.4 graus") and leaves it as written elsewhere ("o
+# valor é 10.4"). It read neither before
 # https://github.com/TigreGotico/text2spoken/issues/242
 # ---------------------------------------------------------------------------
 _DOT_DECIMAL = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w.,])")
