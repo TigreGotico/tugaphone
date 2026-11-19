@@ -64,11 +64,21 @@ print(ph.phonemize_sentence("A vila é bonita.", "pt-PT-x-madeira"))
 
 `pt-BR-x-sp`, `pt-BR-x-rj`, `pt-BR-x-mg`, `pt-BR-x-pr`, `pt-BR-x-sul`,
 `pt-BR-x-caipira`, `pt-BR-x-fluminen`, `pt-BR-x-bahia`, `pt-BR-x-recife`,
-`pt-BR-x-ce`, `pt-BR-x-norte`, `pt-BR-x-cuiaba`, `pt-BR-x-floripa`.
+`pt-BR-x-ce`, `pt-BR-x-norte`, `pt-BR-x-cuiaba`, `pt-BR-x-floripa`,
+`pt-BR-x-paraiba`.
 
 ```python
 print(ph.phonemize_sentence("noite", "pt-BR"))       # ˈnojt͡ʃi
 print(ph.phonemize_sentence("noite", "pt-BR-x-recife"))  # ˈnojti
+```
+
+`pt-BR-x-paraiba` reads Paraíba as the VALPB studies describe João Pessoa.
+It shares the stops before [i] with Recife. Its coda /S/ is alveolar, and it
+is palatal only before /t d/ (Hora, Henrique & Amorim 2018: 283-284):
+
+```python
+print(ph.phonemize_sentence("A casca do texto.", "pt-BR-x-recife"))   # ɐ ˈkaʃkɐ du ˈteʃtu
+print(ph.phonemize_sentence("A casca do texto.", "pt-BR-x-paraiba"))  # ɐ ˈkaskɐ du ˈteʃtu
 ```
 
 ### African, Asian and other lects
@@ -102,6 +112,7 @@ keeps as an alias.
 | `pt-BR-x-sao-paulo` | `pt-BR-x-sp` |
 | `pt-BR-x-rio-janeiro`, `pt-BR-x-rio` | `pt-BR-x-rj` |
 | `pt-BR-x-fluminense` | `pt-BR-x-fluminen` |
+| `pt-BR-x-pb` | `pt-BR-x-paraiba` |
 
 ```python
 from tugaphone import resolve_lect

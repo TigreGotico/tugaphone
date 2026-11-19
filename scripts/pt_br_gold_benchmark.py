@@ -87,6 +87,7 @@ CITY_SPECS = {
     "manaus": "pt-BR-x-norte",
     "florianópolis": "pt-BR-x-floripa",
     "cuiabá": "pt-BR-x-cuiaba",
+    "joão pessoa": "pt-BR-x-paraiba",
 }
 
 
