@@ -1,12 +1,24 @@
 # Changelog
 
-## [1.10.12a1](https://github.com/TigreGotico/tugaphone/tree/1.10.12a1) (2026-11-19)
+## [1.11.0a1](https://github.com/TigreGotico/tugaphone/tree/1.11.0a1) (2026-11-19)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.10a1...1.10.12a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.12a1...1.11.0a1)
 
 **Merged pull requests:**
 
+- docs: sync README and docs with dev [\#289](https://github.com/TigreGotico/tugaphone/pull/289) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 - feat: add the pt-BR-x-paraiba lect from orthography2ipa 7.124.2a2 [\#288](https://github.com/TigreGotico/tugaphone/pull/288) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.10.12a1](https://github.com/TigreGotico/tugaphone/tree/1.10.12a1) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.11a1...1.10.12a1)
+
+## [1.10.11a1](https://github.com/TigreGotico/tugaphone/tree/1.10.11a1) (2026-11-19)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.10a1...1.10.11a1)
+
+**Merged pull requests:**
+
 - test\(pt-PT\): pin the open vowel before a dropped c or p [\#284](https://github.com/TigreGotico/tugaphone/pull/284) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 - docs: say that normalize\_spelling rewrites ideia, not that it reads it [\#283](https://github.com/TigreGotico/tugaphone/pull/283) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
