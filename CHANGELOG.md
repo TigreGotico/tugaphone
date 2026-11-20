@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.2a3](https://github.com/TigreGotico/tugaphone/tree/1.11.2a3) (2026-11-20)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.2a2...1.11.2a3)
+
+**Merged pull requests:**
+
+- docs: sync README and docs with dev [\#302](https://github.com/TigreGotico/tugaphone/pull/302) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.2a2](https://github.com/TigreGotico/tugaphone/tree/1.11.2a2) (2026-11-19)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.2a1...1.11.2a2)
