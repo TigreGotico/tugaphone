@@ -26,7 +26,7 @@ engine-only output exactly and code-switching is opt-in.
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-ph.phonemize_sentence("fiz o download do app", "pt-BR")                  # none: ˈfiz u dow̃ˈload du ˈapp
+ph.phonemize_sentence("fiz o download do app", "pt-BR")                  # none: ˈfiz u dow̃ˈload du ˈap
 ph.phonemize_sentence("fiz o download do app", "pt-BR", contact="auto")  # en:   ˈfiz u dawnlowd du ap
 ph.phonemize_sentence("fui ao ayuntamiento", "pt-UY", contact="auto")    # es:   ˈfuj au aʒuntamjento
 ```
