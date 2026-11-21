@@ -1,12 +1,17 @@
-"""Orthographic text transforms applied BEFORE number verbalisation.
+"""Text rewrites around text2spoken, the reader of numbers, dates and times.
 
-These rewrite raw written conventions (unit symbols, number ranges, clock
-times, European thousands/decimal separators, honorific abbreviations, regnal
-Roman numerals, letter-spelled acronyms) into plain words or digit tokens that
-:func:`tugaphone.number_utils.normalize_numbers` can then read out loud. They
-run at the text level, before any lattice/phoneme work, so they are plugged
-into :func:`tugaphone.lattice_core._expander` ahead of
-``normalize_numbers``.
+:func:`normalize_text` is the ``expand`` step of the pipeline after the
+spelling step. It expands the abbreviations of the tables below,
+letter-spelled acronyms and letter-digit codes, which text2spoken leaves as
+written. :func:`tugaphone.number_utils.read_numbers` then reads the numbers:
+text2spoken first, and tugaphone's fallback rewrites for the forms that it
+leaves as written. Last, Roman numerals that text2spoken left are read.
+
+The digit rewrites (:func:`split_number_ranges`, :func:`expand_clock_times`,
+:func:`normalize_number_separators`, :func:`separate_unit_symbols`) live in
+:mod:`tugaphone.number_utils` and are importable from here too.
+:func:`normalize_orthography` runs every rewrite and leaves the digits for
+:func:`tugaphone.number_utils.normalize_numbers`.
 
 The reading rules for ranges, clock times, separators, abbreviations, and
 regnal numerals are ported from the European-Portuguese TTS front-end
@@ -27,128 +32,12 @@ from pathlib import Path
 
 from tugalex import TugaLexicon
 
-from tugaphone.number_utils import NumberParser
+from tugaphone.number_utils import (  # noqa: F401  (public at their 1.7.1 paths)
+    UNIT_NAMES, expand_clock_times, is_number_word, normalize_number_separators,
+    read_multiplication_signs, read_numbers, separate_unit_symbols, split_number_ranges,
+    text2spoken_reading, warn_unread_digits)
 
 _DATA = Path(__file__).parent / "data"
-
-# ---------------------------------------------------------------------------
-# Number ranges: a dash BETWEEN two digits is a numeric range, read " a ".
-# Word hyphens ("chamo-me", "guarda-chuva") have letters on at least one side
-# and are untouched.
-# ---------------------------------------------------------------------------
-_RANGE_DASH = re.compile(r"(?<=\d)[-–—−](?=\d)")
-
-
-def split_number_ranges(text: str) -> str:
-    """"1139-1185" -> "1139 a 1185"."""
-    return _RANGE_DASH.sub(" a ", text)
-
-
-# ---------------------------------------------------------------------------
-# European number separators: "." groups thousands and is dropped;
-# "," is the decimal mark, read "vírgula". Both only between two digits, so
-# sentence-final periods, list commas and ordinal marks ("3.º") are unaffected.
-# ---------------------------------------------------------------------------
-_THOUSANDS_DOT = re.compile(r"(?<=\d)\.(?=\d)")
-_DECIMAL_COMMA = re.compile(r"(?<=\d),(?=\d)")
-
-
-def normalize_number_separators(text: str) -> str:
-    """"92.073" -> "92073"; "10,4" -> "10 vírgula 4"."""
-    text = _THOUSANDS_DOT.sub("", text)
-    return _DECIMAL_COMMA.sub(" vírgula ", text)
-
-
-# ---------------------------------------------------------------------------
-# Unit symbols. The SI writes a space between a number and its unit symbol
-# (SI brochure, IPQ/Inmetro 2021, §5.4.3) and between a number and "%"
-# (same brochure, p. 28). Text often glues them ("7kg", "20%") or puts the
-# euro sign first ("€20"). These rules restore "<number> <symbol>", which
-# normalize_numbers then reads with the unit name and number agreement.
-# A symbol counts only right after digits, so the letter "m" or a word
-# such as "kg" in running text is never touched.
-# ---------------------------------------------------------------------------
-_NUMBER = r"\d+(?:[.,]\d+)*"
-_SYMBOLS = "|".join(re.escape(s) for s in
-                    sorted(NumberParser.UNIT_NAMES, key=len, reverse=True))
-_GLUED_UNIT = re.compile(rf"(?<![\w.,])({_NUMBER})({_SYMBOLS})(?![\w/²³])")
-_EURO_FIRST = re.compile(rf"€ ?({_NUMBER})(?!\w)")
-# "2,50 €" is read "dois euros e cinquenta cêntimos" (Ciberdúvidas 25561:
-# "cinquenta euros e trinta cêntimos"). Only one or two decimals are cents.
-_EURO_CENTS = re.compile(r"(?<![\w.,])(\d+(?:\.\d{3})*),(\d{1,2}) €")
-# A "x" or "×" between two numbers is multiplication, read "vezes": "dois
-# vezes dois são quatro" (Priberam DLPO, "vezes"). Hex literals ("0x1F")
-# and words ("o x da questão") have a letter on one side and are untouched.
-_TIMES = re.compile(r"(?<![\w.,])(\d+(?:,\d+)?) ?[x×] ?(?=\d+(?:,\d+)?(?:[x×]\d|(?!\w)))")
-
-
-def _euro_cents_repl(match: "re.Match[str]") -> str:
-    euros, cents = match.group(1), int(match.group(2).ljust(2, "0"))
-    if cents == 0:
-        return f"{euros} €"
-    cents_text = f"{cents} cêntimo" if cents == 1 else f"{cents} cêntimos"
-    if int(euros.replace(".", "")) == 0:
-        return cents_text
-    return f"{euros} € e {cents_text}"
-
-
-def separate_unit_symbols(text: str) -> str:
-    """"7kg" -> "7 kg"; "20%" -> "20 %"; "€20" -> "20 €";
-    "2,50 €" -> "2 € e 50 cêntimos"; "15x8" -> "15 vezes 8"."""
-    text = _GLUED_UNIT.sub(r"\1 \2", text)
-    text = _EURO_FIRST.sub(r"\1 €", text)
-    text = _EURO_CENTS.sub(_euro_cents_repl, text)
-    while True:
-        expanded = _TIMES.sub(r"\1 vezes ", text)
-        if expanded == text:
-            return text
-        text = expanded
-
-
-# ---------------------------------------------------------------------------
-# Clock times. "HH:00" is read "<hora> hora(s)" -- the digit token is left for
-# normalize_numbers, which already picks the feminine form ("uma", "duas",
-# "vinte e uma", ...) from the following "hora"/"horas" noun, so no separate
-# gender table is needed here. Any other "HH:MM" is read "<hora> e <minutos>".
-# Whole hours additionally accept 24 ("24:00" -> "vinte e quatro horas");
-# 25+ is not a clock hour and is left alone. Non-whole times keep the
-# ordinary 0-23 range.
-#
-# The minute is emitted WITHOUT a leading zero ("9:05" -> "9 e 5", not
-# "9 e 05"): normalize_numbers's tokenizer splits on whitespace, and a
-# leading zero would otherwise make the token ambiguous with an ordinal or
-# decimal spelling. Any punctuation immediately following the minutes/hour
-# digits is left glued to them ("16:54." -> "16 e 54.") -- normalize_numbers
-# itself splits trailing punctuation off a numeric token before checking
-# whether it is a number, spells the digits, and glues the punctuation back
-# on, so there is no need to detach it here with a space.
-# ---------------------------------------------------------------------------
-_HOUR = r"(?:[01]?\d|2[0-3])"
-_HOUR_OR_24 = r"(?:[01]?\d|2[0-4])"
-_PUNCT = r"[.,;:!?)\"”…]?"
-_WHOLE_HOUR = re.compile(rf"\b({_HOUR_OR_24}):00({_PUNCT})")
-_CLOCK_TIME = re.compile(rf"\b({_HOUR}):([0-5]\d)({_PUNCT})")
-
-
-def _whole_hour_repl(match: "re.Match[str]") -> str:
-    hh, punct = match.group(1), match.group(2)
-    unit = "hora" if int(hh) == 1 else "horas"
-    return f"{hh} {unit}{punct}"
-
-
-def _clock_time_repl(match: "re.Match[str]") -> str:
-    hh, mm, punct = match.group(1), match.group(2), match.group(3)
-    mm = str(int(mm))  # drop the leading zero: "05" -> "5"
-    return f"{hh} e {mm}{punct}"
-
-
-def expand_clock_times(text: str) -> str:
-    """"16:00" -> "16 horas"; "24:00" -> "24 horas"; "16:54" -> "16 e 54".
-    Whole hours must be expanded first, so the ":00" case doesn't fall
-    through to "16 e 0"."""
-    text = _WHOLE_HOUR.sub(_whole_hour_repl, text)
-    return _CLOCK_TIME.sub(_clock_time_repl, text)
-
 
 # ---------------------------------------------------------------------------
 # Given names and their grammatical gender come from tugalex:
@@ -401,6 +290,11 @@ def expand_abbreviations(text: str) -> str:
 #   "eu vi X" and "Raio X" stay untouched;
 # * a numeral with L, C, D or M converts only after a part-of-work noun, so
 #   "tamanho XL" and "o CD" stay untouched.
+#
+# text2spoken reads a numeral after a title ("D. João V"), a part of a
+# work ("século XIX") or a pope's name ("Pio XII"). It leaves a numeral
+# after a name with no title ("Afonso I") and one before its noun ("a II
+# Guerra Mundial") as written: https://github.com/TigreGotico/text2spoken/issues/248
 # ---------------------------------------------------------------------------
 _ROMAN = re.compile(r"M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
 _ROMAN_VALUES = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
@@ -436,10 +330,6 @@ def _split_trailing_punct(w: str) -> tuple[str, str]:
     while i > 0 and w[i - 1] in _TRAIL_PUNCT:
         i -= 1
     return w[:i], w[i:]
-
-
-def _is_brazilian(lang: str) -> bool:
-    return "pt-br" in lang.lower()
 
 
 def _roman_value(numeral: str) -> int | None:
@@ -494,8 +384,9 @@ def _read_roman(value: int, prev_word: str | None, lang: str) -> str:
         as_ordinal = True
     else:
         gender, as_ordinal = "masculine", False
-    return NumberParser.pronounce_number_word(
-        str(value), gender=gender, as_ordinal=as_ordinal, is_brazilian=_is_brazilian(lang))
+    if as_ordinal:
+        return text2spoken_reading(f"{value}{'ª' if gender == 'feminine' else 'º'}", lang)
+    return text2spoken_reading(str(value), lang, gender=gender)
 
 
 def _title(reading: str) -> str:
@@ -620,7 +511,9 @@ def expand_acronyms(text: str) -> str:
 # same whatever the code stands for, so no context is needed. Codes take
 # one to three capitals or one or two lowercase letters, so longer
 # capitalised words ("COVID19") and ordinary lowercase words are left alone.
-# Right after a number the letters are a unit symbol ("10 m2"), not a code.
+# A known unit symbol that contains a digit ("m2", "km2", "cm3") right after a
+# number in digits is left for the unit reader ("10 m2"). Anywhere else it is
+# spelled, because the unit reader reads a symbol only after digits.
 # ---------------------------------------------------------------------------
 _LETTER_DIGIT_CODE = re.compile(r"([A-Z]{1,3}|[a-z]{1,2})(\d+)")
 
@@ -632,23 +525,25 @@ def expand_letter_digit_codes(text: str, lang: str = "pt-PT") -> str:
     for i, w in enumerate(words):
         lead, core, trail = _split_edges(w)
         match = _LETTER_DIGIT_CODE.fullmatch(core)
-        after_number = i > 0 and _split_edges(words[i - 1])[1].isdigit()
-        if match is None or after_number:
+        previous = _split_edges(words[i - 1])[1] if i > 0 else ""
+        after_number = re.fullmatch(r"[-−]?\d+(?:[.,]\d+)*", previous) is not None
+        if match is None or (after_number and core in UNIT_NAMES):
             out.append(w)
             continue
         letters, digits = match.groups()
-        number = NumberParser.pronounce_number_word(
-            digits, gender="masculine", as_ordinal=False,
-            is_brazilian=_is_brazilian(lang))
+        number = text2spoken_reading(digits, lang, gender="masculine")
         out.append(f"{lead}{_spell_letters(letters.upper())} {number}{trail}")
     return " ".join(out)
 
 
+
+
 def normalize_orthography(text: str, lang: str = "pt-PT") -> str:
-    """Apply every rule above, in the order that keeps them from interfering:
-    unit symbols first (the euro-cents rule needs the decimal comma), then
-    separators and ranges (digit-only), then clock times (also digit-only),
-    then abbreviations, regnal numerals and acronyms (word-token rules)."""
+    """Apply every rewrite, with the digits left for
+    :func:`tugaphone.number_utils.normalize_numbers`: unit symbols first (the
+    euro-cents rule needs the decimal comma), then separators and ranges
+    (digit-only), then clock times (also digit-only), then abbreviations,
+    regnal numerals, acronyms and letter-digit codes (word-token rules)."""
     text = separate_unit_symbols(text)
     text = normalize_number_separators(text)
     text = split_number_ranges(text)
@@ -658,3 +553,22 @@ def normalize_orthography(text: str, lang: str = "pt-PT") -> str:
     text = expand_acronyms(text)
     text = expand_letter_digit_codes(text, lang)
     return text
+
+
+def normalize_text(text: str, lang: str = "pt-PT") -> str:
+    """The words a speaker of ``lang`` says for ``text``.
+
+    The rewrites before text2spoken run first, then text2spoken, then the
+    fallback rewrites of the forms that it left as written.
+    "Nasceu a 25/12/2023." reads "Nasceu a vinte e cinco de dezembro de dois
+    mil e vinte e três.", "São 16:30." reads "São dezasseis e trinta.", and
+    "falei com o Dr." reads "falei com o Doutor". Text that is already
+    spelled out comes back unchanged. A form with digits that is still
+    unread gives an :class:`tugaphone.number_utils.UnreadFormWarning`.
+    """
+    spoken = expand_abbreviations(text)
+    spoken = expand_acronyms(spoken)
+    spoken = expand_letter_digit_codes(spoken, lang)
+    spoken = expand_regnal_numerals(read_numbers(spoken, lang), lang)
+    warn_unread_digits(spoken, text, lang)
+    return spoken

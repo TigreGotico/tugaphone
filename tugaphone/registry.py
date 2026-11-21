@@ -17,10 +17,11 @@ resolve to their orthography2ipa equivalents through :data:`_ALIASES`.
 """
 from __future__ import annotations
 
+import functools
 import warnings
 from typing import Dict, List, Optional
 
-from orthography2ipa import available_codes, resolve, resolves_exactly
+from orthography2ipa import ancestry_chain, available_codes, resolve, resolves_exactly
 
 from tugaphone.version import VERSION_MAJOR
 
@@ -35,8 +36,10 @@ _OWN_ORTHOGRAPHY = frozenset({"pt-PT-x-medieval"})
 
 
 def _canonical_codes() -> List[str]:
+    # No Portuguese-family spec is a clade node, so the list keeps clades:
+    # filtering them out loads every spec orthography2ipa ships.
     return sorted(
-        c for c in available_codes()
+        c for c in available_codes(include_clades=True)
         if c.startswith(_PT_PREFIXES) and c not in _OWN_ORTHOGRAPHY
     )
 
@@ -171,6 +174,25 @@ def lexicon_region(lect: str) -> Optional[str]:
 def list_dialects() -> List[str]:
     """Every canonical dialect code (the Portuguese-family orthography2ipa specs)."""
     return list(_CANONICAL)
+
+
+#: The AO1990 norm of each national standard, in desacordo_ortografico's names.
+_SPELLING_NORMS: Dict[str, str] = {"pt-PT": "ao1990-pt", "pt-BR": "ao1990-br"}
+
+
+@functools.lru_cache(maxsize=None)
+def spelling_norm(lect: str) -> str:
+    """The AO1990 norm whose spelling ``lect`` reads: ``ao1990-pt`` or ``ao1990-br``.
+
+    A lect follows the norm of the nearest of ``pt-PT`` and ``pt-BR`` in its
+    orthography2ipa lineage, itself included. The European sub-lects and the
+    African and Asian lects descend from ``pt-PT``; the Brazilian sub-lects and
+    ``pt-UY`` descend from ``pt-BR``. A lect under neither raises ``ValueError``.
+    """
+    for code in (lect, *ancestry_chain(lect)):
+        if code in _SPELLING_NORMS:
+            return _SPELLING_NORMS[code]
+    raise ValueError(f"{lect!r} descends from neither pt-PT nor pt-BR")
 
 
 #: Lects that embed Spanish rather than English by default. ``pt-UY`` is

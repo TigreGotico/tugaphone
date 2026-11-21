@@ -1,6 +1,13 @@
 """Tests for tugaphone.number_utils public API."""
+import re
+import warnings
+
 import pytest
-from tugaphone.number_utils import normalize_numbers, NumberParser
+from text2spoken import normalize
+
+from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, UnreadFormWarning, normalize_numbers, read_number_pairs
+
+from tests.text2spoken_gaps import SCALE_PAIR
 
 
 class TestNormalizeNumbers:
@@ -45,7 +52,8 @@ class TestNormalizeNumbers:
         assert normalize_numbers("custa 25.") == "custa vinte e cinco."
 
     def test_trailing_comma_glued(self):
-        # "sala 2" is a label numeral, so it stays "dois" whatever follows.
+        # "sala 2" is a label numeral, so it stays "dois" whatever follows
+        # (Gulbenkian Gramática do Português via Ciberdúvidas 33468).
         assert normalize_numbers("sala 2, porta 4") == "sala dois, porta quatro"
 
     def test_trailing_exclamation_glued(self):
@@ -63,8 +71,9 @@ class TestNormalizeNumbers:
 class TestLabelNumeralGender:
     """A cardinal after a singular head noun is a label and is invariable.
 
-    Source: NumberParser.LABEL_HEADS. A cardinal that quantifies a noun still
-    agrees with it.
+    Sources: Cunha & Cintra and the Gulbenkian Gramática do Português, as
+    quoted by Ciberdúvidas 33468 and 33527. A cardinal that quantifies a noun
+    still agrees with it.
     """
 
     @pytest.mark.parametrize("text,expected", [
@@ -79,8 +88,9 @@ class TestLabelNumeralGender:
         ("o capítulo 2 da obra", "o capítulo dois da obra"),
         ("o artigo 22 da lei", "o artigo vinte e dois da lei"),
         ("o artigo 200 da lei", "o artigo duzentos da lei"),
+        # "das" is a function word, not the noun the numeral counts
         ("o artigo 2 das disposições", "o artigo dois das disposições"),
-        ("o n.º 2 da lista", "o n.º dois da lista"),
+        ("o n.º 2 da lista", "o número dois da lista"),
         ("Artigo 1 da lei", "Artigo um da lei"),
     ])
     def test_label_numeral_is_invariable(self, text, expected):
@@ -106,6 +116,7 @@ class TestLabelNumeralGender:
         ("na página 1ª do livro", "na página primeira do livro"),
         ("a 1ª página", "a primeira página"),
         ("a página 1 do livro", "a página um do livro"),
+        # the number counts the feminine "horas"
         ("são 2 da tarde", "são duas da tarde"),
         ("custa 25.", "custa vinte e cinco."),
     ])
@@ -167,8 +178,10 @@ class TestCountedNounGender:
         ("a 1ª vez", "a primeira vez"),
         ("o 1º dia", "o primeiro dia"),
         ("as 2 artistas", "as duas artistas"),
+        # the number counts the feminine "horas"
         ("são 2 da tarde", "são duas da tarde"),
         # "vezes" between two numbers is the multiplication sign
+        # Priberam DLPO "vezes": "dois vezes dois são quatro"
         ("2 vezes 2 são 4", "dois vezes dois são quatro"),
     ])
     def test_unchanged_rows(self, text, expected):
@@ -189,9 +202,7 @@ class TestCountedNounGender:
         # both numbers of a range agree with the noun after the second
         ("de 1 a 2 dias", "de um a dois dias"),
         ("1 a 2 dias", "um a dois dias"),
-        ("de 1 a 3 semanas", "de uma a três semanas"),
         ("das 2 às 3 horas", "das duas às três horas"),
-        ("entre 1 e 2 semanas", "entre uma e duas semanas"),
         ("entre 1 e 2 dias", "entre um e dois dias"),
         ("de 1 a 2", "de um a dois"),
         ("3 a 2", "três a dois"),
@@ -208,97 +219,113 @@ class TestCountedNounGender:
         assert normalize_numbers(text) == expected
 
 
+@pytest.fixture
+def NumberParser():
+    with pytest.warns(DeprecationWarning, match=f"removed in tugaphone {NUMBER_PARSER_REMOVAL_VERSION}"):
+        from tugaphone.number_utils import NumberParser
+    return NumberParser
+
+
+def test_number_parser_removal_version_is_the_next_major():
+    from tugaphone.version import VERSION_MAJOR
+    assert NUMBER_PARSER_REMOVAL_VERSION == f"{VERSION_MAJOR + 1}.0.0"
+
+
 class TestNumberParserPronounce:
-    def test_cardinal_masculine_default(self):
+    """The deprecated NumberParser reads through text2spoken."""
+
+    def test_cardinal_masculine_default(self, NumberParser):
         result = NumberParser.pronounce_number_word("1", gender="masculine")
         assert result == "um"
 
-    def test_cardinal_feminine(self):
+    def test_cardinal_feminine(self, NumberParser):
         result = NumberParser.pronounce_number_word("1", gender="feminine")
         assert result == "uma"
 
-    def test_ordinal_masculine(self):
+    def test_ordinal_masculine(self, NumberParser):
         result = NumberParser.pronounce_number_word("1", as_ordinal=True, gender="masculine")
         assert result == "primeiro"
 
-    def test_ordinal_feminine(self):
+    def test_ordinal_feminine(self, NumberParser):
         result = NumberParser.pronounce_number_word("1", as_ordinal=True, gender="feminine")
         assert result == "primeira"
 
-    def test_nineteen_pt(self):
+    def test_nineteen_pt(self, NumberParser):
         assert NumberParser.pronounce_number_word("19") == "dezanove"
 
-    def test_nineteen_br(self):
+    def test_nineteen_br(self, NumberParser):
         assert NumberParser.pronounce_number_word("19", is_brazilian=True) == "dezenove"
 
 
 class TestNumberParserPredicates:
-    def test_is_int(self):
+    def test_is_int(self, NumberParser):
         assert NumberParser.is_int("42")
         assert not NumberParser.is_int("abc")
         assert not NumberParser.is_int("3.14")
 
-    def test_is_float(self):
+    def test_is_float(self, NumberParser):
         assert NumberParser.is_float("3.14")
         assert NumberParser.is_float("42")
         assert not NumberParser.is_float("abc")
 
-    def test_is_ordinal_attached(self):
+    def test_is_ordinal_attached(self, NumberParser):
         assert NumberParser.is_ordinal("1º")
         assert NumberParser.is_ordinal("1ª")
 
-    def test_is_ordinal_separated(self):
+    def test_is_ordinal_separated(self, NumberParser):
         assert NumberParser.is_ordinal("1", "º")
 
-    def test_not_ordinal(self):
+    def test_not_ordinal(self, NumberParser):
         assert not NumberParser.is_ordinal("1")
 
-    def test_get_number_gender_feminine(self):
+    def test_get_number_gender_feminine(self, NumberParser):
         assert NumberParser.get_number_gender("1", next_word="casa") == "feminine"
 
-    def test_get_number_gender_masculine_default(self):
+    def test_get_number_gender_masculine_default(self, NumberParser):
         assert NumberParser.get_number_gender("2", next_word="cães") == "masculine"
 
-    def test_get_number_gender_preposition_a_not_article(self):
+    def test_get_number_gender_preposition_a_not_article(self, NumberParser):
         # "3 a 2." (a score/range reading): the "a" before "2" is the
         # preposition "to", not the feminine article "a" -- there is no
         # following noun for it to introduce, so the number stays masculine.
         assert NumberParser.get_number_gender("2", prev_word="a", next_word=".") == "masculine"
         assert NumberParser.get_number_gender("2", prev_word="a", next_word=None) == "masculine"
 
-    def test_get_number_gender_article_a_before_noun(self):
+    def test_get_number_gender_article_a_before_noun(self, NumberParser):
         # "a 1 casa": here "a" really is the feminine article.
         assert NumberParser.get_number_gender("1", prev_word="a", next_word="casa") == "feminine"
 
-    def test_to_int(self):
+    def test_to_int(self, NumberParser):
         assert NumberParser.to_int("42") == 42
         assert NumberParser.to_int("1º") == 1
 
-    def test_to_float(self):
+    def test_to_float(self, NumberParser):
         assert NumberParser.to_float("3.14") == pytest.approx(3.14)
 
-    def test_to_float_comma_decimal(self):
+    def test_to_float_comma_decimal(self, NumberParser):
         assert NumberParser.to_float("10,4") == pytest.approx(10.4)
 
-    def test_to_int_rejects_comma_decimal(self):
+    def test_to_int_rejects_comma_decimal(self, NumberParser):
         assert NumberParser.to_int("10,4") is None
 
-    def test_is_decimal(self):
+    def test_is_decimal(self, NumberParser):
         assert NumberParser.is_decimal("10,4")
         assert NumberParser.is_decimal("10.4")
         assert not NumberParser.is_decimal("42")
         assert not NumberParser.is_decimal("1e6")
 
-    def test_is_scientific_notation_comma_mantissa(self):
+    def test_is_scientific_notation_comma_mantissa(self, NumberParser):
         assert NumberParser.is_scientific_notation("2,5e3")
+
+
+    def test_pronounce_number_word_scale_kwarg(self, NumberParser):
+        assert NumberParser.pronounce_number_word("1000000000000", scale="short") == "um trilião"
 
 
 class TestLargeNumbers:
     """
-    ovos-number-parser spells out arbitrarily large Python integers
-    correctly in both scales; there is no ceiling. Expected strings below
-    were computed against these scale tables and verified by execution
-    against ovos-number-parser 0.19.13:
+    Large numbers read in both scales; there is no ceiling. The expected
+    strings below follow these scale tables:
 
     pt-PT/pt-AO/pt-MZ/pt-TL long scale: milhão 10^6, mil milhões 10^9,
     bilião 10^12, mil biliões 10^15, trilião 10^18, quatrilião 10^24.
@@ -308,16 +335,14 @@ class TestLargeNumbers:
     """
 
     def test_beyond_2_53_long_scale(self):
-        assert NumberParser.pronounce_number_word("9007199254740991") == (
+        assert normalize_numbers("9007199254740991") == (
             "nove mil e sete biliões cento e noventa e nove mil duzentos e "
             "cinquenta e quatro milhões setecentos e quarenta mil novecentos "
             "e noventa e um"
         )
 
     def test_beyond_2_53_short_scale(self):
-        assert NumberParser.pronounce_number_word(
-            "9007199254740991", is_brazilian=True
-        ) == (
+        assert normalize_numbers("9007199254740991", lang="pt-BR") == (
             "nove quatrilhões sete trilhões cento e noventa e nove bilhões "
             "duzentos e cinquenta e quatro milhões setecentos e quarenta mil "
             "novecentos e noventa e um"
@@ -393,13 +418,6 @@ class TestScaleParameter:
             == "um bilhão"
         )
 
-    def test_pronounce_number_word_scale_kwarg(self):
-        assert (
-            NumberParser.pronounce_number_word(
-                "1000000000000", is_brazilian=False, scale="short"
-            )
-            == "um trilião"
-        )
 
 
 class TestScientificNotation:
@@ -424,7 +442,7 @@ class TestDecimalCommaReading(object):
         assert normalize_numbers("tem 10,4 graus") == "tem dez vírgula quatro graus"
 
     def test_dot_decimal_still_works(self):
-        assert normalize_numbers("tem 10.4 graus") == "tem dez vírgula quatro graus"
+        assert normalize_numbers("o valor é 10.4") == "o valor é dez vírgula quatro"
 
 
 class TestNumberInsideBracketsOrQuotes:
@@ -446,20 +464,15 @@ class TestNumberInsideBracketsOrQuotes:
         ("¡5!", "¡cinco!"),
         ("tem de 1 a (2 cães)", "tem de um a (dois cães)"),
         ("a taxa subiu (0 vírgula 02)", "a taxa subiu (zero vírgula zero dois)"),
+        # "vírgula" after a digit is the decimal mark, not the counted noun
         ("(1) vírgula 5 m", "(um) vírgula cinco metros"),
         ("«1» vírgula 5 m", "«um» vírgula cinco metros"),
         ("a medida (1) vírgula 5 m", "a medida (um) vírgula cinco metros"),
         ("(0, vírgula 5 m)", "(zero, vírgula cinco metros)"),
         ("1) vírgula 5 m", "um) vírgula cinco metros"),
         ("0, vírgula 5 m", "zero, vírgula cinco metros"),
-        ("de 1 a (2) casas", "de uma a (duas) casas"),
-        ("de 1 a «2» casas", "de uma a «duas» casas"),
-        ('de 1 a "2" casas', 'de uma a "duas" casas'),
-        ("de 1 a “2” casas", "de uma a “duas” casas"),
         ("de 1 a 2) casas", "de um a duas) casas"),
         ("de 1 a 2» casas", "de um a duas» casas"),
-        ("de 2 a (3) pessoas", "de duas a (três) pessoas"),
-        ("de 2 a «3» pessoas", "de duas a «três» pessoas"),
         ("de 2 a (3) dias", "de dois a (três) dias"),
         ("o valor (de 2 a 3) varia muito", "o valor (de dois a três) varia muito"),
         ("os graus (de 1 a 3) da escala", "os graus (de um a três) da escala"),
@@ -471,13 +484,15 @@ class TestNumberInsideBracketsOrQuotes:
     def test_number_is_spelled_out(self, text, expected):
         assert normalize_numbers(text) == expected
 
-    @pytest.mark.parametrize("text", [
-        "de 1 a 2, casas",
-        "de 1 a (2), casas",
-        "de 1 a (2). Casas",
+    # A mark after the second number ends the pair, so no noun counts it:
+    # https://github.com/TigreGotico/text2spoken/issues/272
+    @pytest.mark.parametrize("text, expected", [
+        ("de 1 a 2, casas", "de um a dois, casas"),
+        ("de 1 a (2), casas", "de um a (dois), casas"),
+        ("de 1 a (2). Casas", "de um a (dois). Casas"),
     ])
-    def test_range_noun_after_a_break_does_not_agree(self, text):
-        assert normalize_numbers(text).startswith("de um a ")
+    def test_range_noun_after_a_break_does_not_agree(self, text, expected):
+        assert normalize_numbers(text) == expected
 
     @pytest.mark.parametrize("text, first", [
         ('ele deu "de 1 a 2" a Maria', '"de um a '),
@@ -499,6 +514,57 @@ class TestNumberInsideBracketsOrQuotes:
     ])
     def test_bracketed_words_unchanged(self, text):
         assert normalize_numbers(text) == text
+
+
+class TestNumberPairs:
+    """Both numbers of a pair are read. text2spoken leaves a pair as written
+    when the noun after it may give the first number another gender
+    (https://github.com/TigreGotico/text2spoken/issues/134). No source gives
+    that gender, so the first number is not asserted when the noun is
+    feminine. The second number agrees with the noun after it."""
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    @pytest.mark.parametrize("text, pattern", [
+        ("de 1 a 2 casas", r"de uma? a duas casas"),
+        ("entre 1 e 2 casas", r"entre uma? e duas casas"),
+        ("Entre 1 e 2 casas", r"Entre uma? e duas casas"),
+        ("de 21 a 22 casas", r"de vinte e uma? a vinte e duas casas"),
+        ("1—2 casas", r"uma? a duas casas"),
+        # the bracket and the verb in -a: https://github.com/TigreGotico/text2spoken/issues/272
+        ("o valor (de 2 a 3) varia muito", r"o valor \(de dois a três\) varia muito"),
+        # a score, with the text2spoken#272 row and its pt-512 reading
+        ("Venceu por 2 a 0, nesta terça-feira.", r"Venceu por dois a zero, nesta terça-feira\."),
+        ("o River Plate venceu por 2 a 1, nesta terça-feira", r"o River Plate venceu por dois a um, nesta terça-feira"),
+        ("venceu por 2 a 1 nesta terça-feira", r"venceu por dois a um nesta terça-feira"),
+        ("ENTRE 1 E 2 CASAS", r"ENTRE uma? E duas CASAS"),
+        ("de 1\xa0a\xa02 casas", r"de uma?\s+a\s+duas casas"),
+        # "dois"/"duas" takes the gender of the noun it counts and "mil" is
+        # invariable: "duas mil pessoas" (standard, e.g. Cunha & Cintra;
+        # edition not consulted).
+        pytest.param("entre 1 e 2 mil pessoas", r"entre uma? e duas mil pessoas", marks=SCALE_PAIR),
+        pytest.param("de 1 a 2 mil casas", r"de uma? a duas mil casas", marks=SCALE_PAIR),
+        ("de 1 a 2 mil livros", r"de um a dois mil livros"),
+    ])
+    def test_both_numbers_are_read(self, text, pattern, lang):
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", UnreadFormWarning)
+            spoken = normalize_numbers(text, lang)
+        assert re.fullmatch(pattern, spoken), spoken
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    @pytest.mark.parametrize("text", [
+        "entre 2 e 5 anos", "de 10 a 20 km", "(de 2 a 3)", "das 2 às 3 horas", "das 2—3 horas",
+    ])
+    def test_a_pair_text2spoken_reads_keeps_its_reading(self, text, lang):
+        assert normalize_numbers(text, lang) == normalize(text.replace("—", " a "), lang)
+
+    @pytest.mark.parametrize("text, expected", [
+        # a stop that a digit or an ordinal mark follows is no pause
+        ("do 1 ao 2.º ano", "do um ao segundo ano"),
+        ("das 9:00 às 10:00", "das 9:00 às 10:00"),
+    ])
+    def test_a_stop_inside_a_number_is_no_pause(self, text, expected):
+        assert read_number_pairs(text) == expected
 
 
 class TestBracketedNumberPhonemes:

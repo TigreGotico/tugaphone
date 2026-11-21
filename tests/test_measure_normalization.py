@@ -2,7 +2,8 @@
 
 Each expected reading comes from a cited source, not from the code under test:
 
-* SI brochure, "Tradução luso-brasileira de 2021 do SI" (IPQ/Inmetro):
+* SI brochure, "Sistema Internacional de Unidades (SI)", Inmetro/IPQ, 2021,
+  ISBN 978-85-86920-28-8:
   unit symbols are invariable and are not abbreviations (§5.2, p. 23), unit
   names are common nouns (§5.3, p. 24), "%" reads "por cento" (p. 28).
 * Inmetro, "Unidades Legais de Medida": "O grama pertence ao gênero
@@ -15,18 +16,25 @@ Each expected reading comes from a cited source, not from the code under test:
   litros" (Peres & Móia, Áreas Críticas da Língua Portuguesa, pp. 512-517, as
   quoted by FLiP, "concordâncias com unidades (II)"). In Brazil the singular
   is usual after zero ("zero vírgula vinte e cinco mol", same FLiP answer).
+* A decimal from one to two: the CLDR 49 plural rules give pt "one: i =
+  0..1" and pt_PT "one: i = 1 and v = 0", so "1,8 m" is "um vírgula oito
+  metro" in Brazil and "um vírgula oito metros" in Portugal. The Senado
+  Federal, Manual de Comunicação, "Números", writes "de 1,1 milhão a 1,7
+  milhão de pessoas".
 * Euro amounts: "cinquenta euros e trinta cêntimos" (Ciberdúvidas 25561).
 * "vezes" between two numerals marks multiplication: "dois vezes dois são
   quatro" (Priberam DLPO, "vezes").
 """
 import pytest
+from text2spoken import normalize
 
-from tugaphone.number_utils import normalize_numbers
-from tugaphone.text_normalization import normalize_orthography
+from tugaphone.text_normalization import normalize_text
+
+from tests.text2spoken_gaps import SPACE_THOUSANDS
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
-    return normalize_numbers(normalize_orthography(text), lang)
+    return normalize_text(text, lang)
 
 
 class TestPercent:
@@ -67,6 +75,8 @@ class TestUnits:
         ("a 2 m da porta", "a dois metros da porta"),
         ("pesa 7kg.", "pesa sete quilogramas."),
         ("2,5 anos", "dois vírgula cinco anos"),
+        # the decimal part reads as written, with its final zero
+        ("Mede 1,80 m.", "Mede um vírgula oitenta metros."),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -81,6 +91,26 @@ class TestUnits:
     def test_reading_pt_br(self, text, expected):
         assert read(text, "pt-BR") == expected
 
+    @pytest.mark.parametrize("text,lang,expected", [
+        ("1,8 m", "pt-PT", "um vírgula oito metros"),
+        ("1,8 m", "pt-BR", "um vírgula oito metro"),
+        ("1,8 L", "pt-PT", "um vírgula oito litros"),
+        ("1,8 L", "pt-BR", "um vírgula oito litro"),
+    ])
+    def test_a_decimal_from_one_to_two(self, text, lang, expected):
+        assert read(text, lang) == expected
+
+
+@pytest.mark.parametrize("lang", [
+    "pt-PT",
+    pytest.param("pt-BR", marks=SPACE_THOUSANDS),
+])
+@pytest.mark.parametrize("text,expected", [
+    ("Há 100 000 pessoas.", "Há cem mil pessoas."),
+])
+def test_a_space_groups_thousands(text, expected, lang):
+    assert read(text, lang) == expected
+
 
 class TestEuro:
     @pytest.mark.parametrize("text,expected", [
@@ -91,6 +121,7 @@ class TestEuro:
         ("1 €", "um euro"),
         ("1.500 €", "mil e quinhentos euros"),
         ("50,30 €", "cinquenta euros e trinta cêntimos"),
+        # one decimal is tens of cents (Ciberdúvidas 25561)
         ("2,5 €", "dois euros e cinquenta cêntimos"),
         ("1,01 €", "um euro e um cêntimo"),
         ("0,50 €", "cinquenta cêntimos"),
@@ -126,6 +157,33 @@ class TestMultiplication:
     def test_reading(self, text, expected):
         assert read(text) == expected
 
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    @pytest.mark.parametrize("text", [
+        "A sala tem 4 x 5 m e comprei 2 x 3 caixas.",
+        "Comprei 2 x 3 caixas e a sala tem 4 x 5 m.",
+    ])
+    def test_each_product_reads_alone(self, text, lang):
+        # text2spoken reads "4 x 5 m"; its reading stands, and "2 x 3" still
+        # reads "vezes".
+        room = normalize("4 x 5 m", lang)
+        assert read(text, lang) == text.replace("4 x 5 m", room).replace("2 x 3", "dois vezes três")
+
+    @pytest.mark.parametrize("text,expected", [
+        # A product the author wrote in words keeps its "x"; only the product
+        # in digits reads "vezes", whichever comes first.
+        ("dois x três e 2 x 3", "dois x três e dois vezes três"),
+        ("2 x 3 e dois x três", "dois vezes três e dois x três"),
+        ("dois x três, 2 x 3 e dois x três", "dois x três, dois vezes três e dois x três"),
+        ("2 x 3, dois x três e 2 x 3", "dois vezes três, dois x três e dois vezes três"),
+    ])
+    def test_product_in_words_keeps_its_x(self, text, expected):
+        assert read(text) == expected
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    def test_products_text2spoken_reads_keep_its_reading(self, lang):
+        text = "A sala tem 4 x 5 m e a outra 3 x 6 m."
+        assert read(text, lang) == normalize(text, lang)
+
 
 class TestGuardRows:
     """Rows that these rules must leave as they were."""
@@ -140,7 +198,7 @@ class TestGuardRows:
         ("o artigo 1 da lei", "o artigo um da lei"),
         ("comprei 2 casas", "comprei duas casas"),
         ("tem 2 cães", "tem dois cães"),
-        ("5 min", "cinco min"),
+        ("5 min", "cinco minutos"),
         ("O jogo é 3-2.", "O jogo é três a dois."),
     ])
     def test_unchanged(self, text, expected):

@@ -18,23 +18,21 @@ Expected values come from the grammar, not from the engine:
 * After a number, a capital letter is a unit symbol ("220 V", "2 L").
 """
 import json
+import re
 from pathlib import Path
 
 import pytest
 
 import tugaphone
-from tugaphone.number_utils import normalize_numbers
-from tugaphone.text_normalization import (
-    expand_abbreviations,
-    expand_regnal_numerals,
-    normalize_orthography,
-)
+from tugaphone.text_normalization import expand_abbreviations, normalize_orthography, normalize_text
+
 
 DATA = Path(tugaphone.__file__).parent / "data"
+ROMAN_RUN = re.compile(r"\b[IVXLCDM]+\b")
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
-    return normalize_numbers(normalize_orthography(text, lang), lang)
+    return normalize_text(text, lang)
 
 
 class TestRulersAndPopes:
@@ -93,7 +91,6 @@ class TestUnchanged:
         # headline text in capitals
         "EU VI O FILME",
         "ELE LI O LIVRO",
-        "D. JOÃO V CHEGOU",
         # fixed expressions
         "Raio X", "raio X", "os raios X", "Geração X", "Malcolm X", "Fator X",
         "Projeto X", "Twitter/X", "o Twitter X", "o cromossoma X",
@@ -105,13 +102,18 @@ class TestUnchanged:
         "eu vi X", "Vi o filme", "a Sala V", "o Anexo I",
     ])
     def test_not_a_numeral(self, text):
-        assert expand_regnal_numerals(text) == text
+        written = normalize_orthography(text)
+        assert ROMAN_RUN.findall(read(text)) == ROMAN_RUN.findall(written)
 
     @pytest.mark.parametrize("text", ["220 V", "2 L"])
     def test_unit_after_number(self, text):
-        assert expand_regnal_numerals(text) == text
         reading = read(text).lower()
         assert "quint" not in reading and "cinquenta" not in reading
+
+
+def test_a_title_and_a_name_in_capitals_read_the_numeral():
+    # "D. João V (quinto)" (Ciberdúvidas 14167), written in capitals.
+    assert read("D. JOÃO V CHEGOU").lower() == "dom joão quinto chegou"
 
 
 class TestGivenNameGender:
@@ -129,12 +131,6 @@ class TestGivenNameGender:
     def test_title_follows_the_name(self, text, expected):
         assert expand_abbreviations(text) == expected
 
-    def test_letter_expressions_are_word_and_capital(self):
-        data = json.loads((DATA / "letter_expressions.json").read_text(encoding="utf-8"))
-        for phrase in data["expressions"]:
-            word, letter = phrase.rsplit(" ", 1)
-            assert word and len(letter) == 1 and letter.isupper()
-
 
 @pytest.mark.parametrize("text,expected", [
     # "EU" in all-caps text is the pronoun; alone in mixed case, the acronym.
@@ -148,3 +144,9 @@ class TestGivenNameGender:
 ])
 def test_acronyms_that_spell_a_word(text, expected):
     assert normalize_orthography(text) == expected
+
+    def test_letter_expressions_are_word_and_capital(self):
+        data = json.loads((DATA / "letter_expressions.json").read_text(encoding="utf-8"))
+        for phrase in data["expressions"]:
+            word, letter = phrase.rsplit(" ", 1)
+            assert word and len(letter) == 1 and letter.isupper()

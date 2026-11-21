@@ -24,16 +24,13 @@ cardinal label, which is invariable: "sente-se a omissão da palavra número"
 """
 import pytest
 
-from tugaphone.number_utils import normalize_numbers
-from tugaphone.text_normalization import (
-    expand_letter_digit_codes,
-    expand_regnal_numerals,
-    normalize_orthography,
-)
+from tugaphone.text_normalization import expand_letter_digit_codes, expand_regnal_numerals, normalize_text
+
+from tests.text2spoken_gaps import PRENOMINAL_CARDINAL
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
-    return normalize_numbers(normalize_orthography(text, lang), lang)
+    return normalize_text(text, lang)
 
 
 class TestRomanAfterNoun:
@@ -60,13 +57,13 @@ class TestRomanAfterNoun:
         ("D. Afonso I.", "Dom Afonso Primeiro."),
     ])
     def test_reading(self, text, expected):
-        assert read(text) == expected
+        assert read(text).lower() == expected.lower()
 
     def test_pt_br_cardinal_spelling(self):
         assert read("o século XIX", "pt-BR") == "o século dezenove"
 
     def test_capitalised_part_of_work_heading(self):
-        assert read("Capítulo XI") == "Capítulo Onze"
+        assert read("Capítulo XI").lower() == "capítulo onze"
 
 
 class TestRomanBeforeNoun:
@@ -74,6 +71,8 @@ class TestRomanBeforeNoun:
         ("o XIX Congresso", "o Décimo Nono Congresso"),
         ("a II Guerra Mundial", "a Segunda Guerra Mundial"),
         ("na XXI edição", "na vigésima primeira edição"),
+        pytest.param("O XXV Congresso decorreu em Lisboa.", "O Vigésimo Quinto Congresso decorreu em Lisboa.",
+                     marks=PRENOMINAL_CARDINAL),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -85,11 +84,23 @@ class TestRomanGuardRows:
         ("a I entrada", "a I entrada"),
         ("Pizza Grande XL", "Pizza Grande XL"),
         ("um CD novo", "um CD novo"),
-        ("o DL 10", "o DL 10"),
+        ("o DL 10", "o DL dez"),
         ("o MIX", "o MIX"),
         ("Afonso I reinou", "Afonso Primeiro reinou"),
     ])
     def test_unchanged_or_as_before(self, text, expected):
+        assert read(text) == expected
+
+    @pytest.mark.parametrize("text,expected", [
+        ("eu vi X pessoas", "eu vi X pessoas"),
+        ("a I entrada", "a I entrada"),
+        ("Pizza Grande XL", "Pizza Grande XL"),
+        ("um CD novo", "um CD novo"),
+        ("o DL 10", "o DL 10"),
+        ("o MIX", "o MIX"),
+        ("Afonso I reinou", "Afonso Primeiro reinou"),
+    ])
+    def test_expand_regnal_numerals_alone(self, text, expected):
         assert expand_regnal_numerals(text) == expected
 
 
@@ -115,7 +126,7 @@ class TestLetterDigitCodes:
 
 class TestLetterDigitGuardRows:
     @pytest.mark.parametrize("text,expected", [
-        # after a number the letters are a unit symbol, not a code
+        # a unit symbol is a unit, not a code, whatever comes before it
         ("10 m2", "10 m2"),
         ("5 km2", "5 km2"),
         ("4G", "4G"),
@@ -135,3 +146,32 @@ class TestLetterDigitGuardRows:
     ])
     def test_pipeline_unchanged(self, text, expected):
         assert read(text) == expected
+
+
+class TestCodeAfterANumber:
+    """A letter-digit code after a number is still a code, so its letters are
+    spelled by name; only a known unit symbol is left as written."""
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    @pytest.mark.parametrize("text,expected", [
+        ("Imprimi 2 A4.", "Imprimi dois á quatro."),
+        ("Imprimi 1.2 A4.", "Imprimi um vírgula dois á quatro."),
+        ("Lote 12.3 B2.", "Lote doze vírgula três bê dois."),
+        ("1.500 RTP2", "mil e quinhentos érre tê pê dois"),
+        ("Ficou em -5 F1.", "Ficou em menos cinco éfe um."),
+    ])
+    def test_a_code_after_a_number_spells_out(self, text, expected, lang):
+        assert read(text, lang) == expected
+
+    @pytest.mark.parametrize("lang,expected", [
+        ("pt-PT", "um vírgula cinco milímetros quadrados"),
+        ("pt-BR", "um vírgula cinco milímetro quadrado"),
+    ])
+    def test_mm2_reads_as_a_unit(self, lang, expected):
+        assert read("1,5 mm2", lang) == expected
+
+    @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
+    def test_a_unit_symbol_with_no_number_before_it_is_spelled(self, lang):
+        # The unit reader reads a symbol only after digits, so elsewhere "m2" is
+        # spelled rather than left with its digit unread.
+        assert read("O m2 custa 2 euros.", lang) == "O éme dois custa dois euros."

@@ -1,12 +1,26 @@
+"""Numbers, dates, times, money and measures, read by text2spoken.
+
+text2spoken reads first, so where it reads a form, its reading stands. The
+lects that write the European AO1990 norm read ``pt-PT``, and the lects that
+write the Brazilian norm read ``pt-BR``. For a form that text2spoken leaves as
+written, a fallback rewrite below reads it, and text2spoken reads the digits
+that the rewrite leaves. Each fallback names the text2spoken issue for its
+form, and goes when text2spoken reads the form.
+"""
 import re
 import string
 import unicodedata
 import warnings
 from typing import Optional
 
-from ovos_number_parser import pronounce_number
-from ovos_number_parser.util import GrammaticalGender
+from text2spoken import FrozenMap, GrammaticalGender, NormalizationParams, normalize
 from tugalex import TugaLexicon
+
+from tugaphone.registry import resolve_lect, spelling_norm
+from tugaphone.version import VERSION_MAJOR
+
+#: The release that removes :class:`NumberParser`.
+NUMBER_PARSER_REMOVAL_VERSION = f"{VERSION_MAJOR + 1}.0.0"
 
 
 class UnreadFormWarning(UserWarning):
@@ -17,31 +31,502 @@ class UnreadFormWarning(UserWarning):
     """
 
 
-class NumberParser:
+#: The text2spoken variety of each AO1990 norm (``registry.spelling_norm``).
+TEXT2SPOKEN_TAGS = {"ao1990-pt": "pt-PT", "ao1990-br": "pt-BR"}
+
+
+def text2spoken_tag(lang: str) -> str:
+    """The text2spoken variety that ``lang`` reads: ``pt-PT`` or ``pt-BR``.
+
+    "19" is "dezanove" in ``pt-PT`` and "dezenove" in ``pt-BR``. The European
+    sub-lects and the African and Asian lects read ``pt-PT``. The Brazilian
+    sub-lects and ``pt-UY`` read ``pt-BR``.
     """
-    A utility class to convert digits into their spelled-out Portuguese equivalent.
+    return TEXT2SPOKEN_TAGS[spelling_norm(resolve_lect(lang))]
 
-    In Portuguese, numbers must agree in gender (masculine/feminine) and
-    type (cardinal/ordinal) with the nouns they modify.
-    Example: '1' can be 'um' (masc.), 'uma' (fem.), 'primeiro' (1st masc.), or 'primeira' (1st fem.).
 
-    Numbers are read out by ovos-number-parser, which spells out arbitrarily
-    large Python integers correctly in either scale -- there is no ceiling.
+def text2spoken_reading(text: str, lang: str, scale: Optional[str] = None,
+                        gender: Optional[str] = None) -> str:
+    """``text`` read by text2spoken in the variety of ``lang``. ``gender``
+    ("masculine" or "feminine") is the gender of a number that no word in the
+    text decides."""
+    default_gender = FrozenMap({"pt": GrammaticalGender(gender)}) if gender else FrozenMap()
+    return normalize(text, text2spoken_tag(lang),
+                     NormalizationParams(scale=scale, default_gender=default_gender))
 
-    NOTE: pt-BR defaults to short-scale, pt-PT/pt-AO/pt-MZ/pt-TL to long-scale.
-          https://en.wikipedia.org/wiki/Long_and_short_scales
-          https://pt.wikipedia.org/wiki/Escalas_curta_e_longa
 
-    The `scale` parameter picks which scale words are used ("long" or
-    "short"), independently of the dialect spelling requested via
-    `is_brazilian`: e.g. `scale="short"` on a pt-PT call still spells the
-    number with pt-PT wording, just using "trilião"-style short-scale names
-    instead of the long-scale ones.
+def warn_unread_digits(spoken: str, text: str, lang: str) -> None:
+    """Give an :class:`UnreadFormWarning` for each form with digits left in
+    ``spoken``, the reading of ``text``."""
+    for form in re.findall(r"\S*\d\S*", spoken):
+        warnings.warn(f"{text2spoken_tag(lang)}: no reading for {form!r} in {text!r}; "
+                      "its digits are dropped", UnreadFormWarning, stacklevel=3)
 
-    Long scale reference (pt-PT/pt-AO/pt-MZ/pt-TL): milhão 10^6, mil milhões
-    10^9, bilião 10^12, mil biliões 10^15, trilião 10^18, quatrilião 10^24.
-    Short scale reference (pt-BR): milhão 10^6, bilhão 10^9, trilhão 10^12,
-    quatrilhão 10^15, quintilhão 10^18, sextilhão 10^21, septilhão 10^24.
+
+# Unit symbols read after a number, as (singular, plural) names. Symbols
+# and names follow the SI brochure ("Sistema Internacional de Unidades
+# (SI)", Inmetro/IPQ, 2021, ISBN 978-85-86920-28-8, §5.2-5.3): the symbol
+# is invariable, "l" and "L" are both the litre, "%" reads "por cento". The
+# names are the dictionary forms ("quilómetro", "quilograma"); pt-BR writes
+# "quilômetro". Every
+# name is masculine -- "o grama", "duzentos gramas" (Inmetro, "Unidades
+# Legais de Medida") -- so the number before a symbol is masculine.
+UNIT_NAMES = {
+    "%": ("por cento", "por cento"),
+    "€": ("euro", "euros"),
+    "mm": ("milímetro", "milímetros"),
+    "cm": ("centímetro", "centímetros"),
+    "m": ("metro", "metros"),
+    "km": ("quilómetro", "quilómetros"),
+    "km/h": ("quilómetro por hora", "quilómetros por hora"),
+    "mm2": ("milímetro quadrado", "milímetros quadrados"),
+    "cm2": ("centímetro quadrado", "centímetros quadrados"),
+    "cm²": ("centímetro quadrado", "centímetros quadrados"),
+    "m2": ("metro quadrado", "metros quadrados"),
+    "m²": ("metro quadrado", "metros quadrados"),
+    "km2": ("quilómetro quadrado", "quilómetros quadrados"),
+    "km²": ("quilómetro quadrado", "quilómetros quadrados"),
+    "cm3": ("centímetro cúbico", "centímetros cúbicos"),
+    "cm³": ("centímetro cúbico", "centímetros cúbicos"),
+    "m3": ("metro cúbico", "metros cúbicos"),
+    "m³": ("metro cúbico", "metros cúbicos"),
+    "mg": ("miligrama", "miligramas"),
+    "g": ("grama", "gramas"),
+    "kg": ("quilograma", "quilogramas"),
+    "ml": ("mililitro", "mililitros"),
+    "mL": ("mililitro", "mililitros"),
+    "cl": ("centilitro", "centilitros"),
+    "cL": ("centilitro", "centilitros"),
+    "dl": ("decilitro", "decilitros"),
+    "dL": ("decilitro", "decilitros"),
+    "l": ("litro", "litros"),
+    "L": ("litro", "litros"),
+}
+
+
+# ---------------------------------------------------------------------------
+# Number ranges: a dash BETWEEN two digits is a numeric range, read " a ".
+# text2spoken leaves a score ("3-2") and a range with an em dash ("10—20")
+# as written: https://github.com/TigreGotico/text2spoken/issues/250
+# Word hyphens ("chamo-me", "guarda-chuva") have letters on at least one side
+# and are untouched.
+# ---------------------------------------------------------------------------
+_RANGE_DASH = re.compile(r"(?<=\d)[-–—−](?=\d)")
+
+
+def split_number_ranges(text: str) -> str:
+    """"1139-1185" -> "1139 a 1185"."""
+    return _RANGE_DASH.sub(" a ", text)
+
+
+# ---------------------------------------------------------------------------
+# European number separators: "." groups thousands and is dropped;
+# "," is the decimal mark, read "vírgula". Both only between two digits, so
+# sentence-final periods, list commas and ordinal marks ("3.º") are unaffected.
+# text2spoken reads both, so normalize_numbers does not run this rewrite.
+# ---------------------------------------------------------------------------
+_THOUSANDS_DOT = re.compile(r"(?<=\d)\.(?=\d)")
+_DECIMAL_COMMA = re.compile(r"(?<=\d),(?=\d)")
+
+
+def normalize_number_separators(text: str) -> str:
+    """"92.073" -> "92073"; "10,4" -> "10 vírgula 4"."""
+    text = _THOUSANDS_DOT.sub("", text)
+    return _DECIMAL_COMMA.sub(" vírgula ", text)
+
+
+# ---------------------------------------------------------------------------
+# Unit symbols. The SI writes a space between a number and its unit symbol
+# (SI brochure, Inmetro/IPQ 2021, §5.4.3) and between a number and "%"
+# (same brochure, p. 28). Text often glues them ("7kg", "20%") or puts the
+# euro sign first ("€20"). These rules restore "<number> <symbol>", which
+# normalize_numbers then reads with the unit name and number agreement.
+# A symbol counts only right after digits, so the letter "m" or a word
+# such as "kg" in running text is never touched. text2spoken leaves a glued
+# litre symbol with a capital L ("10mL", "2L") as written:
+# https://github.com/TigreGotico/text2spoken/issues/249
+# ---------------------------------------------------------------------------
+_NUMBER = r"\d+(?:[.,]\d+)*"
+_SYMBOLS = "|".join(re.escape(s) for s in
+                    sorted(UNIT_NAMES, key=len, reverse=True))
+_GLUED_UNIT = re.compile(rf"(?<![\w.,])({_NUMBER})({_SYMBOLS})(?![\w/²³])")
+_EURO_FIRST = re.compile(rf"€ ?({_NUMBER})(?!\w)")
+# "2,50 €" is read "dois euros e cinquenta cêntimos" (Ciberdúvidas 25561:
+# "cinquenta euros e trinta cêntimos"). Only one or two decimals are cents.
+_EURO_CENTS = re.compile(r"(?<![\w.,])(\d+(?:\.\d{3})*),(\d{1,2}) €")
+# A "x" or "×" between two numbers is multiplication, read "vezes": "dois
+# vezes dois são quatro" (Priberam DLPO, "vezes"). Hex literals ("0x1F")
+# and words ("o x da questão") have a letter on one side and are untouched.
+_TIMES = re.compile(r"(?<![\w.,])(\d+(?:,\d+)?) ?[x×] ?(?=\d+(?:,\d+)?(?:[x×]\d|(?!\w)))")
+
+
+def _euro_cents_repl(match: "re.Match[str]") -> str:
+    euros, cents = match.group(1), int(match.group(2).ljust(2, "0"))
+    if cents == 0:
+        return f"{euros} €"
+    cents_text = f"{cents} cêntimo" if cents == 1 else f"{cents} cêntimos"
+    if int(euros.replace(".", "")) == 0:
+        return cents_text
+    return f"{euros} € e {cents_text}"
+
+
+def separate_unit_symbols(text: str) -> str:
+    """"7kg" -> "7 kg"; "20%" -> "20 %"; "€20" -> "20 €";
+    "2,50 €" -> "2 € e 50 cêntimos"; "15x8" -> "15 vezes 8"."""
+    text = _GLUED_UNIT.sub(r"\1 \2", text)
+    text = _EURO_FIRST.sub(r"\1 €", text)
+    text = _EURO_CENTS.sub(_euro_cents_repl, text)
+    while True:
+        expanded = _TIMES.sub(r"\1 vezes ", text)
+        if expanded == text:
+            return text
+        text = expanded
+
+
+# ---------------------------------------------------------------------------
+# Clock times. "HH:00" is read "<hora> hora(s)" -- the digit token is left for
+# normalize_numbers, which already picks the feminine form ("uma", "duas",
+# "vinte e uma", ...) from the following "hora"/"horas" noun, so no separate
+# gender table is needed here. Any other "HH:MM" is read "<hora> e <minutos>".
+# text2spoken leaves a clock time with no time word before it ("Chegou 16:54.",
+# "9:05") and "24:00" as written: https://github.com/TigreGotico/text2spoken/issues/251
+# Whole hours additionally accept 24 ("24:00" -> "vinte e quatro horas");
+# 25+ is not a clock hour and is left alone. Non-whole times keep the
+# ordinary 0-23 range.
+#
+# The minute is emitted WITHOUT a leading zero ("9:05" -> "9 e 5", not
+# "9 e 05"): normalize_numbers's tokenizer splits on whitespace, and a
+# leading zero would otherwise make the token ambiguous with an ordinal or
+# decimal spelling. Any punctuation immediately following the minutes/hour
+# digits is left glued to them ("16:54." -> "16 e 54.") -- normalize_numbers
+# itself splits trailing punctuation off a numeric token before checking
+# whether it is a number, spells the digits, and glues the punctuation back
+# on, so there is no need to detach it here with a space.
+# ---------------------------------------------------------------------------
+_HOUR = r"(?:[01]?\d|2[0-3])"
+_HOUR_OR_24 = r"(?:[01]?\d|2[0-4])"
+_PUNCT = r"[.,;:!?)\"”…]?"
+_WHOLE_HOUR = re.compile(rf"\b({_HOUR_OR_24}):00({_PUNCT})")
+_CLOCK_TIME = re.compile(rf"\b({_HOUR}):([0-5]\d)({_PUNCT})")
+
+
+def _whole_hour_repl(match: "re.Match[str]") -> str:
+    hh, punct = match.group(1), match.group(2)
+    unit = "hora" if int(hh) == 1 else "horas"
+    return f"{hh} {unit}{punct}"
+
+
+def _clock_time_repl(match: "re.Match[str]") -> str:
+    hh, mm, punct = match.group(1), match.group(2), match.group(3)
+    mm = str(int(mm))  # drop the leading zero: "05" -> "5"
+    return f"{hh} e {mm}{punct}"
+
+
+def expand_clock_times(text: str) -> str:
+    """"16:00" -> "16 horas"; "24:00" -> "24 horas"; "16:54" -> "16 e 54".
+    Whole hours must be expanded first, so the ":00" case doesn't fall
+    through to "16 e 0"."""
+    text = _WHOLE_HOUR.sub(_whole_hour_repl, text)
+    return _CLOCK_TIME.sub(_clock_time_repl, text)
+
+
+# ---------------------------------------------------------------------------
+# Number words, so a rule can tell that a word ends a spoken number ("oitenta
+# m2" after text2spoken). A spoken number joins its words with "e" and its
+# decimal part with "vírgula".
+# ---------------------------------------------------------------------------
+_NUMBER_WORDS = frozenset("""
+    zero um uma dois duas três quatro cinco seis sete oito nove dez onze doze
+    treze catorze quatorze quinze dezasseis dezesseis dezassete dezessete
+    dezoito dezanove dezenove vinte trinta quarenta cinquenta sessenta setenta
+    oitenta noventa cem cento duzentos duzentas trezentos trezentas
+    quatrocentos quatrocentas quinhentos quinhentas seiscentos seiscentas
+    setecentos setecentas oitocentos oitocentas novecentos novecentas mil
+    milhão milhões bilião biliões bilhão bilhões trilião triliões trilhão
+    trilhões
+""".split())
+_NUMBER_JOINERS = frozenset({"e", "vírgula"})
+
+
+def is_number_word(core: str) -> bool:
+    return core.isdigit() or core.lower() in _NUMBER_WORDS
+
+
+def _is_mark(ch: str) -> bool:
+    category = unicodedata.category(ch)
+    return category[0] == "P" or category in ("Sm", "Sk")
+
+
+_DIGIT_NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
+_SIGNED_NUMBER = re.compile(r"[-−]?\d+(?:[.,]\d+)*")
+
+
+def _split_trailing_marks(word: str) -> tuple[str, str]:
+    i = len(word)
+    while i > 0 and _is_mark(word[i - 1]):
+        i -= 1
+    return word[:i], word[i:]
+
+
+# ---------------------------------------------------------------------------
+# A "x" between two numbers is multiplication, read "vezes": "dois vezes dois
+# são quatro" (Priberam DLPO, "vezes"). Each factor reads alone, as a
+# masculine cardinal. text2spoken reads "2×2". It leaves "15x8" as written,
+# and reads "2 x 2" as "dois x dois", leaving the "x":
+# https://github.com/TigreGotico/text2spoken/issues/240
+# ---------------------------------------------------------------------------
+_FACTOR = r"\d+(?:,\d+)?"
+_PRODUCT_X = re.compile(rf"(?<![\w.,]){_FACTOR}(?: ?x ?{_FACTOR})+(?!\w)")
+
+
+def read_multiplication_signs(text: str, lang: str = "pt-PT") -> str:
+    """"15x8" -> "quinze vezes oito"; "2 x 3 x 4" -> "dois vezes três vezes quatro"."""
+    def read(match: "re.Match[str]") -> str:
+        factors = re.split(r" ?x ?", match.group())
+        return " vezes ".join(text2spoken_reading(f, lang, gender="masculine") for f in factors)
+    return _PRODUCT_X.sub(read, text)
+
+
+def _written_after_digits(text: str, symbols: frozenset[str]) -> list[bool]:
+    """For each word of ``text`` in ``symbols``, in order: whether a number in
+    digits comes before it."""
+    words = text.split()
+    return [i > 0 and _SIGNED_NUMBER.fullmatch(words[i - 1]) is not None
+            for i, w in enumerate(words) if _split_trailing_marks(w)[0] in symbols]
+
+
+def _read_flagged(text: str, symbols: frozenset[str], flags: list[bool], read) -> str:
+    """Rewrite the words of ``text`` in ``symbols`` whose flag is set, with
+    ``read(words, i)``. text2spoken leaves these words as written, so they come
+    in the same order as in the input; if their count differs, none is read."""
+    words = text.split()
+    positions = [i for i, w in enumerate(words) if _split_trailing_marks(w)[0] in symbols]
+    if len(positions) != len(flags):
+        return text
+    for i, flag in zip(positions, flags):
+        if flag:
+            words[i] = read(words, i)
+    return " ".join(words)
+
+
+_SPACED_PRODUCT = re.compile(rf"(?<![\w.,]){_DIGIT_NUMBER.pattern}(?: x {_DIGIT_NUMBER.pattern})+(?!\w)")
+
+
+def read_spoken_times(spoken: str, written: str, lang: str = "pt-PT") -> str:
+    """The "x" that text2spoken leaves in a product written in digits: "2 x 2",
+    read "dois x dois", gives "dois vezes dois". Each product of ``written`` is
+    found in ``spoken`` by the readings of its factors, in either gender, so a
+    product that text2spoken read ("4 x 5 m", "quatro por cinco metros") does
+    not stop the next one. A product that the author wrote in words reads the
+    same and keeps its "x": as many matches as ``written`` has between this
+    product and the one before are skipped."""
+    start = written_start = 0
+    for product in _SPACED_PRODUCT.finditer(written):
+        factors = ["|".join(re.escape(text2spoken_reading(factor, lang, gender=gender))
+                            for gender in ("masculine", "feminine"))
+                   for factor in product.group().split(" x ")]
+        spoken_product = re.compile(r"(?<!\w)" + " x ".join(f"(?:{f})" for f in factors) + r"(?!\w)")
+        in_words = len(spoken_product.findall(written, written_start, product.start()))
+        written_start = product.end()
+        match = spoken_product.search(spoken, start)
+        for _ in range(in_words):
+            match = match and spoken_product.search(spoken, match.end())
+        if match:
+            reading = match.group().replace(" x ", " vezes ")
+            spoken = spoken[:match.start()] + reading + spoken[match.end():]
+            start = match.start() + len(reading)
+    return spoken
+
+
+# ---------------------------------------------------------------------------
+# Scientific notation: "1e6" is "um vezes dez elevado a seis". Mantissa and
+# exponent read alone. text2spoken leaves the notation as written:
+# https://github.com/TigreGotico/text2spoken/issues/249
+# ---------------------------------------------------------------------------
+_SCIENTIFIC = re.compile(r"(?<![\w.,])(\d+(?:[.,]\d+)?)[eE]([+\-−]?\d+)(?!\w)")
+
+
+def read_scientific_notation(text: str, lang: str = "pt-PT") -> str:
+    """"1e6" -> "um vezes dez elevado a seis"; "2,5e3" -> "dois vírgula cinco
+    vezes dez elevado a três"."""
+    def read(match: "re.Match[str]") -> str:
+        mantissa = text2spoken_reading(match.group(1).replace(".", ","), lang, gender="masculine")
+        exponent = text2spoken_reading(match.group(2).replace("−", "-"), lang, gender="masculine")
+        return f"{mantissa} vezes dez elevado a {exponent}"
+    return _SCIENTIFIC.sub(read, text)
+
+
+# ---------------------------------------------------------------------------
+# Unit symbols after a number that text2spoken reads but whose symbol it leaves
+# as written ("dez m2"): https://github.com/TigreGotico/text2spoken/issues/249
+# The names follow the SI brochure (Inmetro/IPQ 2021) in UNIT_NAMES. The
+# number takes the singular as in the CLDR 49 plural rules, which text2spoken
+# follows for "metro": pt-PT only for "um" ("one: i = 1 and v = 0"), pt-BR
+# for an integer part of zero or one ("one: i = 0..1"), so "um vírgula oito
+# litro" in pt-BR.
+# ---------------------------------------------------------------------------
+_UNREAD_UNITS = frozenset({"mm2", "cm2", "m2", "km2", "cm3", "m3", "mg", "mL", "cl", "cL", "dl", "dL", "L"})
+
+
+def _number_before(words: list[str], i: int) -> list[str]:
+    """The words of the spoken number that ends at words[i - 1]."""
+    j = i
+    while j > 0 and (is_number_word(words[j - 1].lower())
+                     or (words[j - 1].lower() in _NUMBER_JOINERS and j > 1
+                         and is_number_word(words[j - 2].lower()))):
+        j -= 1
+    return [w.lower() for w in words[j:i]]
+
+
+def read_unit_symbols(spoken: str, written: str, lang: str = "pt-PT") -> str:
+    """The unit symbols of ``spoken`` that follow a number written in digits in
+    ``written``: "10 mg", read "dez mg", gives "dez miligramas". In "dois L"
+    the "L" is a letter and stays."""
+    brazilian = text2spoken_tag(lang) == "pt-BR"
+    flags = _written_after_digits(separate_unit_symbols(written), _UNREAD_UNITS)
+
+    def read(words: list[str], i: int) -> str:
+        symbol, trail = _split_trailing_marks(words[i])
+        number = _number_before(words, i)
+        if brazilian:
+            integer = number[:number.index("vírgula")] if "vírgula" in number else number
+            plural = integer not in (["zero"], ["um"], ["uma"])
+        else:
+            plural = number not in (["um"], ["uma"])
+        name = UNIT_NAMES[symbol][plural]
+        return (name.replace("quilómetro", "quilômetro") if brazilian else name) + trail
+    return _read_flagged(spoken, _UNREAD_UNITS, flags, read)
+
+
+# ---------------------------------------------------------------------------
+# A number between marks ("/7/", ":7:") reads alone, as a masculine cardinal.
+# A mark is punctuation or a math or modifier symbol. text2spoken reads it
+# wrong or leaves it as written: https://github.com/TigreGotico/text2spoken/issues/250
+# ---------------------------------------------------------------------------
+def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
+    """"casa /7/ casa" -> "casa /sete/ casa"; "25:00" is untouched."""
+    out = []
+    for w in text.split():
+        i, j = 0, len(w)
+        while i < j and _is_mark(w[i]):
+            i += 1
+        while j > i and _is_mark(w[j - 1]):
+            j -= 1
+        core = w[i:j]
+        if core.isdecimal() and (i or j < len(w)):
+            w = w[:i] + text2spoken_reading(core, lang, gender="masculine") + w[j:]
+        out.append(w)
+    return " ".join(out)
+
+
+# ---------------------------------------------------------------------------
+# A dot between digits that is not followed by groups of three digits is a
+# decimal mark, so "10.4" reads as "10,4". text2spoken reads a dot decimal
+# before a unit ("tem 10.4 graus") and leaves it as written elsewhere ("o
+# valor é 10.4"). It read neither before
+# https://github.com/TigreGotico/text2spoken/issues/242
+# ---------------------------------------------------------------------------
+_DOT_DECIMAL = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w.,])")
+
+
+def read_dot_decimals(text: str) -> str:
+    """"10.4" -> "10,4"; "92.073" is untouched."""
+    return _DOT_DECIMAL.sub(lambda m: m.group() if len(m.group(2)) == 3 else f"{m.group(1)},{m.group(2)}", text)
+
+
+# ---------------------------------------------------------------------------
+# A pair of numbers in digits, "de 1 a 2 casas" or "entre 1 e 2 casas", whose
+# noun may give the first number another gender. text2spoken leaves the pair
+# as written: https://github.com/TigreGotico/text2spoken/issues/134
+# No source gives the gender of the first number, so it reads in the
+# masculine, and text2spoken then reads the second number with its noun.
+# text2spoken also leaves a pair that it should read when a comma or a closing
+# bracket follows the second number ("de 1 a 2, casas", "o valor (de 2 a 3)
+# varia muito"): the mark does not end the pair, and a verb that ends in -a
+# ("varia", "ajuda") reads as a feminine noun.
+# https://github.com/TigreGotico/text2spoken/issues/272
+# When a comma or a stop follows the second number, no noun counts the pair,
+# and both numbers read in the masculine: "Venceu por 2 a 0, nesta
+# terça-feira" -> "dois a zero" (text2spoken#272 and its pt-512 row).
+# This rewrite runs on what text2spoken read, so a pair that text2spoken reads
+# keeps its reading.
+# ---------------------------------------------------------------------------
+_OPENING_MARK = r"[(«\"“']?"
+_PAUSE = r"[)»\"”']?[,;.!?](?![\dºª])"
+_PAIR = re.compile(
+    rf"(?<![\w.,])(?:(?<=\b[Ee]ntre\s)|(?<=\bENTRE\s))(?P<first>{_DIGIT_NUMBER.pattern})"
+    rf"(?P<link>\s+[eE]\s+{_OPENING_MARK})(?P<second>{_DIGIT_NUMBER.pattern})(?P<pause>{_PAUSE})?"
+    rf"|(?<![\w.,])(?P<first2>{_DIGIT_NUMBER.pattern})"
+    rf"(?P<link2>\s+(?i:a|à|às|ao|aos)\s+{_OPENING_MARK})(?P<second2>{_DIGIT_NUMBER.pattern})"
+    rf"(?P<pause2>{_PAUSE})?")
+
+
+def read_number_pairs(text: str, lang: str = "pt-PT", scale: Optional[str] = None) -> str:
+    """The pairs of numbers that text2spoken leaves as written, read: "de 1 a 2
+    casas" -> "de um a duas casas"; "entre 1 e 2 casas" -> "entre um e duas
+    casas"."""
+    def read(m):
+        first, link, second, pause = (m.group("first", "link", "second", "pause") if m.group("first")
+                                      else m.group("first2", "link2", "second2", "pause2"))
+        if pause:
+            second = text2spoken_reading(second, lang, scale, gender="masculine")
+        return text2spoken_reading(first, lang, scale, gender="masculine") + link + second + (pause or "")
+
+    first_read = _PAIR.sub(read, text)
+    return text2spoken_reading(first_read, lang, scale) if first_read != text else text
+
+
+def read_numbers(text: str, lang: str = "pt-PT", scale: Optional[str] = None) -> str:
+    """:func:`normalize_numbers` with no warning: text2spoken reads ``text``,
+    the fallback rewrites above read the forms that it leaves as written, and
+    text2spoken reads the digits that they leave."""
+    spoken = text2spoken_reading(text, lang, scale)
+    exposed = read_spoken_times(read_multiplication_signs(spoken, lang), text, lang)
+    exposed = read_scientific_notation(exposed, lang)
+    exposed = read_dot_decimals(exposed)
+    exposed = separate_unit_symbols(exposed)
+    exposed = split_number_ranges(exposed)
+    exposed = expand_clock_times(exposed)
+    if exposed != spoken:
+        exposed = text2spoken_reading(exposed, lang, scale)
+    exposed = read_number_pairs(exposed, lang, scale)
+    exposed = read_unit_symbols(exposed, text, lang)
+    return read_joined_numbers(exposed, lang)
+
+
+def normalize_numbers(text: str, lang: str = "pt-PT", strict: bool = True,
+                      scale: Optional[str] = None) -> str:
+    """Rewrite the numbers, dates, times, money, measures and abbreviations of
+    ``text`` as the words a speaker of ``lang`` says.
+
+    "Nasceu a 25/12/2023." reads "Nasceu a vinte e cinco de dezembro de dois
+    mil e vinte e três.". The rest of the text stays as written, so text that
+    is already spelled out comes back unchanged.
+
+    ``scale`` is ``"long"`` or ``"short"``. It overrides the scale of the
+    variety: ``10^9`` is "mil milhões" in ``pt-PT`` and "um bilhão" in
+    ``pt-BR``. A form that text2spoken leaves as written stays as written,
+    and a form with digits gives an :class:`UnreadFormWarning`. With
+    ``strict``, an error in text2spoken raises; without it, ``text`` comes
+    back as written.
+    """
+    try:
+        spoken = read_numbers(text, lang, scale)
+    except Exception:
+        if strict:
+            raise
+        return text
+    warn_unread_digits(spoken, text, lang)
+    return spoken
+
+
+
+
+class _NumberParser:
+    """Deprecated: :func:`normalize_numbers` reads numbers through text2spoken.
+
+    The methods keep their signatures. ``pronounce_number_word`` and
+    ``pronounce_scientific`` read the number through text2spoken.
     """
 
     # Symbols used in PT to denote ordinals (like the English 'st', 'nd', 'rd')
@@ -88,43 +573,7 @@ class NumberParser:
     # 3 horas"); "e" joins them after "entre" ("entre 1 e 2 semanas").
     RANGE_LINKS = frozenset({"a", "à", "às", "ao", "aos"})
 
-    # Unit symbols read after a number, as (singular, plural) names. Symbols
-    # and names follow the SI brochure ("Tradução luso-brasileira de 2021 do
-    # SI", IPQ/Inmetro, §5.2-5.3): the symbol is invariable, "l" and "L" are
-    # both the litre, "%" reads "por cento". The names are the dictionary
-    # forms ("quilómetro", "quilograma"); pt-BR writes "quilômetro". Every
-    # name is masculine -- "o grama", "duzentos gramas" (Inmetro, "Unidades
-    # Legais de Medida") -- so the number before a symbol is masculine.
-    UNIT_NAMES = {
-        "%": ("por cento", "por cento"),
-        "€": ("euro", "euros"),
-        "mm": ("milímetro", "milímetros"),
-        "cm": ("centímetro", "centímetros"),
-        "m": ("metro", "metros"),
-        "km": ("quilómetro", "quilómetros"),
-        "km/h": ("quilómetro por hora", "quilómetros por hora"),
-        "cm2": ("centímetro quadrado", "centímetros quadrados"),
-        "cm²": ("centímetro quadrado", "centímetros quadrados"),
-        "m2": ("metro quadrado", "metros quadrados"),
-        "m²": ("metro quadrado", "metros quadrados"),
-        "km2": ("quilómetro quadrado", "quilómetros quadrados"),
-        "km²": ("quilómetro quadrado", "quilómetros quadrados"),
-        "cm3": ("centímetro cúbico", "centímetros cúbicos"),
-        "cm³": ("centímetro cúbico", "centímetros cúbicos"),
-        "m3": ("metro cúbico", "metros cúbicos"),
-        "m³": ("metro cúbico", "metros cúbicos"),
-        "mg": ("miligrama", "miligramas"),
-        "g": ("grama", "gramas"),
-        "kg": ("quilograma", "quilogramas"),
-        "ml": ("mililitro", "mililitros"),
-        "mL": ("mililitro", "mililitros"),
-        "cl": ("centilitro", "centilitros"),
-        "cL": ("centilitro", "centilitros"),
-        "dl": ("decilitro", "decilitros"),
-        "dL": ("decilitro", "decilitros"),
-        "l": ("litro", "litros"),
-        "L": ("litro", "litros"),
-    }
+    UNIT_NAMES = UNIT_NAMES
 
     @classmethod
     def unit_name(cls, symbol: str, plural: bool, is_brazilian=False) -> str:
@@ -175,28 +624,15 @@ class NumberParser:
         """
         if cls.is_scientific_notation(word):
             return cls.pronounce_scientific(word, is_brazilian=is_brazilian, scale=scale)
-
-        # 1. Determine if the number is an ordinal (1st, 2nd) or cardinal (1, 2)
         is_ord = cls.is_ordinal(word, next_word) if as_ordinal is None else as_ordinal
-
-        # 2. Determine grammatical gender (numbers 1, 2, and hundreds change in PT)
         gender = gender or cls.get_number_gender(word, prev_word, next_word)
-        gender_enum = GrammaticalGender.FEMININE if gender == "feminine" else GrammaticalGender.MASCULINE
-
-        # 3. Turn the token into a Python number. The ordinal markers (º/ª) are only
-        # used to detect ordinality/gender above; strip them before parsing.
-        word = word.replace(" º", "º").replace(" ª", "ª").strip()
-        word = word.rstrip(cls.ORDINAL_MALE + cls.ORDINAL_FEMALE)
-        # PT/BR write decimals with a comma; Python only accepts a dot.
-        word = word.replace(",", ".", 1)
-        number = float(word) if "." in word else int(word)
-
-        use_short_scale = scale == "short" if scale else is_brazilian
+        digits = word.replace(" º", "º").replace(" ª", "ª").strip()
+        digits = digits.rstrip(cls.ORDINAL_MALE + cls.ORDINAL_FEMALE).replace(".", ",", 1)
         lang = "pt-BR" if is_brazilian else "pt-PT"
-        return pronounce_number(
-            number, lang=lang, short_scale=use_short_scale,
-            ordinals=is_ord, gender=gender_enum,
-        )
+        if is_ord:
+            marker = cls.ORDINAL_FEMALE if gender == "feminine" else cls.ORDINAL_MALE
+            return normalize_numbers(digits + marker, lang, scale=scale)
+        return text2spoken_reading(digits, lang, scale, gender)
 
     # Punctuation that can open or close a numeric token in running text
     # without being part of the number itself (brackets, quotes,
@@ -478,156 +914,11 @@ class NumberParser:
         return "masculine"
 
 
-def normalize_numbers(text: str, lang: str = "pt-PT", strict=True,
-                       scale: Optional[str] = None) -> str:
-    """
-    Replace numeric tokens in a sentence with their contextually correct Portuguese written forms.
-
-    This function normalizes the language tag (treating any variant of "pt-br" as "pt-BR"), collapses spaced ordinal markers (e.g., "1 º" -> "1º") for parsing, and converts integer, decimal and scientific-notation tokens into their spelled-out Portuguese equivalents, preserving other tokens and surrounding context.
-
-    Parameters:
-        text (str): Input sentence containing numeric and non-numeric tokens.
-        lang (str): Language variant to use for spelling rules (defaults to "pt-PT"; any "pt-br" variant is treated as "pt-BR").
-        strict (bool): If True, a token that cannot be spelled out raises whatever exception the parser raised; if False, its digits are left untouched.
-        scale (Optional[str]): "long" or "short", overriding the numeric scale that `lang` would otherwise pick (long for pt-PT/pt-AO/pt-MZ/pt-TL, short for pt-BR).
-
-    Returns:
-        str: The input sentence with numeric tokens replaced by their spelled-out Portuguese forms.
-    """
-    if "pt-br" in lang.lower():
-        lang = "pt-BR"
-    is_brazilian = lang == "pt-BR"
-    if scale is None:
-        scale = "short" if is_brazilian else "long"
-
-    # Pre-process: ensure symbols like 1 º become 1º for easier parsing
-    words = text.replace(" º", "º").replace(" ª", "ª").split()
-    normalized_words = []
-
-    def is_number(token: Optional[str]) -> bool:
-        if token is None:
-            return False
-        token = NumberParser.split_edges(token)[1]
-        # float() also accepts "nan", "inf" and "infinity", which are words
-        # in running text ("Inf." is "Infante", "(inf.)" is "infinitivo").
-        return (any(ch.isdigit() for ch in token)
-                and (NumberParser.is_int(token) or NumberParser.is_float(token)))
-
-    def unit_symbol(token: Optional[str]) -> Optional[str]:
-        if token is None:
-            return None
-        symbol = NumberParser.split_trailing_punctuation(token)[0]
-        return symbol if symbol in NumberParser.UNIT_NAMES else None
-
-    skip_unit = False
-    for idx, word in enumerate(words):
-        if skip_unit:
-            skip_unit = False
-            continue
-        # A numeric token may carry punctuation glued to its edges ("54.",
-        # "05,", "5!", "(789)", "«7»", "[7]", "—7") -- split it off so
-        # is_int/is_float see a clean number, then glue it back onto the
-        # spelled-out words so the caller never has to detach it with a space
-        # (see #116).
-        lead, core, trail = NumberParser.split_edges(word)
-        if not is_number(core):
-            normalized_words.append(word)
-            continue
-        # Lookahead and Lookbehind for grammatical context
-        next_word = words[idx + 1] if idx + 1 < len(words) else None
-        prev_word = words[idx - 1] if idx - 1 >= 0 else None
-        unit = None if trail else unit_symbol(next_word)
-        # The digits after "vírgula" are the fractional part of a decimal
-        # ("0,02" -> "0 vírgula 02"); their leading zeros are read one by one.
-        is_fraction = prev_word == "vírgula" and is_number(words[idx - 2] if idx >= 2 else None)
-
-        gender = None
-        if unit:
-            gender = "masculine"
-        elif next_word == "vírgula" and is_number(words[idx + 2] if idx + 2 < len(words) else None):
-            # The integer part of a decimal agrees with the noun after the
-            # whole decimal, not with the word "vírgula".
-            after = words[idx + 3] if idx + 3 < len(words) else None
-            gender = ("masculine" if unit_symbol(after)
-                      else NumberParser.get_number_gender(core, prev_word, after))
-        elif next_word == "vezes" and is_number(words[idx + 2] if idx + 2 < len(words) else None):
-            # "vezes" between two numbers is the multiplication sign, not the
-            # plural of the feminine noun "vez": "dois vezes dois são quatro"
-            # (Priberam DLPO, "vezes", as cited in
-            # tests/test_measure_normalization.py).
-            gender = "masculine"
-        elif ((next_word in NumberParser.RANGE_LINKS or (next_word == "e" and prev_word == "entre"))
-              and is_number(words[idx + 2] if idx + 2 < len(words) else None)
-              and not NumberParser.is_ordinal(core, next_word)):
-            # Both numbers of a range agree with the noun after the second
-            # one ("de 1 a 2 dias" -> "de um a dois dias").
-            # A bracket or quote around the second number alone keeps it with
-            # its noun ("de 1 a (2) casas"). One that closes a longer stretch
-            # ("(de 2 a 3) varia muito"), a comma or a full stop cut them apart.
-            second, second_trail = NumberParser.split_trailing_punctuation(words[idx + 2])
-            cut = (second_trail.rstrip(")\"”»") if second[0] in NumberParser.LEADING_PUNCTUATION
-                   else second_trail)
-            after = None if cut or idx + 3 >= len(words) else words[idx + 3]
-            gender = ("masculine" if unit_symbol(after)
-                      else NumberParser.get_number_gender(second, next_word, after))
-        try:
-            spelled = []
-            if is_fraction and core.isdigit():
-                digits = core.lstrip("0")
-                spelled = ["zero"] * (len(core) - len(digits))
-                core = digits
-            if core:
-                spelled.append(NumberParser.pronounce_number_word(
-                    core, prev_word, next_word, gender=gender,
-                    is_brazilian=is_brazilian, scale=scale))
-            if unit:
-                if is_fraction:
-                    integer = NumberParser.split_trailing_punctuation(
-                        words[idx - 2].lstrip(NumberParser.LEADING_PUNCTUATION))[0]
-                    value = float(f"{integer}.{core or 0}")
-                else:
-                    value = NumberParser.to_float(core)
-                plural = NumberParser.unit_takes_plural(value, is_fraction, is_brazilian)
-                if unit != "%" and spelled[-1].endswith(("ão", "ões")):
-                    # "um milhão de euros" (Ciberdúvidas 25561: "2,5 milhões de euros")
-                    spelled.append("de")
-                spelled.append(NumberParser.unit_name(unit, plural, is_brazilian))
-                trail = NumberParser.split_trailing_punctuation(next_word)[1]
-                skip_unit = True
-            normalized_words.append(lead + " ".join(spelled) + trail)
-        except Exception as e:
-            if strict:
-                raise e
-            normalized_words.append(word)
-
-    normalized = " ".join(normalized_words)
-    for form in re.findall(r"\S*\d\S*", normalized):
-        warnings.warn(f"{lang}: no reading for {form!r} in {text!r}; its digits are dropped",
-                      UnreadFormWarning, stacklevel=2)
-    return normalized
-
-
-if __name__ == "__main__":
-    # Test regional spelling (19)
-    print(f"BR: {NumberParser.pronounce_number_word('19', is_brazilian=True)}")
-    print(f"PT: {NumberParser.pronounce_number_word('19', is_brazilian=False)}")
-
-    # Test gender agreement
-    print(normalize_numbers("vou comprar 1 casa"))  # uma (fem)
-    print(normalize_numbers("vou comprar 2 casas"))  # duas (fem)
-    print(normalize_numbers("vou adotar 1 cão"))  # um (masc)
-    print(normalize_numbers("vou adotar 2 cães"))  # dois (masc)
-
-    # Test -e suffix rule (cidade = fem)
-    print(normalize_numbers("visitei 1 cidade"))  # uma (fem)
-
-
-    print(normalize_numbers("897654356789098", "pt-PT")) # long-scale
-    # oitocentos e noventa e sete biliões seiscentos e cinquenta e quatro mil trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito
-    print(normalize_numbers("897654356789098", "pt-BR")) # short-scale
-    # oitocentos e noventa e sete trilhões seiscentos e cinquenta e quatro bilhões trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito
-
-    print(normalize_numbers("1e-3")) # um vezes dez elevado a menos três
-    print(normalize_numbers("1e9")) # um vezes dez elevado a nove
-    print(normalize_numbers("1.5e10"))  # um vírgula cinco vezes dez elevado a dez
-    print(normalize_numbers("1.5e10000000")) # um vírgula cinco vezes dez elevado a dez milhões
+def __getattr__(name: str):
+    if name == "NumberParser":
+        warnings.warn(
+            "tugaphone.number_utils.NumberParser is deprecated: use normalize_numbers, which "
+            f"reads numbers through text2spoken. It will be removed in tugaphone "
+            f"{NUMBER_PARSER_REMOVAL_VERSION}.", DeprecationWarning, stacklevel=2)
+        return _NumberParser
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -171,6 +171,58 @@ engine = G2P(lect, pipeline=tugaphone.pipeline(lect))
 engine.transcribe("Tenho 3 gatos.")   # same as tugaphone.phonemize("Tenho 3 gatos.", lect)
 ```
 
+## `tugaphone.revision`
+
+```python
+revision(lang: str = "pt-PT") -> str
+```
+
+Returns a string that changes when the output of `phonemize(text, lang)` can
+change, for some text. A voice records the revision of the lect it was trained
+on. At load time, an equal revision tells that the running tugaphone gives the
+same output, even when the version differs.
+
+The revision covers `contact="none"`, the default and the path that scriptconv
+uses. Another `contact` value also reads the `en-US`, `es-ES` and `fr-FR` specs
+of orthography2ipa and the optional markovonnx detector. The
+revision covers neither, so it can stay equal while that output changes.
+
+The value is `tp1:` and a SHA-256 in hex. The hash covers:
+
+- `unicodedata.unidata_version` of the running Python. The Unicode database
+  decides how the text stages normalise and classify characters.
+- `orthography2ipa.spec_revision(lect)`, and `lexicon_revision(lect, patches=True)`
+  for `pt-PT` and `pt-BR`, the lects that take a packaged lexicon.
+- Each other distribution that a probe call of `phonemize` for the lect imports,
+  in a fresh process. The distribution counts whole: the code tokens of each of
+  its Python modules, also the modules that the probe does not load, and the
+  bytes of each of its data files.
+
+A comment, a docstring, a blank line, the width of an indent, and a `version.py`
+or `_version.py` at the top of a package do not count. A version string does not
+count, with one exception. A distribution that ships a compiled module, such as
+`numpy`, counts by its name and version, because its files differ by platform.
+
+A distribution whose files cannot be read from the file system, such as a
+package imported from a zip, raises `RevisionError`. A hash of no files would
+stay equal across every edit of that distribution.
+
+The probe also raises `RevisionError` when its process fails, prints no
+result, prints a result that is not JSON, or runs longer than 120 s.
+`tugaphone.RevisionError` is a subclass of `RuntimeError`.
+
+`lang` resolves as `phonemize` resolves it, with the same warning for a code that
+is not a lect. So `revision("pt")` equals `revision("pt-PT")`. The first call for
+a lect in a process runs the probe and reads the files, which takes some seconds.
+Later calls return the kept value.
+
+```python
+import tugaphone
+
+tugaphone.revision("pt-PT")   # 'tp1:' and 64 hex digits
+tugaphone.revision("pt-BR")   # another value: the specs differ
+```
+
 ## `tugaphone.registry`
 
 The dialect registry behind code resolution. `list_dialects` and `resolve_lect`
@@ -195,6 +247,27 @@ resolve_lect("pt-PT-x-lisboa")   # 'pt-PT-x-lisbon'  (alias)
 "pt-BR-x-sp" in list_dialects()  # True
 ```
 
+## `tugaphone.lattice_core.normalize_spelling`
+
+```python
+normalize_spelling(text: str, lect: str) -> str
+```
+
+The spelling step, the first part of the `expand` step of the pipeline. It
+rewrites the old spellings of `text` in the AO1990 norm of `lect` with
+desacordo_ortografico: `ao1990-br` for the Brazilian lects and `pt-UY`,
+`ao1990-pt` for every other lect. Pass a code of `list_dialects()`: a loose tag
+such as `"pt"` raises `ValueError`, so resolve it with `resolve_lect` first. Most
+text that is already in the AO1990 spelling stays as written.
+[text_normalization.md](text_normalization.md#old-spellings) lists the changes
+it makes to modern text, such as *ideia* → *idéia* for the Brazilian lects.
+
+```python
+from tugaphone.lattice_core import normalize_spelling
+normalize_spelling("A acção da pharmacia foi rápida.", "pt-PT")   # 'A ação da farmácia foi rápida.'
+normalize_spelling("Tive uma ideia.", "pt-BR")                    # 'Tive uma idéia.'
+```
+
 ## `tugaphone.number_utils`
 
 ### `normalize_numbers`
@@ -204,24 +277,44 @@ normalize_numbers(text: str, lang: str = "pt-PT", strict: bool = True,
                   scale: str | None = None) -> str
 ```
 
-Replaces numeric tokens in a sentence with their Portuguese written form,
-inferring gender and ordinality from the surrounding words. `pt-PT` uses the
-long scale (biliões), `pt-BR` the short scale (trilhões), and `scale="long"` or
-`scale="short"` overrides that choice. With `strict=False`, tokens that fail to
-format are left untouched instead of raising. This runs
-inside the engine's `expand` step before the lattice sees the text.
+Reads the numbers, dates, clock times, money, measures and abbreviations of
+`text` with text2spoken, in the variety of `lang`, and reads the forms that
+text2spoken leaves as written with the
+[fallback rewrites](text_normalization.md#fallback-rewrites). The rest of the
+text stays as written. `pt-PT` uses the long scale (biliões) and `pt-BR` the
+short scale (trilhões); `scale="long"` or `scale="short"` overrides the scale.
+A form that is still unread stays as written, and a form with digits gives an
+`UnreadFormWarning`. With `strict=True`, the default, an error in text2spoken
+raises; with `strict=False`, `text` comes back as written. See
+[numbers.md](numbers.md).
 
 ```python
 from tugaphone.number_utils import normalize_numbers
-normalize_numbers("vou comprar 1 casa")    # 'vou comprar uma casa'
-normalize_numbers("vou adotar 1 cão")      # 'vou adotar um cão'
-normalize_numbers("comprei 2 casas")       # 'comprei duas casas'
+normalize_numbers("vou comprar 1 casa")                  # 'vou comprar uma casa'
+normalize_numbers("Nasceu a 25/12/2023.")                # 'Nasceu a vinte e cinco de dezembro de dois mil e vinte e três.'
+normalize_numbers("A reunião é às 19h30.", "pt-BR")      # 'A reunião é às dezenove horas e trinta minutos.'
+```
+
+### `text2spoken_tag`
+
+```python
+text2spoken_tag(lang: str) -> str
+```
+
+The text2spoken variety that a lect reads: `"pt-PT"` for the lects of the
+`ao1990-pt` spelling norm and `"pt-BR"` for the lects of `ao1990-br`.
+
+```python
+from tugaphone.number_utils import text2spoken_tag
+text2spoken_tag("pt-AO")   # 'pt-PT'
+text2spoken_tag("pt-UY")   # 'pt-BR'
 ```
 
 ### `NumberParser`
 
-A classmethod-based helper underneath `normalize_numbers`. Useful when you need
-finer control or want to interrogate a single token.
+**Deprecated.** The token helper of tugaphone 1.7. Its readings come from
+text2spoken. Importing it emits a `DeprecationWarning` that names the removal
+release, tugaphone 2.0.0. Use `normalize_numbers` instead.
 
 | Method | Returns |
 |--------|---------|
@@ -241,6 +334,35 @@ NumberParser.pronounce_number_word("19", is_brazilian=False)                   #
 NumberParser.pronounce_number_word("1", as_ordinal=True, gender="masculine")   # 'primeiro'
 NumberParser.get_number_gender("1", next_word="casa")                          # 'feminine'
 ```
+
+## `tugaphone.text_normalization`
+
+### `normalize_text`
+
+```python
+normalize_text(text: str, lang: str = "pt-PT") -> str
+```
+
+The words a speaker of `lang` says for `text`: the `expand` step of the
+pipeline after the spelling step. It expands abbreviations, acronyms and
+letter-digit codes, then reads the numbers as `normalize_numbers` does, then
+reads the Roman numerals that text2spoken leaves. See
+[text_normalization.md](text_normalization.md).
+
+```python
+from tugaphone.text_normalization import normalize_text
+normalize_text("O Sr. presidente pagou 20%.")   # 'O Senhor presidente pagou vinte por cento.'
+```
+
+### The rewrites
+
+`normalize_orthography(text, lang="pt-PT")` runs the rewrites of tugaphone 1.7
+and leaves the digits for `normalize_numbers`. Each rewrite is public:
+`separate_unit_symbols`, `split_number_ranges`, `expand_clock_times`,
+`normalize_number_separators`, `expand_abbreviations`,
+`expand_regnal_numerals(text, lang)`, `expand_acronyms` and
+`expand_letter_digit_codes(text, lang)`. See
+[text_normalization.md](text_normalization.md) for each one.
 
 ## `tugaphone.tokenizer` and `tugaphone.dialects`
 

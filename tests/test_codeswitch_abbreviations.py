@@ -4,9 +4,10 @@ The normalizer expands an abbreviation and reads a Roman numeral after a
 part-of-work noun from its neighbours. After its noun, a numeral up to ten is
 an ordinal and from eleven on a cardinal, for kings, popes, centuries and
 chapters (Silveira Bueno, Questões de Português, 1957, vol. II, p. 318, quoted
-by José Maria da Costa in Migalhas "Gramatigalhas: Numeral"), so "Cap. XII" is
-"capítulo doze". Code-switch routing splits the text into words before the
-normalizer runs. An abbreviation that only Portuguese reads in its context
+by José Maria da Costa in Migalhas "Gramatigalhas: Numeral": "Estas regras
+servem somente para a enumeração de reis, papas, capítulos, séculos"), so
+"Cap. X" is "capítulo décimo" in both varieties and "Cap. XII" is "capítulo
+doze". Code-switch routing splits the text into words before the normalizer runs. An abbreviation that only Portuguese reads in its context
 stays Portuguese; every other token is left to the router.
 """
 import pytest
@@ -14,7 +15,7 @@ import pytest
 from tugaphone import TugaPhonemizer
 import tugaphone.codeswitch as codeswitch
 from tugaphone.codeswitch import _classify, _is_contact, split_runs
-from tugaphone.text_normalization import normalize_orthography
+from tugaphone.text_normalization import normalize_orthography, normalize_text
 
 SENTENCE = "Tenho 23 anos, Sr. Silva; li o Cap. XII."
 # The sentence as a reader says it, written out by hand.
@@ -162,6 +163,19 @@ def test_period_final_contact_word_routes(classifier, contact):
 ])
 def test_capitalised_abbreviation_expands(text, expected):
     assert normalize_orthography(text) == expected
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("li o Cap. XII.", "li o capítulo doze."),
+    ("Séc. XIX", "século dezanove"),
+    ("ver (Cap. XII)", "ver (capítulo doze)"),
+    ("«Cap. XII»", "«capítulo doze»"),
+    ("ver Fig. II", "ver figura segunda"),
+    ("a Pág. IV", "a página quarta"),
+    ("ver fig. XII", "ver figura doze"),
+])
+def test_numeral_after_an_expanded_marker_reads(text, expected):
+    assert normalize_text(text).lower() == expected
 
 
 @pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
