@@ -102,7 +102,8 @@ the forms that text2spoken leaves as written: a range with an em dash or a
 hyphen ("3-2"), a clock time with no time word ("Chegou 16:54."), `24:00` with
 no preposition before it ("São 24:00."), a litre symbol with a capital L after
 a number in digits, glued or not ("2L", "10 mL"), a multiplication sign, a
-decimal with a dot that no unit follows ("o valor é 10.4"), scientific notation, a number
+decimal with a dot that no unit text2spoken knows follows ("o valor é 10.4",
+"dura 10.4 horas"; it reads "tem 10.4 graus"), scientific notation, a number
 between two marks, and a pair of numbers whose noun may give the first number
 another gender ("de 1 a 2 casas"). The first number of such a pair reads in the
 masculine, and the second agrees with its noun. When a comma, a semicolon, a
