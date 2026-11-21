@@ -1,10 +1,10 @@
 # Benchmarking
 <!-- agent-hint
 covers: how tugaphone measures accuracy and which scripts run each benchmark
-source: `scripts/tts_gold_benchmark.py`, `scripts/pt_br_gold_benchmark.py`, `scripts/benchmark.py`, `scripts/check_benchmark_regression.py`
+source: scripts/tts_gold_benchmark.py, scripts/pt_br_gold_benchmark.py, scripts/benchmark.py, scripts/check_benchmark_regression.py
 generated: no
 verify: for s in tts_gold_benchmark pt_br_gold_benchmark benchmark check_benchmark_regression; do test -f scripts/$s.py || exit 1; done; grep -oE -- '--[a-z][a-z-]+' docs/benchmarking.md | sort -u | while read f; do grep -q -- "$f" scripts/*.py || { echo "unknown flag $f"; exit 1; }; done
-see: `scoreboard.md`, `architecture.md`
+see: scoreboard.md, architecture.md
 -->
 
 tugaphone is measured against two golds, one per path. The

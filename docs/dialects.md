@@ -1,10 +1,10 @@
 # Dialects
 <!-- agent-hint
 covers: which lect codes exist, how aliases resolve and which lects take a lexicon
-source: `tugaphone/registry.py`, `orthography2ipa.available_codes`
+source: tugaphone/registry.py, orthography2ipa.available_codes
 generated: no
-verify: python scripts/check_docs_examples.py docs/dialects.md
-see: `architecture.md`, `accent_forcing.md`
+verify: .venv/bin/python scripts/check_docs_examples.py docs/dialects.md
+see: architecture.md, accent_forcing.md
 -->
 
 A tugaphone dialect *is* an orthography2ipa lect spec. The dialect set is the

@@ -1,10 +1,10 @@
 # Forcing an accent
 <!-- agent-hint
 covers: how to force a target accent into a TTS voice as IPA, respelled text or an overlay
-source: `tugaphone/accent.py`, `tugaphone/__main__.py`
+source: tugaphone/accent.py, tugaphone/__main__.py
 generated: no
-verify: python scripts/check_docs_examples.py docs/accent_forcing.md
-see: `dialects.md`, `api.md`
+verify: .venv/bin/python scripts/check_docs_examples.py docs/accent_forcing.md
+see: dialects.md, api.md
 -->
 
 `tugaphone.phonemize(text, lect)` *describes* an accent: it produces the IPA a

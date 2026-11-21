@@ -1,10 +1,10 @@
 # tugaphone: dialect-aware Portuguese phonemizer
 <!-- agent-hint
 covers: what tugaphone does, how to install it, a first call and where the documentation starts
-source: `tugaphone/__init__.py`, `tugaphone/lattice_core.py`, `tugaphone/__main__.py`, `pyproject.toml`
+source: tugaphone/__init__.py, tugaphone/lattice_core.py, tugaphone/__main__.py, pyproject.toml
 generated: no
-verify: python scripts/check_docs_examples.py README.md
-see: `docs/index.md`, `docs/quickstart.md`, `AGENTS.md`
+verify: .venv/bin/python scripts/check_docs_examples.py README.md
+see: docs/index.md, docs/quickstart.md, AGENTS.md
 -->
 
 **tugaphone** turns Portuguese text into IPA, and it does it per Lusophone
@@ -22,7 +22,8 @@ pt-TL → o ˈɡato ˈdɔrme
 
 Every IPA sample in these docs is the output of the orthography2ipa lect specs
 that tugaphone resolves at run time, so a spec change in orthography2ipa can
-change a sample.
+change a sample. The samples in [docs/tokenizer.md](docs/tokenizer.md) come from
+the deprecated `tugaphone.dialects` inventory instead.
 
 Under the hood it drives the
 [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) candidate
@@ -42,7 +43,8 @@ orthography2ipa's own extension points. See
 uv pip install --prerelease=allow tugaphone
 ```
 
-The package has one extra:
+The package defines one extra for users, `langdetect`. The `test` extra is for
+development.
 
 ```bash
 uv pip install --prerelease=allow "tugaphone[langdetect]"
@@ -194,10 +196,11 @@ print(ph.phonemize_sentence("A chave.", "pt-PT-x-tras-os-montes"))
 # ɐ ˈtʃabɨ
 
 from tugaphone import list_dialects
-# list_dialects() returns every registered lect code
 print("pt-PT-x-porto" in list_dialects())
 # True
 ```
+
+`list_dialects()` returns every registered lect code.
 
 Legacy tugaphone accent codes and the old orthography2ipa keys resolve as
 aliases (`pt-PT-x-azores` → `pt-PT-x-acores`, `pt-BR-x-sao-paulo` →
@@ -341,7 +344,7 @@ wrong. Every other lect runs on the rules alone.
 **feature** API (manner, place, voicing, syllable roles, CV skeletons) and the
 rules-only benchmark baseline, not the phonemization path. Both modules and
 `registry.get_dialect_inventory` are deprecated. They emit a
-`DeprecationWarning` and go in tugaphone 2.0.0. See
+`DeprecationWarning` and go in the next major release (`VERSION_MAJOR + 1`). See
 [docs/architecture.md](docs/architecture.md) and
 [docs/tokenizer.md](docs/tokenizer.md).
 

@@ -1,10 +1,10 @@
 # tugaphone documentation
 <!-- agent-hint
 covers: the reading order of every documentation page
-source: `docs/`
+source: docs/
 generated: no
 verify: diff <(ls docs/*.md | xargs -n1 basename | grep -v '^index.md$' | sort) <(grep -o '^| \[[^]]*\]([a-z_]*\.md)' docs/index.md | sed 's/.*(\(.*\))/\1/' | sort)
-see: `README.md`, `AGENTS.md`
+see: README.md, AGENTS.md
 -->
 
 `tugaphone` turns Portuguese text into IPA for each Lusophone dialect. Start with the quickstart.

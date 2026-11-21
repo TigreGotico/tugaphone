@@ -24,3 +24,6 @@ venv/
 # Local-only planning files (not part of the published package)
 TODO.md
 ROADMAP.md
+
+# Written by the docs example check
+voice.json

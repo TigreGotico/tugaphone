@@ -1,10 +1,10 @@
 # Homograph disambiguation
 <!-- agent-hint
 covers: how bifonia marks the sense of a heterophonic homograph before transcription
-source: `tugaphone/lattice_core.py`, `bifonia.add_extra_diacritics`
+source: tugaphone/lattice_core.py, bifonia.add_extra_diacritics
 generated: no
-verify: python scripts/check_docs_examples.py docs/homographs.md
-see: `architecture.md`, `codeswitch.md`
+verify: .venv/bin/python scripts/check_docs_examples.py docs/homographs.md
+see: architecture.md, codeswitch.md
 -->
 
 Portuguese has heterophonic homographs (same spelling, different pronunciation)

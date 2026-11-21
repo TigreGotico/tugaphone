@@ -1,15 +1,15 @@
 # The token tree
 <!-- agent-hint
 covers: the deprecated token tree and its linguistic features
-source: `tugaphone/tokenizer.py`, `tugaphone/dialects.py`
+source: tugaphone/tokenizer.py, tugaphone/dialects.py
 generated: no
-verify: python scripts/check_docs_examples.py docs/tokenizer.md
-see: `architecture.md`, `advanced.md`
+verify: .venv/bin/python scripts/check_docs_examples.py docs/tokenizer.md
+see: architecture.md, advanced.md
 -->
 
 **Deprecated.** `tugaphone.tokenizer`, `tugaphone.dialects` and
 `tugaphone.registry.get_dialect_inventory` emit a `DeprecationWarning` and go
-in tugaphone 2.0.0. `tugaphone.phonemize` does not use them.
+in the next major release (`VERSION_MAJOR + 1`). `tugaphone.phonemize` does not use them.
 
 `tugaphone.tokenizer` builds a four-level model of a sentence that you can
 inspect directly:
@@ -86,10 +86,11 @@ the index of the stressed syllable, `n_syllables` counts them.
 ## Grapheme level
 
 A `GraphemeToken` groups characters into orthographic units (digraphs like `ch`
-and `nh`, diphthongs like `ão` and `ei`) and knows how each maps to IPA:
+and `nh`, diphthongs like `ão` and `ei`) and knows how each maps to IPA.
+The example takes the second word of the sentence, *cão*:
 
 ```python
-word = s.words[1]   # cão
+word = s.words[1]
 for g in word.graphemes:
     print(repr(g.surface), "→", g.ipa,
           "diphthong" if g.is_diphthong else "",
@@ -179,8 +180,8 @@ into a single namespaced dict suitable for a feature vector:
 
 ```python
 feats = s.features
-# {'n_words': 5, 'n_whitespaces': 4,
-#  'word_0_n_syllables': 1, 'word_0_stressed_syllable_idx': 0, ...}
+print(feats["n_words"], feats["word_0_n_syllables"])
+# 5 1
 ```
 
 Long sentences produce large dictionaries, for ML pipelines, project the keys

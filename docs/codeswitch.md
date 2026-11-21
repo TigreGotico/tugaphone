@@ -1,10 +1,10 @@
 # Code-switch handling
 <!-- agent-hint
 covers: how the contact parameter detects, routes and nativizes English, Spanish and French words
-source: `tugaphone/codeswitch.py`, `tugaphone/langdetect.py`, `tugaphone/data/loanwords.json`
+source: tugaphone/codeswitch.py, tugaphone/langdetect.py, tugaphone/data/loanwords.json
 generated: no
-verify: python scripts/check_docs_examples.py docs/codeswitch.md
-see: `api.md`, `numbers.md`
+verify: .venv/bin/python scripts/check_docs_examples.py docs/codeswitch.md
+see: api.md, numbers.md
 -->
 
 Real Portuguese text is bilingual, and in the modern register trilingual. The
@@ -29,11 +29,12 @@ engine-only output exactly and code-switching is opt-in.
 | `"auto"` | detect contact words, classify each among es/fr/en, route unclassified words to the dialect's side |
 | `"es"` / `"fr"` / `"en"` | force that contact lattice for detected words |
 
+Without a `contact` argument, the engine uses `contact="none"`:
+
 ```python
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-# contact="none", the default
 ph.phonemize_sentence("fiz o download do app", "pt-BR")
 # 'ˈfiz u dow̃ˈload du ˈap'
 
@@ -176,9 +177,11 @@ extra guards keep the default honest:
 A `default_side` tie-break routes a genuinely ambiguous embed (two foreign models
 within a margin of each other) to the dialect's expected contact language.
 
+`get_detector()` returns `None` when `markovonnx` or its models are unavailable.
+
 ```python
 from tugaphone.langdetect import get_detector
-d = get_detector()                 # None if markovonnx/models unavailable
+d = get_detector()
 print(d.detect("download")[0])
 # en
 print(d.detect("que"))

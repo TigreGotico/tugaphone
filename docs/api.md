@@ -1,10 +1,10 @@
 # API Reference
 <!-- agent-hint
 covers: the public classes and functions of tugaphone with their signatures and defaults
-source: `tugaphone/__init__.py`, `tugaphone/accent.py`, `tugaphone/registry.py`, `tugaphone/number_utils.py`
+source: tugaphone/__init__.py, tugaphone/accent.py, tugaphone/registry.py, tugaphone/number_utils.py
 generated: no
-verify: python scripts/check_docs_examples.py docs/api.md
-see: `quickstart.md`, `architecture.md`
+verify: .venv/bin/python scripts/check_docs_examples.py docs/api.md
+see: quickstart.md, architecture.md
 -->
 
 Every public symbol, with the signatures and return shapes as they exist in the
@@ -15,13 +15,13 @@ source.
 The phonemizer entry class. It drives the orthography2ipa lattice, see
 [architecture.md](architecture.md).
 
-```python
+```text
 TugaPhonemizer()
 ```
 
 ### `phonemize_sentence`
 
-```python
+```text
 phonemize_sentence(sentence: str,
                    lang: str = "pt-PT",
                    contact: str = "none",
@@ -58,7 +58,7 @@ ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-porto")  # 'u ˈbiɲu ˈjɛ ˈ
 
 ### `force_accent` (staticmethod)
 
-```python
+```text
 TugaPhonemizer.force_accent(text: str, lect: str, mode: str = "ipa",
                             base_lect: str = "pt-PT",
                             overlay: AccentOverlay | None = None) -> str
@@ -69,7 +69,7 @@ argument.
 
 ### `is_supported` (staticmethod)
 
-```python
+```text
 TugaPhonemizer.is_supported(lang: str) -> bool
 ```
 
@@ -92,7 +92,7 @@ is_supported("en-US")              # False
 
 ## `tugaphone.phonemize`
 
-```python
+```text
 phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str
 ```
 
@@ -113,7 +113,7 @@ root. See [accent_forcing.md](accent_forcing.md) for the guide.
 
 ### `force_accent`
 
-```python
+```text
 force_accent(text: str, lect: str, mode: str = "ipa",
              base_lect: str = "pt-PT",
              overlay: AccentOverlay | None = None,
@@ -128,7 +128,7 @@ Any other `mode` raises `ValueError`.
 
 ### `respell` / `respell_word`
 
-```python
+```text
 respell(text: str, target_lect: str, base_lect: str = "pt-PT", rules=…) -> str
 respell_word(word: str, target_lect: str, base_lect: str = "pt-PT", rules=…) -> str
 ```
@@ -148,7 +148,7 @@ shareable.
 
 ## `tugaphone.pipeline`
 
-```python
+```text
 pipeline(lect: str) -> orthography2ipa.Pipeline
 ```
 
@@ -183,7 +183,7 @@ The result equals `tugaphone.phonemize("Tenho 3 gatos.", lect)`.
 
 ## `tugaphone.revision`
 
-```python
+```text
 revision(lang: str = "pt-PT") -> str
 ```
 
@@ -251,7 +251,7 @@ are re-exported from the package root.
 | `lexicon_region(lect)` | **Deprecated**, returns `None`: no lect takes a `tugalex` region map. Emits a `DeprecationWarning` that names the removal release. |
 | `normalize_dialect_code(lang)` | BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). |
 | `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`, emits a `DeprecationWarning`. |
-| `get_dialect_inventory(lang="pt-PT")` | **Deprecated**, returns the `tugaphone.dialects` inventory of the nearest national standard. Emits a `DeprecationWarning` and goes in tugaphone 2.0.0. |
+| `get_dialect_inventory(lang="pt-PT")` | **Deprecated**, returns the `tugaphone.dialects` inventory of the nearest national standard. Emits a `DeprecationWarning` and goes in the next major release (`VERSION_MAJOR + 1`). |
 
 ```python
 from tugaphone import resolve_lect, list_dialects
@@ -264,7 +264,7 @@ resolve_lect("pt-PT-x-lisboa")   # 'pt-PT-x-lisbon'
 
 ## `tugaphone.lattice_core.normalize_spelling`
 
-```python
+```text
 normalize_spelling(text: str, lect: str) -> str
 ```
 
@@ -287,7 +287,7 @@ normalize_spelling("Tive uma ideia.", "pt-BR")                    # 'Tive uma id
 
 ### `normalize_numbers`
 
-```python
+```text
 normalize_numbers(text: str, lang: str = "pt-PT", strict: bool = True,
                   scale: str | None = None) -> str
 ```
@@ -312,7 +312,7 @@ normalize_numbers("A reunião é às 19h30.", "pt-BR")      # 'A reunião é às
 
 ### `text2spoken_tag`
 
-```python
+```text
 text2spoken_tag(lang: str) -> str
 ```
 
@@ -329,7 +329,7 @@ text2spoken_tag("pt-UY")   # 'pt-BR'
 
 **Deprecated.** The token helper of tugaphone 1.7. Its readings come from
 text2spoken. Importing it emits a `DeprecationWarning` that names the removal
-release, tugaphone 2.0.0. Use `normalize_numbers` instead.
+release, the next major release (`VERSION_MAJOR + 1`). Use `normalize_numbers` instead.
 
 | Method | Returns |
 |--------|---------|
@@ -354,7 +354,7 @@ NumberParser.get_number_gender("1", next_word="casa")                          #
 
 ### `normalize_text`
 
-```python
+```text
 normalize_text(text: str, lang: str = "pt-PT") -> str
 ```
 
@@ -382,7 +382,7 @@ and leaves the digits for `normalize_numbers`. Each rewrite is public:
 ## `tugaphone.tokenizer` and `tugaphone.dialects`
 
 **Deprecated.** Both modules and `tugaphone.registry.get_dialect_inventory`
-emit a `DeprecationWarning` and go in tugaphone 2.0.0. The phonemization path
+emit a `DeprecationWarning` and go in the next major release (`VERSION_MAJOR + 1`). The phonemization path
 does not use them.
 
 These modules are the token-tree **feature** API and the rules-only benchmark

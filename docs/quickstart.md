@@ -1,10 +1,10 @@
 # Quickstart: zero to hero
 <!-- agent-hint
 covers: how to install tugaphone and phonemize a first sentence in each dialect
-source: `tugaphone/__init__.py:TugaPhonemizer`, `tugaphone/registry.py`, `pyproject.toml`
+source: tugaphone/__init__.py:TugaPhonemizer, tugaphone/registry.py, pyproject.toml
 generated: no
-verify: python scripts/check_docs_examples.py docs/quickstart.md
-see: `architecture.md`, `dialects.md`, `api.md`
+verify: .venv/bin/python scripts/check_docs_examples.py docs/quickstart.md
+see: architecture.md, dialects.md, api.md
 -->
 
 `tugaphone` turns Portuguese text into IPA phonemes, and it does it per dialect.

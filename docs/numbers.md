@@ -1,10 +1,10 @@
 # Numbers, dates and times
 <!-- agent-hint
 covers: how numbers, dates, times and money become words per lect and how to call the step alone
-source: `tugaphone/number_utils.py`, `text2spoken`
+source: tugaphone/number_utils.py, text2spoken
 generated: no
-verify: python scripts/check_docs_examples.py docs/numbers.md
-see: `text_normalization.md`, `api.md`
+verify: .venv/bin/python scripts/check_docs_examples.py docs/numbers.md
+see: text_normalization.md, api.md
 -->
 
 tugaphone reads numbers, dates, clock times, money, measures and the

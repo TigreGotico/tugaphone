@@ -3,7 +3,12 @@
 
 A comment run directly under a ``print(...)`` call or a bare expression states
 the output: the printed text, or the ``repr`` of the value. A trailing comment
-on the same line does the same. Blocks of one page share a namespace.
+on the same line does the same. Blocks of one page share a namespace. Blocks
+fenced ``python`` or ``py`` run; fence code that must not run as ``text``.
+
+A page fails when a block does not parse, when a statement raises, or when a
+comment states an output under a statement the script cannot compare (only
+``print`` calls, bare expressions and ``for`` loops show output).
 
     python scripts/check_docs_examples.py README.md docs/quickstart.md
 """
@@ -16,7 +21,7 @@ import io
 import re
 import sys
 
-BLOCK = re.compile(r"^```python\n(.*?)^```", re.S | re.M)
+BLOCK = re.compile(r"^```(?:python|py)\n(.*?)^```", re.S | re.M)
 
 
 def stated(lines: list[str], stmt: ast.stmt) -> str | None:
@@ -42,12 +47,20 @@ def check(path: str) -> tuple[int, int]:
         lines = block.splitlines()
         try:
             body = ast.parse(block).body
-        except SyntaxError:
+        except SyntaxError as err:
+            checked += 1
+            failed += 1
+            print(f"{path}: block does not parse: {err}")
             continue
         for stmt in body:
             source = ast.Module([stmt], [])
             outputs = isinstance(stmt, (ast.Expr, ast.For))
-            claim = stated(lines, stmt) if outputs else None
+            claim = stated(lines, stmt)
+            if claim is not None and not outputs:
+                checked += 1
+                failed += 1
+                print(f"{path}:{stmt.lineno}: comment under a statement that shows no output")
+                continue
             buf = io.StringIO()
             shows_value = (
                 claim is not None
@@ -66,6 +79,9 @@ def check(path: str) -> tuple[int, int]:
                         exec(compile(source, path, "exec"), scope)
             except Exception as err:
                 if claim is None:
+                    checked += 1
+                    failed += 1
+                    print(f"{path}:{stmt.lineno}: raised {type(err).__name__}: {err}")
                     continue
                 buf = io.StringIO(f"{type(err).__name__}: {err}")
             if claim is None:

@@ -1,10 +1,10 @@
 # Advanced
 <!-- agent-hint
 covers: the lexicon boundary, number scales and integration with the sibling libraries
-source: `tugaphone/lattice_core.py`, `tugaphone/number_utils.py`, `pyproject.toml`
+source: tugaphone/lattice_core.py, tugaphone/number_utils.py, pyproject.toml
 generated: no
-verify: python scripts/check_docs_examples.py docs/advanced.md
-see: `architecture.md`, `api.md`
+verify: .venv/bin/python scripts/check_docs_examples.py docs/advanced.md
+see: architecture.md, api.md
 -->
 
 Once the basic `phonemize_sentence` loop is clear, this is what sits underneath
