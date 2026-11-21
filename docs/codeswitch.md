@@ -1,4 +1,11 @@
 # Code-switch handling
+<!-- agent-hint
+covers: how the contact parameter detects, routes and nativizes English, Spanish and French words
+source: `tugaphone/codeswitch.py`, `tugaphone/langdetect.py`, `tugaphone/data/loanwords.json`
+generated: no
+verify: python scripts/check_docs_examples.py docs/codeswitch.md
+see: `api.md`, `numbers.md`
+-->
 
 Real Portuguese text is bilingual, and in the modern register trilingual. The
 Brazilian tech/media register embeds **English** heavily (`download`, `app`,
@@ -26,9 +33,17 @@ engine-only output exactly and code-switching is opt-in.
 from tugaphone import TugaPhonemizer
 
 ph = TugaPhonemizer()
-ph.phonemize_sentence("fiz o download do app", "pt-BR")                  # none: ˈfiz u dow̃ˈload du ˈap
-ph.phonemize_sentence("fiz o download do app", "pt-BR", contact="auto")  # en:   ˈfiz u dawnlowd du ap
-ph.phonemize_sentence("fui ao ayuntamiento", "pt-UY", contact="auto")    # es:   ˈfuj au aʒuntamjento
+# contact="none", the default
+ph.phonemize_sentence("fiz o download do app", "pt-BR")
+# 'ˈfiz u dow̃ˈload du ˈap'
+
+# English words routed to the English lattice
+ph.phonemize_sentence("fiz o download do app", "pt-BR", contact="auto")
+# 'ˈfiz u dawnlowd du ap'
+
+# Spanish words in pt-UY
+ph.phonemize_sentence("fui ao ayuntamiento", "pt-UY", contact="auto")
+# 'ˈfuj au aʒuntamjento'
 ```
 
 The dialect's default side comes from `tugaphone.registry.default_contact`:
@@ -108,7 +123,7 @@ Wikipedia and stored gzip-compressed under `tugaphone/data/langdetect/` (about
 35 to 43 KB each, about 158 KB for all four). A word is scored under all four models and
 the lowest-perplexity model wins. The detector is scored by
 [`markovonnx`](https://github.com/TigreGotico/markovonnx), it is an optional
-dependency (`pip install tugaphone[langdetect]`). Without it, the code falls back
+dependency (`uv pip install --prerelease=allow "tugaphone[langdetect]"`). Without it, the code falls back
 to the orthographic heuristic, the routing behind `contact="auto"`/`"es"`/`"fr"`/`"en"`
 is unchanged, so there is no API break.
 
@@ -164,11 +179,16 @@ within a margin of each other) to the dialect's expected contact language.
 ```python
 from tugaphone.langdetect import get_detector
 d = get_detector()                 # None if markovonnx/models unavailable
-d.detect("download")               # ('en', {...})  -> routed and nativized
-d.detect("que")                    # ('pt', {})     -> native grammar word, kept
-d.detect("radio")                  # ('pt', {...})  -> inside the margin band
+print(d.detect("download")[0])
+# en
+print(d.detect("que"))
+# ('pt', {})
+print(d.detect("radio")[0])
+# pt
 d.is_contact("ayuntamiento")       # True
 ```
+
+The detector routes "download" to English, so tugaphone nativizes it. "que" is a native grammar word, so it stays Portuguese and carries no scores. "radio" falls inside the margin band, so it stays Portuguese.
 
 ### How the models measure up
 
@@ -216,10 +236,12 @@ the English projection table above, not by a stored pronunciation.
 
 ```python
 ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="auto")
-# kõˈpɾej ˈũ ɛɐɾbɐɡ ˈnovu   -- "airbag" nativized; "comprei"/"novo" untouched
+# 'kõˈpɾej ˈũ ɛɐɾbɐɡ ˈnovu'
 ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="none")
-# kõˈpɾej ˈũ ɐˈiɾbɐɡ ˈnovu  -- code-switching off: "airbag" read as Portuguese spelling
+# 'kõˈpɾej ˈũ ɐˈiɾbɐɡ ˈnovu'
 ```
+
+With `contact="auto"`, "airbag" is nativized and "comprei" and "novo" are untouched. With `contact="none"`, "airbag" reads as Portuguese spelling.
 
 The list is ported from [logus2k/tts_eu_pt](https://github.com/logus2k/tts_eu_pt)
 (Antonio Cruz, Apache-2.0), which curated it to common nouns only — proper
@@ -236,6 +258,5 @@ names/personal names the upstream curation missed (`aberdeen`, `batman`,
 `google`, U.S. state and city names, ...) were dropped too. The remaining
 entries ship in the file.
 
-
 ---
-[← Homographs](homographs.md) · [Home](../README.md) · [Numbers →](numbers.md)
+[← Homographs](homographs.md) · [Index](index.md) · [Numbers →](numbers.md)

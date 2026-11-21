@@ -1,4 +1,11 @@
 # The token tree
+<!-- agent-hint
+covers: the deprecated token tree and its linguistic features
+source: `tugaphone/tokenizer.py`, `tugaphone/dialects.py`
+generated: no
+verify: python scripts/check_docs_examples.py docs/tokenizer.md
+see: `architecture.md`, `advanced.md`
+-->
 
 **Deprecated.** `tugaphone.tokenizer`, `tugaphone.dialects` and
 `tugaphone.registry.get_dialect_inventory` emit a `DeprecationWarning` and go
@@ -185,6 +192,5 @@ you need rather than materializing the whole thing per sample.
 - [advanced.md](advanced.md), accents, numbers
 - [quickstart.md](quickstart.md), the basics
 
-
 ---
-[← API](api.md) · [Home](../README.md) · [Advanced →](advanced.md)
+[← API](api.md) · [Index](index.md) · [Advanced →](advanced.md)

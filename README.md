@@ -1,4 +1,11 @@
 # tugaphone: dialect-aware Portuguese phonemizer
+<!-- agent-hint
+covers: what tugaphone does, how to install it, a first call and where the documentation starts
+source: `tugaphone/__init__.py`, `tugaphone/lattice_core.py`, `tugaphone/__main__.py`, `pyproject.toml`
+generated: no
+verify: python scripts/check_docs_examples.py README.md
+see: `docs/index.md`, `docs/quickstart.md`, `AGENTS.md`
+-->
 
 **tugaphone** turns Portuguese text into IPA, and it does it per Lusophone
 dialect. Give it a sentence and a dialect code, get back a phoneme string with
@@ -32,8 +39,18 @@ orthography2ipa's own extension points. See
 ## Install
 
 ```bash
-pip install --pre tugaphone
+uv pip install --prerelease=allow tugaphone
 ```
+
+The package has one extra:
+
+```bash
+uv pip install --prerelease=allow "tugaphone[langdetect]"
+```
+
+The `langdetect` extra installs `markovonnx`, which scores the statistical
+code-switch detector. Without it, code-switch detection uses an orthographic
+heuristic. See [docs/codeswitch.md](docs/codeswitch.md).
 
 Its runtime dependencies (`orthography2ipa`, `o2i-lexicons`, `silabificador`,
 `tugalex`, `bifonia`, `text2spoken`, `desacordo_ortografico`) install automatically. The `pt-PT`
@@ -138,7 +155,7 @@ you first whether a code names a lect:
 ```python
 from tugaphone import is_supported
 
-is_supported("pt-BR-x-sao-paulo")   # True, through an alias
+is_supported("pt-BR-x-sao-paulo")   # True
 is_supported("en-US")               # False
 ```
 
@@ -151,8 +168,13 @@ expansion and before the lattice transcribes the sentence, so the same spelling
 maps to different pronunciations depending on sentence context.
 
 ```python
-print(ph.phonemize_sentence("Eu gosto de música."))   # verb → ˈew ˈɡɔʃtu dɨ ˈmuzikɐ
-print(ph.phonemize_sentence("Tenho bom gosto."))       # noun → ˈteɲu ˈbõ ˈɡoʃtu
+# gosto as a verb
+print(ph.phonemize_sentence("Eu gosto de música."))
+# ˈew ˈɡɔʃtu dɨ ˈmuzikɐ
+
+# gosto as a noun
+print(ph.phonemize_sentence("Tenho bom gosto."))
+# ˈteɲu ˈbõ ˈɡoʃtu
 ```
 
 ### Sub-regional accents
@@ -172,7 +194,9 @@ print(ph.phonemize_sentence("A chave.", "pt-PT-x-tras-os-montes"))
 # ɐ ˈtʃabɨ
 
 from tugaphone import list_dialects
-print(list_dialects())   # every registered lect code
+# list_dialects() returns every registered lect code
+print("pt-PT-x-porto" in list_dialects())
+# True
 ```
 
 Legacy tugaphone accent codes and the old orthography2ipa keys resolve as
@@ -341,6 +365,9 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 
 ## Documentation
 
+[docs/index.md](docs/index.md) lists every page in reading order. Start with
+[docs/quickstart.md](docs/quickstart.md).
+
 - [docs/quickstart.md](docs/quickstart.md), install, first call, dialect overview
 - [docs/architecture.md](docs/architecture.md), the lattice core and the caller-owned layers
 - [docs/dialects.md](docs/dialects.md), the lect codes, aliases and lexicon overlay
@@ -363,7 +390,7 @@ tugaphone is part of the TigreGotico Portuguese NLP stack:
 Set up a checkout with its test extra, then run the suite:
 
 ```bash
-uv venv --python 3.12 .venv
+uv venv --python 3.11 .venv
 uv pip install --python .venv/bin/python --prerelease=allow -e ".[test]"
 .venv/bin/python -m pytest tests
 ```

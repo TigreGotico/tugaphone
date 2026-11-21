@@ -1,4 +1,11 @@
 # API Reference
+<!-- agent-hint
+covers: the public classes and functions of tugaphone with their signatures and defaults
+source: `tugaphone/__init__.py`, `tugaphone/accent.py`, `tugaphone/registry.py`, `tugaphone/number_utils.py`
+generated: no
+verify: python scripts/check_docs_examples.py docs/api.md
+see: `quickstart.md`, `architecture.md`
+-->
 
 Every public symbol, with the signatures and return shapes as they exist in the
 source.
@@ -159,7 +166,7 @@ sends contact words through the `es-ES`, `fr-FR` or `en-US` lattice, and one
 `lect` must be a code of `list_dialects()`. Any other code raises `ValueError`.
 tugaphone and orthography2ipa resolve a loose tag differently: `resolve_lect("br")`
 gives `pt-PT`, and orthography2ipa resolves `br` to Breton. Resolve the tag with
-`resolve_lect` and pass the result to both. Each call returns a new `Pipeline`,
+`resolve_lect` and pass the result to both. Each call returns a separate `Pipeline`,
 because the lexicon is a mutable dict.
 
 ```python
@@ -168,8 +175,11 @@ import tugaphone
 
 lect = tugaphone.resolve_lect("pt_pt")
 engine = G2P(lect, pipeline=tugaphone.pipeline(lect))
-engine.transcribe("Tenho 3 gatos.")   # same as tugaphone.phonemize("Tenho 3 gatos.", lect)
+engine.transcribe("Tenho 3 gatos.")
+# 'ˈteɲu ˈtɾeʒ ˈɡatuʃ'
 ```
+
+The result equals `tugaphone.phonemize("Tenho 3 gatos.", lect)`.
 
 ## `tugaphone.revision`
 
@@ -219,9 +229,12 @@ Later calls return the kept value.
 ```python
 import tugaphone
 
-tugaphone.revision("pt-PT")   # 'tp1:' and 64 hex digits
-tugaphone.revision("pt-BR")   # another value: the specs differ
+pt, br = tugaphone.revision("pt-PT"), tugaphone.revision("pt-BR")
+print(pt.startswith("tp1:"), len(pt) - len("tp1:"), pt != br)
+# True 64 True
 ```
+
+The value is `tp1:` and 64 hex digits. The two lects give different values, because their specs differ.
 
 ## `tugaphone.registry`
 
@@ -243,9 +256,11 @@ are re-exported from the package root.
 ```python
 from tugaphone import resolve_lect, list_dialects
 
-resolve_lect("pt-PT-x-lisboa")   # 'pt-PT-x-lisbon'  (alias)
+resolve_lect("pt-PT-x-lisboa")   # 'pt-PT-x-lisbon'
 "pt-BR-x-sp" in list_dialects()  # True
 ```
+
+`pt-PT-x-lisboa` is an alias of `pt-PT-x-lisbon`.
 
 ## `tugaphone.lattice_core.normalize_spelling`
 
@@ -396,6 +411,5 @@ module-level `LEXICON` (`TugaLexicon()`) instance.
 - [numbers.md](numbers.md), number normalization and gender agreement
 - [tokenizer.md](tokenizer.md), the token tree and feature extraction
 
-
 ---
-[← Text normalization](text_normalization.md) · [Home](../README.md) · [Tokenizer →](tokenizer.md)
+[← Text normalization](text_normalization.md) · [Index](index.md) · [Tokenizer →](tokenizer.md)

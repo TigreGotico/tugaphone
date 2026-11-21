@@ -1,4 +1,11 @@
 # Architecture
+<!-- agent-hint
+covers: how tugaphone drives the orthography2ipa lattice and which stage each library owns
+source: `tugaphone/lattice_core.py`, `tugaphone/registry.py:PACKAGED_LEXICON_LECTS`
+generated: no
+verify: python scripts/check_docs_examples.py docs/architecture.md
+see: `dialects.md`, `api.md`, `advanced.md`
+-->
 
 tugaphone phonemizes Portuguese by driving the shared
 [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) candidate
@@ -120,6 +127,5 @@ a `DeprecationWarning` and go in tugaphone 2.0.0. See
 - [api.md](api.md), the public surface
 - [benchmarking.md](benchmarking.md), how accuracy is measured
 
-
 ---
-[← Quickstart](quickstart.md) · [Home](../README.md) · [Dialects →](dialects.md)
+[← Quickstart](quickstart.md) · [Index](index.md) · [Dialects →](dialects.md)

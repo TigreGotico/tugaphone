@@ -1,4 +1,11 @@
 # Quickstart: zero to hero
+<!-- agent-hint
+covers: how to install tugaphone and phonemize a first sentence in each dialect
+source: `tugaphone/__init__.py:TugaPhonemizer`, `tugaphone/registry.py`, `pyproject.toml`
+generated: no
+verify: python scripts/check_docs_examples.py docs/quickstart.md
+see: `architecture.md`, `dialects.md`, `api.md`
+-->
 
 `tugaphone` turns Portuguese text into IPA phonemes, and it does it per dialect.
 Give it a sentence and a Lusophone dialect code, get back a phoneme string with
@@ -13,8 +20,8 @@ pt-BR → u ˈɡatu ˈdoɾmi
 ## 1. Install
 
 ```bash
-pip install --pre tugaphone      # from PyPI
-pip install -e .                 # from a source checkout
+uv pip install --prerelease=allow tugaphone      # from PyPI
+uv pip install --prerelease=allow -e .           # from a source checkout
 ```
 
 Runtime dependencies (`text2spoken`, `silabificador`, `tugalex`,
@@ -102,8 +109,10 @@ extra argument is needed:
 ```python
 ph = TugaPhonemizer()
 print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
-# u ˈbiɲu ˈjɛ ˈmũj̃tu ˈbõ   (betacism: vinho → binho, rising diphthong: é → jɛ)
+# u ˈbiɲu ˈjɛ ˈmũj̃tu ˈbõ
 ```
+
+The accent shows betacism (*vinho* reads as *binho*) and a rising diphthong (*é* reads as *jɛ*).
 
 See [dialects.md](dialects.md) for the full list of European and Brazilian
 sub-regional codes and the legacy aliases.
@@ -118,6 +127,5 @@ sub-regional codes and the legacy aliases.
 - [advanced.md](advanced.md), the pipeline internals and integration
 - [tokenizer.md](tokenizer.md), the `Sentence → Word → Grapheme → Character` feature model
 
-
 ---
-[Home](../README.md) · [Architecture →](architecture.md)
+[Index](index.md) · [Architecture →](architecture.md)
