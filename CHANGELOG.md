@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.2a4](https://github.com/TigreGotico/tugaphone/tree/1.11.2a4) (2026-11-21)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.2a3...1.11.2a4)
+
+**Merged pull requests:**
+
+- docs: a dot decimal reads only before a unit text2spoken knows [\#304](https://github.com/TigreGotico/tugaphone/pull/304) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.2a3](https://github.com/TigreGotico/tugaphone/tree/1.11.2a3) (2026-11-20)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.2a2...1.11.2a3)
