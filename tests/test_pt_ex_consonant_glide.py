@@ -5,7 +5,7 @@ A spec's ⟨e⟩ before ⟨x⟩ plus a consonant takes the diphthong of that spe
 dejˈʃaɾ. pt-PT-x-lisbon writes [ɐj] in every position, as it does for ⟨ei⟩:
 texto ˈtɐjʃtu, deixar dɐjˈʃaɾ. The other pt-PT lects inherit [ej].
 
-Sources: Leite de Vasconcellos, Esquisse d'une phonologie du portugais (1901),
+Sources: Leite de Vasconcellos, Esquisse d'une dialectologie portugaise (1901),
 §56-g p. 109 and §44j p. 92; Cruz-Ferreira (1999: 128) in Handbook of the
 International Phonetic Association. Infopédia writes [ɐj]; that carries the
 Lisbon assumption and does not settle the pt-PT norm.
@@ -64,6 +64,13 @@ def test_ex_diphthong_equals_the_ei_diphthong(lect, diphthong):
 def test_initial_ex_before_consonant_takes_the_ei_diphthong(lect, word, prefix):
     assert phonemize(word, lect).lstrip("ˈ").startswith(prefix)
 
+
+@pytest.mark.parametrize("lect", LECTS)
+@pytest.mark.parametrize("word", ["exame", "exato", "exalar", "exibir", "exumar", "exhalar", "sexo"])
+def test_ex_before_a_vowel_or_h_takes_no_glide(lect, word):
+    """The rule covers ⟨x⟩ plus a consonant only: ⟨x⟩ before a vowel or ⟨h⟩ keeps a plain vowel."""
+    ipa = phonemize(word, lect)
+    assert "ej" not in ipa and "ɐj" not in ipa
 
 @pytest.mark.parametrize("lect", LECTS)
 def test_texto_and_textos_share_the_vowel(lect):
