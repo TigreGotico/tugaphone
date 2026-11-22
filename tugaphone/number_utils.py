@@ -206,12 +206,14 @@ def separate_unit_symbols(text: str) -> str:
 _HOUR = r"(?:[01]?\d|2[0-3])"
 _HOUR_OR_24 = r"(?:[01]?\d|2[0-4])"
 _PUNCT = r"[.,;:!?)\"”…]?"
-_WHOLE_HOUR = re.compile(rf"\b({_HOUR_OR_24}):00({_PUNCT})")
+_WHOLE_HOUR = re.compile(rf"\b({_HOUR_OR_24}):00(?:(\s+horas?\b)|({_PUNCT}))")
 _CLOCK_TIME = re.compile(rf"\b({_HOUR}):([0-5]\d)({_PUNCT})")
 
 
 def _whole_hour_repl(match: "re.Match[str]") -> str:
-    hh, punct = match.group(1), match.group(2)
+    hh, noun, punct = match.groups()
+    if noun:  # "12:00 horas" already names the hour
+        return hh + noun
     unit = "hora" if int(hh) == 1 else "horas"
     return f"{hh} {unit}{punct}"
 
@@ -223,7 +225,7 @@ def _clock_time_repl(match: "re.Match[str]") -> str:
 
 
 def expand_clock_times(text: str) -> str:
-    """"16:00" -> "16 horas"; "24:00" -> "24 horas"; "16:54" -> "16 e 54".
+    """"16:00" -> "16 horas"; "12:00 horas" -> "12 horas"; "16:54" -> "16 e 54".
     Whole hours must be expanded first, so the ":00" case doesn't fall
     through to "16 e 0"."""
     text = _WHOLE_HOUR.sub(_whole_hour_repl, text)

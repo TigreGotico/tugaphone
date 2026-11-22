@@ -43,6 +43,7 @@ class TestPublicRewrites:
         ("16:54", "16 e 54"), ("9:05", "9 e 5"), ("9:05, sala 2.", "9 e 5, sala 2."),
         ("24:00", "24 horas"), ("25:00", "25:00"), ("Nota: importante", "Nota: importante"),
         ("O comboio parte às 16:54.", "O comboio parte às 16 e 54."),
+        ("São 12:00 horas.", "São 12 horas."), ("à 1:00 hora", "à 1 hora"),
     ])
     def test_expand_clock_times(self, text, expected):
         assert expand_clock_times(text) == expected
@@ -112,6 +113,8 @@ class TestClockTimes:
         ("Reunião às 9:05, sala 2.", "Reunião às nove e cinco, sala dois."),
         ("O comboio parte às 16:54.", "O comboio parte às dezasseis e cinquenta e quatro."),
         ("24:00", "vinte e quatro horas"),
+        ("São 12:00 horas.", "São doze horas."),
+        ("à 1:00 hora", "à uma hora"),
     ])
     def test_clock_time(self, text, expected):
         assert read(text) == expected
