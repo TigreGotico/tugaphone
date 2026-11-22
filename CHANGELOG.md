@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.5a1](https://github.com/TigreGotico/tugaphone/tree/1.11.5a1) (2026-11-22)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.4a1...1.11.5a1)
+
+**Merged pull requests:**
+
+- fix: raise orthography2ipa floor to 7.124.36a2 [\#313](https://github.com/TigreGotico/tugaphone/pull/313) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.4a1](https://github.com/TigreGotico/tugaphone/tree/1.11.4a1) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.3a3...1.11.4a1)
