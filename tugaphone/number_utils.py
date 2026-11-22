@@ -668,18 +668,7 @@ class _NumberParser:
 
     @classmethod
     def split_trailing_punctuation(cls, word: str) -> tuple:
-        """
-        Split a numeric token from any trailing punctuation glued to it.
-
-        Parameters:
-            word (str): Token that may end in one or more punctuation marks
-                (e.g. "54.", "05,", "5!").
-
-        Returns:
-            tuple[str, str]: (core, trail) where `core` is the token with
-                trailing punctuation removed and `trail` is the removed
-                punctuation (possibly empty).
-        """
+        """Split a numeric token from any trailing punctuation glued to it."""
         i = len(word)
         while i > 0 and word[i - 1] in cls.TRAILING_PUNCTUATION:
             i -= 1
@@ -711,15 +700,7 @@ class _NumberParser:
 
     @classmethod
     def is_int(cls, word: str) -> bool:
-        """
-        Determine whether a token represents an integer (no decimal point).
-
-        Parameters:
-            word (str): Input token; ordinal markers (º, ª), punctuation and spaces are ignored during validation.
-
-        Returns:
-            bool: `True` if the token can be parsed to an integer after cleaning, `False` otherwise.
-        """
+        """Determine whether a token represents an integer (no decimal point)."""
         return cls.to_int(word) is not None
 
     @classmethod
@@ -816,16 +797,7 @@ class _NumberParser:
     # contextual rules
     @classmethod
     def is_ordinal(cls, word: str, next_word: Optional[str] = None) -> bool:
-        """
-        Determine whether a token represents an ordinal number.
-
-        Parameters:
-            word (str): The token to check.
-            next_word (Optional[str]): The following token; used to detect a separated ordinal marker (e.g., "º", "ª").
-
-        Returns:
-            `true` if the word contains an ordinal marker or the next_token is an ordinal marker, `false` otherwise.
-        """
+        """Determine whether a token represents an ordinal number."""
         # Check if the symbol is a separate token or attached to the number
         if next_word in cls.ORDINAL_TOKENS:
             return True

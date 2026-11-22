@@ -1,54 +1,9 @@
 """
-Portuguese Orthography → IPA Transcription System
+Portuguese orthography to IPA through a Sentence, Word, Grapheme, Character
+token hierarchy, for pt-PT, pt-BR, pt-AO, pt-MZ and pt-TL.
 
-This module provides comprehensive conversion from Portuguese orthography to
-International Phonetic Alphabet (IPA) notation, following prescriptive norms
-for European Portuguese (pt-PT), Brazilian Portuguese (pt-BR), and African
-Portuguese variants (pt-AO, pt-MZ, pt-TL).
-
-LINGUISTIC BACKGROUND:
-======================
-Portuguese orthography uses Latin script with diacritical marks to represent
-a rich phonological system. The relationship between spelling and pronunciation
-is relatively regular but includes context-sensitive rules, silent letters,
-and dialectal variations.
-
-KEY PHONOLOGICAL CONCEPTS:
---------------------------
-1. STRESS: Portuguese uses lexical stress (word-level prominence of syllables)
-   - Proparoxytone: stress on antepenultimate (third-to-last) syllable - rare, always marked
-   - Paroxytone: stress on penultimate (second-to-last) syllable - most common
-   - Oxytone: stress on final syllable - less common, specific phonological contexts
-
-2. VOWEL QUALITY: Stressed vs unstressed vowels differ in quality and reduction
-   - Stressed: fuller realization, can be open [ɛ, ɔ] or closed [e, o]
-   - Unstressed: typically reduced to [ɨ] or [ɐ] in European Portuguese
-   - Brazilian: less reduction, maintains [e, o, a] quality
-
-3. NASALIZATION: Vowels can be oral or nasal
-   - Marked by tilde (ã, õ) or followed by nasal consonant (m, n)
-   - Creates distinct phonemes, not just allophones
-   - Less nasalized in Brazilian Portuguese
-
-4. DIPHTHONGS: Sequences of vowel + semivowel or semivowel + vowel
-   - Falling/descending: vowel → semivowel (rei [ˈʁej])
-   - Rising/ascending: semivowel → vowel (piano [ˈpjɐnu])
-   - Can be oral or nasal
-   - Brazilian: additional diphthongs from L-vocalization
-
-IMPLEMENTATION ARCHITECTURE:
-============================
-The code uses a hierarchical tokenization model that mirrors linguistic structure:
-
-Sentence → Words → Graphemes → Characters
-
-- Character: Single letter/symbol
-- Grapheme: Minimal spelling unit (can be digraph like 'ch' or diphthong like 'ai')
-- Word: Sequence of graphemes with syllable structure
-- Sentence: Sequence of words with prosodic information
-
-All indices are computed top-down during initialization to avoid circular dependencies.
-Context-sensitive rules are applied bottom-up during IPA generation.
+Indices are computed top-down at construction; context-sensitive rules run
+bottom-up during IPA generation.
 
 QUICK REFERENCES:
 ===========
@@ -103,16 +58,7 @@ with warnings.catch_warnings():
 
 @lru_cache(maxsize=None)
 def _phonetok(dialect_code: str, inventory: Tuple[str, ...]) -> PhonetokTokenizer:
-    """Shared orthography2ipa grapheme tokenizer for a dialect inventory.
-
-    The maximal-munch grapheme segmentation is delegated to
-    :class:`orthography2ipa.phonetok.PhonetokTokenizer`'s trie rather than
-    re-rolled here. The tokenizer is driven purely by the dialect's own
-    ``GRAPHEME_INVENTORY`` (the Portuguese grapheme data stays in
-    :mod:`tugaphone.dialects`); only the language-agnostic segmentation
-    algorithm is shared. IPA values are irrelevant to segmentation, so each
-    grapheme maps to itself in the throw-away spec.
-    """
+    """Shared orthography2ipa grapheme tokenizer for a dialect inventory."""
     spec = LanguageSpec(
         code=dialect_code, name="pt", family="portuguese", script="Latn",
         graphemes={g: [g] for g in inventory}, allophones={},
@@ -120,10 +66,8 @@ def _phonetok(dialect_code: str, inventory: Tuple[str, ...]) -> PhonetokTokenize
     return PhonetokTokenizer(spec)
 
 
-# Token kinds the grapheme tokenizer emits that correspond to a written
-# unit tugaphone must keep as a grapheme. GRAPHEME covers inventory hits;
-# UNKNOWN/DIGIT/PUNCTUATION cover the single-character fallback the
-# hand-rolled scanner used for anything outside the inventory.
+# GRAPHEME covers inventory hits; UNKNOWN/DIGIT/PUNCTUATION cover the
+# single-character fallback for anything outside the inventory.
 _GRAPHEME_TOKEN_KINDS = frozenset((
     TokenKind.GRAPHEME, TokenKind.UNKNOWN, TokenKind.DIGIT,
     TokenKind.PUNCTUATION,
@@ -145,32 +89,7 @@ def _spec_stress_rules(dialect_code: str):
 
 
 def detect_stress_position(word: str, syllables: List[str], dialect: DialectInventory) -> int:
-    """
-    Determine which syllable carries primary stress.
-
-    Delegates to the declarative ``StressRules`` of the dialect's
-    orthography2ipa spec (written accents → oxytone endings → penult
-    default). When the spec carries no stress block, the dialect's own
-    PRIMARY_STRESS_MARKERS / OXYTONE_ENDINGS apply.
-
-    Args:
-        word: Normalized word string
-        syllables: List of syllables
-        dialect: DialectInventory with stress rules
-
-    Returns:
-        Index of stressed syllable (0-based)
-
-    Examples:
-        >>> detect_stress_position("café", ["ca", "fé"], dialect)
-        1  # Final syllable (explicit accent)
-
-        >>> detect_stress_position("casa", ["ca", "sa"], dialect)
-        0  # Penultimate (default)
-
-        >>> detect_stress_position("falar", ["fa", "lar"], dialect)
-        1  # Final (ends in -r)
-    """
+    """Determine which syllable carries primary stress."""
     n_syllables = len(syllables)
 
     # Monosyllables are inherently stressed
@@ -240,38 +159,7 @@ def pronounces_qu_gu_u(word: str) -> bool:
 
 def is_grapheme_silent(grapheme: str, context_before: str, context_after: str,
                        word: str, dialect: DialectInventory) -> bool:
-    """
-    Determine if a grapheme has no phonetic realization (silent).
-
-    SILENT CATEGORIES:
-    ------------------
-    1. H: Always silent except in digraphs (handled separately)
-    2. U in QU/GU: Silent before e/i in modern orthography
-       - Exception: Some words have pronounced [w] (needs word list)
-    3. Archaic consonants: p in mpt/mpc/mpç (pre-2009 spelling)
-    4. First letter of doubled consonants in digraphs: rr, ss, ff, ll
-
-    Args:
-        grapheme: The grapheme to check
-        context_before: Characters immediately before
-        context_after: Characters immediately after
-        word: Full word (for irregular word lookup)
-        dialect: DialectInventory with rules
-
-    Returns:
-        True if grapheme is silent, False otherwise
-
-    Examples:
-        >>> is_grapheme_silent('h', '', 'oje', 'hoje', dialect)
-        True  # h is always silent
-
-        >>> is_grapheme_silent('u', 'q', 'ero', 'quero', dialect)
-        True  # u silent in 'que'
-
-        >>> is_grapheme_silent('u', 'q', 'ino', 'equino', dialect)
-        False  # u pronounced in 'equino' [eˈkwinu]
-        (Note: This would require word list to distinguish)
-    """
+    """Determine if a grapheme has no phonetic realization (silent)."""
     g = grapheme.lower()
     before = context_before.lower()
     after = context_after.lower()
@@ -305,30 +193,7 @@ def is_grapheme_silent(grapheme: str, context_before: str, context_after: str,
 
 @dataclasses.dataclass
 class CharToken:
-    """
-    Represents a single character with its phonological context.
-
-    LINGUISTIC ROLE:
-    ----------------
-    Characters are the atomic units of orthography.
-    Their phonetic realization depends on:
-    - Inherent properties (vowel/consonant, diacritics)
-    - Linear context (preceding/following characters)
-    - Hierarchical context (parent grapheme, syllable, word)
-    - Prosodic context (stress, position in word)
-
-    DESIGN RATIONALE:
-    -----------------
-    We track both the character itself and its context
-    to enable context-sensitive phonological rules.
-    All indices are computed during initialization to avoid
-    circular dependencies.
-
-    Attributes:
-        surface: The actual character string (may include diacritics)
-        char_idx: Position within parent grapheme (0-based)
-        parent_grapheme: GraphemeToken containing this character
-    """
+    """Represents a single character with its phonological context."""
 
     surface: str
     char_idx: int = 0  # parent_grapheme.characters[idx] == self
@@ -362,15 +227,7 @@ class CharToken:
 
     @cached_property
     def normalized(self) -> str:
-        """
-        Lowercase, normalized form of character.
-
-        Normalization maps archaic/foreign diacritics to standard equivalents.
-        Examples:
-            - ü → w (represents [w] sound)
-            - è → é (obsolete grave → modern acute)
-            - î → i (redundant circumflex → plain)
-        """
+        """Lowercase, normalized form of character."""
         s = self.surface.lower().strip()
         return self.dialect.NORMALIZED_VOWELS.get(s, s)
 
@@ -466,33 +323,13 @@ class CharToken:
 
     @cached_property
     def is_vowel(self) -> bool:
-        """
-        True if character represents a vowel (with or without diacritics).
-
-        Portuguese vowels: a, e, i, o, u
-        With diacritics: á, à, â, ã, é, ê, í, ó, ô, õ, ú
-        Archaic: è, ì, ò, ù, ẽ, ĩ, ũ, ä, ë, ï, ö, ü, ÿ
-
-        Classification is fully delegated to the shared
-        :func:`orthography2ipa.vowels.is_orthographic_vowel` (the single
-        owner of vowel-letter membership), including the archaic ẽ/ĩ/ũ.
-        """
+        """True if character represents a vowel (with or without diacritics)."""
         s = self.normalized
         return is_orthographic_vowel(s)
 
     @cached_property
     def is_semivowel(self) -> bool:
-        """
-        True if character can function as semivowel (glide).
-
-        Semivowels in Portuguese:
-        - [j]: written as 'i' or 'e'
-        - [w]: written as 'u' or 'o'
-
-        Whether it actually IS a semivowel depends on position:
-        - In diphthong: semivowel
-        - As syllable nucleus: vowel
-        """
+        """True if character can function as semivowel (glide)."""
         return self.normalized in self.dialect.SEMIVOWEL_CHARS
 
     @cached_property
@@ -548,17 +385,7 @@ class CharToken:
 
     @cached_property
     def is_silent(self) -> bool:
-        """
-        True if character has no phonetic realization.
-
-        Silent letter categories:
-        1. H: Always silent (except in digraphs ch, nh, lh)
-        2. U in QU/GU: Silent before e/i (modern orthography)
-        3. Archaic P: Silent in mpc/mpç/mpt clusters
-        4. First letter in doubled consonant digraphs
-
-        Context-dependent - uses word and positional information.
-        """
+        """True if character has no phonetic realization."""
         return is_grapheme_silent(
             self.normalized,
             self.prefix,
@@ -573,15 +400,7 @@ class CharToken:
 
     @cached_property
     def is_open_vowel(self) -> bool:
-        """
-        True if vowel is phonetically open (low tongue position).
-
-        Open vowels: [a, ɛ, ɔ]
-        Marked with acute accent: á, é, ó
-
-        Linguistic note: Only a, e, o have open/closed distinction.
-        i and u are always closed (high vowels).
-        """
+        """True if vowel is phonetically open (low tongue position)."""
         return self.normalized in self.dialect.ACUTE_VOWEL_CHARS or self.normalized == "a"
 
     @cached_property
@@ -928,22 +747,7 @@ class CharToken:
     # =========================================================================
 
     def _ipa_for_vowel(self) -> str:
-        """
-        Generate IPA for vowel character.
-
-        VOWEL REALIZATION RULES:
-        ------------------------
-        1. Explicit quality: á→[a], é→[ɛ], ê→[e], ó→[ɔ], ô→[o]
-        2. Stress-dependent:
-           - Stressed a → [a]
-           - Unstressed a → [ɐ]
-           - Stressed e → [ɛ] or [e] (depends on syllable)
-           - Unstressed e → [ɨ] (European) or [e] (Brazilian)
-        3. Nasal: ã→[ɐ̃], õ→[õ], a+m/n→[ɐ̃], etc.
-
-        Returns:
-            IPA string for this vowel
-        """
+        """Generate IPA for vowel character."""
         s = self.normalized
 
         # The u of qu/gu that is not silent is the glide [w], never a
@@ -1050,21 +854,7 @@ class CharToken:
         return s  # Fallback
 
     def _ipa_for_consonant(self) -> str:
-        """
-        Generate IPA for consonant character.
-
-        CONTEXT-SENSITIVE CONSONANT RULES:
-        -----------------------------------
-        1. C: [k] normally, [s] before e/i
-        2. G: [ɡ] normally, [ʒ] before e/i
-        3. R: [ɾ] normally, [ʁ] word-initially or after l/n/s
-        4. S: [s] normally, [z] intervocalically
-        5. X: [ʃ] normally, but [ks], [z], [s], [gz] in specific contexts
-        6. Z: [z] normally, [ʃ] word-finally (European)
-
-        Returns:
-            IPA string for this consonant
-        """
+        """Generate IPA for consonant character."""
         s = self.normalized
         # Use word-level neighbours (cross-grapheme boundary)
         next_letter = self._next_letter
@@ -1164,25 +954,7 @@ class CharToken:
         return self.dialect.DEFAULT_CHAR2PHONEMES.get(s, s)
 
     def _ipa_for_x(self) -> str:
-        """
-        Generate IPA for the letter X (highly context-dependent).
-
-        X PRONUNCIATION RULES:
-        ----------------------
-        1. Word-initial: [ʃ] - xadrez, xícara
-        2. Word-final: [ks] - tórax, fax
-        3. Intervocalic:
-           a. [ʃ]: peixe, caixa (default)
-           b. [ks]: sexo, máximo (after stressed vowel with accent)
-           c. [z]: exemplo, exato (in ex- prefix before vowel)
-           d. [s]: próximo (rare)
-           e. [gz]: hexa- prefix (rare variant)
-
-        This is one of the most complex orthographic patterns in Portuguese.
-
-        Returns:
-            IPA string for X
-        """
+        """Generate IPA for the letter X (highly context-dependent)."""
         prev_char = self.prev_char.normalized if self.prev_char else ""
         next_char = self.next_char.normalized if self.next_char else ""
         word = self.parent_word.normalized if self.parent_word else ""
@@ -1226,19 +998,7 @@ class CharToken:
 
     @cached_property
     def ipa(self) -> str:
-        """
-        Generate IPA transcription for this character.
-
-        ALGORITHM:
-        ----------
-        1. Handle punctuation → prosodic markers
-        2. Check for silence
-        3. Dispatch to vowel vs consonant rules
-        4. Apply special-case overrides
-
-        Returns:
-            IPA string (may be empty for silent characters)
-        """
+        """Generate IPA transcription for this character."""
         # Punctuation → prosodic markers
         if self.is_punct:
             return self.dialect.PUNCT2IPA.get(self.normalized, self.dialect.HIATUS_TOKEN)
@@ -1259,17 +1019,7 @@ class CharToken:
 
     @property
     def features(self) -> Dict[str, any]:
-        """
-        Extract all linguistic features as a dictionary.
-
-        Useful for:
-        - Machine learning feature vectors
-        - Debugging
-        - Linguistic analysis
-
-        Returns:
-            Dictionary mapping feature names to values
-        """
+        """Extract all linguistic features as a dictionary."""
         return {
             "text": self.normalized,
             "ipa": self.ipa,
@@ -1330,36 +1080,7 @@ class CharToken:
 
 @dataclasses.dataclass
 class GraphemeToken:
-    """
-    Represents a grapheme - the minimal distinctive unit of writing.
-
-    GRAPHEME DEFINITION:
-    --------------------
-    A grapheme is the smallest unit of a writing system.
-    In alphabetic systems like Portuguese, graphemes can be:
-    - Single letters: a, b, c
-    - Digraphs: ch, nh, lh, rr, ss
-    - Diphthongs: ai, ou, ei
-    - Trigraphs: que, gui, coo
-    - Tetragraphs: aien (rare)
-
-    LINGUISTIC MOTIVATION:
-    ----------------------
-    Portuguese orthography uses multi-character sequences to represent:
-    1. Single phonemes: ch → [ʃ], nh → [ɲ]
-    2. Phoneme clusters: qu → [kw] or [k] depending on context
-    3. Diphthongs: ai → [aj], ou → [ow]
-
-    Tokenizing at grapheme level (not character level) respects
-    the structure of the writing system.
-
-    Attributes:
-        surface: The grapheme string (1-4 characters)
-        grapheme_idx: Position in parent word's grapheme list
-        syllable_idx: Which syllable this grapheme belongs to
-        characters: List of CharToken objects composing this grapheme
-        parent_word: WordToken containing this grapheme
-    """
+    """Represents a grapheme - the minimal distinctive unit of writing."""
 
     surface: str
     grapheme_idx: int = 0  # parent_word.graphemes[idx] == self
@@ -1522,17 +1243,7 @@ class GraphemeToken:
 
     @cached_property
     def is_archaism(self) -> bool:
-        """
-        True if grapheme uses archaic orthography.
-
-        Archaic patterns:
-        1. Trema (ü): Pre-1945/2009 marker for pronounced u
-        2. Grave accents (except à): Pre-1973 secondary stress
-        3. Archaic words with ph, mpt, mpc, mpç
-        4. Obsolete circumflex: êle
-
-        These may appear in historical texts or proper names.
-        """
+        """True if grapheme uses archaic orthography."""
         s = self.normalized
 
         # Trema (abolished 1945/2009)
@@ -1572,14 +1283,7 @@ class GraphemeToken:
 
     @cached_property
     def is_nasal(self) -> bool:
-        """
-        True if grapheme represents nasal sound(s).
-
-        Nasal patterns:
-        1. Nasal digraphs: am, an, em, en, im, in, om, on, um, un
-        2. Tilde vowels: ã, õ (and archaic ẽ, ĩ, ũ)
-        3. Nasal diphthongs: ão, ãe, õe, em (final)
-        """
+        """True if grapheme represents nasal sound(s)."""
         s = self.normalized
 
         # Nasal digraph lookup
@@ -1618,17 +1322,7 @@ class GraphemeToken:
 
     @cached_property
     def is_diphthong(self) -> bool:
-        """
-        True if grapheme represents a diphthong.
-
-        Diphthongs are two-vowel sequences in one syllable.
-        Examples: ai, ei, ou, ão, ãe
-
-        Note: Diphthong vs hiatus is determined by syllabification.
-        Same spelling can be different:
-        - caiu [kɐˈju]: hiatus (ca.iu, two syllables)
-        - cai [ˈkaj]: diphthong (one syllable)
-        """
+        """True if grapheme represents a diphthong."""
         s = self.normalized
         # Observação: qu"em : não é um encontro vocálico, pois não se pronuncia o U.
         # Portanto, "qu" é um dígrafo e "ue" não é um ditongo.
@@ -1638,26 +1332,12 @@ class GraphemeToken:
 
     @cached_property
     def is_triphthong(self) -> bool:
-        """
-        True if grapheme represents a triphthong.
-
-        Triphthongs are three-vowel sequences in one syllable: G-V-G
-        Examples: miau [ˈmjaw], Uruguai [uɾuˈɡwaj]
-
-        Very rare in Portuguese.
-        """
+        """True if grapheme represents a triphthong."""
         return self.normalized in self.dialect.TRIPHTHONG2IPA
 
     @cached_property
     def is_falling_diphthong(self) -> bool:
-        """
-        True if diphthong has vowel before semivowel (V-G).
-
-        Examples: pai, rei, meu, céu
-        Direction: vowel [a] → glide [j]
-
-        Most Portuguese diphthongs are falling.
-        """
+        """True if diphthong has vowel before semivowel (V-G)."""
         if not self.is_diphthong:
             return False
 
@@ -1690,14 +1370,7 @@ class GraphemeToken:
 
     @cached_property
     def is_rising_diphthong(self) -> bool:
-        """
-        True if diphthong has semivowel before vowel (G-V).
-
-        Examples: piano, água, qual
-        Direction: glide [j] → vowel [a]
-
-        Less common than falling diphthongs in Portuguese.
-        """
+        """True if diphthong has semivowel before vowel (G-V)."""
         if not self.is_diphthong:
             return False
         return self.first_char.normalized in self.dialect.SEMIVOWEL_CHARS
@@ -1726,57 +1399,22 @@ class GraphemeToken:
 
     @cached_property
     def is_digraph(self) -> bool:
-        """
-        True if grapheme is a consonant digraph.
-
-        Consonant digraphs (two letters, one consonant phoneme):
-        - nh [ɲ]: palatal nasal
-        - lh [ʎ]: palatal lateral
-        - ch [ʃ]: postalveolar fricative
-        - rr [ʁ]: strong R
-        - ss [s]: voiceless between vowels
-        - ph [f]: archaic
-
-        Does NOT include nasal digraphs (am, em, etc.) - see is_nasal.
-        """
+        """True if grapheme is a consonant digraph."""
         return self.normalized in self.dialect.DIGRAPH2IPA
 
     @cached_property
     def is_foreign_digraph(self) -> bool:
-        """
-        True if grapheme is a foreign digraph.
-
-        Examples from loanwords:
-        - sh [ʃ]: show, shopping
-        - th [t]: thriller
-        - ff [f]: graffiti
-        - ll [l]: villa
-        """
+        """True if grapheme is a foreign digraph."""
         return self.normalized in self.dialect.FOREIGN_DIGRAPH2IPA
 
     @cached_property
     def is_trigraph(self) -> bool:
-        """
-        True if grapheme is a trigraph (3-letter unit).
-
-        Examples:
-        - que, qui: q + u + vowel
-        - coo: prefix boundary
-        - ção: common suffix
-        """
+        """True if grapheme is a trigraph (3-letter unit)."""
         return self.normalized in self.dialect.TRIGRAM2IPA
 
     @cached_property
     def is_consonant_hiatus(self) -> bool:
-        """
-        True if grapheme is a consonant cluster spanning syllable boundary.
-
-        Examples:
-        - ct: pac.to [ˈpak.tu]
-        - cç: fic.ção [fik.ˈsɐ̃w]
-
-        These are NOT pronounced as single units; they split across syllables.
-        """
+        """True if grapheme is a consonant cluster spanning syllable boundary."""
         return self.normalized in self.dialect.HETEROSYLLABIC_CLUSTERS
 
     # =========================================================================
@@ -1874,16 +1512,7 @@ class GraphemeToken:
 
     @cached_property
     def has_primary_stress(self) -> bool:
-        """
-        True if this grapheme carries primary word stress.
-
-        Stress determination:
-        1. Explicit: any character has primary stress marker (á, é, ã, etc.)
-        2. Implicit: this grapheme's syllable is the stressed syllable
-
-        For words with explicit accent marks, that syllable is stressed.
-        For unmarked words, stress is predicted by word ending and syllable count.
-        """
+        """True if this grapheme carries primary word stress."""
         if self.parent_word.n_syllables == 1:
             return True
         # Check if any character in this grapheme has explicit primary stress
@@ -1905,16 +1534,7 @@ class GraphemeToken:
 
     @cached_property
     def has_secondary_stress(self) -> bool:
-        """
-        True if this grapheme carries secondary stress.
-
-        Secondary stress occurs in:
-        - Compound words: semi-automático
-        - Long words with complex morphology
-        - Historical grave accent usage (obsolete)
-
-        Marked by circumflex or grave accents in non-primary position.
-        """
+        """True if this grapheme carries secondary stress."""
         if self.has_primary_stress:
             return False
 
@@ -1929,21 +1549,7 @@ class GraphemeToken:
 
     @cached_property
     def ipa(self) -> str:
-        """
-        Generate IPA transcription for this grapheme.
-
-        ALGORITHM:
-        ----------
-        1. Check irregular word list (highest priority)
-        2. Check multi-character lookups (tetragraph → trigraph → digraph)
-        3. Fall back to character-by-character IPA
-
-        For multi-character graphemes (digraphs, diphthongs),
-        the lookup returns a single IPA unit, not individual characters.
-
-        Returns:
-            IPA string for this grapheme
-        """
+        """Generate IPA transcription for this grapheme."""
         s = self.normalized
         word = self.parent_word.normalized if self.parent_word else ""
 
@@ -2053,41 +1659,7 @@ class GraphemeToken:
 
 @dataclasses.dataclass
 class WordToken:
-    """
-    Represents a word with syllable structure and grapheme tokenization.
-
-    LINGUISTIC STRUCTURE:
-    ---------------------
-    A word is analyzed at multiple levels:
-    1. Orthographic: sequence of characters
-    2. Graphemic: sequence of graphemes (digraphs, diphthongs, etc.)
-    3. Syllabic: sequence of syllables
-    4. Phonological: stress pattern and IPA transcription
-
-    SYLLABIFICATION:
-    ----------------
-    Portuguese syllables follow a preferred CV (consonant-vowel) structure.
-    The syllabifier handles:
-    - Onset maximization: consonants go with following vowel
-    - Complex onsets: pr, tr, br, etc.
-    - Coda constraints: only l, r, s, n allowed in syllable-final position
-    - Hiatus vs diphthong: vowel sequences may be one or two syllables
-
-    STRESS ASSIGNMENT:
-    ------------------
-    Stress is determined by:
-    1. Explicit accent marks (highest priority)
-    2. Word-final pattern (oxytone exceptions)
-    3. Default paroxytone rule (penultimate syllable)
-
-    Attributes:
-        surface: The word as it appears in text
-        word_idx: Position in parent sentence
-        graphemes: List of GraphemeToken objects
-        syllables: List of syllable strings
-        parent_sentence: Sentence containing this word
-        dialect: DialectInventory with rules
-    """
+    """Represents a word with syllable structure and grapheme tokenization."""
     surface: str
     word_idx: int  # parent_sentence.words[idx] == self
     graphemes: List[GraphemeToken] = dataclasses.field(default_factory=list)
@@ -2102,17 +1674,7 @@ class WordToken:
     _idx_in_sentence: int = -1
 
     def __post_init__(self):
-        """
-        Initialize syllables and graphemes with proper indexing.
-
-        INITIALIZATION ORDER:
-        ---------------------
-        1. Syllabify word (using external syllabifier)
-        2. Tokenize into graphemes with syllable alignment
-        3. Create character tokens with computed indices
-
-        This top-down approach avoids circular dependencies.
-        """
+        """Initialize syllables and graphemes with proper indexing."""
         # Step 1: Syllabification
         if not self.syllables:
             self.syllables = syllabify(self.normalized)
@@ -2128,33 +1690,7 @@ class WordToken:
             self.dialect = self.parent_sentence.dialect
 
     def _tokenize_graphemes(self) -> List[GraphemeToken]:
-        """
-        Tokenize word into graphemes aligned with syllables.
-
-        TOKENIZATION STRATEGY:
-        ----------------------
-        1. Normalize word and syllables
-        2. For each syllable, scan for longest matching grapheme
-        3. Greedy match: try tetragraphs → trigraphs → digraphs → chars
-        4. Track which syllable each grapheme belongs to
-
-        SYLLABLE ALIGNMENT:
-        -------------------
-        We need to know which grapheme belongs to which syllable
-        for stress assignment and phonological rules.
-
-        DOUBLED CONSONANT HANDLING:
-        ---------------------------
-        Portuguese syllabification splits doubled consonants:
-        - bairro → bair.ro (not bai.rro)
-        - muitíssimo → mui.tís.si.mo
-
-        But these represent single phonemes. We normalize:
-        - Move first letter to following syllable for phonological unity
-
-        Returns:
-            List of GraphemeToken objects with syllable indices
-        """
+        """Tokenize word into graphemes aligned with syllables."""
         # Normalize syllables for consonant doubling
         normalized_syllables = self._normalize_syllables()
 
@@ -2186,22 +1722,7 @@ class WordToken:
         return graphemes
 
     def _normalize_syllables(self) -> List[str]:
-        """
-        Normalize syllables for doubled consonant handling.
-
-        Portuguese syllabification splits rr, ss, etc.:
-        - carro → car.ro
-
-        But phonologically, these are single consonants [ʁ], [s].
-        We want them in the second syllable for correct IPA generation.
-
-        Normalization: Move first letter of doubled consonant to next syllable.
-        - car.ro → ca.rro (for processing)
-        - baír.ris.mo → baí.rris.mo
-
-        Returns:
-            List of normalized syllable strings
-        """
+        """Normalize syllables for doubled consonant handling."""
         norm_syllables = list(self.syllables)
 
         for idx in range(len(norm_syllables) - 1):
@@ -2218,40 +1739,8 @@ class WordToken:
 
         return norm_syllables
 
-    @staticmethod
-    def _build_char_to_syllable_map(syllables: List[str]) -> Dict[int, int]:
-        """
-        Map character index to syllable index.
-
-        Needed for aligning graphemes with syllables during tokenization.
-
-        Args:
-            syllables: List of syllable strings
-
-        Returns:
-            Dictionary mapping character position to syllable index
-        """
-        char_to_syl = {}
-        char_pos = 0
-
-        for syl_idx, syl in enumerate(syllables):
-            for _ in syl:
-                char_to_syl[char_pos] = syl_idx
-                char_pos += 1
-
-        return char_to_syl
-
     def _compute_indices(self):
-        """
-        Compute all character and grapheme indices top-down.
-
-        This is called after grapheme tokenization to set:
-        - Grapheme indices in word
-        - Character indices in word
-        - Character indices in sentence
-
-        Top-down computation avoids circular dependencies.
-        """
+        """Compute all character and grapheme indices top-down."""
         char_idx_in_word = 0
 
         for grapheme in self.graphemes:
@@ -2473,24 +1962,7 @@ class WordToken:
 
     @cached_property
     def ipa(self) -> str:
-        """
-        Generate IPA transcription for entire word.
-
-        ALGORITHM:
-        ----------
-        1. Check irregular word list (overrides all rules)
-        2. Generate IPA for each grapheme
-        3. Insert syllable boundaries (·)
-        4. Insert stress marker (ˈ) before stressed syllable
-
-        STRESS MARKING:
-        ---------------
-        IPA convention: ˈ precedes stressed syllable
-        Example: português [puɾ.tu.ˈɡeʃ] → "ˈ" before "ɡeʃ"
-
-        Returns:
-            Full IPA transcription with stress and syllable marks
-        """
+        """Generate IPA transcription for entire word."""
         # Check irregular words first
         if self.normalized in self.dialect.IRREGULAR_WORDS:
             return self.dialect.IRREGULAR_WORDS[self.normalized].replace(
@@ -2576,51 +2048,13 @@ class WordToken:
 
 @dataclasses.dataclass
 class Sentence:
-    """
-    Represents a sentence with full phonological analysis.
-
-    SENTENCE-LEVEL PHONOLOGY:
-    -------------------------
-    While most phonological rules operate at word level,
-    sentences introduce:
-    1. Liaison: linking between words (resyllabification)
-    2. Phrasal stress: prominence patterns across words
-    3. Intonation: pitch contours for questions, statements, etc.
-
-    CURRENT IMPLEMENTATION:
-    -----------------------
-    This version focuses on word-level analysis.
-    Sentence-level prosody (liaison, phrasal stress, intonation)
-    is simplified or not yet implemented.
-
-    Future extensions could include:
-    - Liaison rules (final consonant + initial vowel)
-    - Phrasal stress patterns
-    - Intonation contours (ToBI annotation)
-
-    Attributes:
-        surface: Raw sentence text
-        words: List of WordToken objects
-        dialect: DialectInventory with rules
-    """
+    """Represents a sentence with full phonological analysis."""
     surface: str
     words: List[WordToken] = dataclasses.field(default_factory=list)
     dialect: DialectInventory = dataclasses.field(default_factory=EuropeanPortuguese)
 
     def __post_init__(self):
-        """
-        Initialize word tokens with computed indices.
-
-        TOKENIZATION:
-        -------------
-        Simple whitespace tokenization.
-        Punctuation is kept attached to words for now.
-
-        More sophisticated tokenization could handle:
-        - Clitics: dar-lhe → dar + lhe
-        - Contractions: do → de + o
-        - Punctuation separation
-        """
+        """Initialize word tokens with computed indices."""
         if not self.words:
             # Tokenize on whitespace and hyphen; the words of one
             # hyphenated chunk share its chunk index
@@ -2675,25 +2109,7 @@ class Sentence:
 
     @cached_property
     def ipa(self) -> str:
-        """
-        Generate IPA transcription for entire sentence.
-
-        ALGORITHM:
-        ----------
-        1. Generate IPA for each word
-        2. Join with word boundary markers (space)
-
-        SIMPLIFICATION:
-        ---------------
-        This treats each word independently.
-        A full implementation would handle:
-        - Liaison across word boundaries
-        - Resyllabification (e.g., "os amigos" → "o.za.mi.gos")
-        - Phrasal stress patterns
-
-        Returns:
-            Space-separated IPA transcription
-        """
+        """Generate IPA transcription for entire sentence."""
         word_ipas = [word.ipa for word in self.words]
         return " ".join(word_ipas)
 
@@ -2703,16 +2119,7 @@ class Sentence:
 
     @property
     def features(self) -> Dict[str, any]:
-        """
-        Extract all linguistic features.
-
-        WARNING: Can produce very large feature dictionaries
-        for long sentences. Consider alternative representations
-        (e.g., arrays, DataFrames) for ML applications.
-
-        Returns:
-            Dictionary with sentence features and nested word features
-        """
+        """Extract all linguistic features."""
         feats = {
             "n_words": self.n_words,
             "n_whitespaces": self.n_words - 1,
@@ -2740,32 +2147,7 @@ class Sentence:
 # =============================================================================
 
 def demonstrate_transcription(text: str, dialect: DialectInventory = None):
-    """
-    Demonstrate IPA transcription with detailed linguistic analysis.
-
-    This function provides a pedagogical view of the transcription process,
-    showing intermediate steps and linguistic features.
-
-    Args:
-        text: Portuguese text to transcribe
-        dialect: DialectInventory to use (default: European Portuguese)
-
-    Example:
-        >>> demonstrate_transcription("O cão comeu o pão.")
-        Sentence: O cão comeu o pão.
-        IPA: [u ˈkɐ̃w ko·ˈmew u ˈpɐ̃w]
-
-        Words:
-        1. o [u]
-           Syllables: o
-           Stress: syllable 0
-        2. cão [ˈkɐ̃w]
-           Syllables: cão
-           Stress: syllable 0 (final -ão)
-           Graphemes: c[k] ão[ɐ̃w]
-           Nasal diphthong: ão
-        ...
-    """
+    """Demonstrate IPA transcription with detailed linguistic analysis."""
     if dialect is None:
         dialect = EuropeanPortuguese()
 
