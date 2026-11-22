@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.5a2](https://github.com/TigreGotico/tugaphone/tree/1.11.5a2) (2026-11-22)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.5a1...1.11.5a2)
+
+**Merged pull requests:**
+
+- refactor: shorten tokenizer and number\_utils docstrings, drop dead helper [\#315](https://github.com/TigreGotico/tugaphone/pull/315) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.5a1](https://github.com/TigreGotico/tugaphone/tree/1.11.5a1) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.4a1...1.11.5a1)
@@ -372,10 +380,6 @@
 ## [1.6.2a2](https://github.com/TigreGotico/tugaphone/tree/1.6.2a2) (2026-11-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.2a1...1.6.2a2)
-
-**Merged pull requests:**
-
-- refactor: pass expansion and homograph marks through Pipeline fields [\#204](https://github.com/TigreGotico/tugaphone/pull/204) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.6.2a1](https://github.com/TigreGotico/tugaphone/tree/1.6.2a1) (2026-11-05)
 
