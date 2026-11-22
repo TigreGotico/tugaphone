@@ -1,4 +1,11 @@
 # Advanced
+<!-- agent-hint
+covers: the lexicon boundary, number scales and integration with the sibling libraries
+source: tugaphone/lattice_core.py, tugaphone/number_utils.py, pyproject.toml
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/advanced.md
+see: architecture.md, api.md
+-->
 
 Once the basic `phonemize_sentence` loop is clear, this is what sits underneath
 it.
@@ -66,9 +73,13 @@ from tugaphone.number_utils import normalize_numbers
 
 normalize_numbers("vou comprar 1 casa")        # 'vou comprar uma casa'
 normalize_numbers("vou adotar 1 cão")          # 'vou adotar um cão'
-normalize_numbers("897654356789098", "pt-PT")  # long scale (biliões)
-normalize_numbers("897654356789098", "pt-BR")  # short scale (trilhões)
+normalize_numbers("897654356789098", "pt-PT")
+# 'oitocentos e noventa e sete biliões seiscentos e cinquenta e quatro mil trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito'
+normalize_numbers("897654356789098", "pt-BR")
+# 'oitocentos e noventa e sete trilhões seiscentos e cinquenta e quatro bilhões trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito'
 ```
+
+`pt-PT` reads the long scale (biliões). `pt-BR` reads the short scale (trilhões).
 
 text2spoken owns the reading rules, gender agreement included.
 [numbers.md](numbers.md) shows which lect reads which variety. Inside the
@@ -115,6 +126,5 @@ through it. See [tokenizer.md](tokenizer.md).
 - [text_normalization.md](text_normalization.md), the orthographic rewrites that run ahead of number normalization
 - [tokenizer.md](tokenizer.md), inspect syllables, stress and graphemes directly
 
-
 ---
-[← Tokenizer](tokenizer.md) · [Home](../README.md) · [Benchmarking →](benchmarking.md)
+[← Tokenizer](tokenizer.md) · [Index](index.md) · [Benchmarking →](benchmarking.md)

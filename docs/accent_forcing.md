@@ -1,4 +1,11 @@
 # Forcing an accent
+<!-- agent-hint
+covers: how to force a target accent into a TTS voice as IPA, respelled text or an overlay
+source: tugaphone/accent.py, tugaphone/__main__.py
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/accent_forcing.md
+see: dialects.md, api.md
+-->
 
 `tugaphone.phonemize(text, lect)` *describes* an accent: it produces the IPA a
 speaker of `lect` would say. Accent **forcing** is the inverse job, bending a
@@ -32,10 +39,10 @@ target lect. This is a thin wrapper over `phonemize`.
 from tugaphone import force_accent
 
 force_accent("o vinho verde", "pt-PT-x-porto", mode="ipa")
-# 'u ˈbiɲu ˈbjɛɾdɨ'   ← Northern betacism, [v]→[b], from the lect spec
+# 'u ˈbiɲu ˈbjɛɾdɨ'
 ```
 
-Feed the returned string straight to a phoneme-input voice.
+The lect spec of the Porto accent turns [v] into [b]. Feed the returned string straight to a phoneme-input voice.
 
 ### 2. Grapheme-input TTS: `mode="respell"`
 
@@ -46,8 +53,10 @@ betacism of `vinho`.
 
 ```python
 force_accent("o vinho verde", "pt-PT-x-porto", mode="respell", base_lect="pt-PT")
-# 'o binho berde'    ← a pt-PT voice reads this as [ˈbiɲu ˈbɛɾdɨ]
+# 'o binho berde'
 ```
+
+A pt-PT voice reads this text as [ˈbiɲu ˈbɛɾdɨ].
 
 `base_lect` is the accent your grapheme voice actually speaks. Respelling only
 rewrites the graphemes whose pronunciation **differs** from that base, words the
@@ -56,8 +65,10 @@ readable Portuguese, not a phonetic soup.
 
 ```python
 force_accent("a tia no Brasil", "pt-BR", mode="respell", base_lect="pt-PT")
-# 'a tchia no Brasiu'   ← [t]→[tʃ] palatalisation, coda [ɫ]→[w] vocalisation
+# 'a tchia no Brasiu'
 ```
+
+The respelling writes the palatalisation of [t] to [tʃ] and the vocalisation of coda [ɫ] to [w].
 
 ### 3. User tweaks: `AccentOverlay`
 
@@ -81,9 +92,11 @@ overlay = AccentOverlay(
 
 force_accent("o carro", "pt-PT", mode="ipa", overlay=overlay)   # 'u ˈkaɾu'
 
-open("voice.json", "w").write(overlay.to_json())      # share it
+open("voice.json", "w").write(overlay.to_json())
 overlay = AccentOverlay.from_json(open("voice.json").read())
 ```
+
+The file `voice.json` holds the overlay, so you can share it.
 
 `Transform` fields: `kind` (`"regex"` or whole-`"word"`), `pattern`,
 `replacement`, `stage` (`"ipa"` or `"text"`), `ignore_case`. Transforms run in
@@ -164,6 +177,5 @@ One caveat the numbers carry: words are respelled independently, so
 cross-word sandhi is not modelled during respelling, which can leave a
 negligible sentence-level residue on a few lects.
 
-
 ---
-[← Dialects](dialects.md) · [Home](../README.md) · [Homographs →](homographs.md)
+[← Dialects](dialects.md) · [Index](index.md) · [Homographs →](homographs.md)

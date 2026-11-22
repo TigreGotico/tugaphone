@@ -1,4 +1,11 @@
 # Homograph disambiguation
+<!-- agent-hint
+covers: how bifonia marks the sense of a heterophonic homograph before transcription
+source: tugaphone/lattice_core.py, bifonia.add_extra_diacritics
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/homographs.md
+see: architecture.md, codeswitch.md
+-->
 
 Portuguese has heterophonic homographs (same spelling, different pronunciation)
 where the vowel quality shifts depending on which sense is active:
@@ -59,6 +66,5 @@ print(ph.phonemize_sentence("Tenho bom gosto."))
 - [api.md](api.md), `TugaPhonemizer`
 - [advanced.md](advanced.md), the pipeline internals
 
-
 ---
-[← Accent forcing](accent_forcing.md) · [Home](../README.md) · [Code-switch →](codeswitch.md)
+[← Accent forcing](accent_forcing.md) · [Index](index.md) · [Code-switch →](codeswitch.md)

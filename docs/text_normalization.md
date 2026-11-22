@@ -1,4 +1,11 @@
 # Text normalization
+<!-- agent-hint
+covers: which old spellings, abbreviations, Roman numerals, acronyms and letter-digit codes the expand step rewrites
+source: tugaphone/text_normalization.py, tugaphone/number_utils.py, tugaphone/lattice_core.py:normalize_spelling
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/text_normalization.md
+see: numbers.md, api.md
+-->
 
 Written text holds forms that the phoneme rules cannot read: numbers, dates, clock times, money, abbreviations, Roman numerals and acronyms. The engine's `expand` step rewrites them as words before any lattice or phoneme work. `tugaphone.text_normalization.normalize_text` is that step after the spelling step:
 
@@ -376,6 +383,5 @@ expand_acronyms("ia ao mercado")
 - [numbers.md](numbers.md), `normalize_numbers` and the variety of each lect
 - [quickstart.md](quickstart.md), the pipeline in context
 
-
 ---
-[← Numbers](numbers.md) · [Home](../README.md) · [API →](api.md)
+[← Numbers](numbers.md) · [Index](index.md) · [API →](api.md)

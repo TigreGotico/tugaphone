@@ -21,7 +21,9 @@ htmlcov/
 venv/
 .env
 
-# Agent pipeline / local-only docs (not part of the published package)
-AGENTS.md
+# Local-only planning files (not part of the published package)
 TODO.md
 ROADMAP.md
+
+# Written by the docs example check
+voice.json

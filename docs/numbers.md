@@ -1,4 +1,11 @@
 # Numbers, dates and times
+<!-- agent-hint
+covers: how numbers, dates, times and money become words per lect and how to call the step alone
+source: tugaphone/number_utils.py, text2spoken
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/numbers.md
+see: text_normalization.md, api.md
+-->
 
 tugaphone reads numbers, dates, clock times, money, measures and the
 abbreviations of its tables with
@@ -85,8 +92,11 @@ form and the text:
 
 ```python
 normalize_numbers("um filme 3D")
-# UnreadFormWarning: pt-PT: no reading for '3D' in 'um filme 3D'; its digits are dropped
+# 'um filme 3D'
 ```
+
+The call also emits this warning:
+`UnreadFormWarning: pt-PT: no reading for '3D' in 'um filme 3D'; its digits are dropped`.
 
 With `strict=True`, the default, an error in text2spoken raises. With
 `strict=False`, the text comes back as written.
@@ -109,6 +119,5 @@ and its source.
 - [quickstart.md](quickstart.md), `normalize_numbers` in context
 - [api.md](api.md), the function reference
 
-
 ---
-[← Code-switch](codeswitch.md) · [Home](../README.md) · [Text normalization →](text_normalization.md)
+[← Code-switch](codeswitch.md) · [Index](index.md) · [Text normalization →](text_normalization.md)

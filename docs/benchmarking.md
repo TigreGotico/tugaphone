@@ -1,4 +1,11 @@
 # Benchmarking
+<!-- agent-hint
+covers: how tugaphone measures accuracy and which scripts run each benchmark
+source: scripts/tts_gold_benchmark.py, scripts/pt_br_gold_benchmark.py, scripts/benchmark.py, scripts/check_benchmark_regression.py
+generated: no
+verify: for s in tts_gold_benchmark pt_br_gold_benchmark benchmark check_benchmark_regression; do test -f scripts/$s.py || exit 1; done; grep -oE -- '--[a-z][a-z-]+' docs/benchmarking.md | sort -u | while read f; do grep -q -- "$f" scripts/*.py || { echo "unknown flag $f"; exit 1; }; done
+see: scoreboard.md, architecture.md
+-->
 
 tugaphone is measured against two golds, one per path. The
 **phonemization pipeline**, a dialect selected by its lect code, driving the
@@ -202,9 +209,9 @@ a segment error, and PER already counts it.
 the committed fixtures and compares against the committed baseline
 (`benchmarks/results.json`), failing CI when any dialect's PER rises or
 its stress accuracy falls by more than 0.005 absolute. A dialect whose
-baseline has a stress accuracy and whose new score has none also fails.
+baseline has a stress accuracy and whose rescored row has none also fails.
 Improvements never fail, commit the
-regenerated baseline with the improving change so the new level becomes
+regenerated baseline with the improving change so the improved level becomes
 the floor. The gate fails closed when fewer rows than registered
 dialects are scored, so a broken fixture cannot produce a silent green.
 
@@ -213,6 +220,5 @@ python scripts/benchmark.py                    # rescore + rewrite reports
 python scripts/check_benchmark_regression.py   # gate
 ```
 
-
 ---
-[← Advanced](advanced.md) · [Home](../README.md) · [Scoreboard →](scoreboard.md)
+[← Advanced](advanced.md) · [Index](index.md) · [Scoreboard →](scoreboard.md)

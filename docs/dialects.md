@@ -1,4 +1,11 @@
 # Dialects
+<!-- agent-hint
+covers: which lect codes exist, how aliases resolve and which lects take a lexicon
+source: tugaphone/registry.py, orthography2ipa.available_codes
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/dialects.md
+see: architecture.md, accent_forcing.md
+-->
 
 A tugaphone dialect *is* an orthography2ipa lect spec. The dialect set is the
 Portuguese-family lects orthography2ipa ships, each reachable by its BCP-47
@@ -153,6 +160,5 @@ would overwrite the sub-lect spec's phonology with the parent's forms. See
 - [numbers.md](numbers.md), number normalization
 - [api.md](api.md), full class reference
 
-
 ---
-[← Architecture](architecture.md) · [Home](../README.md) · [Accent forcing →](accent_forcing.md)
+[← Architecture](architecture.md) · [Index](index.md) · [Accent forcing →](accent_forcing.md)
