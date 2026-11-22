@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.6a1](https://github.com/TigreGotico/tugaphone/tree/1.11.6a1) (2026-11-22)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.5a3...1.11.6a1)
+
+**Merged pull requests:**
+
+- fix\(numbers\): a whole hour already followed by hora or horas reads the noun once [\#319](https://github.com/TigreGotico/tugaphone/pull/319) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.5a3](https://github.com/TigreGotico/tugaphone/tree/1.11.5a3) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.5a2...1.11.5a3)
@@ -372,10 +380,6 @@
 ## [1.6.3a1](https://github.com/TigreGotico/tugaphone/tree/1.6.3a1) (2026-11-09)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.2a3...1.6.3a1)
-
-**Merged pull requests:**
-
-- fix: keep the packaged lexicon patches for pt-PT and pt-BR [\#208](https://github.com/TigreGotico/tugaphone/pull/208) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.6.2a3](https://github.com/TigreGotico/tugaphone/tree/1.6.2a3) (2026-11-06)
 
