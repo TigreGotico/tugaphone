@@ -4,15 +4,15 @@
     "region": "pt-AO",
     "n": 1000,
     "failed": 0,
-    "per": 0.2495,
-    "word_accuracy": 0.07,
+    "per": 0.2477,
+    "word_accuracy": 0.074,
     "stress_acc": 0.995,
     "n_stress": 993,
     "top_confusions": [
       {
         "got": "a",
         "expected": "ɐ",
-        "count": 620
+        "count": 624
       },
       {
         "got": "o",
@@ -117,20 +117,20 @@
     "region": "pt-BR",
     "n": 1000,
     "failed": 0,
-    "per": 0.2448,
-    "word_accuracy": 0.08,
+    "per": 0.2365,
+    "word_accuracy": 0.084,
     "stress_acc": 0.9754,
     "n_stress": 893,
     "top_confusions": [
       {
         "got": "a",
         "expected": "ɐ",
-        "count": 292
+        "count": 299
       },
       {
         "got": "ʊ",
         "expected": "u",
-        "count": 212
+        "count": 213
       },
       {
         "got": "ɪ",
@@ -140,7 +140,7 @@
       {
         "got": "e",
         "expected": "ɛ",
-        "count": 55
+        "count": 60
       },
       {
         "got": "ɾ",
@@ -155,17 +155,12 @@
       {
         "got": "i",
         "expected": "ɪ",
-        "count": 38
-      },
-      {
-        "got": "l",
-        "expected": "w",
-        "count": 36
+        "count": 39
       },
       {
         "got": "o",
         "expected": "ɔ",
-        "count": 35
+        "count": 36
       },
       {
         "got": "e",
@@ -188,14 +183,14 @@
         "count": 24
       },
       {
-        "got": "h",
-        "expected": "ʁ",
+        "got": "i",
+        "expected": "ĩ",
         "count": 23
       },
       {
-        "got": "i",
-        "expected": "ĩ",
-        "count": 22
+        "got": "h",
+        "expected": "ʁ",
+        "count": 23
       },
       {
         "got": "s",
@@ -203,24 +198,29 @@
         "count": 22
       },
       {
+        "got": "ɐ̃",
+        "expected": "ã",
+        "count": 21
+      },
+      {
         "got": "ɾ",
         "expected": "χ",
         "count": 20
       },
       {
-        "got": "ɐ̃",
-        "expected": "ã",
-        "count": 20
-      },
-      {
-        "got": "u",
-        "expected": "w",
-        "count": 17
-      },
-      {
         "got": "jʊ",
         "expected": "iu",
         "count": 15
+      },
+      {
+        "got": "",
+        "expected": "(",
+        "count": 14
+      },
+      {
+        "got": "",
+        "expected": ")",
+        "count": 14
       }
     ],
     "harness_version": "1.0"
@@ -230,8 +230,8 @@
     "region": "pt-BR-x-riodejaneiro",
     "n": 1000,
     "failed": 0,
-    "per": 0.1543,
-    "word_accuracy": 0.2,
+    "per": 0.148,
+    "word_accuracy": 0.214,
     "stress_acc": 1.0,
     "n_stress": 992,
     "top_confusions": [
@@ -258,7 +258,7 @@
       {
         "got": "i",
         "expected": "ĩ",
-        "count": 79
+        "count": 80
       },
       {
         "got": "o",
@@ -269,11 +269,6 @@
         "got": "̃",
         "expected": "",
         "count": 50
-      },
-      {
-        "got": "l",
-        "expected": "w",
-        "count": 46
       },
       {
         "got": "ɾ",
@@ -293,12 +288,12 @@
       {
         "got": "j",
         "expected": "i",
-        "count": 36
+        "count": 37
       },
       {
         "got": "e",
         "expected": "ɛ",
-        "count": 28
+        "count": 29
       },
       {
         "got": "o",
@@ -334,6 +329,11 @@
         "got": "",
         "expected": "j",
         "count": 11
+      },
+      {
+        "got": "ẽ",
+        "expected": "ĩ",
+        "count": 11
       }
     ],
     "harness_version": "1.0"
@@ -343,8 +343,8 @@
     "region": "pt-BR-x-saopaulo",
     "n": 1000,
     "failed": 0,
-    "per": 0.1577,
-    "word_accuracy": 0.196,
+    "per": 0.1512,
+    "word_accuracy": 0.207,
     "stress_acc": 0.997,
     "n_stress": 992,
     "top_confusions": [
@@ -379,14 +379,14 @@
         "count": 52
       },
       {
-        "got": "̃",
-        "expected": "",
+        "got": "e",
+        "expected": "i",
         "count": 50
       },
       {
-        "got": "e",
-        "expected": "i",
-        "count": 49
+        "got": "̃",
+        "expected": "",
+        "count": 50
       },
       {
         "got": "h",
@@ -394,19 +394,14 @@
         "count": 47
       },
       {
-        "got": "l",
-        "expected": "w",
-        "count": 46
-      },
-      {
         "got": "j",
         "expected": "i",
-        "count": 44
+        "count": 45
       },
       {
         "got": "e",
         "expected": "ɛ",
-        "count": 37
+        "count": 38
       },
       {
         "got": "o",
@@ -426,7 +421,7 @@
       {
         "got": "u",
         "expected": "w",
-        "count": 22
+        "count": 17
       },
       {
         "got": "",
@@ -447,6 +442,11 @@
         "got": "ɾ",
         "expected": "r",
         "count": 10
+      },
+      {
+        "got": "ẽ",
+        "expected": "eɲ",
+        "count": 9
       }
     ],
     "harness_version": "1.0"
@@ -456,15 +456,15 @@
     "region": "pt-MZ-x-maputo",
     "n": 1000,
     "failed": 0,
-    "per": 0.2246,
-    "word_accuracy": 0.164,
+    "per": 0.2236,
+    "word_accuracy": 0.165,
     "stress_acc": 1.0,
     "n_stress": 992,
     "top_confusions": [
       {
         "got": "ɾ",
         "expected": "r",
-        "count": 163
+        "count": 162
       },
       {
         "got": "e",
@@ -494,7 +494,7 @@
       {
         "got": "u",
         "expected": "ɔ",
-        "count": 104
+        "count": 102
       },
       {
         "got": "̃",
@@ -512,14 +512,14 @@
         "count": 34
       },
       {
+        "got": "o",
+        "expected": "ɔ",
+        "count": 34
+      },
+      {
         "got": "l",
         "expected": "ɫ",
         "count": 33
-      },
-      {
-        "got": "o",
-        "expected": "ɔ",
-        "count": 32
       },
       {
         "got": "es",
@@ -542,9 +542,9 @@
         "count": 18
       },
       {
-        "got": "u",
-        "expected": "w",
-        "count": 17
+        "got": "ɐ",
+        "expected": "a",
+        "count": 14
       },
       {
         "got": "ɾu",
@@ -557,8 +557,8 @@
         "count": 13
       },
       {
-        "got": "ɐ",
-        "expected": "a",
+        "got": "a",
+        "expected": "ɐ",
         "count": 13
       }
     ],
@@ -569,7 +569,7 @@
     "region": "pt-PT",
     "n": 1000,
     "failed": 0,
-    "per": 0.2295,
+    "per": 0.2276,
     "word_accuracy": 0.154,
     "stress_acc": 0.9867,
     "n_stress": 979,
@@ -577,7 +577,7 @@
       {
         "got": "ɾ",
         "expected": "r",
-        "count": 497
+        "count": 498
       },
       {
         "got": "ɨ",
@@ -587,17 +587,17 @@
       {
         "got": "u",
         "expected": "ɔ",
-        "count": 83
+        "count": 80
       },
       {
         "got": "ɨ",
         "expected": "ɛ",
-        "count": 53
+        "count": 52
       },
       {
         "got": "e",
         "expected": "ɐ",
-        "count": 47
+        "count": 48
       },
       {
         "got": "ɨɾ",
@@ -612,22 +612,17 @@
       {
         "got": "ɐl",
         "expected": "aɫ",
-        "count": 30
-      },
-      {
-        "got": "u",
-        "expected": "w",
-        "count": 29
-      },
-      {
-        "got": "ɐ",
-        "expected": "a",
-        "count": 28
+        "count": 32
       },
       {
         "got": "o",
         "expected": "ɔ",
-        "count": 27
+        "count": 30
+      },
+      {
+        "got": "ɐ",
+        "expected": "a",
+        "count": 29
       },
       {
         "got": "",
@@ -635,19 +630,24 @@
         "count": 25
       },
       {
+        "got": "ɨ",
+        "expected": "i",
+        "count": 23
+      },
+      {
         "got": "s",
         "expected": "ʒ",
         "count": 22
       },
       {
-        "got": "ɨ",
-        "expected": "i",
-        "count": 22
+        "got": "u",
+        "expected": "w",
+        "count": 20
       },
       {
         "got": "ʁɨ",
         "expected": "ʀə",
-        "count": 21
+        "count": 20
       },
       {
         "got": "l",
@@ -667,7 +667,7 @@
       {
         "got": "e",
         "expected": "ɛ",
-        "count": 16
+        "count": 17
       },
       {
         "got": "ɾɨ",
@@ -682,8 +682,8 @@
     "region": "pt-PT-x-lisboa",
     "n": 1000,
     "failed": 0,
-    "per": 0.0902,
-    "word_accuracy": 0.486,
+    "per": 0.0882,
+    "word_accuracy": 0.492,
     "stress_acc": 0.998,
     "n_stress": 994,
     "top_confusions": [
@@ -695,7 +695,7 @@
       {
         "got": "u",
         "expected": "ɔ",
-        "count": 65
+        "count": 64
       },
       {
         "got": "ɨ",
@@ -703,24 +703,19 @@
         "count": 54
       },
       {
-        "got": "̃",
-        "expected": "",
-        "count": 39
-      },
-      {
         "got": "ɨ",
         "expected": "i",
+        "count": 43
+      },
+      {
+        "got": "̃",
+        "expected": "",
         "count": 39
       },
       {
         "got": "e",
         "expected": "ɐ",
         "count": 36
-      },
-      {
-        "got": "u",
-        "expected": "w",
-        "count": 35
       },
       {
         "got": "ɐ",
@@ -731,6 +726,11 @@
         "got": "s",
         "expected": "ʒ",
         "count": 28
+      },
+      {
+        "got": "u",
+        "expected": "w",
+        "count": 26
       },
       {
         "got": "l",
@@ -748,14 +748,14 @@
         "count": 22
       },
       {
+        "got": "o",
+        "expected": "ɔ",
+        "count": 21
+      },
+      {
         "got": "ɐl",
         "expected": "aɫ",
         "count": 20
-      },
-      {
-        "got": "o",
-        "expected": "ɔ",
-        "count": 19
       },
       {
         "got": "s",
@@ -770,7 +770,7 @@
       {
         "got": "a",
         "expected": "ɐ",
-        "count": 13
+        "count": 15
       },
       {
         "got": "ẽ",
@@ -795,7 +795,7 @@
     "region": "pt-TL-x-dili",
     "n": 1000,
     "failed": 0,
-    "per": 0.2385,
+    "per": 0.2375,
     "word_accuracy": 0.124,
     "stress_acc": 1.0,
     "n_stress": 985,
@@ -848,7 +848,7 @@
       {
         "got": "e",
         "expected": "ɛ",
-        "count": 48
+        "count": 49
       },
       {
         "got": "l",
@@ -896,8 +896,8 @@
         "count": 21
       },
       {
-        "got": "u",
-        "expected": "w",
+        "got": "e",
+        "expected": "",
         "count": 21
       }
     ],
