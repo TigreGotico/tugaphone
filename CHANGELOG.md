@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.5a3](https://github.com/TigreGotico/tugaphone/tree/1.11.5a3) (2026-11-22)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.5a2...1.11.5a3)
+
+**Merged pull requests:**
+
+- build: require text2spoken 0.0.2a97 [\#317](https://github.com/TigreGotico/tugaphone/pull/317) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.5a2](https://github.com/TigreGotico/tugaphone/tree/1.11.5a2) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.5a1...1.11.5a2)
@@ -372,10 +380,6 @@
 ## [1.6.2a3](https://github.com/TigreGotico/tugaphone/tree/1.6.2a3) (2026-11-06)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.2a2...1.6.2a3)
-
-**Merged pull requests:**
-
-- docs: describe the engine through the orthography2ipa Pipeline fields [\#206](https://github.com/TigreGotico/tugaphone/pull/206) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.6.2a2](https://github.com/TigreGotico/tugaphone/tree/1.6.2a2) (2026-11-06)
 
