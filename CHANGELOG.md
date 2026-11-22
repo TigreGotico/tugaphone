@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.4a1](https://github.com/TigreGotico/tugaphone/tree/1.11.4a1) (2026-11-22)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.3a3...1.11.4a1)
+
+**Merged pull requests:**
+
+- fix\(pt-PT\): take up o2i-lexicons paraquedas readings; rescore the board [\#311](https://github.com/TigreGotico/tugaphone/pull/311) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.3a3](https://github.com/TigreGotico/tugaphone/tree/1.11.3a3) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.3a2...1.11.3a3)
@@ -365,17 +373,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.1a2...1.6.2a1)
 
-**Merged pull requests:**
-
-- fix: remove the historical lects and warn on a resolve\_lect fallback [\#201](https://github.com/TigreGotico/tugaphone/pull/201) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [1.6.1a2](https://github.com/TigreGotico/tugaphone/tree/1.6.1a2) (2026-11-05)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.1a1...1.6.1a2)
-
-**Merged pull requests:**
-
-- refactor: build the engine with an orthography2ipa Pipeline [\#200](https://github.com/TigreGotico/tugaphone/pull/200) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.6.1a1](https://github.com/TigreGotico/tugaphone/tree/1.6.1a1) (2026-11-05)
 
