@@ -58,7 +58,10 @@ with warnings.catch_warnings():
 
 @lru_cache(maxsize=None)
 def _phonetok(dialect_code: str, inventory: Tuple[str, ...]) -> PhonetokTokenizer:
-    """Shared orthography2ipa grapheme tokenizer for a dialect inventory."""
+    """Shared orthography2ipa grapheme tokenizer for a dialect inventory.
+
+    IPA values are irrelevant to segmentation, so each grapheme maps to itself.
+    """
     spec = LanguageSpec(
         code=dialect_code, name="pt", family="portuguese", script="Latn",
         graphemes={g: [g] for g in inventory}, allophones={},
@@ -1722,7 +1725,10 @@ class WordToken:
         return graphemes
 
     def _normalize_syllables(self) -> List[str]:
-        """Normalize syllables for doubled consonant handling."""
+        """Move a doubled consonant into the next syllable (car.ro → ca.rro).
+
+        rr and ss are one consonant ([ʁ], [s]), read with the second syllable.
+        """
         norm_syllables = list(self.syllables)
 
         for idx in range(len(norm_syllables) - 1):
@@ -1738,6 +1744,19 @@ class WordToken:
                     break
 
         return norm_syllables
+
+    @staticmethod
+    def _build_char_to_syllable_map(syllables: List[str]) -> Dict[int, int]:
+        """Map each character index to its syllable index (the tugaphone.cpp goldens call it)."""
+        char_to_syl = {}
+        char_pos = 0
+
+        for syl_idx, syl in enumerate(syllables):
+            for _ in syl:
+                char_to_syl[char_pos] = syl_idx
+                char_pos += 1
+
+        return char_to_syl
 
     def _compute_indices(self):
         """Compute all character and grapheme indices top-down."""
