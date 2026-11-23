@@ -124,9 +124,9 @@ the code, and it goes when text2spoken reads its form.
 The dot decimal fallback reads the dot as "vírgula". text2spoken 0.0.2a102 and
 later read some dot forms first, and their reading stands: a sign makes the
 number a decimal ("subiu +4.3" reads "subiu mais quatro vírgula três"), and
-after a version word or a capitalised product name the dot reads "ponto" ("a
-versão 4.3" reads "a versão quatro ponto três"). With text2spoken 0.0.2a97,
-the floor of tugaphone, the fallback reads both forms with "vírgula".
+after a version word or a product name such as iOS or Python the dot reads
+"ponto" ("a versão 4.3" reads "a versão quatro ponto três"). Before text2spoken
+0.0.2a102, the fallback reads both forms with "vírgula".
 
 ```python
 normalize_text("O jogo é 3-2.")
