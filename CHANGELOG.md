@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.6a2](https://github.com/TigreGotico/tugaphone/tree/1.11.6a2) (2026-11-23)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.6a1...1.11.6a2)
+
+**Merged pull requests:**
+
+- docs: sync README and docs with dev [\#321](https://github.com/TigreGotico/tugaphone/pull/321) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.6a1](https://github.com/TigreGotico/tugaphone/tree/1.11.6a1) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.5a3...1.11.6a1)
@@ -372,10 +380,6 @@
 ## [1.6.3a2](https://github.com/TigreGotico/tugaphone/tree/1.6.3a2) (2026-11-10)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.3a1...1.6.3a2)
-
-**Merged pull requests:**
-
-- docs: name the pt-BR lexicon beside pt-PT [\#211](https://github.com/TigreGotico/tugaphone/pull/211) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.6.3a1](https://github.com/TigreGotico/tugaphone/tree/1.6.3a1) (2026-11-09)
 
