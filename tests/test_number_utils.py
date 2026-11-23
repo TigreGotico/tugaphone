@@ -256,6 +256,24 @@ class TestNumberParserPronounce:
     def test_nineteen_br(self, NumberParser):
         assert NumberParser.pronounce_number_word("19", is_brazilian=True) == "dezenove"
 
+    @pytest.mark.parametrize("text,expected", [
+        # tugalex gives "ainda" and "mas" no gender: no noun follows the number
+        ("Paguei 300 ainda ontem.", "Paguei trezentos ainda ontem."),
+        ("Tenho 2 mas não chegam.", "Tenho dois mas não chegam."),
+        # an article before the number still decides
+        ("as 2 ainda", "as duas ainda"),
+        # "banana" is feminine in tugalex; "caixa" has both genders, and its
+        # ending decides
+        ("Comprei 2 bananas.", "Comprei duas bananas."),
+        ("Comprei 2 caixas.", "Comprei duas caixas."),
+    ])
+    def test_number_agrees_with_next_word(self, NumberParser, text, expected):
+        words = text.split()
+        i = next(k for k, w in enumerate(words) if w.isdecimal())
+        words[i] = NumberParser.pronounce_number_word(
+            words[i], prev_word=words[i - 1] if i else None, next_word=words[i + 1])
+        assert " ".join(words) == expected
+
 
 class TestNumberParserPredicates:
     def test_is_int(self, NumberParser):
