@@ -107,7 +107,8 @@ normalize_text("o século XIX", "pt-BR")
 text2spoken reads first, and its reading stands. The rewrites below read only
 the forms that text2spoken leaves as written: a range with an em dash or a
 hyphen ("3-2"), a clock time with no time word ("Chegou 16:54."), `24:00` with
-no preposition before it ("São 24:00."), a litre symbol with a capital L after
+no preposition before it ("São 24:00."), a whole hour that the noun "hora" or
+"horas" already follows ("São 12:00 horas."), a litre symbol with a capital L after
 a number in digits, glued or not ("2L", "10 mL"), a multiplication sign, a
 decimal with a dot that no unit text2spoken knows follows ("o valor é 10.4",
 "dura 10.4 horas"; it reads "tem 10.4 graus"), scientific notation, a number
@@ -120,11 +121,20 @@ masculine. In "Escreve-se com dois L."
 the `L` is a letter and stays. Each fallback names its text2spoken issue in
 the code, and it goes when text2spoken reads its form.
 
+The dot decimal fallback reads the dot as "vírgula". text2spoken 0.0.2a102 and
+later read some dot forms first, and their reading stands: a sign makes the
+number a decimal ("subiu +4.3" reads "subiu mais quatro vírgula três"), and
+after a version word or a product name such as iOS or Python the dot reads
+"ponto" ("a versão 4.3" reads "a versão quatro ponto três"). Before text2spoken
+0.0.2a102, the fallback reads both forms with "vírgula".
+
 ```python
 normalize_text("O jogo é 3-2.")
 # 'O jogo é três a dois.'
 normalize_text("Chegou 16:54.")
 # 'Chegou dezasseis e cinquenta e quatro.'
+normalize_text("São 12:00 horas.")
+# 'São doze horas.'
 normalize_text("Bebi 2L de água.")
 # 'Bebi dois litros de água.'
 normalize_text("Mede 15x8 metros.")
@@ -184,7 +194,9 @@ split_number_ranges("As páginas 1139-1185 falam disso.")
 "vinte e uma", …) from the following noun. Any other `HH:MM` is read "H e MM"
 — the leading zero of the minutes is dropped, so "9:05" reads "9 e 5", not
 "9 e 05". Whole hours also accept `24:00` ("24 horas"); non-whole
-times keep the ordinary 0-23 hour range.
+times keep the ordinary 0-23 hour range. When the noun "hora" or "horas"
+already follows a whole hour, the rewrite drops only the `:00`, so the noun is
+read once.
 
 ```python
 from tugaphone.text_normalization import expand_clock_times
@@ -201,6 +213,8 @@ expand_clock_times("O despertador tocou às 9:05")
 # 'O despertador tocou às 9 e 5'
 expand_clock_times("A loja fecha às 24:00")
 # 'A loja fecha às 24 horas'
+expand_clock_times("São 12:00 horas.")
+# 'São 12 horas.'
 ```
 
 ### European separators
