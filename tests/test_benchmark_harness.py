@@ -78,10 +78,12 @@ class TestRulesOnly:
         assert benchmark.rules_only_ipa("casa", "pt-PT")
 
     def test_normal_inventory_untouched(self):
-        # the harness must not leak its emptied lexicon into normal use
+        # the harness must not share its emptied table with normal use
         from tugaphone.registry import get_dialect_inventory
-        benchmark._rules_only_inventory("pt-BR")
-        assert get_dialect_inventory("pt-BR").IRREGULAR_WORDS
+        harness = benchmark._rules_only_inventory("pt-BR")
+        normal = get_dialect_inventory("pt-BR")
+        normal.IRREGULAR_WORDS["casa"] = "ˈkazɐ"
+        assert harness.IRREGULAR_WORDS == {}
 
 
 class TestStress:

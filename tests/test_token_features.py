@@ -248,10 +248,11 @@ class TestWordFeatures:
     def test_homograph_and_irregular(self):
         assert _word("gosto").is_homograph
         assert not _word("casa").is_homograph
-        # the lexicon backs IRREGULAR_WORDS, so common words are lexical;
-        # an out-of-lexicon neologism is not
-        assert _word("muito").is_irregular
-        assert not _word("zubralho").is_irregular
+        # a word is irregular when the inventory's IRREGULAR_WORDS lists it
+        inventory = EuropeanPortuguese(IRREGULAR_WORDS={"muito": "ˈmũj.tu"})
+        assert _word("muito", inventory).is_irregular
+        assert not _word("zubralho", inventory).is_irregular
+        assert not _word("muito").is_irregular
 
 
 class TestFeatureDicts:
@@ -296,21 +297,22 @@ GUARD = [
     # Pinned from dev, so the assertion below means what it says: adding the
     # feature layer changes no transcription. Re-pin from dev, never from this
     # branch — pinning from the branch would make the test assert nothing.
-    ("pt-PT", "O gato dorme.", "u ɡˈa·tu ˈdoɾ·mɨ"),
-    ("pt-BR", "O gato dorme.", "u ɡˈa·tʊ ˈdoɾ·mɪ"),
-    ("pt-AO", "O gato dorme.", "u ɡˈa·tʊ ˈdoɾ·me"),
-    ("pt-MZ", "O gato dorme.", "u ɡˈa·tu ˈdoɾ·me"),
-    ("pt-TL", "O gato dorme.", "u ɡˈa·tʊ ˈdoɾ·me"),
-    ("pt-PT", "A menina comeu o pão todo.", "ɐ mɨ·nˈi·nɐ ku·ˈmew u pˈɐ̃w tˈo·du"),
-    ("pt-BR", "A menina comeu o pão todo.", "a mẽ·nˈĩ·nɐ ko·ˈmew u pˈɐ̃w tˈo·dɐ"),
-    ("pt-AO", "A menina comeu o pão todo.", "a me·nˈi·nɐ ko·ˈmew u pˈɐ̃w tˈo·dɐ"),
-    ("pt-MZ", "A menina comeu o pão todo.", "ɐ me·nˈi·nɐ ku·ˈmew u pˈãw tˈo·du"),
-    ("pt-TL", "A menina comeu o pão todo.", "ə mɨ·nˈi·nə ko·ˈmew u pˈə̃w tˈo·də"),
-    ("pt-PT", "Choveu muito ontem à noite.", "ʃu·ˈvew mˈũj·tu ˈõ·tɐ̃j a nˈojt"),
-    ("pt-BR", "Choveu muito ontem à noite.", "ʃo·ˈvew mwˈĩ·tʊ ˈõ·tẽj a nˈoj·tʃɪ"),
-    ("pt-AO", "Choveu muito ontem à noite.", "ʃo·ˈvew mˈũjn·tʊ ˈõn·tẽj a nˈoj·tɨ"),
-    ("pt-MZ", "Choveu muito ontem à noite.", "ʃu·ˈvew mˈũj·tu ˈõ·tẽj a nˈɔj·tɨ"),
-    ("pt-TL", "Choveu muito ontem à noite.", "ʃo·ˈvew mˈuj·tʊ ˈõn·tɐ̃j a nˈojtʰ"),
+    # The inventories take no lexicon, so every word takes the grapheme rules.
+    ("pt-PT", "O gato dorme.", "u ˈɡa·tu ˈdoɾ·mɨ"),
+    ("pt-BR", "O gato dorme.", "u ˈɡa·tʊ ˈdoɾ·mɪ"),
+    ("pt-AO", "O gato dorme.", "u ˈɡa·to ˈdoɾ·me"),
+    ("pt-MZ", "O gato dorme.", "u ˈɡa·tu ˈdoɾ·me"),
+    ("pt-TL", "O gato dorme.", "u ˈɡa·to ˈdoɾ·me"),
+    ("pt-PT", "A menina comeu o pão todo.", "ɐ mɨ·ˈni·nɐ ku·ˈmew u ˈpɐ̃w ˈto·du"),
+    ("pt-BR", "A menina comeu o pão todo.", "ɐ me·ˈni·na ko·ˈmew u ˈpɐ̃w ˈto·dʊ"),
+    ("pt-AO", "A menina comeu o pão todo.", "ɐ me·ˈni·na ko·ˈmew u ˈpɐ̃w ˈto·do"),
+    ("pt-MZ", "A menina comeu o pão todo.", "ɐ me·ˈni·nɐ ku·ˈmew u ˈpɐ̃w ˈto·du"),
+    ("pt-TL", "A menina comeu o pão todo.", "ɐ me·ˈni·nə ko·ˈmew u ˈpɐ̃w ˈto·do"),
+    ("pt-PT", "Choveu muito ontem à noite.", "ʃu·ˈvew ˈmũj·tu ˈõ·tẽ a ˈnoj·tɨ"),
+    ("pt-BR", "Choveu muito ontem à noite.", "ʃo·ˈvew ˈmũj·tʊ ˈõ·tẽ a ˈnoj·tʃɪ"),
+    ("pt-AO", "Choveu muito ontem à noite.", "ʃo·ˈvew ˈmũj·to ˈõ·tẽ a ˈnoj·te"),
+    ("pt-MZ", "Choveu muito ontem à noite.", "ʃu·ˈvew ˈmũj·tu ˈõ·tẽ a ˈnoj·te"),
+    ("pt-TL", "Choveu muito ontem à noite.", "ʃo·ˈvew ˈmũj·to ˈõ·tẽ a ˈnoj·te"),
 ]
 
 

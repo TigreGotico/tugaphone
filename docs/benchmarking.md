@@ -130,15 +130,14 @@ One gold region is scored per registered dialect code:
 
 ## Rules-only mode, and why it is non-circular
 
-tugaphone ships a lexicon (tugalex) built from the same sources as the
-gold. Scoring the normal lookup-first path would therefore measure
-*lexicon coverage*, a word found in the lexicon scores perfectly by
-construction, and say nothing about the grapheme rules that handle
-every out-of-vocabulary word.
+A lexicon built from the same sources as the gold would make a
+lookup-first score measure *lexicon coverage*: a word found in the
+lexicon scores perfectly by construction, and the score says nothing
+about the grapheme rules that handle every out-of-vocabulary word.
 
-The harness instead empties the lexicon exception table
-(`DialectInventory.IRREGULAR_WORDS = {}`) before scoring, so **every**
-gold word takes the rule path. The number is then a per-word honest
+The legacy inventories take no lexicon, and the harness also empties
+the exception table (`DialectInventory.IRREGULAR_WORDS = {}`) before
+scoring, so **every** gold word takes the rule path. The number is then a per-word honest
 measurement: the rules never saw the answer.
 
 ## Offline fixtures

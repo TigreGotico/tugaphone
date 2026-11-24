@@ -4,9 +4,8 @@
 Scores tugaphone's RULES-ONLY mode (the lexicon exception path emptied)
 against the unified Portuguese pronunciation gold, one region per
 registered dialect code. Rules-only keeps the score non-circular per
-word: the lexicon tugaphone ships (tugalex) is built from the same
-sources as the gold, so scoring the lexicon path would measure lookup
-coverage, not grapheme-rule quality.
+word: a lexicon built from the same sources as the gold would measure
+lookup coverage, not grapheme-rule quality.
 
 Gold source
 ───────────
@@ -279,9 +278,8 @@ def rules_only_ipa(word: str, dialect_code: str) -> str:
     """Phonemize *word* with the dialect's grapheme rules ONLY.
 
     The dialect inventory is built normally, then its lexicon exception
-    table is emptied, so every word takes the rule path. The engine and
-    inventory are cached per dialect (module-level), because inventory
-    construction loads the full tugalex map.
+    table is emptied, so every word takes the rule path. The inventory is
+    cached per dialect (module-level).
     """
     inv = _rules_only_inventory(dialect_code)
     from tugaphone.tokenizer import Sentence

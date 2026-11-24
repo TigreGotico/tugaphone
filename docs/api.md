@@ -400,8 +400,9 @@ manner, place, voicing, vowel height, syllable roles and CV skeletons. See
 
 `tugaphone.dialects` supplies the `DialectInventory` subclasses those tokens
 read (`EuropeanPortuguese`, `BrazilianPortuguese`, `AngolanPortuguese`,
-`MozambicanPortuguese`, `TimoresePortuguese`, and city inventories) plus the
-module-level `LEXICON` (`TugaLexicon()`) instance.
+`MozambicanPortuguese`, `TimoresePortuguese`, and city inventories). An
+inventory takes no lexicon: its `IRREGULAR_WORDS` table is empty unless the
+caller passes one.
 
 ## Where next
 
