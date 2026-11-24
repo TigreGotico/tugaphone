@@ -20,6 +20,16 @@ class TestNormalizeNumbers:
     def test_cardinal_two_feminine(self):
         assert normalize_numbers("comprei 2 casas") == "comprei duas casas"
 
+    @pytest.mark.parametrize("text,expected", [
+        # tugalex gives these words no gender, so the number keeps the default
+        ("Paguei 300 ainda ontem.", "Paguei trezentos ainda ontem."),
+        ("Tenho 2 mas não chegam.", "Tenho dois mas não chegam."),
+        # an mf noun whose usual sense is feminine (owner ruling: banana is f)
+        ("Comprei 2 bananas.", "Comprei duas bananas."),
+    ])
+    def test_number_gender_follows_tugalex(self, text, expected):
+        assert normalize_numbers(text, "pt-PT") == expected
+
     def test_cardinal_pt_vs_br_nineteen(self):
         assert normalize_numbers("tem 19 anos", lang="pt-PT") == "tem dezanove anos"
         assert normalize_numbers("tem 19 anos", lang="pt-BR") == "tem dezenove anos"
