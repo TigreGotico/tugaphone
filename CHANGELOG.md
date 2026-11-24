@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.7a2](https://github.com/TigreGotico/tugaphone/tree/1.11.7a2) (2026-11-24)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.7a1...1.11.7a2)
+
+**Merged pull requests:**
+
+- test: read the number gender through text2spoken 0.0.2a106 [\#326](https://github.com/TigreGotico/tugaphone/pull/326) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.7a1](https://github.com/TigreGotico/tugaphone/tree/1.11.7a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.6a2...1.11.7a1)
@@ -372,10 +380,6 @@
 ## [1.6.5a1](https://github.com/TigreGotico/tugaphone/tree/1.6.5a1) (2026-11-10)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.4a1...1.6.5a1)
-
-**Merged pull requests:**
-
-- fix: keep a \<phoneme\> element whole in contact modes [\#215](https://github.com/TigreGotico/tugaphone/pull/215) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.6.4a1](https://github.com/TigreGotico/tugaphone/tree/1.6.4a1) (2026-11-10)
 
