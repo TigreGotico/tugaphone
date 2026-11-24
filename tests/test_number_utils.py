@@ -474,6 +474,18 @@ class TestDecimalCommaReading(object):
     def test_dot_decimal_still_works(self):
         assert normalize_numbers("o valor é 10.4") == "o valor é dez vírgula quatro"
 
+    @pytest.mark.parametrize("text, expected", [
+        ("o valor é 10.4.", "o valor é dez vírgula quatro."),
+        ("O índice fechou em 10.30.", "O índice fechou em dez vírgula trinta."),
+        ("o valor é 10.4!", "o valor é dez vírgula quatro!"),
+    ])
+    def test_dot_decimal_before_the_final_mark(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text", ["a versão 1.2.3.", "o ficheiro 10.4.pdf"])
+    def test_a_dot_before_more_digits_or_letters_is_no_decimal(self, text):
+        assert "vírgula" not in normalize_numbers(text)
+
 
 class TestNumberInsideBracketsOrQuotes:
     """A number glued to an opening or closing bracket or guillemet is read

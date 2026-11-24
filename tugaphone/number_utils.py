@@ -420,7 +420,7 @@ def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
 # 3.2") as written, and this rewrite reads both as decimals:
 # https://github.com/TigreGotico/text2spoken/issues/242
 # ---------------------------------------------------------------------------
-_DOT_DECIMAL = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w.,])")
+_DOT_DECIMAL = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w,]|\.\w)")
 
 
 def read_dot_decimals(text: str) -> str:
