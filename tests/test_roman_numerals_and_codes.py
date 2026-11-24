@@ -155,8 +155,8 @@ class TestCodeAfterANumber:
     @pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
     @pytest.mark.parametrize("text,expected", [
         ("Imprimi 2 A4.", "Imprimi dois á quatro."),
-        ("Imprimi 1.2 A4.", "Imprimi um vírgula dois á quatro."),
-        ("Lote 12.3 B2.", "Lote doze vírgula três bê dois."),
+        ("Imprimi 1.2 A4.", "Imprimi um ponto dois á quatro."),
+        ("Lote 12.3 B2.", "Lote doze ponto três bê dois."),
         ("1.500 RTP2", "mil e quinhentos érre tê pê dois"),
         ("Ficou em -5 F1.", "Ficou em menos cinco éfe um."),
     ])

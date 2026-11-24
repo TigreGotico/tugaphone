@@ -471,8 +471,23 @@ class TestDecimalCommaReading(object):
     def test_comma_decimal_in_sentence(self):
         assert normalize_numbers("tem 10,4 graus") == "tem dez vírgula quatro graus"
 
-    def test_dot_decimal_still_works(self):
-        assert normalize_numbers("o valor é 10.4") == "o valor é dez vírgula quatro"
+    @pytest.mark.parametrize("text, expected", [
+        # text2spoken leaves a bare dot number as written; most are labels (tugaphone#324).
+        ("secção 3.2 diz", "secção três ponto dois diz"),
+        ("Romanos 13.8 diz", "Romanos treze ponto oito diz"),
+        ("o valor é 10.4", "o valor é dez ponto quatro"),
+        ("a nota 1.05 é", "a nota um ponto zero cinco é"),
+        ("O índice fechou em 10.30.", "O índice fechou em dez ponto trinta."),
+        # After a clock word text2spoken leaves only an amount (text2spoken#522).
+        ("das 4.25 por cento", "das quatro vírgula vinte e cinco por cento"),
+        ("perto das 8.37 milhões", "perto das oito vírgula trinta e sete milhões"),
+    ])
+    def test_a_bare_dot_number(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text", ["a versão 1.2.3.", "o ficheiro 10.4.pdf"])
+    def test_a_dot_before_more_digits_or_letters_stays(self, text):
+        assert normalize_numbers(text) == text
 
 
 class TestNumberInsideBracketsOrQuotes:

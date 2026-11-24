@@ -412,20 +412,29 @@ def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
 
 
 # ---------------------------------------------------------------------------
-# A dot between digits that is not followed by groups of three digits is a
-# decimal mark, so "10.4" reads as "10,4". text2spoken reads a dot decimal
-# that a sign, a percent sign, a currency or a unit marks as an amount ("tem
-# 10.4 graus", "-10.4"), and a version with "ponto" ("a versão 2.1"). It
-# leaves a bare number ("o valor é 10.4") and a section number ("secção
-# 3.2") as written, and this rewrite reads both as decimals:
-# https://github.com/TigreGotico/text2spoken/issues/242
+# text2spoken leaves a bare dot number as written: a section ("secção 3.2"),
+# a version or name ("Indústria 4.0", "Romanos 13.8") or a rare decimal
+# (https://github.com/TigreGotico/text2spoken/issues/242). Most are labels, so
+# this rewrite reads them with "ponto", as text2spoken reads a version
+# (tugaphone#324). After "às", "das" or "pelas" text2spoken leaves only an
+# amount, which its clock guard keeps out of the clock reading (text2spoken#522),
+# so that number reads as a decimal. "92.073" is a thousands group.
 # ---------------------------------------------------------------------------
-_DOT_DECIMAL = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w.,])")
+_DOT_NUMBER = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w,]|\.\w)")
+_CLOCK_WORD_BEFORE = re.compile(r"\b(?:às|das|pelas)\s+$", re.IGNORECASE)
 
 
-def read_dot_decimals(text: str) -> str:
-    """"10.4" -> "10,4"; "92.073" is untouched."""
-    return _DOT_DECIMAL.sub(lambda m: m.group() if len(m.group(2)) == 3 else f"{m.group(1)},{m.group(2)}", text)
+def read_dot_numbers(text: str) -> str:
+    """"secção 3.2" -> "secção 3 ponto 2"; "das 4.25 por cento" -> "das 4,25 por cento"."""
+    def read(m):
+        whole, part = m.groups()
+        if len(part) == 3:
+            return m.group()
+        if _CLOCK_WORD_BEFORE.search(text, 0, m.start()):
+            return f"{whole},{part}"
+        rest = part.lstrip("0") or "0"
+        return f"{whole} ponto {'zero ' * (len(part) - len(rest))}{rest}"
+    return _DOT_NUMBER.sub(read, text)
 
 
 # ---------------------------------------------------------------------------
@@ -477,7 +486,7 @@ def read_numbers(text: str, lang: str = "pt-PT", scale: Optional[str] = None) ->
     spoken = text2spoken_reading(text, lang, scale)
     exposed = read_spoken_times(read_multiplication_signs(spoken, lang), text, lang)
     exposed = read_scientific_notation(exposed, lang)
-    exposed = read_dot_decimals(exposed)
+    exposed = read_dot_numbers(exposed)
     exposed = separate_unit_symbols(exposed)
     exposed = split_number_ranges(exposed)
     exposed = expand_clock_times(exposed)
