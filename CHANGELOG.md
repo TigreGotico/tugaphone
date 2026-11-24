@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.10a1](https://github.com/TigreGotico/tugaphone/tree/1.11.10a1) (2026-11-24)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.9a1...1.11.10a1)
+
+**Merged pull requests:**
+
+- fix: read an amount after as and a preposition with vírgula \(text2spoken a116\) [\#335](https://github.com/TigreGotico/tugaphone/pull/335) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.9a1](https://github.com/TigreGotico/tugaphone/tree/1.11.9a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.8a1...1.11.9a1)
