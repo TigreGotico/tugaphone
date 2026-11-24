@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.7a1](https://github.com/TigreGotico/tugaphone/tree/1.11.7a1) (2026-11-24)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.6a2...1.11.7a1)
+
+**Merged pull requests:**
+
+- fix: read a number masculine when tugalex gives the next word no gender [\#323](https://github.com/TigreGotico/tugaphone/pull/323) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.6a2](https://github.com/TigreGotico/tugaphone/tree/1.11.6a2) (2026-11-23)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.6a1...1.11.6a2)
@@ -372,10 +380,6 @@
 ## [1.6.4a1](https://github.com/TigreGotico/tugaphone/tree/1.6.4a1) (2026-11-10)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.3a2...1.6.4a1)
-
-**Merged pull requests:**
-
-- fix: keep the edge spaces of a plain run in expand [\#213](https://github.com/TigreGotico/tugaphone/pull/213) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.6.3a2](https://github.com/TigreGotico/tugaphone/tree/1.6.3a2) (2026-11-10)
 
