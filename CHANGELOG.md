@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.11a1](https://github.com/TigreGotico/tugaphone/tree/1.11.11a1) (2026-11-24)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.10a2...1.11.11a1)
+
+**Merged pull requests:**
+
+- fix: read the pt-BR space-grouped number through text2spoken 0.0.2a123 [\#339](https://github.com/TigreGotico/tugaphone/pull/339) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.10a2](https://github.com/TigreGotico/tugaphone/tree/1.11.10a2) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.10a1...1.11.10a2)
@@ -375,10 +383,6 @@
 ## [1.7.1a4](https://github.com/TigreGotico/tugaphone/tree/1.7.1a4) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a3...1.7.1a4)
-
-**Merged pull requests:**
-
-- docs: point Barranquenho users to the o2i ext-PT-x-barranco spec [\#227](https://github.com/TigreGotico/tugaphone/pull/227) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.7.1a3](https://github.com/TigreGotico/tugaphone/tree/1.7.1a3) (2026-11-12)
 
