@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.9a1](https://github.com/TigreGotico/tugaphone/tree/1.11.9a1) (2026-11-24)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.8a1...1.11.9a1)
+
+**Merged pull requests:**
+
+- fix: read a bare dot number with "ponto"; amounts after a clock word keep "vírgula" [\#333](https://github.com/TigreGotico/tugaphone/pull/333) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.8a1](https://github.com/TigreGotico/tugaphone/tree/1.11.8a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.7a3...1.11.8a1)
@@ -364,17 +372,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a1...1.7.1a2)
 
-**Merged pull requests:**
-
-- refactor: deprecate tugaphone.tokenizer, tugaphone.dialects and get\_dialect\_inventory [\#220](https://github.com/TigreGotico/tugaphone/pull/220) ([JarbasAl](https://github.com/JarbasAl))
-
 ## [1.7.1a1](https://github.com/TigreGotico/tugaphone/tree/1.7.1a1) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.0a1...1.7.1a1)
-
-**Merged pull requests:**
-
-- fix: read numbers that touch punctuation and warn on unread digit forms [\#221](https://github.com/TigreGotico/tugaphone/pull/221) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.7.0a1](https://github.com/TigreGotico/tugaphone/tree/1.7.0a1) (2026-11-12)
 
