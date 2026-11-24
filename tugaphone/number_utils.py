@@ -417,13 +417,15 @@ def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
 # a version or name ("Indústria 4.0", "Romanos 13.8") or a rare decimal
 # (https://github.com/TigreGotico/text2spoken/issues/242). Most are labels, so
 # this rewrite reads them with "ponto", as text2spoken reads a version, and
-# masculine, as a label (tugaphone#324). After "às", "das" or "pelas" text2spoken leaves only an
-# amount, which its clock guard keeps out of the clock reading
-# (text2spoken#522), so that number reads as a decimal. "92.073" is a
+# masculine, as a label (tugaphone#324). After "às", "das" or "pelas"
+# (text2spoken#522), or "as" after até, desde, após, para or entre
+# (text2spoken#543), text2spoken reads every time and leaves only an amount,
+# so that number reads as a decimal. "à" and "e as" are not in this list:
+# text2spoken leaves a label after them ("quanto à 8.14"). "92.073" is a
 # thousands group.
 # ---------------------------------------------------------------------------
 _DOT_NUMBER = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w,]|\.\w)")
-_CLOCK_WORD_BEFORE = re.compile(r"\b(?:às|das|pelas)\s+$", re.IGNORECASE)
+_CLOCK_WORD_BEFORE = re.compile(r"\b(?:às|das|pelas|(?:até|desde|após|para|entre)\s+as)\s+$", re.IGNORECASE)
 
 
 @functools.lru_cache(maxsize=1024)

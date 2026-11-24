@@ -485,6 +485,18 @@ class TestDecimalCommaReading(object):
         # After a clock word text2spoken leaves only an amount (text2spoken#522).
         ("das 4.25 por cento", "das quatro vírgula vinte e cinco por cento"),
         ("perto das 8.37 milhões", "perto das oito vírgula trinta e sete milhões"),
+        # So does "as" after até, desde, após, para or entre (text2spoken#543).
+        ("até as 4.5 toneladas", "até as quatro vírgula cinco toneladas"),
+        ("desde as 4.25 toneladas", "desde as quatro vírgula vinte e cinco toneladas"),
+        ("após as 4.5 horas de espera", "após as quatro vírgula cinco horas de espera"),
+        ("subiu para as 10.30 toneladas", "subiu para as dez vírgula trinta toneladas"),
+        ("entre as 4.5 toneladas", "entre as quatro vírgula cinco toneladas"),
+        # "à", "e as", "a" and "as" alone leave a label.
+        ("quanto à 8.14. compatibilidade", "quanto à oito ponto catorze. compatibilidade"),
+        ("Leia as alíneas 3.1 e as 3.2 do regulamento.",
+         "Leia as alíneas três ponto um e as três ponto dois do regulamento."),
+        ("Leia a 3.2 hoje", "Leia a três ponto dois hoje"),
+        ("as 3.2 e 3.3", "as três ponto dois e três ponto três"),
     ])
     def test_a_bare_dot_number(self, text, expected):
         assert normalize_numbers(text) == expected
