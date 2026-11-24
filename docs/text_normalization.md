@@ -123,7 +123,7 @@ the code, and it goes when text2spoken reads its form.
 
 text2spoken reads some dot numbers, and its reading stands: a sign makes the
 number a decimal ("subiu +4.3" reads "subiu mais quatro vírgula três"); a unit
-that text2spoken reads, `%` or "por cento" makes it an amount ("pesa 2.5 kg");
+that text2spoken reads or `%` makes it an amount ("pesa 2.5 kg");
 after a version word or a product name such as iOS or Python the dot reads
 "ponto" ("a versão 4.3" reads "a versão quatro ponto três"); after `às`, `das`
 or `pelas` the dot of a time reads as a clock time ("Chego às 10.30 horas."
@@ -132,9 +132,11 @@ reads "Chego às dez e trinta horas."). A currency sign or code reads as money
 
 text2spoken leaves a bare dot number as written. Most are labels, not
 decimals: a section, a version or a reference ("secção 3.2", "Indústria 4.0",
-"Romanos 13.8"). The fallback reads them with "ponto", each side as a whole
-number: "secção 3.2" reads "secção três ponto dois", and "1.05" reads "um ponto
-zero cinco". After `às`, `das` or `pelas`, text2spoken leaves only an amount
+"Romanos 13.8"). The fallback reads them with "ponto", each side as a
+masculine whole number with its leading zeros read "zero": "secção 3.2" reads
+"secção três ponto dois", and "1.05" reads "um ponto zero cinco". An amount
+word does not change this: "subiu 4.25 por cento" reads "quatro ponto vinte e
+cinco por cento" (TigreGotico/text2spoken#542). After `às`, `das` or `pelas`, text2spoken leaves only an amount
 ("das 4.25 por cento"), and the fallback reads it with "vírgula". A group of
 three digits after the dot is a thousands group ("92.073").
 
