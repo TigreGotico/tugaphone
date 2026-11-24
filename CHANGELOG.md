@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.10a2](https://github.com/TigreGotico/tugaphone/tree/1.11.10a2) (2026-11-24)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.10a1...1.11.10a2)
+
+**Merged pull requests:**
+
+- test: cite text2spoken\#560 for the pt-BR space-grouped number [\#337](https://github.com/TigreGotico/tugaphone/pull/337) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.10a1](https://github.com/TigreGotico/tugaphone/tree/1.11.10a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.9a1...1.11.10a1)
