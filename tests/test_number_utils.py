@@ -262,10 +262,12 @@ class TestNumberParserPronounce:
         ("Tenho 2 mas não chegam.", "Tenho dois mas não chegam."),
         # an article before the number still decides
         ("as 2 ainda", "as duas ainda"),
-        # "banana" is feminine in tugalex; "caixa" has both genders, and its
-        # ending decides
+        ("As 2 ainda chegam.", "As duas ainda chegam."),
+        # "banana" is feminine in tugalex; "caixa" and "personagem" have both
+        # genders, and their endings decide
         ("Comprei 2 bananas.", "Comprei duas bananas."),
         ("Comprei 2 caixas.", "Comprei duas caixas."),
+        ("Há 1 personagem.", "Há uma personagem."),
     ])
     def test_number_agrees_with_next_word(self, NumberParser, text, expected):
         words = text.split()

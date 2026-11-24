@@ -860,9 +860,10 @@ class _NumberParser:
         # number. Without one, a bare "a"/"as" before the number is the
         # preposition "to", as in a score or range reading ("3 a 2").
         if prev_word and is_word:
-            if prev_word in cls.FEMININE_DETERMINERS:
+            article = prev_word.lower()
+            if article in cls.FEMININE_DETERMINERS:
                 return "feminine"
-            if prev_word in cls.MASCULINE_DETERMINERS:
+            if article in cls.MASCULINE_DETERMINERS:
                 return "masculine"
 
         # tugalex tries its own ending rules before it gives no gender, so the
