@@ -274,9 +274,11 @@ def force_accent(
     ``mode="respell"`` returns Portuguese text respelled so a grapheme-input
     TTS that speaks ``base_lect`` pronounces the target accent (see
     :func:`respell`). Any other ``mode`` raises ``ValueError``. ``lect`` and
-    ``base_lect`` resolve as in :func:`tugaphone.resolve_lect`. The
-    ``overlay`` applies last: its ``stage="ipa"`` transforms in IPA mode, its
-    ``stage="text"`` transforms in respell mode.
+    ``base_lect`` resolve as in :func:`tugaphone.resolve_lect`; ``base_lect``
+    matters only in respell mode. ``rules`` is the respelling rule table
+    (:data:`DEFAULT_RESPELL_RULES` by default). The ``overlay`` applies last:
+    its ``stage="ipa"`` transforms in IPA mode, its ``stage="text"`` transforms
+    in respell mode.
     """
     target = resolve_lect(lect)
     base = resolve_lect(base_lect)

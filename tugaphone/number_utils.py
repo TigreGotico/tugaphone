@@ -191,8 +191,9 @@ def separate_unit_symbols(text: str) -> str:
 # https://github.com/TigreGotico/text2spoken/issues/251
 # A whole hour can be 24 ("24:00" -> "vinte e quatro horas"); other times
 # take hours 0-23. The minute loses its leading zero ("9:05" -> "9 e 5"), so
-# it does not read as a decimal. Punctuation after the digits stays glued to
-# them ("16:54." -> "16 e 54."): the reader of the digits splits it off.
+# it does not read as an ordinal or a decimal. Punctuation after the digits
+# stays glued to them ("16:54." -> "16 e 54."): the reader of the digits
+# splits it off.
 # ---------------------------------------------------------------------------
 _HOUR = r"(?:[01]?\d|2[0-3])"
 _HOUR_OR_24 = r"(?:[01]?\d|2[0-4])"

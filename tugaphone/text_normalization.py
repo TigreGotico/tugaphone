@@ -33,9 +33,9 @@ from pathlib import Path
 from tugalex import TugaLexicon
 
 from tugaphone.number_utils import (  # noqa: F401  (also public from this module)
-    UNIT_NAMES, expand_clock_times, is_number_word, normalize_number_separators,
-    read_multiplication_signs, read_numbers, separate_unit_symbols, split_number_ranges,
-    text2spoken_reading, warn_unread_digits)
+    UNIT_NAMES, _SIGNED_NUMBER, expand_clock_times, is_number_word,
+    normalize_number_separators, read_multiplication_signs, read_numbers,
+    separate_unit_symbols, split_number_ranges, text2spoken_reading, warn_unread_digits)
 
 _DATA = Path(__file__).parent / "data"
 
@@ -502,7 +502,6 @@ def expand_acronyms(text: str) -> str:
 # spelled, because the unit reader reads a symbol only after digits.
 # ---------------------------------------------------------------------------
 _LETTER_DIGIT_CODE = re.compile(r"([A-Z]{1,3}|[a-z]{1,2})(\d+)")
-_SIGNED_NUMBER = re.compile(r"[-−]?\d+(?:[.,]\d+)*")
 
 
 def expand_letter_digit_codes(text: str, lang: str = "pt-PT") -> str:

@@ -64,6 +64,7 @@ from orthography2ipa import G2P
 from orthography2ipa.markup import parse_markup
 
 from tugaphone import langdetect
+from tugaphone.langdetect import is_keep_word
 from tugaphone.text_normalization import stays_portuguese
 
 # ---------------------------------------------------------------------------
@@ -166,7 +167,7 @@ def is_contact_word(token: str) -> bool:
     core = _strip(token)
     if not core:
         return False
-    if langdetect.is_keep_word(core):
+    if is_keep_word(core):
         return False
     if core in _loanwords():
         return True
@@ -189,7 +190,7 @@ def contact_language(token: str, default_side: str = "en") -> str:
     whichever contact stopword list also lists it.
     """
     core = _strip(token)
-    if langdetect.is_keep_word(core):
+    if is_keep_word(core):
         return "pt"
     if core in _loanwords():
         return "en"

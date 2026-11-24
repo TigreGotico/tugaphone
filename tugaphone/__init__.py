@@ -44,7 +44,8 @@ class TugaPhonemizer:
         ``contact`` is the embedded-language policy, ``"none"`` (the default),
         ``"auto"``, ``"es"``, ``"fr"`` or ``"en"``; see :mod:`tugaphone.codeswitch`.
         ``regional_dialect`` is deprecated and ignored: ``lang`` alone selects
-        the accent.
+        the accent. Returns space-separated IPA per word, with ``ˈ`` before
+        each stressed syllable. An unknown ``contact`` raises ``ValueError``.
         """
         if regional_dialect is not None:
             warnings.warn(

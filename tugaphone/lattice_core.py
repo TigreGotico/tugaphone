@@ -206,6 +206,8 @@ def phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str:
     ``"auto"`` (each contact word is classified among es/fr/en), or ``"es"``,
     ``"fr"`` or ``"en"``. Contact words go through that language's lattice and
     are nativized onto the Portuguese inventory (see :mod:`tugaphone.codeswitch`).
+    Any other ``contact`` raises ``ValueError``. Returns space-separated IPA per
+    word, with ``ˈ`` before each stressed syllable.
     """
     _validate_contact(contact)
     lect = resolve_lect(lang)
