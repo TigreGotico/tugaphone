@@ -30,7 +30,6 @@ from text2spoken import normalize
 
 from tugaphone.text_normalization import normalize_text
 
-from tests.text2spoken_gaps import SPACE_THOUSANDS
 
 
 def read(text: str, lang: str = "pt-PT") -> str:
@@ -101,10 +100,7 @@ class TestUnits:
         assert read(text, lang) == expected
 
 
-@pytest.mark.parametrize("lang", [
-    "pt-PT",
-    pytest.param("pt-BR", marks=SPACE_THOUSANDS),
-])
+@pytest.mark.parametrize("lang", ["pt-PT", "pt-BR"])
 @pytest.mark.parametrize("text,expected", [
     ("Há 100 000 pessoas.", "Há cem mil pessoas."),
 ])
