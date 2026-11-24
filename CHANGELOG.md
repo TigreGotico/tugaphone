@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.7a3](https://github.com/TigreGotico/tugaphone/tree/1.11.7a3) (2026-11-24)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.7a2...1.11.7a3)
+
+**Merged pull requests:**
+
+- refactor: inline forwarding helpers and cut narrating comments [\#328](https://github.com/TigreGotico/tugaphone/pull/328) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.7a2](https://github.com/TigreGotico/tugaphone/tree/1.11.7a2) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.7a1...1.11.7a2)
@@ -372,10 +380,6 @@
 ## [1.6.6a1](https://github.com/TigreGotico/tugaphone/tree/1.6.6a1) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.5a1...1.6.6a1)
-
-**Merged pull requests:**
-
-- fix: make is\_supported answer from the lects tugaphone serves [\#217](https://github.com/TigreGotico/tugaphone/pull/217) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.6.5a1](https://github.com/TigreGotico/tugaphone/tree/1.6.5a1) (2026-11-10)
 
