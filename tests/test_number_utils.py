@@ -471,8 +471,36 @@ class TestDecimalCommaReading(object):
     def test_comma_decimal_in_sentence(self):
         assert normalize_numbers("tem 10,4 graus") == "tem dez vírgula quatro graus"
 
-    def test_dot_decimal_still_works(self):
-        assert normalize_numbers("o valor é 10.4") == "o valor é dez vírgula quatro"
+    @pytest.mark.parametrize("text, expected", [
+        # text2spoken leaves a bare dot number as written; most are labels (tugaphone#324).
+        ("secção 3.2 diz", "secção três ponto dois diz"),
+        ("Romanos 13.8 diz", "Romanos treze ponto oito diz"),
+        ("o valor é 10.4", "o valor é dez ponto quatro"),
+        ("a nota 1.05 é", "a nota um ponto zero cinco é"),
+        ("Ver 01.05 do anexo.", "Ver zero um ponto zero cinco do anexo."),
+        # A label is masculine, whatever noun follows it.
+        ("2.1 Introdução", "dois ponto um Introdução"),
+        ("A seção 3.2 explica", "A seção três ponto dois explica"),
+        ("O índice fechou em 10.30.", "O índice fechou em dez ponto trinta."),
+        # After a clock word text2spoken leaves only an amount (text2spoken#522).
+        ("das 4.25 por cento", "das quatro vírgula vinte e cinco por cento"),
+        ("perto das 8.37 milhões", "perto das oito vírgula trinta e sete milhões"),
+    ])
+    def test_a_bare_dot_number(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.xfail(strict=True, reason="text2spoken leaves a dot number before an amount word: "
+                       "https://github.com/TigreGotico/text2spoken/issues/542")
+    @pytest.mark.parametrize("text, expected", [
+        ("subiu 4.25 por cento", "subiu quatro vírgula vinte e cinco por cento"),
+        ("pesa 2.5 quilos", "pesa dois vírgula cinco quilos"),
+    ])
+    def test_a_dot_number_before_an_amount_word(self, text, expected):
+        assert normalize_numbers(text) == expected
+
+    @pytest.mark.parametrize("text", ["a versão 1.2.3.", "o ficheiro 10.4.pdf"])
+    def test_a_dot_before_more_digits_or_letters_stays(self, text):
+        assert normalize_numbers(text) == text
 
 
 class TestNumberInsideBracketsOrQuotes:
