@@ -424,8 +424,11 @@ def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
 # ---------------------------------------------------------------------------
 # A dot between digits that is not followed by groups of three digits is a
 # decimal mark, so "10.4" reads as "10,4". text2spoken reads a dot decimal
-# before a unit ("tem 10.4 graus") and leaves it as written elsewhere ("o
-# valor é 10.4"). It read neither before
+# that a sign, a percent sign, a currency or a unit marks as an amount ("tem
+# 10.4 graus", "-10.4"), and a version with "ponto" ("a versão 2.1"). It
+# leaves a bare number ("o valor é 10.4") and a section number ("secção
+# 3.2") as written, and this rewrite reads both as decimals. text2spoken
+# read no dot decimal before
 # https://github.com/TigreGotico/text2spoken/issues/242
 # ---------------------------------------------------------------------------
 _DOT_DECIMAL = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w.,])")
@@ -841,8 +844,8 @@ class _NumberParser:
 
         noun = cls.split_trailing_punctuation(next_word or "")[0].lower()
         is_word = noun.replace("-", "").isalpha()
-        listed = (TugaLexicon.get_noun_gender(noun)
-                  if is_word and noun not in cls.FUNCTION_WORDS else None)
+        consulted = is_word and noun not in cls.FUNCTION_WORDS
+        listed = TugaLexicon.get_noun_gender(noun) if consulted else None
 
         # Rule N: the counted noun's gender in tugalex, from its exceptions
         # list or its suffix rules ("1 lei" -> "uma lei", "1 dia" -> "um
@@ -857,24 +860,30 @@ class _NumberParser:
         # number. Without one, a bare "a"/"as" before the number is the
         # preposition "to", as in a score or range reading ("3 a 2").
         if prev_word and is_word:
-            if prev_word in cls.FEMININE_DETERMINERS:
+            article = prev_word.lower()
+            if article in cls.FEMININE_DETERMINERS:
                 return "feminine"
-            if prev_word in cls.MASCULINE_DETERMINERS:
+            if article in cls.MASCULINE_DETERMINERS:
                 return "masculine"
 
-        # Rule C: the ending of the following word, for a function word, a
-        # noun of both genders or a word that tugalex does not know
-        if next_word:
+        # tugalex tries its own ending rules before it gives no gender, so the
+        # next word is no noun ("300 ainda", "2 mas") and the default stands.
+        if consulted and listed is None:
+            return "masculine"
+
+        # Rule C: the ending of the following word, for a function word or a
+        # noun of both genders
+        if noun:
             # Simple check: Words ending in 'a' are usually feminine (e.g., 'casa')
             # We strip 's' to account for plural nouns.
-            if next_word.strip("s").lower().endswith("a"):
+            if noun.strip("s").endswith("a"):
                 # 1 casa (house) -> uma casa (female)
                 # 1 cão (dog) -> um cão (male)
                 return "feminine"
 
             # Rule D: Handle tricky '-e' endings
             # Words ending in -dade, -age, or -agem are consistently feminine.
-            elif next_word.rstrip("sm").lower().endswith("e"):
+            elif noun.rstrip("sm").endswith("e"):
                 # words ending with "e" may be either male, female or both
                 # 1 ponte (bridge) -> uma ponte  (female)
                 # 1 dente (tooth) -> um dente  (male)
@@ -882,7 +891,7 @@ class _NumberParser:
                 female_endings = ["dade", "age", "agem"]
                 # -dade (Feminine): Words like felicidade (happiness), cidade (city), and liberdade (freedom) are always feminine.
                 # -age / -agem (Feminine): Words like viagem (trip) or coragem (courage) are feminine.
-                if any(next_word.endswith(f) for f in female_endings):
+                if any(noun.endswith(f) for f in female_endings):
                     return "feminine"
         # by default numbers are male in portuguese
         return "masculine"
