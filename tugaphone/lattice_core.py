@@ -128,17 +128,11 @@ def normalize_spelling(text: str, lect: str) -> str:
 
 
 def _expander(lect: str):
-    """The orthography2ipa ``expand`` callable tugaphone supplies for ``lect``.
+    """The orthography2ipa ``expand`` callable for ``lect``.
 
-    The spelling step (:func:`normalize_spelling`) runs first, so the stages
-    after it read AO1990 text. :func:`tugaphone.text_normalization.normalize_text`
-    runs next: tugaphone's rewrites of the forms that text2spoken leaves as
-    written (abbreviations, acronyms, letter-digit codes), then text2spoken, in
-    the ``pt-PT`` or ``pt-BR`` variety of the lect
-    (:func:`tugaphone.number_utils.text2spoken_tag`), then the fallback
-    rewrites of what it left. So ``mark`` sees spelled-out words. text2spoken
-    leaves spelled-out text as written, so text that a caller has already
-    normalised comes through unchanged.
+    :func:`normalize_spelling` runs first, so the later stages read AO1990
+    text, then :func:`tugaphone.text_normalization.normalize_text` spells out
+    the text, so ``mark`` sees words.
 
     The engine joins the expanded runs and the forced words back into one
     sentence for ``mark``, so the spaces at the ends of a run are kept: the
@@ -208,25 +202,20 @@ def _validate_contact(contact: str) -> None:
 def phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str:
     """Phonemize ``text`` for ``lang`` through the orthography2ipa lattice.
 
-    Portuguese tokens are transcribed by the ``lang`` lattice (numbers verbalized
-    by the normalizer, cross-word sandhi preserved within contiguous Portuguese
-    runs); detected contact-language tokens are transcribed through the
-    ``es-ES``/``fr-FR``/``en-US`` lattice and nativized onto the Portuguese
-    inventory (see :mod:`tugaphone.codeswitch`). ``contact`` is one of ``auto``
-    (detect and classify each contact word among es/fr/en, unclassified words
-    falling to the dialect's side), ``es``, ``fr``, ``en`` or ``none`` (the
-    default: disable switching — the engine-only, behaviour-preserving path).
+    ``contact`` is ``"none"`` (the default: every word is Portuguese),
+    ``"auto"`` (each contact word is classified among es/fr/en), or ``"es"``,
+    ``"fr"`` or ``"en"``. Contact words go through that language's lattice and
+    are nativized onto the Portuguese inventory (see :mod:`tugaphone.codeswitch`).
     """
     _validate_contact(contact)
     lect = resolve_lect(lang)
     if contact == "none":
         return engine(lect).transcribe(text)
 
-    side = default_contact(lect)
-    runs = split_runs(text, contact, default_side=side)
+    runs = split_runs(text, contact, default_side=default_contact(lect))
     out: List[str] = []
-    # Transcribe contiguous Portuguese tokens as one phrase to preserve sandhi;
-    # nativize each contact token individually.
+    # Contiguous Portuguese tokens are transcribed as one phrase, so the
+    # cross-word sandhi between them stays.
     pt_buffer: List[str] = []
 
     def flush() -> None:

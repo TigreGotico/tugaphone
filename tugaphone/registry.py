@@ -25,7 +25,7 @@ from orthography2ipa import ancestry_chain, available_codes, resolve, resolves_e
 
 from tugaphone.version import VERSION_MAJOR
 
-#: Portuguese-family lect codes orthography2ipa ships, the canonical dialects.
+#: The code prefixes of the Portuguese-family lects, the canonical dialects.
 _PT_PREFIXES = ("pt-", "pt_")
 
 #: Lects written in another orthography, so the modern Portuguese text stages do
@@ -34,17 +34,12 @@ _PT_PREFIXES = ("pt-", "pt_")
 #: ``orthography2ipa.G2P("ext-PT-x-barranco")``.
 _OWN_ORTHOGRAPHY = frozenset({"pt-PT-x-medieval"})
 
-
-def _canonical_codes() -> List[str]:
-    # No Portuguese-family spec is a clade node, so the list keeps clades:
-    # filtering them out loads every spec orthography2ipa ships.
-    return sorted(
-        c for c in available_codes(include_clades=True)
-        if c.startswith(_PT_PREFIXES) and c not in _OWN_ORTHOGRAPHY
-    )
-
-
-_CANONICAL: List[str] = _canonical_codes()
+# No Portuguese-family spec is a clade node, so the list keeps clades:
+# filtering them out loads every spec orthography2ipa ships.
+_CANONICAL: List[str] = sorted(
+    c for c in available_codes(include_clades=True)
+    if c.startswith(_PT_PREFIXES) and c not in _OWN_ORTHOGRAPHY
+)
 _CANONICAL_SET = set(_CANONICAL)
 
 
@@ -70,9 +65,9 @@ _ALIASES: Dict[str, str] = {
 
 #: Lects that take a packaged orthography2ipa lexicon. ``o2i-lexicons`` ships a
 #: residual lexicon for ``pt-PT`` and for ``pt-BR``: the words the lect's rules
-#: get wrong, as exceptions and patches, and tugaphone takes both. It is not enabled for a sub-lect, because it would overwrite that
-#: spec's phonology with the parent's forms. Every other lect runs on the rules
-#: alone.
+#: get wrong, as exceptions and patches, and tugaphone takes both. A sub-lect
+#: does not take it, because it would overwrite that spec's phonology with the
+#: parent's forms. Every other lect runs on the rules alone.
 PACKAGED_LEXICON_LECTS = frozenset({"pt-PT", "pt-BR"})
 
 #: The release that removes :func:`lexicon_region`.
@@ -135,17 +130,13 @@ def is_supported(lang: str) -> bool:
 
 
 def _named_lect(key: str) -> Optional[str]:
-    """The canonical dialect that the lowercased tag ``key`` names, or ``None``."""
-    return _registered(_ALIASES.get(key, key))
-
-
-def _registered(code: str) -> Optional[str]:
-    """The canonical dialect that ``code`` names exactly, or ``None``.
+    """The canonical dialect that the lowercased tag ``key`` names, or ``None``.
 
     Canonical codes compare case-insensitively. A code orthography2ipa renamed
     reaches its spec through the exact alias orthography2ipa keeps for the old
     key; nearest-language guessing never counts as a match.
     """
+    code = _ALIASES.get(key, key)
     folded = code.lower()
     for lect in _CANONICAL:
         if lect.lower() == folded:

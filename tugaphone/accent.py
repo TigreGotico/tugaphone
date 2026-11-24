@@ -1,44 +1,26 @@
 """Accent forcing: bend text or IPA toward a target Lusophone accent.
 
-The lattice-core redesign moved every dialect's *phonology* into the
-orthography2ipa lect specs, so :func:`tugaphone.phonemize` already produces a
-target accent's IPA simply by selecting its lect code. The old
-``regional.py``/``DIALECT_PATTERNS`` string transforms that used to approximate
-this were deleted — their phonology now lives in the specs and is reproduced by
-the lattice far more faithfully.
+:func:`tugaphone.phonemize` already gives a lect's IPA, so this module serves
+two downstream uses:
 
-Those transforms served a *second* purpose the redesign dropped, and that is
-what this module rebuilds: **forcing** an accent, deliberately, for two
-downstream uses.
+1. **Phoneme-input TTS** (phoonnx and others): :func:`force_accent` with
+   ``mode="ipa"`` transcribes with the target lect.
 
-1. **Phoneme-input TTS** (phoonnx and friends): the voice already takes IPA, so
-   "forcing" the accent is just transcribing with the target lect —
-   :func:`force_accent` with ``mode="ipa"`` is a thin wrapper over the lattice.
+2. **Grapheme-input TTS** (a fixed pt-PT or pt-BR voice): the voice reads
+   text, so :func:`force_accent` with ``mode="respell"`` respells the input in
+   Portuguese spelling that the voice's own accent reads as the target sounds
+   (``binho`` for the Northern betacism of ``vinho``). It transcribes the text
+   with the target lect, compares the IPA with the ``base_lect`` reading, and
+   rewrites only the graphemes whose pronunciation differs.
 
-2. **Grapheme-input TTS** (a fixed pt-PT or pt-BR voice you cannot re-point at
-   another lect): the voice reads *text*, so to make it pronounce a target
-   accent you must **respell** the input in Portuguese orthographic conventions
-   that the voice's own base accent will read as the target sounds — feed a
-   pt-PT voice ``binho`` to force the Northern betacism of ``vinho``.
-   :func:`force_accent` with ``mode="respell"`` does this: it transcribes the
-   text with the target lect, diffs the IPA against the ``base_lect`` the voice
-   speaks, and rewrites only the graphemes whose pronunciation differs, leaving
-   everything the base voice already says correctly untouched so the output
-   stays readable.
+Respelling is lossy: a contrast that the base spelling cannot write (European
+``[ɨ]`` against a fuller ``[ə]``) stays as it is. Each candidate edit is kept
+only if the base lect's reading of it moves toward the target, so a respelling
+never makes a word worse (:func:`respell_word`).
 
-Respelling is inherently lossy: an accent contrast the base orthography cannot
-spell (European ``[ɨ]`` reduction vs a fuller ``[ə]``, say) simply cannot be
-forced through text, and those deltas are left as-is rather than mangled. The
-respeller is therefore **verification-gated**: every candidate edit is only
-kept if re-transcribing it with the *base* lect measurably moves the
-pronunciation toward the target, so a respelling can never make a word worse and
-the unrespellable residue is left alone. See :func:`respell_word` and
-:mod:`tugaphone` docs.
-
-On top of both modes sits a user-space escape hatch — :class:`AccentOverlay` —
-the ad-hoc, per-voice tweak layer the old feature effectively was, now quarantined
-as explicitly *user* data (ordered regex/word-map transforms, JSON-serialisable
-so a voice tweak is shareable) rather than shipped dialect phonology.
+:class:`AccentOverlay` is a user-space layer on top of both modes: ordered
+regex and word-map transforms, JSON-serialisable so a voice tweak can be
+shared. It holds user data, not shipped dialect phonology.
 """
 from __future__ import annotations
 
@@ -50,15 +32,9 @@ from typing import Callable, Dict, List, Optional, Tuple
 from tugaphone.lattice_core import phonemize
 from tugaphone.registry import resolve_lect
 
-# Stress and length marks are kept *in* the distance metric that gates
-# respelling, so an edit that shifts stress is penalised and rejected — that is
-# what makes the respeller stress-preserving without any special-casing.
 _WORD_RE = re.compile(r"[^\W\d_]+", re.UNICODE)
 
 
-# ---------------------------------------------------------------------------
-# distance
-# ---------------------------------------------------------------------------
 def _levenshtein(a: str, b: str) -> int:
     if a == b:
         return 0
@@ -76,9 +52,6 @@ def _levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
-# ---------------------------------------------------------------------------
-# respelling rule table
-# ---------------------------------------------------------------------------
 @dataclass(frozen=True)
 class RespellRule:
     """A candidate orthographic edit toward a non-base accent.
@@ -150,12 +123,10 @@ def respell_word(
     """
     target_ipa = phonemize(word, target_lect)
     lower = word.lower()
-
-    def base_ipa(spelling: str) -> str:
-        return phonemize(spelling, base_lect)
-
+    # The distance keeps the stress and length marks, so an edit that shifts
+    # stress scores worse and is rejected.
     cur = lower
-    best_d = _levenshtein(base_ipa(cur), target_ipa)
+    best_d = _levenshtein(phonemize(cur, base_lect), target_ipa)
     if best_d == 0:
         return word  # base already says it — leave spelling untouched
     improved = True
@@ -167,7 +138,7 @@ def respell_word(
                 trial = cur[:start] + rule.replacement + cur[end:]
                 if trial == cur:
                     continue
-                d = _levenshtein(base_ipa(trial), target_ipa)
+                d = _levenshtein(phonemize(trial, base_lect), target_ipa)
                 if d < best_d:
                     best_d, candidate = d, trial
         if candidate is not None:
@@ -200,9 +171,6 @@ def respell(
     return "".join(out)
 
 
-# ---------------------------------------------------------------------------
-# user-space overlay (the ad-hoc escape hatch, quarantined as user data)
-# ---------------------------------------------------------------------------
 @dataclass
 class Transform:
     """One ordered, user-supplied ad-hoc edit.
@@ -221,15 +189,13 @@ class Transform:
     stage: str = "ipa"
     ignore_case: bool = True
 
-    def _flags(self) -> int:
-        return re.IGNORECASE if self.ignore_case else 0
-
     def apply(self, s: str) -> str:
+        flags = re.IGNORECASE if self.ignore_case else 0
         if self.kind == "word":
             pat = r"\b" + re.escape(self.pattern) + r"\b"
-            return re.sub(pat, self.replacement, s, flags=self._flags())
+            return re.sub(pat, self.replacement, s, flags=flags)
         if self.kind == "regex":
-            return re.sub(self.pattern, self.replacement, s, flags=self._flags())
+            return re.sub(self.pattern, self.replacement, s, flags=flags)
         raise ValueError(f"unknown transform kind: {self.kind!r}")
 
     def to_dict(self) -> Dict[str, object]:
@@ -272,7 +238,6 @@ class AccentOverlay:
                 s = t.apply(s)
         return s
 
-    # -- serialisation ------------------------------------------------------
     def to_dict(self) -> Dict[str, object]:
         return {"name": self.name,
                 "transforms": [t.to_dict() for t in self.transforms]}
@@ -295,9 +260,6 @@ class AccentOverlay:
         return cls.from_dict(json.loads(s))
 
 
-# ---------------------------------------------------------------------------
-# public entry point
-# ---------------------------------------------------------------------------
 def force_accent(
     text: str,
     lect: str,
@@ -308,29 +270,13 @@ def force_accent(
 ) -> str:
     """Force ``text`` into the ``lect`` accent for a downstream TTS.
 
-    Parameters:
-        text: Input Portuguese text.
-        lect: Target accent's lect code (any :func:`tugaphone.list_dialects`
-            code, or a legacy alias — it is resolved).
-        mode: ``"ipa"`` returns the target lect's IPA, for a phoneme-input TTS
-            (a thin wrapper over the lattice). ``"respell"`` returns Portuguese
-            *text* respelled so a grapheme-input TTS speaking ``base_lect``
-            pronounces the target accent (see :func:`respell`).
-        base_lect: The accent the grapheme-input voice actually speaks; only
-            used in ``mode="respell"``. Deltas against this lect are what get
-            respelled, so words the base voice already says correctly are left
-            untouched.
-        overlay: Optional :class:`AccentOverlay` of user ad-hoc tweaks, applied
-            last — ``stage="ipa"`` transforms in IPA mode, ``stage="text"``
-            transforms in respell mode.
-        rules: Respelling rule table (defaults to
-            :data:`DEFAULT_RESPELL_RULES`).
-
-    Returns:
-        Target-accent IPA (``mode="ipa"``) or respelled text (``mode="respell"``).
-
-    Raises:
-        ValueError: ``mode`` is neither ``"ipa"`` nor ``"respell"``.
+    ``mode="ipa"`` returns the target lect's IPA, for a phoneme-input TTS.
+    ``mode="respell"`` returns Portuguese text respelled so a grapheme-input
+    TTS that speaks ``base_lect`` pronounces the target accent (see
+    :func:`respell`). Any other ``mode`` raises ``ValueError``. ``lect`` and
+    ``base_lect`` resolve as in :func:`tugaphone.resolve_lect`. The
+    ``overlay`` applies last: its ``stage="ipa"`` transforms in IPA mode, its
+    ``stage="text"`` transforms in respell mode.
     """
     target = resolve_lect(lect)
     base = resolve_lect(base_lect)
