@@ -4,7 +4,8 @@ The expand stage of the pipeline reads numbers, dates, times, money, measures
 and abbreviations with text2spoken, in the ``pt-PT`` or ``pt-BR`` variety of
 the lect. Each expected value comes from the source named next to it, not from
 tugaphone output. "t2s pt-NNN" names a row of text2spoken
-``tests/data/pt.tsv`` at 0.0.2a69, and the row names its own source.
+``tests/data/pt.tsv`` at 0.0.2a69, or at the release that the comment names,
+and the row names its own source.
 """
 import csv
 from pathlib import Path
@@ -47,6 +48,18 @@ FORMS = [
     # clock time, t2s pt-036 (Priberam: hora feminine) and pt-126 (Manual de Redação, p. 71)
     ("pt-PT", "Fecha às 21:00 hoje.", "Fecha às vinte e uma horas hoje."),
     ("pt-BR", "Chego às 2h.", "Chego às duas horas."),
+    # clock time with a full stop after "às", t2s pt-800, pt-801, pt-804 and
+    # pt-810 at 0.0.2a114 (Ciberdúvidas 14648: "Há quem prefira a notação 17.30 h")
+    ("pt-PT", "Chego às 10.30 horas.", "Chego às dez e trinta horas."),
+    ("pt-BR", "Chego às 16.30 horas.", "Chego às dezesseis e trinta horas."),
+    ("pt-PT", "O comboio parte às 9.30h.", "O comboio parte às nove horas e trinta minutos."),
+    ("pt-PT", "O bar fecha às 24.00.", "O bar fecha à meia-noite."),
+    # year before a comma, t2s pt-856 and pt-857 at 0.0.2a113 (Ciberdúvidas
+    # 10879: "de dois mil e um a dois mil e cem"; Priberam, ano: "nome masculino")
+    ("pt-PT", "Foi fundada em 1763, cidade de Minas.",
+     "Foi fundada em mil setecentos e sessenta e três, cidade de Minas."),
+    ("pt-BR", "Foi fundada em 1763, cidade de Minas.",
+     "Foi fundada em mil setecentos e sessenta e três, cidade de Minas."),
     # percentage, t2s pt-021 and pt-022 (Priberam: por cento, símbolo %)
     ("pt-PT", "hoje 20% está", "hoje vinte por cento está"),
     ("pt-BR", "hoje 20%.", "hoje vinte por cento."),

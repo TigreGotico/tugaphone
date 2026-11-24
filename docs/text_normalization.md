@@ -126,7 +126,14 @@ later read some dot forms first, and their reading stands: a sign makes the
 number a decimal ("subiu +4.3" reads "subiu mais quatro vírgula três"), and
 after a version word or a product name such as iOS or Python the dot reads
 "ponto" ("a versão 4.3" reads "a versão quatro ponto três"). Before text2spoken
-0.0.2a102, the fallback reads both forms with "vírgula".
+0.0.2a102, the fallback reads both forms with "vírgula". After `às`, `das`
+or `pelas`, text2spoken reads the dot of a time as a clock time, and that
+reading stands too: "Chego às 10.30 horas." reads "Chego às dez e trinta
+horas.". A unit that text2spoken reads, `%` or "por cento" after the number
+keeps it an amount ("das 4.25 por cento"), and the fallback reads it with
+"vírgula". A currency sign or code reads as money ("12.50 €" reads "doze euros
+e cinquenta cêntimos"). A unit that text2spoken does not read, such as `t` or
+`ha`, does not stop the clock reading.
 
 ```python
 normalize_text("O jogo é 3-2.")

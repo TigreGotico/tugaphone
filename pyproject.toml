@@ -31,7 +31,7 @@ dependencies = [
     "orthography2ipa>=7.124.36a2",
     "o2i-lexicons>=0.7.22a1",
     "desacordo_ortografico>=0.3.25a1",
-    "text2spoken[pt]>=0.0.2a106",
+    "text2spoken[pt]>=0.0.2a114",
 ]
 
 [project.optional-dependencies]
