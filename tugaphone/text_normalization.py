@@ -32,20 +32,17 @@ from pathlib import Path
 
 from tugalex import TugaLexicon
 
-from tugaphone.number_utils import (  # noqa: F401  (public at their 1.7.1 paths)
-    UNIT_NAMES, expand_clock_times, is_number_word, normalize_number_separators,
-    read_multiplication_signs, read_numbers, separate_unit_symbols, split_number_ranges,
-    text2spoken_reading, warn_unread_digits)
+from tugaphone.number_utils import (  # noqa: F401  (also public from this module)
+    UNIT_NAMES, _SIGNED_NUMBER, expand_clock_times, is_number_word,
+    normalize_number_separators, read_multiplication_signs, read_numbers,
+    separate_unit_symbols, split_number_ranges, text2spoken_reading, warn_unread_digits)
 
 _DATA = Path(__file__).parent / "data"
 
-# ---------------------------------------------------------------------------
-# Given names and their grammatical gender come from tugalex:
-# TugaLexicon.get_given_name_gender gives "m", "f", "mf" or None.
-# ---------------------------------------------------------------------------
+
 def _name_gender(word: str) -> str:
-    """The gender a name gives a title or an ordinal: a name of both genders,
-    or a word that is not a name, gives masculine."""
+    """The gender a name gives a title or an ordinal, from tugalex: a name of
+    both genders, or a word that is not a name, gives masculine."""
     return "feminine" if TugaLexicon.get_given_name_gender(word) == "f" else "masculine"
 
 
@@ -108,8 +105,6 @@ _UNCONDITIONAL_ABBREVIATIONS = {
     "Exma.": "Excelentíssima",
     "Exmos.": "Excelentíssimos",
     "Exmas.": "Excelentíssimas",
-}
-_UNCONDITIONAL_ABBREVIATIONS.update({
     "Sr.": "Senhor",
     "Sra.": "Senhora",
     "Srs.": "Senhores",
@@ -118,7 +113,7 @@ _UNCONDITIONAL_ABBREVIATIONS.update({
     "Dra.": "Doutora",
     "Eng.": "Engenheiro",
     "Prof.": "Professor",
-})
+}
 # Reference markers stand before the number of a part of a text ("cap. 3",
 # "art. 5.º", "séc. XIX"). Capitalised at the start of a sentence or a
 # reference, they expand only before that number: "Cap." before a name is
@@ -250,10 +245,8 @@ def stays_portuguese(words: list[str], i: int,
 
 def expand_abbreviations(text: str) -> str:
     """"Sr. Silva" -> "Senhor Silva"; "D. Maria" -> "Dona Maria"; "n.º 4" ->
-    "número 4"; "Av. Liberdade"
-    or a bare "R." at sentence end both -> "Avenida"/"Rua" regardless of
-    capitalisation, since these stand for the same word either way.
-    "Cap. 3" -> "Capítulo 3"; "(art. 5.º)" -> "(artigo 5.º)"."""
+    "número 4"; "Av." and "R." -> "Avenida" and "Rua" before any word or at a
+    sentence end; "Cap. 3" -> "Capítulo 3"; "(art. 5.º)" -> "(artigo 5.º)"."""
     words = text.split()
     out = []
     for i, w in enumerate(words):
@@ -343,17 +336,22 @@ def _is_caps_word(core: str) -> bool:
     return any(c.isalpha() for c in core) and core == core.upper()
 
 
-def _in_caps_run(cores: list[str], i: int) -> bool:
-    """Whether cores[i] stands in a run of all-caps words that holds a word
-    of two or more letters other than a Roman numeral ("EU VI O FILME").
-    "O XIX Congresso" is not such a run."""
+def _caps_run(cores: list[str], i: int) -> range:
+    """The indices of the run of all-caps words around cores[i]."""
     start, end = i, i
     while start > 0 and _is_caps_word(cores[start - 1]):
         start -= 1
     while end + 1 < len(cores) and _is_caps_word(cores[end + 1]):
         end += 1
-    return any(sum(c.isalpha() for c in w) >= 2 and _roman_value(w) is None
-               for w in cores[start:end + 1])
+    return range(start, end + 1)
+
+
+def _in_caps_run(cores: list[str], i: int) -> bool:
+    """Whether cores[i] stands in a run of all-caps words that holds a word
+    of two or more letters other than a Roman numeral ("EU VI O FILME").
+    "O XIX Congresso" is not such a run."""
+    return any(sum(c.isalpha() for c in cores[j]) >= 2 and _roman_value(cores[j]) is None
+               for j in _caps_run(cores, i))
 
 
 def _converts(numeral: str, prev_word: str | None, cores: list[str], i: int) -> bool:
@@ -426,15 +424,10 @@ def expand_regnal_numerals(text: str, lang: str = "pt-PT") -> str:
 # Acronyms spoken as Portuguese letter names, matched case-SENSITIVELY so
 # ordinary lowercase words ("ia", "eu") are never touched.
 #
-# The brief calls for a general rule (spell any all-caps 2-4 letter token
-# that isn't a pronounceable dictionary word/acronym), with an explicit
-# allowlist for words that ARE read out loud (NASA, UNESCO, FIFA, NATO/OTAN,
-# SIDA, OVNI). A generic "is this pronounceable in Portuguese" heuristic is
-# too easy to get wrong on real proper nouns and product names (e.g. an
-# ALLCAPS brand), so this ships the narrower, safer form the brief allows:
-# an explicit dict of the acronyms in scope, plus the letter-name table so
-# the dict is trivial to extend. NASA/UNESCO/FIFA/NATO/OTAN/SIDA/OVNI simply
-# never appear in the dict, so they pass through unspelled.
+# An explicit table, not a rule over every all-caps token: a rule that guesses
+# whether a token is pronounceable gets real proper nouns and all-caps brands
+# wrong. An acronym read as a word (NASA, UNESCO, FIFA, NATO, OTAN, SIDA, OVNI)
+# is not in the table, so it passes through unspelled.
 # ---------------------------------------------------------------------------
 _LETTER_NAMES = {
     "A": "á", "B": "bê", "C": "cê", "D": "dê", "E": "é", "F": "éfe", "G": "gê",
@@ -450,17 +443,15 @@ def _spell_letters(acronym: str) -> str:
 
 
 _ACRONYMS = {
-    # explicit spellings called out in the brief
     "IA": "i á", "LLM": "éle éle éme", "UTC": "u tê cê", "TTS": "tê tê ésse",
     "PT": "pê tê", "EU": "e u",
+    **{a: _spell_letters(a) for a in
+       ("GPS", "USB", "PDF", "SMS", "CPU", "URL", "API", "IVA", "IRS", "NIF", "SNS", "PS", "PSD")},
 }
 # Acronyms whose letters also spell a Portuguese word ("IA" and the verb
 # form "ia", "EU" and the pronoun "eu"): inside all-caps text ("ELE IA SAIR",
 # "EU VI O FILME") they are the word.
 _WORD_ACRONYMS = frozenset({"IA", "EU"})
-for _a in ("GPS", "USB", "PDF", "SMS", "CPU", "URL", "API", "IVA", "IRS", "NIF", "SNS", "PS", "PSD"):
-    _ACRONYMS[_a] = _spell_letters(_a)
-del _a
 
 _TRAIL_PUNCT_WIDE = ".,;:!?)\"”»…"
 
@@ -479,13 +470,8 @@ def _in_caps_text(cores: list[str], i: int) -> bool:
     """Whether cores[i] stands in a run of all-caps words that holds another
     word of two or more letters ("ELA E EU"), so the run is all-caps text and
     not one acronym in mixed-case text ("A IA aprende")."""
-    start, end = i, i
-    while start > 0 and _is_caps_word(cores[start - 1]):
-        start -= 1
-    while end + 1 < len(cores) and _is_caps_word(cores[end + 1]):
-        end += 1
     return any(j != i and sum(c.isalpha() for c in cores[j]) >= 2
-               for j in range(start, end + 1))
+               for j in _caps_run(cores, i))
 
 
 def expand_acronyms(text: str) -> str:
@@ -526,7 +512,7 @@ def expand_letter_digit_codes(text: str, lang: str = "pt-PT") -> str:
         lead, core, trail = _split_edges(w)
         match = _LETTER_DIGIT_CODE.fullmatch(core)
         previous = _split_edges(words[i - 1])[1] if i > 0 else ""
-        after_number = re.fullmatch(r"[-−]?\d+(?:[.,]\d+)*", previous) is not None
+        after_number = _SIGNED_NUMBER.fullmatch(previous) is not None
         if match is None or (after_number and core in UNIT_NAMES):
             out.append(w)
             continue
@@ -534,8 +520,6 @@ def expand_letter_digit_codes(text: str, lang: str = "pt-PT") -> str:
         number = text2spoken_reading(digits, lang, gender="masculine")
         out.append(f"{lead}{_spell_letters(letters.upper())} {number}{trail}")
     return " ".join(out)
-
-
 
 
 def normalize_orthography(text: str, lang: str = "pt-PT") -> str:

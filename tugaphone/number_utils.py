@@ -68,9 +68,9 @@ def warn_unread_digits(spoken: str, text: str, lang: str) -> None:
 # (SI)", Inmetro/IPQ, 2021, ISBN 978-85-86920-28-8, §5.2-5.3): the symbol
 # is invariable, "l" and "L" are both the litre, "%" reads "por cento". The
 # names are the dictionary forms ("quilómetro", "quilograma"); pt-BR writes
-# "quilômetro". Every
-# name is masculine -- "o grama", "duzentos gramas" (Inmetro, "Unidades
-# Legais de Medida") -- so the number before a symbol is masculine.
+# "quilômetro". Every name is masculine -- "o grama", "duzentos gramas"
+# (Inmetro, "Unidades Legais de Medida") -- so the number before a symbol is
+# masculine.
 UNIT_NAMES = {
     "%": ("por cento", "por cento"),
     "€": ("euro", "euros"),
@@ -184,24 +184,16 @@ def separate_unit_symbols(text: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Clock times. "HH:00" is read "<hora> hora(s)" -- the digit token is left for
-# normalize_numbers, which already picks the feminine form ("uma", "duas",
-# "vinte e uma", ...) from the following "hora"/"horas" noun, so no separate
-# gender table is needed here. Any other "HH:MM" is read "<hora> e <minutos>".
-# text2spoken leaves a clock time with no time word before it ("Chegou 16:54.",
-# "9:05") and "24:00" as written: https://github.com/TigreGotico/text2spoken/issues/251
-# Whole hours additionally accept 24 ("24:00" -> "vinte e quatro horas");
-# 25+ is not a clock hour and is left alone. Non-whole times keep the
-# ordinary 0-23 range.
-#
-# The minute is emitted WITHOUT a leading zero ("9:05" -> "9 e 5", not
-# "9 e 05"): normalize_numbers's tokenizer splits on whitespace, and a
-# leading zero would otherwise make the token ambiguous with an ordinal or
-# decimal spelling. Any punctuation immediately following the minutes/hour
-# digits is left glued to them ("16:54." -> "16 e 54.") -- normalize_numbers
-# itself splits trailing punctuation off a numeric token before checking
-# whether it is a number, spells the digits, and glues the punctuation back
-# on, so there is no need to detach it here with a space.
+# Clock times. "HH:00" is read "<hora> hora(s)", and the reader of the digits
+# takes the feminine ("uma", "duas") from "hora". Any other "HH:MM" is read
+# "<hora> e <minutos>". text2spoken leaves a clock time with no time word
+# before it ("Chegou 16:54.", "9:05") and "24:00" as written:
+# https://github.com/TigreGotico/text2spoken/issues/251
+# A whole hour can be 24 ("24:00" -> "vinte e quatro horas"); other times
+# take hours 0-23. The minute loses its leading zero ("9:05" -> "9 e 5"), so
+# it does not read as an ordinal or a decimal. Punctuation after the digits
+# stays glued to them ("16:54." -> "16 e 54."): the reader of the digits
+# splits it off.
 # ---------------------------------------------------------------------------
 _HOUR = r"(?:[01]?\d|2[0-3])"
 _HOUR_OR_24 = r"(?:[01]?\d|2[0-4])"
@@ -219,9 +211,8 @@ def _whole_hour_repl(match: "re.Match[str]") -> str:
 
 
 def _clock_time_repl(match: "re.Match[str]") -> str:
-    hh, mm, punct = match.group(1), match.group(2), match.group(3)
-    mm = str(int(mm))  # drop the leading zero: "05" -> "5"
-    return f"{hh} e {mm}{punct}"
+    hh, mm, punct = match.groups()
+    return f"{hh} e {int(mm)}{punct}"
 
 
 def expand_clock_times(text: str) -> str:
@@ -259,7 +250,6 @@ def _is_mark(ch: str) -> bool:
     return category[0] == "P" or category in ("Sm", "Sk")
 
 
-_DIGIT_NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
 _SIGNED_NUMBER = re.compile(r"[-−]?\d+(?:[.,]\d+)*")
 
 
@@ -311,7 +301,7 @@ def _read_flagged(text: str, symbols: frozenset[str], flags: list[bool], read) -
     return " ".join(words)
 
 
-_SPACED_PRODUCT = re.compile(rf"(?<![\w.,]){_DIGIT_NUMBER.pattern}(?: x {_DIGIT_NUMBER.pattern})+(?!\w)")
+_SPACED_PRODUCT = re.compile(rf"(?<![\w.,]){_NUMBER}(?: x {_NUMBER})+(?!\w)")
 
 
 def read_spoken_times(spoken: str, written: str, lang: str = "pt-PT") -> str:
@@ -373,9 +363,9 @@ _UNREAD_UNITS = frozenset({"mm2", "cm2", "m2", "km2", "cm3", "m3", "mg", "mL", "
 def _number_before(words: list[str], i: int) -> list[str]:
     """The words of the spoken number that ends at words[i - 1]."""
     j = i
-    while j > 0 and (is_number_word(words[j - 1].lower())
+    while j > 0 and (is_number_word(words[j - 1])
                      or (words[j - 1].lower() in _NUMBER_JOINERS and j > 1
-                         and is_number_word(words[j - 2].lower()))):
+                         and is_number_word(words[j - 2]))):
         j -= 1
     return [w.lower() for w in words[j:i]]
 
@@ -427,8 +417,7 @@ def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
 # that a sign, a percent sign, a currency or a unit marks as an amount ("tem
 # 10.4 graus", "-10.4"), and a version with "ponto" ("a versão 2.1"). It
 # leaves a bare number ("o valor é 10.4") and a section number ("secção
-# 3.2") as written, and this rewrite reads both as decimals. text2spoken
-# read no dot decimal before
+# 3.2") as written, and this rewrite reads both as decimals:
 # https://github.com/TigreGotico/text2spoken/issues/242
 # ---------------------------------------------------------------------------
 _DOT_DECIMAL = re.compile(r"(?<![\w.,])(\d+)\.(\d+)(?![\w.,])")
@@ -459,10 +448,10 @@ def read_dot_decimals(text: str) -> str:
 _OPENING_MARK = r"[(«\"“']?"
 _PAUSE = r"[)»\"”']?[,;.!?](?![\dºª])"
 _PAIR = re.compile(
-    rf"(?<![\w.,])(?:(?<=\b[Ee]ntre\s)|(?<=\bENTRE\s))(?P<first>{_DIGIT_NUMBER.pattern})"
-    rf"(?P<link>\s+[eE]\s+{_OPENING_MARK})(?P<second>{_DIGIT_NUMBER.pattern})(?P<pause>{_PAUSE})?"
-    rf"|(?<![\w.,])(?P<first2>{_DIGIT_NUMBER.pattern})"
-    rf"(?P<link2>\s+(?i:a|à|às|ao|aos)\s+{_OPENING_MARK})(?P<second2>{_DIGIT_NUMBER.pattern})"
+    rf"(?<![\w.,])(?:(?<=\b[Ee]ntre\s)|(?<=\bENTRE\s))(?P<first>{_NUMBER})"
+    rf"(?P<link>\s+[eE]\s+{_OPENING_MARK})(?P<second>{_NUMBER})(?P<pause>{_PAUSE})?"
+    rf"|(?<![\w.,])(?P<first2>{_NUMBER})"
+    rf"(?P<link2>\s+(?i:a|à|às|ao|aos)\s+{_OPENING_MARK})(?P<second2>{_NUMBER})"
     rf"(?P<pause2>{_PAUSE})?")
 
 
@@ -523,8 +512,6 @@ def normalize_numbers(text: str, lang: str = "pt-PT", strict: bool = True,
         return text
     warn_unread_digits(spoken, text, lang)
     return spoken
-
-
 
 
 class _NumberParser:
