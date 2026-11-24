@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.8a1](https://github.com/TigreGotico/tugaphone/tree/1.11.8a1) (2026-11-24)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.7a3...1.11.8a1)
+
+**Merged pull requests:**
+
+- fix: require text2spoken 0.0.2a114 for dotted clock times and years [\#330](https://github.com/TigreGotico/tugaphone/pull/330) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.7a3](https://github.com/TigreGotico/tugaphone/tree/1.11.7a3) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.7a2...1.11.7a3)
@@ -359,7 +367,6 @@
 **Merged pull requests:**
 
 - refactor: deprecate tugaphone.tokenizer, tugaphone.dialects and get\_dialect\_inventory [\#220](https://github.com/TigreGotico/tugaphone/pull/220) ([JarbasAl](https://github.com/JarbasAl))
-- refactor: remove tugaphone.plugin [\#219](https://github.com/TigreGotico/tugaphone/pull/219) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.7.1a1](https://github.com/TigreGotico/tugaphone/tree/1.7.1a1) (2026-11-12)
 
@@ -372,10 +379,6 @@
 ## [1.7.0a1](https://github.com/TigreGotico/tugaphone/tree/1.7.0a1) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.6.6a1...1.7.0a1)
-
-**Merged pull requests:**
-
-- feat: add tugaphone.pipeline\(lect\) and build engine\(\) on it [\#218](https://github.com/TigreGotico/tugaphone/pull/218) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.6.6a1](https://github.com/TigreGotico/tugaphone/tree/1.6.6a1) (2026-11-12)
 
