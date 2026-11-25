@@ -1,12 +1,19 @@
 # Changelog
 
+## [1.11.16a2](https://github.com/TigreGotico/tugaphone/tree/1.11.16a2) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a1...1.11.16a2)
+
+**Merged pull requests:**
+
+- docs: keep the README short and move the details into docs/ [\#375](https://github.com/TigreGotico/tugaphone/pull/375) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.16a1](https://github.com/TigreGotico/tugaphone/tree/1.11.16a1) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.15a1...1.11.16a1)
 
 **Merged pull requests:**
 
-- docs: keep the README short and move the details into docs/ [\#375](https://github.com/TigreGotico/tugaphone/pull/375) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 - fix: Azores island sub-tags reach the island lect [\#371](https://github.com/TigreGotico/tugaphone/pull/371) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.15a1](https://github.com/TigreGotico/tugaphone/tree/1.11.15a1) (2026-11-25)
