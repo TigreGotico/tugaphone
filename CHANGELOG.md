@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.12a2](https://github.com/TigreGotico/tugaphone/tree/1.11.12a2) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a1...1.11.12a2)
+
+**Merged pull requests:**
+
+- chore: freeze the Portuguese text stack on text2spoken 0.0.2a129 [\#348](https://github.com/TigreGotico/tugaphone/pull/348) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.12a1](https://github.com/TigreGotico/tugaphone/tree/1.11.12a1) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.11a2...1.11.12a1)
@@ -375,10 +383,6 @@
 ## [1.7.1a6](https://github.com/TigreGotico/tugaphone/tree/1.7.1a6) (2026-11-13)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a5...1.7.1a6)
-
-**Merged pull requests:**
-
-- test: probe the lexicon stage with velho, which bifonia does not mark [\#233](https://github.com/TigreGotico/tugaphone/pull/233) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.7.1a5](https://github.com/TigreGotico/tugaphone/tree/1.7.1a5) (2026-11-12)
 
