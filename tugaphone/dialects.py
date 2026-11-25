@@ -124,8 +124,6 @@ import string
 import warnings
 from typing import List, Dict, Set
 
-from tugalex import TugaLexicon
-
 from tugaphone.version import VERSION_MAJOR
 
 warnings.warn(
@@ -135,10 +133,6 @@ warnings.warn(
     DeprecationWarning,
     stacklevel=2,
 )
-
-# singleton - load .csv into memory only once
-LEXICON = TugaLexicon()
-
 
 # =============================================================================
 # DIALECT INVENTORY: Phonological Rules and Mappings
@@ -1490,7 +1484,7 @@ class EuropeanPortuguese(DialectInventory):
                 # [j-a-w] sequence
                 "iau": "jaw",  # miau
             },
-            IRREGULAR_WORDS=IRREGULAR_WORDS or LEXICON.get_ipa_map(region="lbx"), # Lisbon
+            IRREGULAR_WORDS=IRREGULAR_WORDS or {},
             **kwargs
         )
 
@@ -1568,7 +1562,7 @@ class BrazilianPortuguese(DialectInventory):
                 # CONSONANTS
                 "r": "ɾ",  # DIVERGENCE: tap, strong R is [h]
             },
-            IRREGULAR_WORDS=IRREGULAR_WORDS or LEXICON.get_ipa_map(region="rjx"),
+            IRREGULAR_WORDS=IRREGULAR_WORDS or {},
             **kwargs
         )
 
@@ -1584,7 +1578,6 @@ class SaoPauloPortuguese(BrazilianPortuguese):
     def __init__(self):
         super().__init__(
             dialect_code="pt-BR-x-sao-paulo",
-            IRREGULAR_WORDS=LEXICON.get_ipa_map(region="spx")
         )
 
 
@@ -1635,7 +1628,7 @@ class AngolanPortuguese(DialectInventory):
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
                              "r": "ɾ",  # DIVERGENCE: Strong R is [r] (positional), tap [ɾ] elsewhere
                          },
-                         IRREGULAR_WORDS=IRREGULAR_WORDS if IRREGULAR_WORDS is not None else LEXICON.get_ipa_map(region="lda"),  # Luanda
+                         IRREGULAR_WORDS=IRREGULAR_WORDS or {},
                          **kwargs
          )
 
@@ -1685,7 +1678,7 @@ class MozambicanPortuguese(DialectInventory):
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
                              "r": "ɾ",  # Strong R is [r] (positional), tap [ɾ] elsewhere
                          },
-                         IRREGULAR_WORDS=IRREGULAR_WORDS if IRREGULAR_WORDS is not None else LEXICON.get_ipa_map(region="mpx"),  # Maputo
+                         IRREGULAR_WORDS=IRREGULAR_WORDS or {},
                          **kwargs
          )
 
@@ -1739,7 +1732,7 @@ class TimoresePortuguese(DialectInventory):
                              "o": "o",  # DIVERGENCE: Less reduction than European [u]
                              "r": "ɾ",  # DIVERGENCE: Strong R is [r] (positional), tap [ɾ] elsewhere
                          },
-                         IRREGULAR_WORDS=IRREGULAR_WORDS if IRREGULAR_WORDS is not None else LEXICON.get_ipa_map(region="dli"),  # Dili
+                         IRREGULAR_WORDS=IRREGULAR_WORDS or {},
                          **kwargs
          )
 

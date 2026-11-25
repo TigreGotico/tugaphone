@@ -96,8 +96,7 @@ usable on its own:
 - [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), the `pt-PT` and
   `pt-BR` residual lexicons.
 - [`tugalex`](https://github.com/TigreGotico/tugalex), the noun and given-name
-  genders, and the phonetic lexicon of the legacy `tugaphone.dialects`
-  inventories (`LEXICON`).
+  genders.
 - [`silabificador`](https://github.com/TigreGotico/silabificador), the
   syllabifier of the `tugaphone.tokenizer` token tree. The phonemization path
   does not use it.

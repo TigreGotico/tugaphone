@@ -1,8 +1,9 @@
 """Example — rules-only G2P (lexicon lookup disabled).
 
-Bypassing the lexicon forces all transcription through the grapheme rules.
+An inventory takes no lexicon unless the caller passes IRREGULAR_WORDS, and
+clearing the table makes sure that every word takes the grapheme rules.
 This is useful for testing rule coverage or transcribing words that are
-intentionally not in the lexicon (neologisms, invented words).
+intentionally not in a lexicon (neologisms, invented words).
 
 Run::
 
@@ -13,7 +14,7 @@ from tugaphone.tokenizer import Sentence
 
 
 def main() -> None:
-    # Disable the lexicon by clearing IRREGULAR_WORDS after instantiation
+    # Clear IRREGULAR_WORDS after instantiation
     inv_pt = EuropeanPortuguese()
     inv_pt.IRREGULAR_WORDS = {}
 

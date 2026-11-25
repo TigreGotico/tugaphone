@@ -62,9 +62,33 @@ def test_get_dialect_inventory_warns_at_caller():
     with pytest.warns(DeprecationWarning, match=f"removed in tugaphone {REMOVAL}") as caught:
         inventory = get_dialect_inventory("pt-BR")
     assert isinstance(inventory, BrazilianPortuguese)
-    # Building an inventory also runs tugalex's own deprecation of get_ipa_map.
-    ours = [w for w in caught if "get_dialect_inventory" in str(w.message)]
-    assert [w.filename for w in ours] == [__file__]
+    assert [w.filename for w in caught] == [__file__]
+
+
+def test_inventories_read_no_tugalex_dictionary():
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        from tugaphone import dialects
+    classes = (dialects.EuropeanPortuguese, dialects.LisbonPortuguese,
+               dialects.BrazilianPortuguese, dialects.RioJaneiroPortuguese,
+               dialects.SaoPauloPortuguese, dialects.AngolanPortuguese,
+               dialects.MozambicanPortuguese, dialects.TimoresePortuguese)
+    for cls in classes:
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            inventory = cls()
+        assert inventory.IRREGULAR_WORDS == {}, cls.__name__
+        assert caught == [], (cls.__name__, [str(w.message) for w in caught])
+    assert not hasattr(dialects, "LEXICON")
+
+
+def test_inventory_takes_the_table_it_is_given():
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        from tugaphone.dialects import AngolanPortuguese, EuropeanPortuguese
+    table = {"muito": "ˈmũj.tu"}
+    assert EuropeanPortuguese(IRREGULAR_WORDS=table).IRREGULAR_WORDS == table
+    assert AngolanPortuguese(IRREGULAR_WORDS=table).IRREGULAR_WORDS == table
 
 
 def test_phonemize_path_is_silent():
