@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.13a2](https://github.com/TigreGotico/tugaphone/tree/1.11.13a2) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a1...1.11.13a2)
+
+**Merged pull requests:**
+
+- test: check the contact gold rows with contact="auto" [\#355](https://github.com/TigreGotico/tugaphone/pull/355) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.13a1](https://github.com/TigreGotico/tugaphone/tree/1.11.13a1) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a4...1.11.13a1)
@@ -340,10 +348,6 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.3a1...1.10.0a1)
 
-**Merged pull requests:**
-
-- feat: read numbers, dates and abbreviations through text2spoken [\#245](https://github.com/TigreGotico/tugaphone/pull/245) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.9.3a1](https://github.com/TigreGotico/tugaphone/tree/1.9.3a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.2a1...1.9.3a1)
@@ -371,10 +375,6 @@
 ## [1.9.0a1](https://github.com/TigreGotico/tugaphone/tree/1.9.0a1) (2026-11-17)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.8.0a1...1.9.0a1)
-
-**Merged pull requests:**
-
-- feat: expose a content revision per lect [\#246](https://github.com/TigreGotico/tugaphone/pull/246) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.8.0a1](https://github.com/TigreGotico/tugaphone/tree/1.8.0a1) (2026-11-17)
 
