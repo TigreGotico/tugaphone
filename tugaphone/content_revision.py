@@ -101,7 +101,7 @@ def revision(lang: str = "pt-PT") -> str:
     and reads the files of each distribution on the output path.
 
     The revision covers ``contact="none"``, the default and the path that scriptconv uses. Another ``contact`` value
-    also reads the ``en-US``, ``es-ES`` and ``fr-FR`` specs of orthography2ipa and the optional markovonnx detector.
+    also reads the ``en-GB``, ``es-ES`` and ``fr-FR`` specs of orthography2ipa and the optional markovonnx detector.
     The revision covers neither, so it can stay equal while that output changes.
 
     Raises

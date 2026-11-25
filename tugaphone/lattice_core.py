@@ -157,7 +157,7 @@ def pipeline(lect: str) -> Pipeline:
     ``G2P(lect, pipeline=pipeline(lect)).transcribe(text)`` gives the same
     output as ``phonemize(text, lect)`` with ``contact="none"``. The
     ``contact="auto"`` path sends contact words through the ``es-ES``,
-    ``fr-FR`` or ``en-US`` lattice, and one ``Pipeline`` cannot express that.
+    ``fr-FR`` or ``en-GB`` lattice, and one ``Pipeline`` cannot express that.
 
     The pipeline holds the lect's packaged lexicon, the number expansion and the
     homograph marks, with ``lect`` selecting bifonia's per-lect marks. The

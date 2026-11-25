@@ -13,7 +13,7 @@ Brazilian tech/media register embeds **English** heavily (`download`, `app`,
 writing embeds English loans too, and on the Uruguayan border (`pt-UY`,
 *portunhol*) Portuguese embeds **Spanish**, quoted French fragments turn up
 throughout. tugaphone can detect that material at the word level, transcribe it
-through the orthography2ipa `es-ES`/`fr-FR`/`en-US` lattice, and **nativize** the
+through the orthography2ipa `es-ES`/`fr-FR`/`en-GB` lattice, and **nativize** the
 result onto the target Portuguese lect's phoneme inventory.
 
 ## Opt-in: the `contact` parameter
@@ -234,7 +234,7 @@ own the heuristic never flags it.
 English nouns Portuguese speakers pronounce with (an approximation of) their
 English sound. A whole-word, case-insensitive hit routes the token onto the
 `en` contact path exactly as if the heuristic or detector had flagged it — the
-word is still transcribed through the ordinary `en-US` lattice and nativized by
+word is still transcribed through the ordinary `en-GB` lattice and nativized by
 the English projection table above, not by a stored pronunciation.
 
 ```python

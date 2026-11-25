@@ -150,7 +150,7 @@ def test_a_comment_edit_keeps_the_revision(tugaphone_copy):
 
 def test_a_one_token_code_edit_changes_the_digest(tugaphone_copy):
     before = tree_digest("tugaphone", tugaphone_copy)
-    edit(tugaphone_copy / "registry.py", '"pt-br-x-rio": "pt-BR-x-rj"', '"pt-br-x-rio": "pt-BR"')
+    edit(tugaphone_copy / "registry.py", '"pt-BR-x-rio": "pt-BR-x-rj"', '"pt-BR-x-rio": "pt-BR"')
     assert tree_digest("tugaphone", tugaphone_copy) != before
 
 
