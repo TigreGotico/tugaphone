@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.18a1](https://github.com/TigreGotico/tugaphone/tree/1.11.18a1) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.17a2...1.11.18a1)
+
+**Merged pull requests:**
+
+- fix: the benchmark folds notation variants of one sound before it scores \(\#389\) [\#391](https://github.com/TigreGotico/tugaphone/pull/391) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.17a2](https://github.com/TigreGotico/tugaphone/tree/1.11.17a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.17a1...1.11.17a2)
@@ -347,10 +355,6 @@
 ## [1.10.9a1](https://github.com/TigreGotico/tugaphone/tree/1.10.9a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.8a1...1.10.9a1)
-
-**Merged pull requests:**
-
-- fix: require orthography2ipa 7.123.0a2, the first published release with spec\_revision [\#275](https://github.com/TigreGotico/tugaphone/pull/275) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.8a1](https://github.com/TigreGotico/tugaphone/tree/1.10.8a1) (2026-11-18)
 
