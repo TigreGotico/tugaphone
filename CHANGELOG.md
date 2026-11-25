@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.11.13a3](https://github.com/TigreGotico/tugaphone/tree/1.11.13a3) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a2...1.11.13a3)
+
+**Merged pull requests:**
+
+- test: pin tugaphone\#358 with a strict xfail [\#362](https://github.com/TigreGotico/tugaphone/pull/362) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- test: pin tugaphone\#357 with a strict xfail [\#361](https://github.com/TigreGotico/tugaphone/pull/361) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.13a2](https://github.com/TigreGotico/tugaphone/tree/1.11.13a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a1...1.11.13a2)
@@ -360,17 +369,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.1a1...1.9.2a1)
 
-**Merged pull requests:**
-
-- perf: build the lect list without loading every spec [\#250](https://github.com/TigreGotico/tugaphone/pull/250) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.9.1a1](https://github.com/TigreGotico/tugaphone/tree/1.9.1a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.0a1...1.9.1a1)
-
-**Merged pull requests:**
-
-- fix: count system site-packages in the content revision [\#249](https://github.com/TigreGotico/tugaphone/pull/249) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.9.0a1](https://github.com/TigreGotico/tugaphone/tree/1.9.0a1) (2026-11-17)
 
