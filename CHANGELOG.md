@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.17a2](https://github.com/TigreGotico/tugaphone/tree/1.11.17a2) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.17a1...1.11.17a2)
+
+**Merged pull requests:**
+
+- chore: pin linguatag\>=0.4.5a1 [\#384](https://github.com/TigreGotico/tugaphone/pull/384) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.17a1](https://github.com/TigreGotico/tugaphone/tree/1.11.17a1) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a4...1.11.17a1)
@@ -355,12 +363,6 @@
 ## [1.10.6a1](https://github.com/TigreGotico/tugaphone/tree/1.10.6a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.5a1...1.10.6a1)
-
-**Merged pull requests:**
-
-- test: pin pt-BR século X as a strict xfail on the text2spoken reading [\#273](https://github.com/TigreGotico/tugaphone/pull/273) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- fix: load orthography2ipa's benchmark, not tugaphone's, in two scripts [\#272](https://github.com/TigreGotico/tugaphone/pull/272) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- fix: read the product in digits, not an earlier product in words [\#271](https://github.com/TigreGotico/tugaphone/pull/271) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.5a1](https://github.com/TigreGotico/tugaphone/tree/1.10.5a1) (2026-11-18)
 
