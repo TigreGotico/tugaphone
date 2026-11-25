@@ -23,3 +23,5 @@ def test_other_rio_place_falls_back_with_warning(tag):
            "national fallback, so is_supported returns True")
 def test_rio_grande_do_norte_is_not_supported():
     assert not is_supported("pt-BR-x-rio-grande-do-norte")
+    with pytest.warns(UserWarning, match="not a tugaphone lect"):
+        assert resolve_lect("pt-BR-x-rio-grande-do-norte") == "pt-BR"
