@@ -79,3 +79,14 @@ def test_a_letter_after_its_label_noun_stays(text):
 
 def test_regnal_numeral_after_dom_still_reads():
     assert normalize_text("D. João V reinou") == "Dom João Quinto reinou"
+
+
+@pytest.mark.xfail(strict=True, reason="tugaphone#349: D. before a capitalised article reads Dom")
+@pytest.mark.parametrize("text", [
+    "DRECHSEL, D. As vantagens são claras.",
+    "D. As vantagens são claras.",
+    "D. O livro.",
+])
+def test_d_before_a_capitalised_article_stays_a_letter(text):
+    # text_normalization.py says that alone "D." "is as often an initial or a letter".
+    assert expand_abbreviations(text) == text
