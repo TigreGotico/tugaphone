@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.11a2](https://github.com/TigreGotico/tugaphone/tree/1.11.11a2) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.11a1...1.11.11a2)
+
+**Merged pull requests:**
+
+- refactor: stop reading the tugalex pronunciation dictionary in tugaphone.dialects [\#341](https://github.com/TigreGotico/tugaphone/pull/341) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.11a1](https://github.com/TigreGotico/tugaphone/tree/1.11.11a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.10a2...1.11.11a1)
@@ -344,10 +352,6 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a8...1.7.1a9)
 
-**Merged pull requests:**
-
-- Update actions/checkout action to v7 [\#230](https://github.com/TigreGotico/tugaphone/pull/230) ([renovate[bot]](https://github.com/apps/renovate))
-
 ## [1.7.1a8](https://github.com/TigreGotico/tugaphone/tree/1.7.1a8) (2026-11-15)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a7...1.7.1a8)
@@ -375,10 +379,6 @@
 ## [1.7.1a5](https://github.com/TigreGotico/tugaphone/tree/1.7.1a5) (2026-11-12)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a4...1.7.1a5)
-
-**Merged pull requests:**
-
-- test: add the pt-PT and pt-BR sentence gate [\#229](https://github.com/TigreGotico/tugaphone/pull/229) ([JarbasAl](https://github.com/JarbasAl))
 
 ## [1.7.1a4](https://github.com/TigreGotico/tugaphone/tree/1.7.1a4) (2026-11-12)
 
