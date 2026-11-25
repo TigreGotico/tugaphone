@@ -199,23 +199,54 @@ print(engine.transcribe("o gato dorme"))
 revision(lang: str = "pt-PT") -> str
 ```
 
-Returns `tugaphone==<version>` first, then `<Name>==<version>` for each installed
-distribution in the `Requires-Dist` of tugaphone. The dependencies are sorted by
-canonical name and joined with `;`. Each name is spelled as the metadata of the
-distribution spells it. A new release of any of them, also one that changes only
-the code of orthography2ipa, changes the revision. A voice can record the revision
-of the lect it was trained on and compare it at load time.
+Returns a string that changes when the output of `phonemize(text, lang)` can
+change, for some text. A voice records the revision of the lect it was trained
+on. At load time, an equal revision tells that the running tugaphone gives the
+same output, even when the version differs.
 
-A dependency that is not installed, or that an extra or a false environment
-marker excludes, is left out. The value is the same for every `lang`, and the
-call does not import `phonemize` or run a subprocess.
+The revision covers `contact="none"`, the default and the path that scriptconv
+uses. Another `contact` value also reads the `en-GB`, `es-ES` and `fr-FR` specs
+of orthography2ipa and the optional markovonnx detector. The
+revision covers neither, so it can stay equal while that output changes.
+
+The value is `tp1:` and a SHA-256 in hex. The hash covers:
+
+- `unicodedata.unidata_version` of the running Python. The Unicode database
+  decides how the text stages normalise and classify characters.
+- `orthography2ipa.spec_revision(lect)`, and `lexicon_revision(lect, patches=True)`
+  for `pt-PT` and `pt-BR`, the lects that take a packaged lexicon.
+- Each other distribution that a probe call of `phonemize` for the lect imports,
+  in a fresh process. The distribution counts whole: the code tokens of each of
+  its Python modules, also the modules that the probe does not load, and the
+  bytes of each of its data files.
+
+A comment, a docstring, a blank line, the width of an indent, and a `version.py`
+or `_version.py` at the top of a package do not count. A version string does not
+count, with one exception. A distribution that ships a compiled module, such as
+`numpy`, counts by its name and version, because its files differ by platform.
+
+A distribution whose files cannot be read from the file system, such as a
+package imported from a zip, raises `RevisionError`. A hash of no files would
+stay equal across every edit of that distribution.
+
+The probe also raises `RevisionError` when its process fails, prints no
+result, prints a result that is not JSON, or runs longer than 120 s.
+`tugaphone.RevisionError` is a subclass of `RuntimeError`.
+
+`lang` resolves as `phonemize` resolves it, with the same warning for a code that
+is not a lect. So `revision("pt")` equals `revision("pt-PT")`. The first call for
+a lect in a process runs the probe and reads the files, which takes some seconds.
+Later calls return the kept value.
 
 ```python
 import tugaphone
 
-print(tugaphone.revision("pt-PT"))
-# tugaphone==1.11.15a1;bifonia==0.5.5a5;desacordo_ortografico==0.3.39a3;linguatag==0.4.4a3;o2i-lexicons==0.7.22a2;orthography2ipa==7.127.1a2;packaging==26.4;silabificador==2.1.15a4;text2spoken==0.0.2a134;tugalex==3.0.0a1
+pt, br = tugaphone.revision("pt-PT"), tugaphone.revision("pt-BR")
+print(pt.startswith("tp1:"), len(pt) - len("tp1:"), pt != br)
+# True 64 True
 ```
+
+The value is `tp1:` and 64 hex digits. The two lects give different values, because their specs differ.
 
 ## `tugaphone.registry`
 
