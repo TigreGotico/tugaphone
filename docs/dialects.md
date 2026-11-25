@@ -37,9 +37,9 @@ installed orthography2ipa. The lists below group the codes it returns.
 |------|---------|
 | `pt-PT` | European Portuguese, heavy vowel reduction, post-alveolar fricatives, uvular /ʁ/ |
 | `pt-BR` | Brazilian Portuguese, fuller vowels, /t d/ palatalisation, l-vocalisation |
-| `pt-AO` | Angolan Portuguese, moderate reduction, Bantu substrate |
-| `pt-MZ` | Mozambican Portuguese, similar to European with regional variation, alveolar trill /r/ |
-| `pt-TL` | Timorese Portuguese, conservative pronunciation, Tetum substrate, alveolar trill /r/ |
+| `pt-AO` | Angolan Portuguese, moderate reduction, in contact with Bantu languages (Undolo 2014; Chavagne 2005, cited in the orthography2ipa spec notes) |
+| `pt-MZ` | Mozambican Portuguese: weaker unstressed vowel reduction than European (`cidade` siˈdade), alveolar trill /r/ (Gonçalves 2010; Nhatuve 2019, cited in the orthography2ipa spec notes) |
+| `pt-TL` | Timorese Portuguese, the acrolectal norm, in contact with Tetum, alveolar trill /r/ (Albuquerque 2010, cited in the orthography2ipa spec notes) |
 
 The same sentence reads differently in each standard:
 
