@@ -25,7 +25,7 @@ classifiers = [
     "Topic :: Multimedia :: Sound/Audio :: Speech",
 ]
 dependencies = [
-    "linguatag>=0.4.2a4",
+    "linguatag>=0.4.5a1",
     "silabificador>=2.1.0a1",
     "tugalex>=2.5.7a1",
     "bifonia>=0.3.9a1",
