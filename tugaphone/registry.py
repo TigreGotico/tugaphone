@@ -58,6 +58,9 @@ _ALIASES: Dict[str, str] = {
     "pt-BR-x-sao-paulo": "pt-BR-x-sp",
     "pt-BR-x-rio-janeiro": "pt-BR-x-rj",
     "pt-BR-x-rio": "pt-BR-x-rj",
+    "pt-BR-x-rio-grande-do-sul": "pt-BR-x-sul",
+    "pt-BR-x-rio-grande-do-norte": "pt-BR",
+    "pt-PT-x-acores-terceira": "pt-PT-x-terceira",
 }
 
 
