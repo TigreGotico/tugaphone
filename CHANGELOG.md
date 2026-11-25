@@ -1,8 +1,21 @@
 # Changelog
 
+## [1.11.16a1](https://github.com/TigreGotico/tugaphone/tree/1.11.16a1) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.15a1...1.11.16a1)
+
+**Merged pull requests:**
+
+- docs: keep the README short and move the details into docs/ [\#375](https://github.com/TigreGotico/tugaphone/pull/375) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- fix: Azores island sub-tags reach the island lect [\#371](https://github.com/TigreGotico/tugaphone/pull/371) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.15a1](https://github.com/TigreGotico/tugaphone/tree/1.11.15a1) (2026-11-25)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a4...1.11.15a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.14a1...1.11.15a1)
+
+## [1.11.14a1](https://github.com/TigreGotico/tugaphone/tree/1.11.14a1) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a4...1.11.14a1)
 
 **Merged pull requests:**
 
@@ -354,17 +367,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.1a1...1.10.2a1)
 
-**Merged pull requests:**
-
-- fix: read pt-BR areia with a closed ei [\#261](https://github.com/TigreGotico/tugaphone/pull/261) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.10.1a1](https://github.com/TigreGotico/tugaphone/tree/1.10.1a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.0a1...1.10.1a1)
-
-**Merged pull requests:**
-
-- fix: keep the standard library out of the revision on a Windows layout [\#259](https://github.com/TigreGotico/tugaphone/pull/259) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.0a1](https://github.com/TigreGotico/tugaphone/tree/1.10.0a1) (2026-11-18)
 
