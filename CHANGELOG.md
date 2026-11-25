@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.12a1](https://github.com/TigreGotico/tugaphone/tree/1.11.12a1) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.11a2...1.11.12a1)
+
+**Merged pull requests:**
+
+- fix: read language tags through linguatag [\#343](https://github.com/TigreGotico/tugaphone/pull/343) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.11a2](https://github.com/TigreGotico/tugaphone/tree/1.11.11a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.11a1...1.11.11a2)
@@ -363,10 +371,6 @@
 ## [1.7.1a7](https://github.com/TigreGotico/tugaphone/tree/1.7.1a7) (2026-11-15)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a6...1.7.1a7)
-
-**Merged pull requests:**
-
-- Update astral-sh/setup-uv action to v10 [\#231](https://github.com/TigreGotico/tugaphone/pull/231) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [1.7.1a6](https://github.com/TigreGotico/tugaphone/tree/1.7.1a6) (2026-11-13)
 
