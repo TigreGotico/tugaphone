@@ -76,8 +76,10 @@ def resolve_lect(lang: str = "pt-PT") -> str:
     """Resolve ``lang`` to the orthography2ipa lect code that answers for it.
 
     A legacy alias or the code itself, each matched exactly against the
-    canonical codes or the old keys orthography2ipa keeps as aliases. Any other
-    code takes the nearest lect (``pt-PT-x-unknown`` → ``pt-PT``). A code with
+    canonical codes or the old keys orthography2ipa keeps as aliases. A legacy
+    alias followed by more subtags takes the alias's lect, with trailing subtags
+    removed one at a time (``pt-PT-x-lisboa-foo`` → ``pt-PT-x-lisbon``). Any
+    other code takes the nearest lect (``pt-PT-x-unknown`` → ``pt-PT``). A code with
     no nearby lect falls back to ``pt-PT``, preserving the European Portuguese
     default. A code that does not name a lect itself warns, because the caller
     gets another variety.
@@ -112,6 +114,11 @@ def _resolve(lang: str) -> Tuple[str, bool]:
     # counts as a match.
     if resolves_exactly(code) and (lect := resolve(code)) in _CANONICAL_SET:
         return lect, True
+    prefix = tag.rpartition("-")[0]
+    while prefix and prefix not in _ALIASES:
+        prefix = prefix.rpartition("-")[0]
+    if prefix:
+        return resolve(_ALIASES[prefix]), False
     return closest_lang(tag, _CANONICAL, lects="standard") or "pt-PT", False
 
 
