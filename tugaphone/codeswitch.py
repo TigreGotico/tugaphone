@@ -62,7 +62,7 @@ from typing import Dict, FrozenSet, List, Optional, Tuple
 
 from linguatag import with_default_region
 from orthography2ipa import G2P
-from orthography2ipa.markup import parse_markup
+from orthography2ipa import parse_markup
 
 from tugaphone import langdetect
 from tugaphone.langdetect import is_keep_word
