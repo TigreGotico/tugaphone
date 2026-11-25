@@ -25,3 +25,7 @@ NUMBER_SIGN = _misreading(
 SCALE_PAIR = _misreading(
     "text2spoken reads 'entre 1 e 2 mil pessoas' as 'entre um e 2 mil pessoas': before a scale word it "
     "reads the first number of a pair and leaves the second as written", 283)
+COUNTED_NOUN_RESOLVER = _misreading(
+    "text2spoken reads 'De 1 A 3 semanas' as 'um A', 'entre outras. 300' as 'trezentas', 'Comprou [2] casas' "
+    "as '[dois]', 'Em 2014 algumas' as 'duas mil' and 'Ganhou 2 outra vez' as 'duas'; the counted-noun "
+    "resolver takes the wrong noun or number", 602)
