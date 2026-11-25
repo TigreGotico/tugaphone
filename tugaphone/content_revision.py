@@ -1,16 +1,17 @@
-"""The version strings of tugaphone and of its installed dependencies, as one revision string."""
+"""``tugaphone==<version>``, then the installed dependencies as ``<Name>==<version>`` sorted by name, joined by ``;``."""
 from __future__ import annotations
 
 from functools import cache
-from importlib.metadata import PackageNotFoundError, requires, version
+from importlib.metadata import PackageNotFoundError, metadata, requires
 
 from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
 
 
 def revision(lang: str = "pt-PT") -> str:
-    """``tugaphone==<version>`` and ``<name>==<version>`` for each installed dependency, sorted by name, joined by ``;``.
+    """``tugaphone==<version>`` first, then ``<Name>==<version>`` for each installed dependency.
 
+    The dependencies are sorted by canonical name, and each name is spelled as the distribution metadata spells it.
     The value is the same for every ``lang``. A dependency that is not installed, or that an extra or a false
     environment marker excludes, is left out.
     """
@@ -19,15 +20,17 @@ def revision(lang: str = "pt-PT") -> str:
 
 @cache
 def _revision() -> str:
-    names = {"tugaphone"}
-    for line in requires("tugaphone") or ():
-        requirement = Requirement(line)
-        if requirement.marker is None or requirement.marker.evaluate({"extra": ""}):
-            names.add(canonicalize_name(requirement.name))
+    names = {canonicalize_name(Requirement(line).name) for line in requires("tugaphone") or ()
+             if Requirement(line).marker is None or Requirement(line).marker.evaluate({"extra": ""})}
     pins = []
-    for name in sorted(names):
+    for name in sorted(names - {"tugaphone"}):
         try:
-            pins.append(f"{name}=={version(name)}")
+            pins.append(_pin(name))
         except PackageNotFoundError:
             pass
-    return ";".join(pins)
+    return ";".join([_pin("tugaphone"), *pins])
+
+
+def _pin(name: str) -> str:
+    found = metadata(name)
+    return f"{found['Name']}=={found['Version']}"
