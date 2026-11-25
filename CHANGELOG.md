@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.13a1](https://github.com/TigreGotico/tugaphone/tree/1.11.13a1) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a4...1.11.13a1)
+
+**Merged pull requests:**
+
+- fix: reach an alias's lect through trailing subtags [\#354](https://github.com/TigreGotico/tugaphone/pull/354) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.12a4](https://github.com/TigreGotico/tugaphone/tree/1.11.12a4) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a3...1.11.12a4)
@@ -371,10 +379,6 @@
 ## [1.8.0a1](https://github.com/TigreGotico/tugaphone/tree/1.8.0a1) (2026-11-17)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1...1.8.0a1)
-
-**Merged pull requests:**
-
-- feat: convert old spellings with desacordo\_ortografico before G2P [\#240](https://github.com/TigreGotico/tugaphone/pull/240) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.7.1](https://github.com/TigreGotico/tugaphone/tree/1.7.1) (2026-11-16)
 
