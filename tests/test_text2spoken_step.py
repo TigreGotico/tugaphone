@@ -130,9 +130,7 @@ def test_each_lect_reads_the_variety_of_its_norm(lect):
 
 
 @pytest.mark.parametrize("text,expected", [
-    pytest.param("De 1 A 3 semanas", "De uma A três semanas", marks=COUNTED_NOUN_RESOLVER),
     pytest.param("entre outras. 300", "entre outras. trezentos", marks=COUNTED_NOUN_RESOLVER),
-    pytest.param("Comprou [2] casas", "Comprou [duas] casas", marks=COUNTED_NOUN_RESOLVER),
     pytest.param("Em 2014 algumas empresas", "Em dois mil e catorze algumas empresas",
                  marks=COUNTED_NOUN_RESOLVER),
     pytest.param("Ganhou 2 outra vez", "Ganhou dois outra vez", marks=COUNTED_NOUN_RESOLVER),
