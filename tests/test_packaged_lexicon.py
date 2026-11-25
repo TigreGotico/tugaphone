@@ -8,7 +8,7 @@ import textwrap
 import o2i_lexicons
 import pytest
 from orthography2ipa import G2P, clear_lexicons, register_lexicon
-from orthography2ipa.lexicon import parse_lexicon_text
+from orthography2ipa import parse_lexicon_text
 
 from tugaphone import lattice_core, list_dialects, phonemize
 
