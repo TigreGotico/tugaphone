@@ -13,6 +13,9 @@ from pathlib import Path
 import pytest
 
 from tugaphone import lattice_core, list_dialects, phonemize, pipeline
+from tugaphone.text_normalization import normalize_text
+
+from tests.text2spoken_gaps import COUNTED_NOUN_RESOLVER
 
 SENTENCES = Path(__file__).parent / "data" / "sentences"
 
@@ -124,3 +127,16 @@ def test_each_lect_reads_the_variety_of_its_norm(lect):
     # t2s pt-084 and pt-085: 19 is "dezenove" in pt-BR and "dezanove" in pt-PT.
     nineteen = {"ao1990-pt": "dezanove", "ao1990-br": "dezenove"}[lattice_core.spelling_norm(lect)]
     assert pipeline(lect).expand("Tem 19 anos.") == f"Tem {nineteen} anos."
+
+
+@pytest.mark.parametrize("text,expected", [
+    pytest.param("entre outras. 300", "entre outras. trezentos", marks=COUNTED_NOUN_RESOLVER),
+    pytest.param("Em 2014 algumas empresas", "Em dois mil e catorze algumas empresas",
+                 marks=COUNTED_NOUN_RESOLVER),
+    pytest.param("Ganhou 2 outra vez", "Ganhou dois outra vez", marks=COUNTED_NOUN_RESOLVER),
+])
+def test_counted_noun_resolver_misreadings(text, expected):
+    # A form that tugaphone sends whole to text2spoken. A noun counts the number
+    # that stands before it ("2 casas" -> "duas casas"); a full stop ends the
+    # count, a year is a cardinal.
+    assert normalize_text(text) == expected
