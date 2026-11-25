@@ -42,11 +42,17 @@ def test_a_contact_language_reads_its_default_region(contact, tag):
 
 @pytest.mark.xfail(strict=True, reason="TigreGotico/linguatag#69: every private-use subtag drops at once; "
                    "RFC 4647 §3.4 removes one subtag at a time")
+def test_an_unnamed_subtag_after_a_lect_keeps_the_lect():
+    with pytest.warns(UserWarning, match="is not a tugaphone lect"):
+        assert resolve_lect("pt-BR-x-sp-foo") == "pt-BR-x-sp"
+
+
+@pytest.mark.xfail(strict=True, reason="TigreGotico/tugaphone#346: the alias table reads the whole tag only")
 @pytest.mark.parametrize("tag,lect", [
-    ("pt-BR-x-sp-foo", "pt-BR-x-sp"),
     ("pt-PT-x-lisboa-foo", "pt-PT-x-lisbon"),
+    ("pt-BR-x-sao-paulo-foo", "pt-BR-x-sp"),
 ])
-def test_an_unnamed_subtag_after_a_lect_keeps_the_lect(tag, lect):
+def test_an_unnamed_subtag_after_an_alias_keeps_its_lect(tag, lect):
     with pytest.warns(UserWarning, match="is not a tugaphone lect"):
         assert resolve_lect(tag) == lect
 

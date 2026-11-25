@@ -21,7 +21,7 @@ import functools
 import warnings
 from typing import Dict, List, Optional, Tuple
 
-from linguatag import closest_lang, default_region, lang_matches, with_default_region
+from linguatag import closest_lang, default_region, with_default_region
 from linguatag.bcp47 import parse
 from orthography2ipa import ancestry_chain, available_codes, resolve, resolves_exactly
 
