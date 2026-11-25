@@ -250,6 +250,7 @@ are re-exported from the package root.
 | `PACKAGED_LEXICON_LECTS` | The lects that take a packaged orthography2ipa lexicon: `pt-PT` and `pt-BR`. |
 | `lexicon_region(lect)` | **Deprecated**, returns `None`: no lect takes a `tugalex` region map. Emits a `DeprecationWarning` that names the removal release. |
 | `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`, emits a `DeprecationWarning`. |
+| `normalize_dialect_code(lang)` | **Deprecated**, BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). Use `linguatag.standardize_lang`. Emits a `DeprecationWarning` that names the removal release. |
 | `get_dialect_inventory(lang="pt-PT")` | **Deprecated**, returns the `tugaphone.dialects` inventory of the nearest national standard. Emits a `DeprecationWarning` and goes in the next major release (`VERSION_MAJOR + 1`). |
 
 ```python

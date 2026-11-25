@@ -22,6 +22,7 @@ import warnings
 from typing import Dict, List, Optional, Tuple
 
 from linguatag import closest_lang, default_region, lang_matches, with_default_region
+from linguatag.bcp47 import parse
 from orthography2ipa import ancestry_chain, available_codes, resolve, resolves_exactly
 
 from tugaphone.version import VERSION_MAJOR
@@ -36,7 +37,7 @@ _OWN_ORTHOGRAPHY = frozenset({"pt-PT-x-medieval"})
 # filtering them out loads every spec orthography2ipa ships.
 _CANONICAL: List[str] = sorted(
     c for c in available_codes(include_clades=True)
-    if lang_matches(c, "pt") and c not in _OWN_ORTHOGRAPHY
+    if parse(c).language == "pt" and c not in _OWN_ORTHOGRAPHY
 )
 _CANONICAL_SET = set(_CANONICAL)
 
@@ -199,6 +200,34 @@ def get_dialect_inventory(lang: str = "pt-PT"):
     inventories = {"BR": BrazilianPortuguese, "AO": AngolanPortuguese,
                    "MZ": MozambicanPortuguese, "TL": TimoresePortuguese}
     return inventories.get(default_region(resolve_lect(lang)), EuropeanPortuguese)()
+
+
+def normalize_dialect_code(lang: str) -> str:
+    """Deprecated: normalize the casing of a BCP-47 tag (``PT-pt-X-PORTO`` → ``pt-PT-x-porto``).
+
+    .. deprecated::
+        :func:`resolve_lect` reads a tag in any spelling. Use
+        :func:`linguatag.standardize_lang` for the canonical form of a tag.
+    """
+    warnings.warn(
+        "normalize_dialect_code() is deprecated; use linguatag.standardize_lang(). "
+        f"It will be removed in tugaphone {LEXICON_REGION_REMOVAL_VERSION}.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    segments = (lang or "").strip().split("-")
+    normalized = []
+    in_private_use = False
+    for i, seg in enumerate(segments):
+        low = seg.lower()
+        if low == "x":
+            in_private_use = True
+            normalized.append(low)
+        elif i > 0 and len(seg) == 2 and not in_private_use:
+            normalized.append(seg.upper())
+        else:
+            normalized.append(low)
+    return "-".join(normalized)
 
 
 def resolve_dialect(lang: str = "pt-PT") -> str:
