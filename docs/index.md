@@ -7,8 +7,35 @@ verify: diff <(ls docs/*.md | xargs -n1 basename | grep -v '^index.md$' | sort) 
 see: README.md, AGENTS.md
 -->
 
-`tugaphone` turns Portuguese text into IPA for each Lusophone dialect. Start with the quickstart.
-The pages below follow the reading order, from the first call to the internals and the benchmarks.
+`tugaphone` turns Portuguese text into IPA for each Lusophone dialect.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/scoreboard-dark.svg">
+  <img alt="Rules-only phoneme error rate and stress accuracy for each of eight Lusophone dialects. The Scoreboard page lists every value." src="img/scoreboard.svg">
+</picture>
+
+The [Scoreboard](scoreboard.md) gives every value of this figure.
+
+## Quickstart
+
+```bash
+uv pip install --prerelease=allow tugaphone
+```
+
+```python
+from tugaphone import TugaPhonemizer
+
+ph = TugaPhonemizer()
+for code in ["pt-PT", "pt-BR", "pt-AO"]:
+    print(code, "→", ph.phonemize_sentence("O gato dorme.", code))
+# pt-PT → u ˈɡatu ˈdɔɾmɨ
+# pt-BR → u ˈɡatu ˈdoɾmi
+# pt-AO → ʊ ˈɡatʊ ˈdɔʁmɨ
+```
+
+## Pages
+
+The pages follow the reading order, from the first call to the internals and the benchmarks.
 
 | Page | What you get from it |
 |---|---|
