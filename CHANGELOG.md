@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.12a4](https://github.com/TigreGotico/tugaphone/tree/1.11.12a4) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a3...1.11.12a4)
+
+**Merged pull requests:**
+
+- test: strict xfail for D. before a capitalised article \(\#349\) [\#353](https://github.com/TigreGotico/tugaphone/pull/353) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.12a3](https://github.com/TigreGotico/tugaphone/tree/1.11.12a3) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a2...1.11.12a3)
