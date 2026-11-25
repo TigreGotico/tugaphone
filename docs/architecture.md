@@ -111,6 +111,11 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 # pt-TL → o ˈɡato ˈdɔrme
 ```
 
+Every IPA sample in these docs is the output of the orthography2ipa lect specs
+that tugaphone resolves at run time, so a spec change in orthography2ipa can
+change a sample. The samples in [tokenizer.md](tokenizer.md) come from
+the deprecated `tugaphone.dialects` inventory instead.
+
 ## The token-feature API
 
 `tugaphone.tokenizer` and `tugaphone.dialects` are a token-tree linguistic
@@ -128,4 +133,4 @@ a `DeprecationWarning` and go in the next major release (`VERSION_MAJOR + 1`). S
 - [benchmarking.md](benchmarking.md), how accuracy is measured
 
 ---
-[← Quickstart](quickstart.md) · [Index](index.md) · [Dialects →](dialects.md)
+[← Comparison](comparison.md) · [Index](index.md) · [Dialects →](dialects.md)

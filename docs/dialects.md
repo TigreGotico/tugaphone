@@ -35,11 +35,26 @@ installed orthography2ipa. The lists below group the codes it returns.
 
 | Code | Variety |
 |------|---------|
-| `pt-PT` | European Portuguese |
-| `pt-BR` | Brazilian Portuguese |
-| `pt-AO` | Angolan Portuguese |
-| `pt-MZ` | Mozambican Portuguese |
-| `pt-TL` | Timorese Portuguese |
+| `pt-PT` | European Portuguese, heavy vowel reduction, post-alveolar fricatives, uvular /ʁ/ |
+| `pt-BR` | Brazilian Portuguese, fuller vowels, /t d/ palatalisation, l-vocalisation |
+| `pt-AO` | Angolan Portuguese, moderate reduction, in contact with Bantu languages (Undolo 2014; Chavagne 2005, cited in the orthography2ipa spec notes) |
+| `pt-MZ` | Mozambican Portuguese: weaker unstressed vowel reduction than European (`cidade` siˈdade), alveolar trill /r/ (Gonçalves 2010; Nhatuve 2019, cited in the orthography2ipa spec notes) |
+| `pt-TL` | Timorese Portuguese, the acrolectal norm, in contact with Tetum, alveolar trill /r/ (Albuquerque 2010, cited in the orthography2ipa spec notes) |
+
+The same sentence reads differently in each standard:
+
+```python
+from tugaphone import TugaPhonemizer
+
+ph = TugaPhonemizer()
+for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
+    print(code, "→", ph.phonemize_sentence("Choveu muito ontem.", code))
+# pt-PT → ʃuˈvew ˈmũj̃tu ˈõtɐ̃j̃
+# pt-BR → ʃoˈvew ˈmũj̃tu ˈõtẽj̃
+# pt-AO → ʃoˈvew ˈmũj̃tʊ ˈõtẽj̃
+# pt-MZ → ʃoˈvew ˈmũj̃tu ˈõtẽ
+# pt-TL → ʃoˈvew ˈmũj̃to ˈõtẽj̃
+```
 
 ### European sub-regional varieties
 

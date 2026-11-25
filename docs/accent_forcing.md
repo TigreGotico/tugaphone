@@ -130,6 +130,9 @@ tugaphone phonemize    "o gato dorme"  --lect pt-BR
 tugaphone list
 ```
 
+`phonemize` defaults to `--lect pt-PT`. `force-accent` takes `--mode ipa` or
+`--mode respell`, and `--overlay` reads a JSON `AccentOverlay`.
+
 ---
 
 ## How respelling works, and its ceiling

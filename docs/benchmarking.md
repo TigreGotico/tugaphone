@@ -220,4 +220,4 @@ python scripts/check_benchmark_regression.py   # gate
 ```
 
 ---
-[← Advanced](advanced.md) · [Index](index.md) · [Scoreboard →](scoreboard.md)
+[← Development](development.md) · [Index](index.md) · [Scoreboard →](scoreboard.md)

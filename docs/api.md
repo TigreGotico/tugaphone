@@ -181,6 +181,18 @@ engine.transcribe("Tenho 3 gatos.")
 
 The result equals `tugaphone.phonemize("Tenho 3 gatos.", lect)`.
 
+A program that already drives `orthography2ipa.G2P` gets tugaphone's output the
+same way for any lect:
+
+```python
+from orthography2ipa import G2P
+import tugaphone
+
+engine = G2P("pt-BR", pipeline=tugaphone.pipeline("pt-BR"))
+print(engine.transcribe("o gato dorme"))
+# u ˈɡatu ˈdoɾmi
+```
+
 ## `tugaphone.revision`
 
 ```text

@@ -30,6 +30,17 @@ and `pt-BR` lexicons ship inside [`o2i-lexicons`](https://github.com/TigreGotico
 so a phonemization call needs no network. See
 [advanced.md](advanced.md#the-lexicon-boundary).
 
+The package defines one extra for users, `langdetect`. The `test` extra is for
+development.
+
+```bash
+uv pip install --prerelease=allow "tugaphone[langdetect]"
+```
+
+The `langdetect` extra installs `markovonnx`, which scores the statistical
+code-switch detector. Without it, code-switch detection uses an orthographic
+heuristic. See [codeswitch.md](codeswitch.md).
+
 ## 2. The one thing to understand
 
 `TugaPhonemizer` is the entry point. Construct it, then call
@@ -128,4 +139,4 @@ sub-regional codes and the legacy aliases.
 - [tokenizer.md](tokenizer.md), the `Sentence → Word → Grapheme → Character` feature model
 
 ---
-[Index](index.md) · [Architecture →](architecture.md)
+[Index](index.md) · [Comparison →](comparison.md)
