@@ -160,7 +160,7 @@ output as `phonemize(text, lect)`, and `phonemize` builds its engine from this
 function.
 
 The function covers `contact="none"` only. With `contact="auto"`, `phonemize`
-sends contact words through the `es-ES`, `fr-FR` or `en-US` lattice, and one
+sends contact words through the `es-ES`, `fr-FR` or `en-GB` lattice, and one
 `Pipeline` cannot express that.
 
 `lect` must be a code of `list_dialects()`. Any other code raises `ValueError`.
@@ -193,7 +193,7 @@ on. At load time, an equal revision tells that the running tugaphone gives the
 same output, even when the version differs.
 
 The revision covers `contact="none"`, the default and the path that scriptconv
-uses. Another `contact` value also reads the `en-US`, `es-ES` and `fr-FR` specs
+uses. Another `contact` value also reads the `en-GB`, `es-ES` and `fr-FR` specs
 of orthography2ipa and the optional markovonnx detector. The
 revision covers neither, so it can stay equal while that output changes.
 
@@ -243,13 +243,12 @@ are re-exported from the package root.
 
 | Symbol | Role |
 |--------|------|
-| `resolve_lect(lang="pt-PT")` | Resolve any BCP-47 code (case-insensitive, alias-aware) to the orthography2ipa lect code that answers for it, unresolved codes fall back to the parent tag, then `pt-PT`. |
+| `resolve_lect(lang="pt-PT")` | Resolve any BCP-47 code (case-insensitive, alias-aware) to the orthography2ipa lect code that answers for it, an unresolved code takes the nearest lect, then `pt-PT`. |
 | `list_dialects()` | Sorted list of every reachable lect code (the Portuguese-family orthography2ipa specs). |
 | `is_supported(lang)` | Whether `lang` names a lect, itself or through an alias. See [`is_supported`](#is_supported-staticmethod). |
 | `default_contact(lect)` | The contact language that `contact="auto"` gives an unclassified word: `"es"` for `pt-UY`, `"en"` for every other lect. |
 | `PACKAGED_LEXICON_LECTS` | The lects that take a packaged orthography2ipa lexicon: `pt-PT` and `pt-BR`. |
 | `lexicon_region(lect)` | **Deprecated**, returns `None`: no lect takes a `tugalex` region map. Emits a `DeprecationWarning` that names the removal release. |
-| `normalize_dialect_code(lang)` | BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). |
 | `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`, emits a `DeprecationWarning`. |
 | `get_dialect_inventory(lang="pt-PT")` | **Deprecated**, returns the `tugaphone.dialects` inventory of the nearest national standard. Emits a `DeprecationWarning` and goes in the next major release (`VERSION_MAJOR + 1`). |
 

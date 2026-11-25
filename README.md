@@ -435,7 +435,7 @@ The English loanword lexicon in `tugaphone/data/loanwords.json` (see
 upstream curated it, minus a handful of proper nouns and words that collide
 with an existing `tugalex` Portuguese pronunciation; the `en-GB` IPA upstream
 generated offline with espeak ships alongside it as reference/test-gold
-material, tugaphone's own `en-US` lattice and nativization produce the
+material, tugaphone's own `en-GB` lattice and nativization produce the
 pronunciation actually spoken.
 
 ## License

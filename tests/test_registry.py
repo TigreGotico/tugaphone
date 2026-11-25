@@ -5,27 +5,13 @@ by running the phonemizer.
 """
 
 import pytest
+from linguatag import lang_matches
 from orthography2ipa import available_codes, resolve
 
-from tugaphone.registry import (_OWN_ORTHOGRAPHY, _PT_PREFIXES,
-                                normalize_dialect_code, resolve_lect,
+from tugaphone.registry import (_OWN_ORTHOGRAPHY, resolve_lect,
                                 resolve_dialect, PACKAGED_LEXICON_LECTS, lexicon_region,
                                 list_dialects,
                                 get_dialect_inventory)
-
-
-class TestNormalization:
-    def test_casing(self):
-        assert normalize_dialect_code("PT-pt-X-PORTO") == "pt-PT-x-porto"
-
-    def test_major(self):
-        assert normalize_dialect_code("pt-br") == "pt-BR"
-
-    def test_bare(self):
-        assert normalize_dialect_code("PT") == "pt"
-
-    def test_private_use_subtags_stay_lowercase(self):
-        assert normalize_dialect_code("pt-BR-X-SP") == "pt-BR-x-sp"
 
 
 class TestResolution:
@@ -123,7 +109,7 @@ class TestListDialects:
         # one. A clade among them would surface as a dialect.
         without_clades = sorted(
             c for c in available_codes()
-            if c.startswith(_PT_PREFIXES) and c not in _OWN_ORTHOGRAPHY
+            if lang_matches(c, "pt") and c not in _OWN_ORTHOGRAPHY
         )
         assert list_dialects() == without_clades
 

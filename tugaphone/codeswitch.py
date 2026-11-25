@@ -8,7 +8,7 @@ can emit phones outside the Portuguese inventory the voice was trained on.
 So a word-level decision (the char-Markov detector in :mod:`tugaphone.langdetect`,
 with an orthographic heuristic as fallback) routes each token to Portuguese or
 to one of es/fr/en. A contact word is transcribed through the orthography2ipa
-``es-ES`` / ``fr-FR`` / ``en-US`` lattice, and each phone of the result is
+``es-ES`` / ``fr-FR`` / ``en-GB`` lattice, and each phone of the result is
 projected onto the Portuguese inventory (arbtok's total nativization: never
 drop a segment). There is no sub-word alignment. Portuguese already has
 ``/v z ʃ ʒ ʁ ɲ ʎ w j/`` and the nasal vowels, so only the interdentals
@@ -40,7 +40,7 @@ Curated loanword lexicon
 ``software``, ``airbag``, ...) that a Portuguese speaker says close to English
 but that the heuristic and the detector's margin miss, because they use only
 Portuguese letters. A whole-word, case-insensitive hit routes the word onto the
-``en`` path (:func:`is_known_loanword`); the ``en-US`` lattice and
+``en`` path (:func:`is_known_loanword`); the ``en-GB`` lattice and
 :func:`_nativize` still give its pronunciation.
 
 The word list is ported from `logus2k/tts_eu_pt
@@ -60,6 +60,7 @@ import re
 from pathlib import Path
 from typing import Dict, FrozenSet, List, Optional, Tuple
 
+from linguatag import with_default_region
 from orthography2ipa import G2P
 from orthography2ipa.markup import parse_markup
 
@@ -272,13 +273,10 @@ def _nativize(ipa: str, english: bool = False) -> str:
 # The contact transcriber.
 # ---------------------------------------------------------------------------
 
-_CONTACT_CODE = {"es": "es-ES", "fr": "fr-FR", "en": "en-US"}
-
-
 @functools.lru_cache(maxsize=None)
 def _contact_engine(contact: str) -> G2P:
     """A cached orthography2ipa engine for the contact lattice."""
-    return G2P(_CONTACT_CODE[contact])
+    return G2P(with_default_region(contact))
 
 
 def transcribe_contact(word: str, contact: str) -> str:
