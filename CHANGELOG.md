@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.12a3](https://github.com/TigreGotico/tugaphone/tree/1.11.12a3) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a2...1.11.12a3)
+
+**Merged pull requests:**
+
+- docs: cite the open text2spoken issues for bare dot numbers [\#350](https://github.com/TigreGotico/tugaphone/pull/350) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.12a2](https://github.com/TigreGotico/tugaphone/tree/1.11.12a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a1...1.11.12a2)
@@ -371,10 +379,6 @@
 ## [1.7.1a8](https://github.com/TigreGotico/tugaphone/tree/1.7.1a8) (2026-11-15)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.7.1a7...1.7.1a8)
-
-**Merged pull requests:**
-
-- docs: sync README and docs with dev [\#235](https://github.com/TigreGotico/tugaphone/pull/235) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.7.1a7](https://github.com/TigreGotico/tugaphone/tree/1.7.1a7) (2026-11-15)
 
