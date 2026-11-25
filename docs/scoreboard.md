@@ -18,6 +18,14 @@ Stress accuracy is the share of the stress-eligible gold words
 (one word, one primary mark, two syllables or more) whose primary
 stress lands on the gold's syllable. PER cannot see that choice.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/scoreboard-dark.svg">
+  <img alt="Rules-only PER by dialect: pt-PT-x-lisbon 0.080, the lowest; pt-AO 0.247, the highest." src="img/scoreboard.svg">
+</picture>
+
+`img/plot_scoreboard.py` makes this figure from
+`benchmarks/results.json`.
+
 | Dialect | Gold region | Words | PER | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|
 | pt-AO | pt-AO | 1000 | 0.2472 | 0.0740 | 993 | 0.9950 |

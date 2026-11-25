@@ -452,6 +452,14 @@ def _count_confusions(hyp: str, golds: List[str],
 
 # ─── reports ────────────────────────────────────────────────────────────────
 
+def scoreboard_alt(rows: List[dict]) -> str:
+    """Alt text of the scoreboard figure, read from the same rows as the table."""
+    by_per = sorted(rows, key=lambda r: r["per"])
+    low, high = by_per[0], by_per[-1]
+    return (f"Rules-only PER by dialect: {low['dialect']} {low['per']:.3f}, the lowest; "
+            f"{high['dialect']} {high['per']:.3f}, the highest.")
+
+
 def write_reports(rows: List[dict]) -> None:
     os.makedirs(os.path.dirname(RESULTS_JSON), exist_ok=True)
     with open(RESULTS_JSON, "w", encoding="utf-8") as fh:
@@ -489,6 +497,14 @@ def write_reports(rows: List[dict]) -> None:
         "Stress accuracy is the share of the stress-eligible gold words",
         "(one word, one primary mark, two syllables or more) whose primary",
         "stress lands on the gold's syllable. PER cannot see that choice.",
+        "",
+        "<picture>",
+        '  <source media="(prefers-color-scheme: dark)" srcset="img/scoreboard-dark.svg">',
+        f'  <img alt="{scoreboard_alt(rows)}" src="img/scoreboard.svg">',
+        "</picture>",
+        "",
+        "`img/plot_scoreboard.py` makes this figure from",
+        "`benchmarks/results.json`.",
         "",
         "| Dialect | Gold region | Words | PER | Word accuracy "
         "| Stress words | Stress accuracy |",
