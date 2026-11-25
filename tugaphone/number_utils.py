@@ -414,8 +414,9 @@ def read_joined_numbers(text: str, lang: str = "pt-PT") -> str:
 
 # ---------------------------------------------------------------------------
 # text2spoken leaves a bare dot number as written: a section ("secção 3.2"),
-# a version or name ("Indústria 4.0", "Romanos 13.8") or a rare decimal
-# (https://github.com/TigreGotico/text2spoken/issues/242). Most are labels, so
+# which it keeps as a label (text2spoken#429), a version or name
+# ("Indústria 4.0", "Romanos 13.8") or a decimal before an amount word
+# ("10.4 euros", https://github.com/TigreGotico/text2spoken/issues/542). Most are labels, so
 # this rewrite reads them with "ponto", as text2spoken reads a version, and
 # masculine, as a label (tugaphone#324). After "às", "das" or "pelas"
 # (text2spoken#522), or "as" after até, desde, após, para or entre
