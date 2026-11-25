@@ -118,7 +118,7 @@ def _resolve(lang: str) -> Tuple[str, bool]:
     while prefix and prefix not in _ALIASES:
         prefix = prefix.rpartition("-")[0]
     if prefix:
-        return _ALIASES[prefix], False
+        return resolve(_ALIASES[prefix]), False
     return closest_lang(tag, _CANONICAL, lects="standard") or "pt-PT", False
 
 

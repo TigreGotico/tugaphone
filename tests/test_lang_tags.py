@@ -4,6 +4,7 @@ import warnings
 import pytest
 
 from linguatag import closest_lang, with_default_region
+from orthography2ipa import resolve
 
 from tugaphone import is_supported, resolve_lect
 from tugaphone.registry import _ALIASES, list_dialects
@@ -63,7 +64,9 @@ def test_an_unnamed_subtag_after_an_alias_keeps_its_lect(tag, lect):
 def test_every_alias_keeps_its_lect_after_unnamed_subtags(alias):
     for tag in (f"{alias}-foo", f"{alias}-foo-bar"):
         with pytest.warns(UserWarning, match="is not a tugaphone lect"):
-            assert resolve_lect(tag) == _ALIASES[alias]
+            lect = resolve_lect(tag)
+        assert lect == resolve(_ALIASES[alias])
+        assert lect in list_dialects()
 
 
 @pytest.mark.parametrize("tag", [
