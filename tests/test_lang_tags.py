@@ -3,7 +3,10 @@ import warnings
 
 import pytest
 
+from linguatag import closest_lang, with_default_region
+
 from tugaphone import is_supported, resolve_lect
+from tugaphone.registry import _ALIASES, list_dialects
 from tugaphone.codeswitch import _contact_engine
 
 
@@ -47,7 +50,6 @@ def test_an_unnamed_subtag_after_a_lect_keeps_the_lect():
         assert resolve_lect("pt-BR-x-sp-foo") == "pt-BR-x-sp"
 
 
-@pytest.mark.xfail(strict=True, reason="TigreGotico/tugaphone#346: the alias table reads the whole tag only")
 @pytest.mark.parametrize("tag,lect", [
     ("pt-PT-x-lisboa-foo", "pt-PT-x-lisbon"),
     ("pt-BR-x-sao-paulo-foo", "pt-BR-x-sp"),
@@ -55,6 +57,22 @@ def test_an_unnamed_subtag_after_a_lect_keeps_the_lect():
 def test_an_unnamed_subtag_after_an_alias_keeps_its_lect(tag, lect):
     with pytest.warns(UserWarning, match="is not a tugaphone lect"):
         assert resolve_lect(tag) == lect
+
+
+@pytest.mark.parametrize("alias", sorted(_ALIASES))
+def test_every_alias_keeps_its_lect_after_unnamed_subtags(alias):
+    for tag in (f"{alias}-foo", f"{alias}-foo-bar"):
+        with pytest.warns(UserWarning, match="is not a tugaphone lect"):
+            assert resolve_lect(tag) == _ALIASES[alias]
+
+
+@pytest.mark.parametrize("tag", [
+    "pt-PT-x-porto-foo", "pt-BR-x-sp-foo", "pt-PT-x-unknown-foo", "pt-US-x-foo", "pt-419-x-foo",
+])
+def test_a_tag_that_truncation_leaves_unnamed_takes_the_nearest_lect(tag):
+    nearest = closest_lang(with_default_region(tag), list_dialects(), lects="standard")
+    with pytest.warns(UserWarning, match="is not a tugaphone lect"):
+        assert resolve_lect(tag) == nearest
 
 
 def test_normalize_dialect_code_is_deprecated_and_keeps_its_value():
