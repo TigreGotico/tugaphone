@@ -1,8 +1,21 @@
 # Changelog
 
+## [1.11.14a1](https://github.com/TigreGotico/tugaphone/tree/1.11.14a1) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a4...1.11.14a1)
+
+**Merged pull requests:**
+
+- fix: keep a longer place name from taking the alias it starts with [\#366](https://github.com/TigreGotico/tugaphone/pull/366) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- fix: point the Tras-os-Montes aliases at the current orthography2ipa key [\#365](https://github.com/TigreGotico/tugaphone/pull/365) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.13a4](https://github.com/TigreGotico/tugaphone/tree/1.11.13a4) (2026-11-25)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a2...1.11.13a4)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a3...1.11.13a4)
+
+## [1.11.13a3](https://github.com/TigreGotico/tugaphone/tree/1.11.13a3) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a2...1.11.13a3)
 
 **Merged pull requests:**
 
@@ -360,10 +373,6 @@
 ## [1.9.3a1](https://github.com/TigreGotico/tugaphone/tree/1.9.3a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.9.2a1...1.9.3a1)
-
-**Merged pull requests:**
-
-- fix: read the open éi of AO1990 Brazilian paroxytones \(ideia\) [\#253](https://github.com/TigreGotico/tugaphone/pull/253) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.9.2a1](https://github.com/TigreGotico/tugaphone/tree/1.9.2a1) (2026-11-18)
 
