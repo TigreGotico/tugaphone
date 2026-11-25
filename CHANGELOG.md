@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.18a4](https://github.com/TigreGotico/tugaphone/tree/1.11.18a4) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a3...1.11.18a4)
+
+**Merged pull requests:**
+
+- refactor: import orthography2ipa names from its public package [\#397](https://github.com/TigreGotico/tugaphone/pull/397) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.18a3](https://github.com/TigreGotico/tugaphone/tree/1.11.18a3) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a2...1.11.18a3)
@@ -361,11 +369,6 @@
 ## [1.10.9a2](https://github.com/TigreGotico/tugaphone/tree/1.10.9a2) (2026-11-19)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.9a1...1.10.9a2)
-
-**Merged pull requests:**
-
-- test: drop the óptica xfail now that desacordo keeps the p [\#282](https://github.com/TigreGotico/tugaphone/pull/282) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- test: mark the number pair before a scale word against text2spoken\#283 [\#281](https://github.com/TigreGotico/tugaphone/pull/281) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.9a1](https://github.com/TigreGotico/tugaphone/tree/1.10.9a1) (2026-11-18)
 
