@@ -155,7 +155,23 @@ python scripts/benchmark.py --refresh-fixtures
 ## Scoring
 
 Both sides are normalized identically, NFC, stress marks and
-syllable/tie joiners removed, whitespace collapsed, then a
+syllable/tie joiners removed, whitespace collapsed. Then each symbol that the
+gold's sources write for a sound that tugaphone writes another way is mapped to
+one symbol of one code point:
+
+| written | scored as | why |
+|---|---|---|
+| ⟨r⟩ | ⟨ɾ⟩ in pt-PT and pt-PT-x-lisbon only | Infopédia writes the tap as ⟨r⟩ and the trill as ⟨ʀ⟩; the pt-AO, pt-MZ and pt-TL gold writes the trill as ⟨r⟩ beside the tap ⟨ɾ⟩ |
+| ⟨ʀ⟩ | ⟨ʁ⟩ in pt-PT and pt-PT-x-lisbon | the Infopédia trill |
+| ⟨χ⟩ | ⟨ʁ⟩ | one uvular or velar rhotic |
+| ⟨ɹ⟩ | ⟨ɾ⟩ | a pt-BR coda tap written as an approximant |
+| ⟨ʊ ɪ⟩ | ⟨u i⟩ | narrow symbols for unstressed [u i] |
+| ⟨ə⟩ | ⟨ɨ⟩ in pt-PT and pt-PT-x-lisbon, ⟨ɐ⟩ elsewhere | the sound the region's source writes as ⟨ə⟩ |
+| ⟨ʧ ʤ⟩ | ⟨tʃ dʒ⟩ | one affricate, in the two letters that a syllable break can split |
+| ⟨ɐ̃⟩, ⟨ã⟩ | ⟨ã⟩ | one nasal vowel |
+| ⟨ⁿ ( ) '⟩ | removed | optional segments and ASCII stress |
+
+The fold keeps ⟨ɾ⟩ and ⟨ʁ⟩ apart. Then a
 character-level edit distance is taken against the **closest** attested
 variant of the word (a word with several valid pronunciations is not
 penalised for the variants it did not choose). Reported per dialect:

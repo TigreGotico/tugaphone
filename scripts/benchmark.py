@@ -75,7 +75,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "1.0"
+HARNESS_VERSION = "1.1"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -87,10 +87,31 @@ _STRESS_MARKS = "ˈˌ"
 _JOINERS = "·.|‿͜͡"
 
 
-def normalize(ipa: str) -> str:
+#: Symbols that the gold's sources and tugaphone write for one sound, mapped
+#: to one form. A nasal vowel becomes one code point, so the fold adds no
+#: edit; an affricate becomes two letters, as a syllable break splits it. Infopédia
+#: writes the tap as ⟨r⟩ and the trill as ⟨ʀ⟩; the pt-BR sources write
+#: ⟨ʊ ɪ⟩ for unstressed [u i] and ⟨χ ɹ⟩ for coda rhotics. ⟨ɾ⟩ and ⟨ʁ⟩
+#: stay apart.
+_NOTATION = (("ʧ", "tʃ"), ("ʤ", "dʒ"), ("ɐ̃", "ã"), ("χ", "ʁ"),
+             ("ɹ", "ɾ"), ("ʊ", "u"), ("ɪ", "i"),
+             ("ⁿ", ""), ("(", ""), (")", ""), ("'", ""))
+
+#: The Infopédia regions write [ɨ] as ⟨ə⟩, the tap as ⟨r⟩ and the trill as
+#: ⟨ʀ⟩. The other regions write unstressed [ɐ] as ⟨ə⟩ (São Paulo akə̃ˈpa for
+#: acampar) and the trill as ⟨r⟩ beside the tap ⟨ɾ⟩ (pt-MZ arrematar).
+_INFOPEDIA = (("ə", "ɨ"), ("r", "ɾ"), ("ʀ", "ʁ"))
+_OTHER = (("ə", "ɐ"),)
+_REGION_NOTATION: Dict[str, tuple] = {"pt-PT": _INFOPEDIA, "pt-PT-x-lisbon": _INFOPEDIA}
+
+
+def normalize(ipa: str, region: tuple = _INFOPEDIA) -> str:
     """One comparable form: NFC, no stress marks, no syllable/tie joiners,
-    no whitespace. Both sides of every comparison go through this."""
-    s = unicodedata.normalize("NFC", ipa)
+    no whitespace, one symbol per sound. Both sides of every comparison go
+    through this."""
+    s = unicodedata.normalize("NFC", ipa).replace("\u0361", "").replace("\u035c", "")
+    for written, sound in region + _NOTATION:
+        s = s.replace(written, sound)
     for ch in _STRESS_MARKS + _JOINERS:
         s = s.replace(ch, "")
     return "".join(s.split())
@@ -114,7 +135,7 @@ def _levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
-def score_word(hyp: str, golds: List[str]) -> Tuple[int, int]:
+def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA) -> Tuple[int, int]:
     """(edit distance, reference length) against the CLOSEST gold variant.
 
     A word with several attested pronunciations is correct if it matches
@@ -122,10 +143,10 @@ def score_word(hyp: str, golds: List[str]) -> Tuple[int, int]:
     so multi-variant words are not penalised for the variants they did
     not choose.
     """
-    h = normalize(hyp)
+    h = normalize(hyp, region)
     best: Optional[Tuple[int, int]] = None
     for gold in golds:
-        r = normalize(gold)
+        r = normalize(gold, region)
         d = _levenshtein(h, r)
         if best is None or d / max(len(r), 1) < best[0] / max(best[1], 1):
             best = (d, len(r))
@@ -371,6 +392,7 @@ def load_fixture(dialect: str) -> Dict[str, List[str]]:
 
 def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
     golds = load_fixture(dialect)
+    region = _REGION_NOTATION.get(dialect, _OTHER)
     words = sorted(golds)
     if limit is not None:
         words = words[:limit]
@@ -386,13 +408,13 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         if hit is not None:
             n_stress += 1
             stress_hits += hit
-        d, n = score_word(hyp, golds[word])
+        d, n = score_word(hyp, golds[word], region)
         err += d
         tot += n
         if d == 0:
             exact += 1
         else:
-            _count_confusions(hyp, golds[word], confusion)
+            _count_confusions(hyp, golds[word], confusion, region)
     top_confusions = sorted(confusion.items(),
                             key=lambda kv: kv[1], reverse=True)[:20]
     return {
@@ -413,11 +435,12 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
 
 
 def _count_confusions(hyp: str, golds: List[str],
-                      confusion: Dict[Tuple[str, str], int]) -> None:
+                      confusion: Dict[Tuple[str, str], int],
+                      region: tuple) -> None:
     """Character-level substitution/indel pairs vs the closest variant."""
     import difflib
-    h = normalize(hyp)
-    r = min((normalize(g) for g in golds),
+    h = normalize(hyp, region)
+    r = min((normalize(g, region) for g in golds),
             key=lambda r: _levenshtein(h, r) / max(len(r), 1))
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(
             None, h, r).get_opcodes():
