@@ -44,6 +44,17 @@ class TestScoring:
         assert benchmark.normalize("ˈka·zɐ") == "kazɐ"
         assert benchmark.normalize("k a | z ɐ") == "ka|zɐ".replace("|", "")
 
+    def test_notation_variants_of_one_sound_compare_equal(self):
+        # Infopédia abnorme ɐbnɔrmə, tugaphone ɐbnɔɾmɨ.
+        assert benchmark.normalize("ɐbnɔrmə") == benchmark.normalize("ɐbnɔɾmɨ")
+        # São Paulo gold akə̃ˈpa (acampar), tugaphone akɐ̃ˈpa.
+        assert benchmark.normalize("akə̃ˈpa", "ɐ") == benchmark.normalize("akɐ̃ˈpa", "ɐ")
+        assert benchmark.normalize("ɐsɪdẽⁿʧɪ") == benchmark.normalize("ɐsidẽt͡ʃi")
+
+    def test_fold_keeps_tap_and_uvular_apart(self):
+        assert benchmark.normalize("ɐʀẽdavɛɫ") != benchmark.normalize("ɐɾẽdavɛɫ")
+        assert benchmark.normalize("ˈkaro") != benchmark.normalize("ˈkaʁo")
+
     def test_score_word_picks_closest_variant(self):
         d, n = benchmark.score_word("ˈkazɐ", ["ˈkazɐ", "ˈkasɐ"])
         assert (d, n) == (0, 4)

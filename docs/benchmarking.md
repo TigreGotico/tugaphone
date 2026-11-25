@@ -155,7 +155,22 @@ python scripts/benchmark.py --refresh-fixtures
 ## Scoring
 
 Both sides are normalized identically, NFC, stress marks and
-syllable/tie joiners removed, whitespace collapsed, then a
+syllable/tie joiners removed, whitespace collapsed. Then each symbol that the
+gold's sources write for a sound that tugaphone writes another way is mapped to
+one symbol of one code point:
+
+| written | scored as | why |
+|---|---|---|
+| ⟨r⟩ | ⟨ɾ⟩ | Infopédia writes the tap as ⟨r⟩ and the trill as ⟨ʀ⟩ |
+| ⟨ʀ χ⟩ | ⟨ʁ⟩ | one uvular or velar rhotic |
+| ⟨ɹ⟩ | ⟨ɾ⟩ | a pt-BR coda tap written as an approximant |
+| ⟨ʊ ɪ⟩ | ⟨u i⟩ | narrow symbols for unstressed [u i] |
+| ⟨ə⟩ | ⟨ɨ⟩ in pt-PT and pt-PT-x-lisbon, ⟨ɐ⟩ elsewhere | the sound the region's source writes as ⟨ə⟩ |
+| ⟨tʃ dʒ⟩, ⟨ʧ ʤ⟩ | ⟨ʧ ʤ⟩ | one affricate |
+| ⟨ɐ̃⟩, ⟨ã⟩ | ⟨ã⟩ | one nasal vowel |
+| ⟨ⁿ ( ) '⟩ | removed | optional segments and ASCII stress |
+
+The fold keeps ⟨ɾ⟩ and ⟨ʁ⟩ apart. Then a
 character-level edit distance is taken against the **closest** attested
 variant of the word (a word with several valid pronunciations is not
 penalised for the variants it did not choose). Reported per dialect:
