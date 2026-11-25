@@ -60,7 +60,21 @@ _ALIASES: Dict[str, str] = {
     "pt-BR-x-rio": "pt-BR-x-rj",
     "pt-BR-x-rio-grande-do-sul": "pt-BR-x-sul",
     "pt-BR-x-rio-grande-do-norte": "pt-BR",
+    # The orthography2ipa notes for pt-PT-x-terceira call it "the best-described
+    # member of the CENTRAL group of the Azores (Terceira, Graciosa, São Jorge,
+    # Pico, Faial)", so each central island takes it. São Miguel has its own lect.
+    "pt-PT-x-acores-sao-miguel": "pt-PT-x-sao-miguel",
     "pt-PT-x-acores-terceira": "pt-PT-x-terceira",
+    "pt-PT-x-acores-faial": "pt-PT-x-terceira",
+    "pt-PT-x-acores-pico": "pt-PT-x-terceira",
+    "pt-PT-x-acores-sao-jorge": "pt-PT-x-terceira",
+    "pt-PT-x-acores-graciosa": "pt-PT-x-terceira",
+    "pt-PT-x-azores-sao-miguel": "pt-PT-x-sao-miguel",
+    "pt-PT-x-azores-terceira": "pt-PT-x-terceira",
+    "pt-PT-x-azores-faial": "pt-PT-x-terceira",
+    "pt-PT-x-azores-pico": "pt-PT-x-terceira",
+    "pt-PT-x-azores-sao-jorge": "pt-PT-x-terceira",
+    "pt-PT-x-azores-graciosa": "pt-PT-x-terceira",
 }
 
 
