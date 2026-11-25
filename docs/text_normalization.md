@@ -408,6 +408,15 @@ expand_acronyms("ia ao mercado")
 
 ---
 
+## Credits
+
+The abbreviation rules in `tugaphone/text_normalization.py` are ported from
+[tts_eu_pt](https://github.com/logus2k/tts_eu_pt), a European-Portuguese TTS
+front-end by Antonio Cruz, released under the Apache License 2.0. The rules
+were reimplemented in tugaphone's own idiom rather than copied verbatim. The
+English loanword lexicon comes from the same project, see
+[codeswitch.md](codeswitch.md).
+
 ## Where next
 
 - [numbers.md](numbers.md), `normalize_numbers` and the variety of each lect

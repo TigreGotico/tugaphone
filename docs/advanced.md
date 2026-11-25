@@ -95,8 +95,12 @@ usable on its own:
   candidate lattice and the lect specs that are tugaphone's core.
 - [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), the `pt-PT` and
   `pt-BR` residual lexicons.
+- [`text2spoken`](https://github.com/TigreGotico/text2spoken), numbers, dates,
+  times, money and abbreviations for `normalize_numbers`.
+- [`desacordo_ortografico`](https://github.com/TigreGotico/desacordo_ortografico),
+  old spellings to AO1990, the spelling step of `expand`.
 - [`tugalex`](https://github.com/TigreGotico/tugalex), the noun and given-name
-  genders.
+  genders, and the gender of a given name for `D.` (Dom or Dona).
 - [`silabificador`](https://github.com/TigreGotico/silabificador), the
   syllabifier of the `tugaphone.tokenizer` token tree. The phonemization path
   does not use it.
@@ -126,4 +130,4 @@ through it. See [tokenizer.md](tokenizer.md).
 - [tokenizer.md](tokenizer.md), inspect syllables, stress and graphemes directly
 
 ---
-[← Tokenizer](tokenizer.md) · [Index](index.md) · [Benchmarking →](benchmarking.md)
+[← Tokenizer](tokenizer.md) · [Index](index.md) · [Development →](development.md)
