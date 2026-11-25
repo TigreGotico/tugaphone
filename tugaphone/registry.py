@@ -21,8 +21,7 @@ import functools
 import warnings
 from typing import Dict, List, Optional, Tuple
 
-from linguatag import closest_lang, default_region, with_default_region
-from linguatag.bcp47 import parse
+from linguatag import closest_lang, default_region, parse_tag, with_default_region
 from orthography2ipa import ancestry_chain, available_codes, resolve, resolves_exactly
 
 from tugaphone.version import VERSION_MAJOR
@@ -37,7 +36,7 @@ _OWN_ORTHOGRAPHY = frozenset({"pt-PT-x-medieval"})
 # filtering them out loads every spec orthography2ipa ships.
 _CANONICAL: List[str] = sorted(
     c for c in available_codes(include_clades=True)
-    if parse(c).language == "pt" and c not in _OWN_ORTHOGRAPHY
+    if parse_tag(c).language == "pt" and c not in _OWN_ORTHOGRAPHY
 )
 _CANONICAL_SET = set(_CANONICAL)
 
