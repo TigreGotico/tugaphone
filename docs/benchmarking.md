@@ -161,12 +161,13 @@ one symbol of one code point:
 
 | written | scored as | why |
 |---|---|---|
-| ⟨r⟩ | ⟨ɾ⟩ | Infopédia writes the tap as ⟨r⟩ and the trill as ⟨ʀ⟩ |
-| ⟨ʀ χ⟩ | ⟨ʁ⟩ | one uvular or velar rhotic |
+| ⟨r⟩ | ⟨ɾ⟩ in pt-PT and pt-PT-x-lisbon only | Infopédia writes the tap as ⟨r⟩ and the trill as ⟨ʀ⟩; the pt-AO, pt-MZ and pt-TL gold writes the trill as ⟨r⟩ beside the tap ⟨ɾ⟩ |
+| ⟨ʀ⟩ | ⟨ʁ⟩ in pt-PT and pt-PT-x-lisbon | the Infopédia trill |
+| ⟨χ⟩ | ⟨ʁ⟩ | one uvular or velar rhotic |
 | ⟨ɹ⟩ | ⟨ɾ⟩ | a pt-BR coda tap written as an approximant |
 | ⟨ʊ ɪ⟩ | ⟨u i⟩ | narrow symbols for unstressed [u i] |
 | ⟨ə⟩ | ⟨ɨ⟩ in pt-PT and pt-PT-x-lisbon, ⟨ɐ⟩ elsewhere | the sound the region's source writes as ⟨ə⟩ |
-| ⟨tʃ dʒ⟩, ⟨ʧ ʤ⟩ | ⟨ʧ ʤ⟩ | one affricate |
+| ⟨ʧ ʤ⟩ | ⟨tʃ dʒ⟩ | one affricate, in the two letters that a syllable break can split |
 | ⟨ɐ̃⟩, ⟨ã⟩ | ⟨ã⟩ | one nasal vowel |
 | ⟨ⁿ ( ) '⟩ | removed | optional segments and ASCII stress |
 
