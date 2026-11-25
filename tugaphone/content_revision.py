@@ -20,8 +20,11 @@ def revision(lang: str = "pt-PT") -> str:
 
 @cache
 def _revision() -> str:
-    names = {canonicalize_name(Requirement(line).name) for line in requires("tugaphone") or ()
-             if Requirement(line).marker is None or Requirement(line).marker.evaluate({"extra": ""})}
+    names = set()
+    for line in requires("tugaphone") or ():
+        requirement = Requirement(line)
+        if requirement.marker is None or requirement.marker.evaluate({"extra": ""}):
+            names.add(canonicalize_name(requirement.name))
     pins = []
     for name in sorted(names - {"tugaphone"}):
         try:
