@@ -1,13 +1,20 @@
 # Changelog
 
+## [3.0.1a3](https://github.com/TigreGotico/tugaphone/tree/3.0.1a3) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a2...3.0.1a3)
+
+**Merged pull requests:**
+
+- test: settle three pt-PT xfails by the orthography2ipa rulings [\#423](https://github.com/TigreGotico/tugaphone/pull/423) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- test: count a hiatus as two syllables in the stress helpers [\#422](https://github.com/TigreGotico/tugaphone/pull/422) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.0.1a2](https://github.com/TigreGotico/tugaphone/tree/3.0.1a2) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a1...3.0.1a2)
 
 **Merged pull requests:**
 
-- test: settle three pt-PT xfails by the orthography2ipa rulings [\#423](https://github.com/TigreGotico/tugaphone/pull/423) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- test: count a hiatus as two syllables in the stress helpers [\#422](https://github.com/TigreGotico/tugaphone/pull/422) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 - chore: pin orthography2ipa\>=7.131.2a5 for the equi- glide [\#419](https://github.com/TigreGotico/tugaphone/pull/419) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [3.0.1a1](https://github.com/TigreGotico/tugaphone/tree/3.0.1a1) (2026-11-26)
