@@ -20,7 +20,7 @@ stress lands on the reference syllable. PER cannot see that choice.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/scoreboard-dark.svg">
-  <img alt="Rules-only PER against human gold: pt-PT 0.093, the lowest, and pt-BR 0.104, the highest." src="img/scoreboard.svg">
+  <img alt="Rules-only PER against human gold: pt-PT 0.093, the lowest, and pt-BR 0.101, the highest." src="img/scoreboard.svg">
 </picture>
 
 `img/plot_scoreboard.py` makes this figure from
@@ -38,7 +38,7 @@ Albano 2004: 228, 230), epenthesis in a written obstruent cluster
 
 | Dialect | Gold region | Words | PER | PER, variants accepted | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|---|
-| pt-BR | pt-BR | 999 | 0.1041 | 0.0837 | 0.4655 | 900 | 0.9767 |
+| pt-BR | pt-BR | 993 | 0.1007 | 0.0804 | 0.4683 | 895 | 0.9765 |
 | pt-PT | pt-PT | 1000 | 0.0929 | 0.0773 | 0.5060 | 978 | 0.9877 |
 
 ## Agreement with a machine reference (Portal LUPo)
