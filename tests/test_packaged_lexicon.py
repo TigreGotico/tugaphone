@@ -34,7 +34,7 @@ def test_a_packaged_entry_reaches_the_pt_pt_output(word):
 
 
 @pytest.mark.parametrize("lect, kind, word", [
-    ("pt-PT", "exception", "táxi"),      # ⟨x⟩ as [ks]: the spelling cannot show it
+    ("pt-PT", "exception", "alvíxaras"), # ⟨x⟩ as [s]: the spelling cannot show it
     ("pt-PT", "patch", "indemnizar"),    # a rule could reach it
     ("pt-BR", "exception", "foto"),      # the height of a stressed mid vowel
     ("pt-BR", "patch", "joga"),          # the stem vowel of a rhizotonic verb form
