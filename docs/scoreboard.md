@@ -20,7 +20,7 @@ stress lands on the reference syllable. PER cannot see that choice.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/scoreboard-dark.svg">
-  <img alt="Rules-only PER against human gold: pt-PT 0.093, the lowest, and pt-BR 0.101, the highest." src="img/scoreboard.svg">
+  <img alt="Rules-only PER against human gold: pt-PT 0.077, the lowest, and pt-BR 0.101, the highest." src="img/scoreboard.svg">
 </picture>
 
 `img/plot_scoreboard.py` makes this figure from
@@ -28,9 +28,10 @@ stress lands on the reference syllable. PER cannot see that choice.
 
 PER, variants accepted counts each reading of a cited optional process as
 one: for European Portuguese a word-initial ⟨es⟩ vowel (Vázquez Diéguez
-2015: 250, 265) and a glide before a vowel (Mateus & Andrade 1998); for
-Brazilian Portuguese the coda /R/ and the glide before a vowel (Barbosa &
-Albano 2004: 228, 230), epenthesis in a written obstruent cluster
+2015: 250, 265), a glide before a vowel (Mateus & Andrade 1998;
+Cruz-Ferreira 1999: 128) and the phones of the strong R (Pereira 2020: iii);
+for Brazilian Portuguese the strong R, the coda /R/ and the glide before a
+vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent cluster
 (Collischonn 2004: 64, 67) and the glide of a final stressed vowel before
 /S/ (Leiria, Organon 28: 133). See docs/benchmarking.md.
 
@@ -38,8 +39,8 @@ Albano 2004: 228, 230), epenthesis in a written obstruent cluster
 
 | Dialect | Gold region | Words | PER | PER, variants accepted | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|---|
-| pt-BR | pt-BR | 993 | 0.1007 | 0.0804 | 0.4683 | 895 | 0.9765 |
-| pt-PT | pt-PT | 1000 | 0.0929 | 0.0773 | 0.5060 | 978 | 0.9877 |
+| pt-BR | pt-BR | 993 | 0.1007 | 0.0780 | 0.4683 | 895 | 0.9765 |
+| pt-PT | pt-PT | 1000 | 0.0768 | 0.0457 | 0.5130 | 995 | 0.9879 |
 
 ## Agreement with a machine reference (Portal LUPo)
 
@@ -53,9 +54,9 @@ always a tugaphone error.
 |---|---|---|---|---|---|---|---|
 | pt-AO | pt-AO | 1000 | 0.2395 | n/a | 0.1010 | 993 | 0.9970 |
 | pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1721 | 0.1311 | 0.1380 | 992 | 1.0000 |
-| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1535 | 0.1388 | 0.1930 | 992 | 0.9980 |
+| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1535 | 0.1379 | 0.1930 | 992 | 0.9980 |
 | pt-MZ | pt-MZ-x-maputo | 1000 | 0.1377 | n/a | 0.2940 | 992 | 1.0000 |
-| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0683 | 0.0540 | 0.5750 | 994 | 0.9980 |
+| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0683 | 0.0383 | 0.5750 | 994 | 0.9980 |
 | pt-TL | pt-TL-x-dili | 1000 | 0.3644 | n/a | 0.0140 | 985 | 0.9970 |
 
 
