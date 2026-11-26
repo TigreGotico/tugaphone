@@ -409,7 +409,7 @@ class TestDecimalCommaReading(object):
     def test_a_bare_dot_number(self, text, expected):
         assert normalize_numbers(text) == expected
 
-    @pytest.mark.xfail(strict=True, reason="text2spoken leaves a dot number before an amount word: "
+    @pytest.mark.xfail(raises=AssertionError, strict=True, reason="text2spoken leaves a dot number before an amount word: "
                        "https://github.com/TigreGotico/text2spoken/issues/542")
     @pytest.mark.parametrize("text, expected", [
         ("subiu 4.25 por cento", "subiu quatro vírgula vinte e cinco por cento"),
