@@ -81,7 +81,7 @@ def test_regnal_numeral_after_dom_still_reads():
     assert normalize_text("D. João V reinou") == "Dom João Quinto reinou"
 
 
-@pytest.mark.xfail(strict=True, reason="tugaphone#349: D. before a capitalised article reads Dom")
+@pytest.mark.xfail(raises=AssertionError, strict=True, reason="tugaphone#349: D. before a capitalised article reads Dom")
 @pytest.mark.parametrize("text", [
     "DRECHSEL, D. As vantagens são claras.",
     "D. As vantagens são claras.",

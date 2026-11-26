@@ -7,12 +7,14 @@ so the mark comes off.
 """
 import pytest
 
+from tugaphone.number_utils import UnreadFormWarning
+
 
 ISSUES = "https://github.com/TigreGotico/text2spoken/issues"
 
 
 def _misreading(reason: str, issue: int):
-    return pytest.mark.xfail(strict=True, reason=f"{reason}. {ISSUES}/{issue}")
+    return pytest.mark.xfail(raises=(AssertionError, UnreadFormWarning), strict=True, reason=f"{reason}. {ISSUES}/{issue}")
 
 
 MINUS_RANGE = _misreading("text2spoken reads '10−20' between two numbers as 'dez menos vinte', not a range", 250)

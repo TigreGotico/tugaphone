@@ -38,7 +38,7 @@ def ipa(word):
 HIATUS_WORDS = [
     "rainha", "rainhas", "moinho", "moinhos", "campainha", "bainha",
     "bainhas", "ladainha", "tainha", "sainha", "remoinho",
-    *[pytest.param(word, marks=pytest.mark.xfail(strict=True, reason=(
+    *[pytest.param(word, marks=pytest.mark.xfail(raises=AssertionError, strict=True, reason=(
         "orthography2ipa #2664: the atonic ⟨i⟩ before ⟨nh⟩ reads as the glide [j] "
         "when the stress falls after it: a diphthong, not the hiatus")))
       for word in ("embainhar", "amoinhar", "arruinhar")],

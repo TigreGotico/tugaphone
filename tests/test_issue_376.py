@@ -16,7 +16,7 @@ _ISLAND_TAGS = [
 ]
 
 
-@pytest.mark.xfail(
+@pytest.mark.xfail(raises=AssertionError, 
     strict=True,
     reason="https://github.com/TigreGotico/tugaphone/issues/376: the Flores, "
            "Corvo and Santa Maria tags warn and are unsupported")
