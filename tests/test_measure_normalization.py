@@ -28,10 +28,8 @@ Each expected reading comes from a cited source, not from the code under test:
 import pytest
 from text2spoken import normalize
 
-# text2spoken #650 reads a pt-PT unit after a decimal under 2 in the singular
-# (Ciberdúvidas 12132). Peres & Móia, Áreas Críticas, pp. 512-517 (FLiP,
-# "concordâncias com unidades (II)") give the plural. The text2spoken owner rules.
-DECIMAL_UNIT_DISPUTE = "text2spoken #650: singular after a pt-PT decimal under 2, against Peres & Móia"
+# A pt-PT unit after any decimal takes the plural: FLiP, Dúvida Linguística 1881,
+# https://www.flip.pt/Duvidas-Linguisticas/Duvida-Linguistica/DID/1881/
 
 from tugaphone.text_normalization import normalize_text
 
@@ -63,8 +61,8 @@ class TestUnits:
         ("3,5 km", "três vírgula cinco quilómetros"),
         ("2,5 km", "dois vírgula cinco quilómetros"),
         ("1 km", "um quilómetro"),
-        pytest.param("1,5 km", "um vírgula cinco quilómetros", marks=pytest.mark.xfail(strict=True, reason=DECIMAL_UNIT_DISPUTE)),
-        pytest.param("1,2 l", "um vírgula dois litros", marks=pytest.mark.xfail(strict=True, reason=DECIMAL_UNIT_DISPUTE)),
+        ("1,5 km", "um vírgula cinco quilómetros"),
+        ("1,2 l", "um vírgula dois litros"),
         ("0 km", "zero quilómetros"),
         ("5 ml", "cinco mililitros"),
         ("10 m2", "dez metros quadrados"),
@@ -80,7 +78,7 @@ class TestUnits:
         ("pesa 7kg.", "pesa sete quilogramas."),
         ("2,5 anos", "dois vírgula cinco anos"),
         # the decimal part reads as written, with its final zero
-        pytest.param("Mede 1,80 m.", "Mede um vírgula oitenta metros.", marks=pytest.mark.xfail(strict=True, reason=DECIMAL_UNIT_DISPUTE)),
+        ("Mede 1,80 m.", "Mede um vírgula oitenta metros."),
     ])
     def test_reading(self, text, expected):
         assert read(text) == expected
@@ -96,7 +94,7 @@ class TestUnits:
         assert read(text, "pt-BR") == expected
 
     @pytest.mark.parametrize("text,lang,expected", [
-        pytest.param("1,8 m", "pt-PT", "um vírgula oito metros", marks=pytest.mark.xfail(strict=True, reason=DECIMAL_UNIT_DISPUTE)),
+        ("1,8 m", "pt-PT", "um vírgula oito metros"),
         ("1,8 m", "pt-BR", "um vírgula oito metro"),
         ("1,8 L", "pt-PT", "um vírgula oito litros"),
         ("1,8 L", "pt-BR", "um vírgula oito litro"),

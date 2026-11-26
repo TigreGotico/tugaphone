@@ -39,7 +39,7 @@ HIATUS_WORDS = [
     "rainha", "rainhas", "moinho", "moinhos", "campainha", "bainha",
     "bainhas", "ladainha", "tainha", "sainha", "remoinho",
     *[pytest.param(word, marks=pytest.mark.xfail(strict=True, reason=(
-        "the pt-PT spec reads the atonic ⟨i⟩ before ⟨nh⟩ as the glide [j] "
+        "orthography2ipa #2664: the atonic ⟨i⟩ before ⟨nh⟩ reads as the glide [j] "
         "when the stress falls after it: a diphthong, not the hiatus")))
       for word in ("embainhar", "amoinhar", "arruinhar")],
     "cainho", "azoinha",
@@ -77,8 +77,7 @@ def test_controls_keep_their_syllabification(word):
     ("vizinha", "vi·ˈzi·ɲɐ"),
     ("sozinho", "su·ˈzi·ɲu"),
     ("farinha", "fɐ·ˈɾi·ɲɐ"),
-    pytest.param("raia", "ˈʁɐj·ɐ", marks=pytest.mark.xfail(strict=True, reason=(
-        "the pt-PT spec reads the ⟨a⟩ of ⟨ai⟩ before a vowel as [a], not [ɐ]"))),
+    ("raia", "ˈʁaj·ɐ"),  # Infopédia ˈʀajɐ, with [a] (praia ˈprajɐ)
     ("moita", "ˈmoj·tɐ"),
 ])
 def test_european_portuguese_ipa(word, expected):
