@@ -47,22 +47,35 @@ class TestScoring:
         assert benchmark.normalize("k a | z ɐ") == "ka|zɐ".replace("|", "")
 
     def test_notation_variants_of_one_sound_compare_equal(self):
-        # Infopédia abnorme ɐbnɔrmə, tugaphone ɐbnɔɾmɨ.
-        assert benchmark.normalize("ɐbnɔrmə") == benchmark.normalize("ɐbnɔɾmɨ")
-        # São Paulo gold akə̃ˈpa (acampar), tugaphone akɐ̃ˈpa.
+        # Cruz-Ferreira (1999: 127): the European [ɨ] is often written ⟨ə⟩.
+        assert benchmark.normalize("ɐbnɔɾmə") == benchmark.normalize("ɐbnɔɾmɨ")
+        # The low nasal vowel is ⟨ɐ̃⟩ in both sources.
+        assert benchmark.normalize("ˈkãtu") == benchmark.normalize("ˈkɐ̃tu")
+        assert benchmark.normalize("dẽⁿʧi") == benchmark.normalize("dẽt͡ʃi")
+
+    def test_phone_per_keeps_distinct_phones_apart(self):
+        # Barbosa & Albano (2004: 229) plot [ʊ ɪ] apart from [u i]; no source
+        # calls ⟨r⟩ the tap or pt-BR ⟨ə⟩ the vowel [ɐ].
         other = benchmark._OTHER
-        assert benchmark.normalize("akə̃ˈpa", other) == benchmark.normalize("akɐ̃ˈpa", other)
-        assert benchmark.normalize("ɐsɪdẽⁿʧɪ") == benchmark.normalize("ɐsidẽt͡ʃi")
+        assert benchmark.normalize("ˈsakʊ", other) != benchmark.normalize("ˈsaku", other)
+        assert benchmark.normalize("ˈpiɾɐ") != benchmark.normalize("ˈpirɐ")
+        assert benchmark.normalize("akə̃ˈpa", other) != benchmark.normalize("akɐ̃ˈpa", other)
+
+    def test_phoneme_per_merges_the_rhotic_phones(self):
+        merged = benchmark._INFOPEDIA + benchmark._PHONEME_MERGES
+        assert benchmark.normalize("ˈkaʀu", merged) == benchmark.normalize("ˈkaʁu", merged)
+        assert benchmark.normalize("ˈmaχ", merged) == benchmark.normalize("ˈmaʁ", merged)
+        assert benchmark.normalize("ˈkaʀu") != benchmark.normalize("ˈkaʁu")
 
     def test_fold_keeps_the_trill_where_the_gold_writes_it_as_r(self):
         # pt-MZ arrematar ɐrɛmɐtˈaɾ: ⟨r⟩ is the trill beside the tap ⟨ɾ⟩.
         other = benchmark._OTHER
         assert benchmark.normalize("ˈkaru", other) != benchmark.normalize("ˈkaɾu", other)
 
-    def test_an_affricate_scores_as_its_two_letters(self):
-        # adjetivar: tugaphone ad·ʒe·ti·ˈvaɾ, pt-AO gold adʒɛtivˈaɾ.
-        assert benchmark.normalize("ad·ʒe") == benchmark.normalize("adʒe")
+    def test_an_affricate_is_one_segment(self):
+        assert benchmark.segments("ˈad͡ʒe") == ["a", "d͡ʒ", "e"]
         assert benchmark.normalize("ˈaʤe") == benchmark.normalize("ˈad͡ʒe")
+        assert benchmark.normalize("adʒe") == benchmark.normalize("ˈad͡ʒe")
 
     def test_fold_keeps_tap_and_uvular_apart(self):
         assert benchmark.normalize("ɐʀẽdavɛɫ") != benchmark.normalize("ɐɾẽdavɛɫ")
@@ -246,9 +259,10 @@ class TestInitialEs:
 
 
 class TestNasalGlide:
-    def test_a_nasal_glide_scores_as_the_bare_glide(self):
-        assert benchmark.normalize("kataˈlɐ̃w̃") == benchmark.normalize("kataˈlãw")
-        assert benchmark.normalize("ˈmɐ̃j̃") == benchmark.normalize("ˈmɐ̃j")
+    def test_a_nasal_glide_stays_apart_from_the_bare_glide(self):
+        # No source calls [w̃] and [w] one phone, so phone PER counts the edit.
+        assert benchmark.normalize("kataˈlɐ̃w̃") != benchmark.normalize("kataˈlɐ̃w")
+        assert benchmark.segments("ˈmɐ̃j̃") == ["m", "ɐ̃", "j̃"]
 
     def test_an_oral_glide_stays_apart_from_the_nasal_vowel(self):
         assert benchmark.normalize("ˈmaw") != benchmark.normalize("ˈmɐ̃w")

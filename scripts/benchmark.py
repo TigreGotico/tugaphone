@@ -82,7 +82,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "2.1"
+HARNESS_VERSION = "3.0"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -93,24 +93,32 @@ HARNESS_VERSION = "2.1"
 _STRESS_MARKS = "ˈˌ"
 _JOINERS = "·.|‿͜͡"
 
+#: The segment rule of the shared phonemizer PER board: NFD; the ligatures
+#: become their tied forms; stress marks, syllable dots, joiners and spaces go;
+#: a segment is one base symbol with its combining marks and modifier letters,
+#: and a tie bar joins the next base into the same segment (t͡ʃ is one segment).
+_LIGATURES = (("ʧ", "t͡ʃ"), ("ʤ", "d͡ʒ"), ("ʦ", "t͡s"), ("ʣ", "d͡z"))
+_SEG_TIES = "\u0361\u035c"
+_SEG_MODIFIERS = "ʰʲʷˠˤːˑ"
+_SEG_DROP = "ˈˌ.·|‿'"
 
-#: Symbols that the gold's sources and tugaphone write for one sound, mapped
-#: to one form. A nasal vowel becomes one code point, so the fold adds no
-#: edit; an affricate becomes two letters, as a syllable break splits it. Infopédia
-#: writes the tap as ⟨r⟩ and the trill as ⟨ʀ⟩; the pt-BR sources write
-#: ⟨ʊ ɪ⟩ for unstressed [u i] and ⟨χ ɹ⟩ for coda rhotics. ⟨ɾ⟩ and ⟨ʁ⟩
-#: stay apart. A glide after a nasal vowel takes its nasality from the vowel,
-#: and the gold writes it both ways (pt-BR ⟨ɐ̃w⟩ and ⟨ɐ̃w̃⟩), so ⟨w̃ j̃⟩ fold to ⟨w j⟩.
-_NOTATION = (("ʧ", "tʃ"), ("ʤ", "dʒ"), ("ɐ̃", "ã"), ("w̃", "w"), ("j̃", "j"), ("χ", "ʁ"),
-             ("ɹ", "ɾ"), ("ʊ", "u"), ("ɪ", "i"),
+
+#: Phone PER folds only what a source calls one phone written two ways. The
+#: low nasal vowel is ⟨ɐ̃⟩ (Cruz-Ferreira 1999, Handbook of the IPA p.127;
+#: Barbosa & Albano 2004, JIPA 34(2) p.229). An affricate without a tie bar is
+#: the tied affricate. ⟨ⁿ ( ) '⟩ are markup, not phones.
+_NOTATION = (("ã", "ɐ̃"), ("tʃ", "t͡ʃ"), ("dʒ", "d͡ʒ"),
              ("ⁿ", ""), ("(", ""), (")", ""), ("'", ""))
 
-#: The Infopédia regions write [ɨ] as ⟨ə⟩, the tap as ⟨r⟩ and the trill as
-#: ⟨ʀ⟩. The other regions write unstressed [ɐ] as ⟨ə⟩ (São Paulo akə̃ˈpa for
-#: acampar) and the trill as ⟨r⟩ beside the tap ⟨ɾ⟩ (pt-MZ arrematar).
-_INFOPEDIA = (("ə", "ɨ"), ("r", "ɾ"), ("ʀ", "ʁ"))
-_OTHER = (("ə", "ɐ"),)
+#: Cruz-Ferreira (1999: 127): the European [ɨ] "is often represented as /ə/".
+_INFOPEDIA = (("ə", "ɨ"),)
+_OTHER: tuple = ()
 _REGION_NOTATION: Dict[str, tuple] = {"pt-PT": _INFOPEDIA, "pt-PT-x-lisbon": _INFOPEDIA}
+
+#: Phoneme PER also merges the phones of one rhotic phoneme: [χ ʀ] with [ʁ]
+#: (Pereira 2020, R-forte do português europeu) and the pt-BR coda [ɹ] with
+#: [ɾ] (Barbosa & Albano 2004: 228, /R/ "is extremely variable in BP").
+_PHONEME_MERGES = (("χ", "ʁ"), ("ʀ", "ʁ"), ("ɹ", "ɾ"))
 
 
 #: European Portuguese drops or reduces the unstressed vowel of a word-initial
@@ -127,19 +135,40 @@ def accept_initial_es(word: str, ipa: str) -> str:
     return _INITIAL_ES.sub(r"\1", ipa) if _ES_WORD.match(word.lower()) else ipa
 
 
+def _folded(ipa: str, region: tuple) -> str:
+    s = unicodedata.normalize("NFD", ipa)
+    for written, sound in region + _NOTATION + _LIGATURES:
+        s = s.replace(unicodedata.normalize("NFD", written), unicodedata.normalize("NFD", sound))
+    return "".join(ch for ch in s if ch not in _SEG_DROP and not ch.isspace())
+
+
+def segments(ipa: str, region: tuple = _INFOPEDIA, word: Optional[str] = None) -> List[str]:
+    """The segments of ``ipa`` under the board's segment rule, after the
+    notation folds. With ``word``, a word-initial ⟨es⟩ vowel is removed."""
+    s = _folded(ipa, region)
+    if word is not None:
+        s = accept_initial_es(word, s)
+    out: List[str] = []
+    join = False
+    for ch in s:
+        if ch in _SEG_TIES:
+            join = bool(out)
+            if out:
+                out[-1] += "\u0361"
+        elif out and (join or unicodedata.combining(ch) or ch in _SEG_MODIFIERS):
+            out[-1] += ch
+            join = False
+        else:
+            out.append(ch)
+    return out
+
+
 def normalize(ipa: str, region: tuple = _INFOPEDIA) -> str:
-    """One comparable form: NFC, no stress marks, no syllable/tie joiners,
-    no whitespace, one symbol per sound. Both sides of every comparison go
-    through this."""
-    s = unicodedata.normalize("NFC", ipa).replace("\u0361", "").replace("\u035c", "")
-    for written, sound in region + _NOTATION:
-        s = s.replace(written, sound)
-    for ch in _STRESS_MARKS + _JOINERS:
-        s = s.replace(ch, "")
-    return "".join(s.split())
+    """The segments of ``ipa`` joined into one string."""
+    return "".join(segments(ipa, region))
 
 
-def _levenshtein(a: str, b: str) -> int:
+def _levenshtein(a, b) -> int:
     if a == b:
         return 0
     if not a:
@@ -166,19 +195,8 @@ def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA,
     so multi-variant words are not penalised for the variants they did
     not choose.
     """
-    h = normalize(hyp, region)
-    if word is not None:
-        h = accept_initial_es(word, h)
-    best: Optional[Tuple[int, int]] = None
-    for gold in golds:
-        r = normalize(gold, region)
-        if word is not None:
-            r = accept_initial_es(word, r)
-        d = _levenshtein(h, r)
-        if best is None or d / max(len(r), 1) < best[0] / max(best[1], 1):
-            best = (d, len(r))
-    assert best is not None
-    return best
+    h = segments(hyp, region, word)
+    return min((_levenshtein(h, r), len(r)) for r in (segments(g, region, word) for g in golds))
 
 
 # ─── stress accuracy ────────────────────────────────────────────────────────
@@ -410,7 +428,7 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         words = words[:limit]
     european = dialect.startswith("pt-PT")
     err = tot = exact = failed = n_stress = stress_hits = 0
-    err_acc = tot_acc = 0
+    err_acc = tot_acc = err_ph = tot_ph = 0
     confusion: Dict[Tuple[str, str], int] = {}
     for word in words:
         try:
@@ -425,6 +443,9 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         d, n = score_word(hyp, golds[word], region)
         err += d
         tot += n
+        d_ph, n_ph = score_word(hyp, golds[word], region + _PHONEME_MERGES)
+        err_ph += d_ph
+        tot_ph += n_ph
         if european:
             d_acc, n_acc = score_word(hyp, golds[word], region, word)
             err_acc += d_acc
@@ -441,6 +462,7 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         "n": len(words),
         "failed": failed,
         "per": round(err / tot, 4) if tot else None,
+        "per_phoneme": round(err_ph / tot_ph, 4) if tot_ph else None,
         "per_accepted": round(err_acc / tot_acc, 4) if tot_acc else None,
         "word_accuracy": round(exact / len(words), 4) if words else None,
         "stress_acc": stress_accuracy(stress_hits, n_stress),
@@ -460,7 +482,7 @@ def _count_confusions(hyp: str, golds: List[str],
     import difflib
     h = normalize(hyp, region)
     r = min((normalize(g, region) for g in golds),
-            key=lambda r: _levenshtein(h, r) / max(len(r), 1))
+            key=lambda r: (_levenshtein(h, r), len(r)))
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(
             None, h, r).get_opcodes():
         if op == "equal":

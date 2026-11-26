@@ -75,7 +75,7 @@ O2I_ROOT=/path/to/orthography2ipa python scripts/pt_br_gold_benchmark.py \
     --alib-bahia alib-bahia-coda-s.tsv --lects pt-BR pt-BR-x-sp
 ```
 
-PER folds the notation of a source into the spec's symbols: [ɪ ʊ ə] and the
+This script folds the notation of a source into the spec's symbols: [ɪ ʊ ə] and the
 fricative rhotics. It folds nothing else, so a `pt-BR-x-sp` row pays for the tap
 and the dropped infinitive ⟨r⟩ that the spec writes and the NILC file does not.
 
@@ -156,29 +156,39 @@ python scripts/benchmark.py --refresh-fixtures
 
 ## Scoring
 
-Both sides are normalized identically, NFC, stress marks and
-syllable/tie joiners removed, whitespace collapsed. Then each symbol that the
-gold's sources write for a sound that tugaphone writes another way is mapped to
-one symbol of one code point:
+Both sides go through one segment rule, the rule of the shared phonemizer PER
+board. The text is NFD. The ligatures ⟨ʧ ʤ ʦ ʣ⟩ become the tied forms. Stress
+marks, syllable dots, joiners and spaces are removed. A segment is one base
+symbol with its combining marks and modifier letters ⟨ʰ ʲ ʷ ˠ ˤ ː ˑ⟩, and a tie
+bar joins the next base symbol into the same segment, so [t͡ʃ] is one segment.
 
-| written | scored as | why |
+Before the segment rule, a notation fold maps a symbol to the one that a source
+calls the same phone. Phone PER uses only these folds:
+
+| written | scored as | source |
 |---|---|---|
-| ⟨r⟩ | ⟨ɾ⟩ in pt-PT and pt-PT-x-lisbon only | Infopédia writes the tap as ⟨r⟩ and the trill as ⟨ʀ⟩; the pt-AO, pt-MZ and pt-TL gold writes the trill as ⟨r⟩ beside the tap ⟨ɾ⟩ |
-| ⟨ʀ⟩ | ⟨ʁ⟩ in pt-PT and pt-PT-x-lisbon | the Infopédia trill |
-| ⟨χ⟩ | ⟨ʁ⟩ | one uvular or velar rhotic |
-| ⟨ɹ⟩ | ⟨ɾ⟩ | a pt-BR coda tap written as an approximant |
-| ⟨ʊ ɪ⟩ | ⟨u i⟩ | narrow symbols for unstressed [u i] |
-| ⟨ə⟩ | ⟨ɨ⟩ in pt-PT and pt-PT-x-lisbon, ⟨ɐ⟩ elsewhere | the sound the region's source writes as ⟨ə⟩ |
-| ⟨ʧ ʤ⟩ | ⟨tʃ dʒ⟩ | one affricate, in the two letters that a syllable break can split |
-| ⟨ɐ̃⟩, ⟨ã⟩ | ⟨ã⟩ | one nasal vowel |
-| ⟨ⁿ ( ) '⟩ | removed | optional segments and ASCII stress |
+| ⟨ə⟩ | ⟨ɨ⟩ in pt-PT and pt-PT-x-lisbon | Cruz-Ferreira (1999), *Handbook of the IPA* p. 127: the vowel "is often represented as /ə/" |
+| ⟨ã⟩ | ⟨ɐ̃⟩ | Cruz-Ferreira (1999: 127) and Barbosa & Albano (2004), JIPA 34(2) p. 229 write the low nasal vowel ⟨ɐ̃⟩ |
+| ⟨tʃ dʒ⟩ | ⟨t͡ʃ d͡ʒ⟩ | the same affricate without its tie bar |
+| ⟨ⁿ ( ) '⟩ | removed | markup for optional segments and ASCII stress |
 
-The fold keeps ⟨ɾ⟩ and ⟨ʁ⟩ apart. Then a
-character-level edit distance is taken against the **closest** attested
-variant of the word (a word with several valid pronunciations is not
-penalised for the variants it did not choose). Reported per dialect:
+Phoneme PER adds the merge of the phones of one rhotic phoneme:
 
-- **PER**: summed edit distance divided by summed reference length.
+| written | scored as | source |
+|---|---|---|
+| ⟨χ ʀ⟩ | ⟨ʁ⟩ | Pereira (2020), *R-forte do português europeu*: the trill [ʀ] and the uvular and velar fricatives are variants of one /ʀ/ |
+| ⟨ɹ⟩ | ⟨ɾ⟩ | Barbosa & Albano (2004: 228): the pt-BR /R/ "is extremely variable" |
+
+No fold maps [ʊ ɪ] to [u i], ⟨r⟩ to the tap, pt-BR ⟨ə⟩ to [ɐ] or [w̃ j̃] to [w j].
+Barbosa & Albano (2004: 229) plot [ʊ ɪ] apart from [u i], and no source found
+calls the other pairs one phone. Each word scores against its **closest**
+attested variant, so a word with several valid pronunciations is not penalised
+for the variants it did not choose. Reported per dialect:
+
+- **PER** (`per`): phone PER, the summed segment edits divided by the summed
+  gold segments. The pt frontend gate uses this number, because a voice learns
+  phones, not phonemes.
+- **phoneme PER** (`per_phoneme`): the same sum with the rhotic merge.
 - **PER, initial es- accepted** (`per_accepted`, European dialects only): the
   same PER, with [iʃ], [ɨʃ] and [ʃ] scored as one reading of a word-initial
   ⟨es⟩ + consonant on both sides. This is a variant of the sound, not of the

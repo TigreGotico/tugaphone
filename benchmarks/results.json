@@ -4,9 +4,10 @@
     "region": "pt-AO",
     "n": 1000,
     "failed": 0,
-    "per": 0.232,
+    "per": 0.2395,
+    "per_phoneme": 0.2395,
     "per_accepted": null,
-    "word_accuracy": 0.109,
+    "word_accuracy": 0.101,
     "stress_acc": 0.997,
     "n_stress": 993,
     "top_confusions": [
@@ -18,12 +19,12 @@
       {
         "got": "ʁ",
         "expected": "ɾ",
-        "count": 243
+        "count": 242
       },
       {
         "got": "",
         "expected": "n",
-        "count": 124
+        "count": 125
       },
       {
         "got": "",
@@ -31,8 +32,13 @@
         "count": 89
       },
       {
+        "got": "̃",
+        "expected": "",
+        "count": 69
+      },
+      {
         "got": "ɾ",
-        "expected": "ʁ",
+        "expected": "χ",
         "count": 67
       },
       {
@@ -57,23 +63,23 @@
       },
       {
         "got": "",
+        "expected": "ŋ",
+        "count": 39
+      },
+      {
+        "got": "",
         "expected": "m",
         "count": 38
       },
       {
-        "got": "",
-        "expected": "ŋ",
-        "count": 38
+        "got": "ia",
+        "expected": "jɐ",
+        "count": 35
       },
       {
         "got": "ʁa",
         "expected": "ɾɐ",
         "count": 35
-      },
-      {
-        "got": "ia",
-        "expected": "jɐ",
-        "count": 34
       },
       {
         "got": "ɛ",
@@ -104,35 +110,46 @@
         "got": "eɫ",
         "expected": "ɛw",
         "count": 21
-      },
-      {
-        "got": "",
-        "expected": "w",
-        "count": 13
       }
     ],
-    "harness_version": "2.1"
+    "harness_version": "3.0"
   },
   {
     "dialect": "pt-BR",
     "region": "pt-BR",
     "n": 1000,
     "failed": 0,
-    "per": 0.0982,
+    "per": 0.125,
+    "per_phoneme": 0.1215,
     "per_accepted": null,
-    "word_accuracy": 0.489,
+    "word_accuracy": 0.42,
     "stress_acc": 0.9731,
     "n_stress": 893,
     "top_confusions": [
       {
+        "got": "i",
+        "expected": "ɪ",
+        "count": 74
+      },
+      {
+        "got": "̃",
+        "expected": "",
+        "count": 73
+      },
+      {
         "got": "a",
         "expected": "ɐ",
-        "count": 73
+        "count": 71
+      },
+      {
+        "got": "u",
+        "expected": "ʊ",
+        "count": 67
       },
       {
         "got": "ɾ",
         "expected": "ʁ",
-        "count": 65
+        "count": 50
       },
       {
         "got": "e",
@@ -140,19 +157,19 @@
         "count": 49
       },
       {
-        "got": "i",
-        "expected": "j",
-        "count": 35
-      },
-      {
         "got": "ɐ",
         "expected": "a",
         "count": 35
       },
       {
+        "got": "i",
+        "expected": "j",
+        "count": 32
+      },
+      {
         "got": "o",
         "expected": "ɔ",
-        "count": 34
+        "count": 31
       },
       {
         "got": "",
@@ -165,24 +182,29 @@
         "count": 26
       },
       {
-        "got": "",
-        "expected": "ʁ",
-        "count": 24
+        "got": "i",
+        "expected": "e",
+        "count": 18
       },
       {
-        "got": "ĩ",
-        "expected": "i",
+        "got": "ɾ",
+        "expected": "χ",
         "count": 15
       },
       {
-        "got": "õ",
-        "expected": "o",
-        "count": 14
+        "got": "",
+        "expected": "ʁ",
+        "count": 15
       },
       {
         "got": "",
         "expected": "ɾ",
-        "count": 13
+        "count": 12
+      },
+      {
+        "got": "ɐ",
+        "expected": "ə",
+        "count": 12
       },
       {
         "got": "s",
@@ -190,9 +212,9 @@
         "count": 12
       },
       {
-        "got": "",
-        "expected": "w",
-        "count": 11
+        "got": "ɾ",
+        "expected": "ɹ",
+        "count": 12
       },
       {
         "got": "ɾ",
@@ -200,68 +222,64 @@
         "count": 10
       },
       {
-        "got": "i",
-        "expected": "e",
-        "count": 9
-      },
-      {
-        "got": "ẽ",
-        "expected": "e",
-        "count": 9
-      },
-      {
-        "got": "ʒ",
-        "expected": "",
-        "count": 8
-      },
-      {
-        "got": "ĩ",
-        "expected": "ẽ",
-        "count": 8
-      },
-      {
         "got": "",
-        "expected": "i",
-        "count": 6
+        "expected": "w",
+        "count": 10
       }
     ],
-    "harness_version": "2.1"
+    "harness_version": "3.0"
   },
   {
     "dialect": "pt-BR-x-rio-janeiro",
     "region": "pt-BR-x-riodejaneiro",
     "n": 1000,
     "failed": 0,
-    "per": 0.106,
+    "per": 0.1721,
+    "per_phoneme": 0.1721,
     "per_accepted": null,
-    "word_accuracy": 0.353,
+    "word_accuracy": 0.138,
     "stress_acc": 1.0,
     "n_stress": 992,
     "top_confusions": [
       {
-        "got": "h",
-        "expected": "ɾ",
-        "count": 189
+        "got": "u",
+        "expected": "ʊ",
+        "count": 274
       },
       {
-        "got": "a",
-        "expected": "ã",
-        "count": 102
-      },
-      {
-        "got": "ʁ",
-        "expected": "ɦ",
-        "count": 98
+        "got": "",
+        "expected": "̃",
+        "count": 175
       },
       {
         "got": "i",
-        "expected": "ĩ",
-        "count": 59
+        "expected": "ɪ",
+        "count": 157
+      },
+      {
+        "got": "h",
+        "expected": "",
+        "count": 156
+      },
+      {
+        "got": "χ",
+        "expected": "ɦ",
+        "count": 103
+      },
+      {
+        "got": "a",
+        "expected": "ɐ̃",
+        "count": 102
+      },
+      {
+        "got": "̃",
+        "expected": "",
+        "count": 82
       },
       {
         "got": "i",
         "expected": "j",
-        "count": 51
+        "count": 47
       },
       {
         "got": "x",
@@ -269,9 +287,9 @@
         "count": 46
       },
       {
-        "got": "e",
-        "expected": "ẽ",
-        "count": 41
+        "got": "h",
+        "expected": "ɾ",
+        "count": 39
       },
       {
         "got": "x",
@@ -279,29 +297,24 @@
         "count": 38
       },
       {
-        "got": "o",
-        "expected": "õ",
-        "count": 37
+        "got": "e",
+        "expected": "ɛ",
+        "count": 32
       },
       {
         "got": "o",
         "expected": "ɔ",
-        "count": 26
+        "count": 29
       },
       {
-        "got": "e",
-        "expected": "ɛ",
-        "count": 24
-      },
-      {
-        "got": "io",
-        "expected": "jõ",
-        "count": 15
+        "got": "iu",
+        "expected": "jʊ",
+        "count": 19
       },
       {
         "got": "i",
         "expected": "",
-        "count": 15
+        "count": 14
       },
       {
         "got": "w",
@@ -309,19 +322,9 @@
         "count": 14
       },
       {
-        "got": "u",
-        "expected": "ũ",
-        "count": 10
-      },
-      {
         "got": "ʃ",
         "expected": "s",
-        "count": 9
-      },
-      {
-        "got": "ẽ",
-        "expected": "ɛ̃",
-        "count": 8
+        "count": 10
       },
       {
         "got": "e",
@@ -330,42 +333,58 @@
       },
       {
         "got": "i",
-        "expected": "ɐ",
+        "expected": "ə",
         "count": 7
       },
       {
-        "got": "h",
-        "expected": "",
-        "count": 6
+        "got": "ʒ",
+        "expected": "z",
+        "count": 5
       }
     ],
-    "harness_version": "2.1"
+    "harness_version": "3.0"
   },
   {
     "dialect": "pt-BR-x-sao-paulo",
     "region": "pt-BR-x-saopaulo",
     "n": 1000,
     "failed": 0,
-    "per": 0.0655,
+    "per": 0.1535,
+    "per_phoneme": 0.1535,
     "per_accepted": null,
-    "word_accuracy": 0.546,
+    "word_accuracy": 0.193,
     "stress_acc": 0.998,
     "n_stress": 992,
     "top_confusions": [
       {
+        "got": "ɐ",
+        "expected": "ə",
+        "count": 322
+      },
+      {
+        "got": "u",
+        "expected": "ʊ",
+        "count": 272
+      },
+      {
+        "got": "̃",
+        "expected": "",
+        "count": 109
+      },
+      {
         "got": "",
         "expected": "j",
-        "count": 112
+        "count": 69
       },
       {
         "got": "i",
         "expected": "j",
-        "count": 76
+        "count": 36
       },
       {
         "got": "e",
-        "expected": "ɛ",
-        "count": 30
+        "expected": "i",
+        "count": 31
       },
       {
         "got": "o",
@@ -374,18 +393,28 @@
       },
       {
         "got": "e",
-        "expected": "i",
+        "expected": "ɛ",
+        "count": 29
+      },
+      {
+        "got": "ɐ",
+        "expected": "jə",
+        "count": 25
+      },
+      {
+        "got": "ɾ",
+        "expected": "ɽ",
         "count": 23
       },
       {
-        "got": "ĩ",
-        "expected": "i",
-        "count": 23
+        "got": "iɐ",
+        "expected": "jə",
+        "count": 21
       },
       {
-        "got": "",
-        "expected": "ɾ",
-        "count": 22
+        "got": "iu",
+        "expected": "jʊ",
+        "count": 19
       },
       {
         "got": "i",
@@ -393,13 +422,8 @@
         "count": 16
       },
       {
-        "got": "ɣ",
-        "expected": "ʁ",
-        "count": 15
-      },
-      {
-        "got": "ã",
-        "expected": "ɐ",
+        "got": "ɐ̃",
+        "expected": "ə",
         "count": 14
       },
       {
@@ -413,56 +437,37 @@
         "count": 13
       },
       {
-        "got": "u",
-        "expected": "w",
-        "count": 13
+        "got": "ɣ",
+        "expected": "ʁ",
+        "count": 12
       },
       {
-        "got": "ẽj",
-        "expected": "eɲ",
+        "got": "u",
+        "expected": "w",
+        "count": 11
+      },
+      {
+        "got": "̃j̃",
+        "expected": "ɲ",
         "count": 10
       },
       {
         "got": "ɾ",
         "expected": "r",
         "count": 10
-      },
-      {
-        "got": "e",
-        "expected": "ʒi",
-        "count": 10
-      },
-      {
-        "got": "i",
-        "expected": "ɐ",
-        "count": 8
-      },
-      {
-        "got": "ẽ",
-        "expected": "ɛ",
-        "count": 8
-      },
-      {
-        "got": "ã",
-        "expected": "a",
-        "count": 6
-      },
-      {
-        "got": "j",
-        "expected": "",
-        "count": 6
       }
     ],
-    "harness_version": "2.1"
+    "harness_version": "3.0"
   },
   {
     "dialect": "pt-MZ",
     "region": "pt-MZ-x-maputo",
     "n": 1000,
     "failed": 0,
-    "per": 0.1293,
+    "per": 0.1377,
+    "per_phoneme": 0.1377,
     "per_accepted": null,
-    "word_accuracy": 0.325,
+    "word_accuracy": 0.294,
     "stress_acc": 1.0,
     "n_stress": 992,
     "top_confusions": [
@@ -474,12 +479,12 @@
       {
         "got": "e",
         "expected": "ɨ",
-        "count": 150
+        "count": 151
       },
       {
         "got": "o",
         "expected": "ɔ",
-        "count": 137
+        "count": 138
       },
       {
         "got": "s",
@@ -492,14 +497,19 @@
         "count": 91
       },
       {
+        "got": "̃",
+        "expected": "",
+        "count": 71
+      },
+      {
         "got": "ɔ",
         "expected": "o",
-        "count": 45
+        "count": 47
       },
       {
         "got": "ɐ",
         "expected": "a",
-        "count": 35
+        "count": 36
       },
       {
         "got": "s",
@@ -524,27 +534,17 @@
       {
         "got": "u",
         "expected": "w",
-        "count": 12
+        "count": 14
+      },
+      {
+        "got": "a",
+        "expected": "ɐ",
+        "count": 14
       },
       {
         "got": "io",
         "expected": "jɔ",
         "count": 11
-      },
-      {
-        "got": "",
-        "expected": "i",
-        "count": 9
-      },
-      {
-        "got": "a",
-        "expected": "ɐ",
-        "count": 9
-      },
-      {
-        "got": "r",
-        "expected": "ɾ",
-        "count": 9
       },
       {
         "got": "ɐs",
@@ -553,77 +553,108 @@
       },
       {
         "got": "",
+        "expected": "i",
+        "count": 8
+      },
+      {
+        "got": "",
         "expected": "ŋ",
+        "count": 8
+      },
+      {
+        "got": "r",
+        "expected": "ɾ",
         "count": 8
       },
       {
         "got": "s",
         "expected": "z",
         "count": 7
-      },
-      {
-        "got": "es",
-        "expected": "ɛʒ",
-        "count": 7
       }
     ],
-    "harness_version": "2.1"
+    "harness_version": "3.0"
   },
   {
     "dialect": "pt-PT",
     "region": "pt-PT",
     "n": 1000,
     "failed": 0,
-    "per": 0.0831,
-    "per_accepted": 0.0833,
-    "word_accuracy": 0.562,
+    "per": 0.1658,
+    "per_phoneme": 0.156,
+    "per_accepted": 0.1663,
+    "word_accuracy": 0.239,
     "stress_acc": 0.9867,
     "n_stress": 979,
     "top_confusions": [
       {
+        "got": "ɾ",
+        "expected": "r",
+        "count": 561
+      },
+      {
         "got": "i",
         "expected": "j",
-        "count": 109
+        "count": 79
+      },
+      {
+        "got": "ʁ",
+        "expected": "ʀ",
+        "count": 75
       },
       {
         "got": "u",
         "expected": "ɔ",
-        "count": 94
+        "count": 69
       },
       {
         "got": "e",
         "expected": "ɐ",
-        "count": 67
+        "count": 59
       },
       {
         "got": "ɨ",
         "expected": "j",
-        "count": 44
+        "count": 38
       },
       {
-        "got": "ɐ",
-        "expected": "a",
-        "count": 30
-      },
-      {
-        "got": "ɨ",
-        "expected": "ɛ",
-        "count": 28
-      },
-      {
-        "got": "u",
-        "expected": "w",
-        "count": 24
+        "got": "ɾi",
+        "expected": "rj",
+        "count": 26
       },
       {
         "got": "ɛ",
         "expected": "e",
-        "count": 21
+        "count": 19
+      },
+      {
+        "got": "u",
+        "expected": "w",
+        "count": 18
+      },
+      {
+        "got": "ɨ",
+        "expected": "ɛ",
+        "count": 18
+      },
+      {
+        "got": "ɐ",
+        "expected": "a",
+        "count": 16
+      },
+      {
+        "got": "ɾu",
+        "expected": "rɔ",
+        "count": 15
       },
       {
         "got": "ɔ",
         "expected": "o",
-        "count": 17
+        "count": 11
+      },
+      {
+        "got": "ɐɾ",
+        "expected": "ar",
+        "count": 7
       },
       {
         "got": "u",
@@ -631,73 +662,59 @@
         "count": 6
       },
       {
+        "got": "ɾe",
+        "expected": "rɐ",
+        "count": 5
+      },
+      {
         "got": "iu",
         "expected": "jɔ",
-        "count": 6
+        "count": 5
       },
       {
-        "got": "i",
-        "expected": "e",
-        "count": 6
-      },
-      {
-        "got": "ʒ",
-        "expected": "ʃ",
-        "count": 4
+        "got": "uɾ",
+        "expected": "ɔr",
+        "count": 5
       },
       {
         "got": "ʃ",
         "expected": "",
-        "count": 4
+        "count": 5
       },
       {
-        "got": "ʃ",
-        "expected": "ks",
-        "count": 4
-      },
-      {
-        "got": "ɨʃ",
-        "expected": "ɛks",
-        "count": 3
-      },
-      {
-        "got": "ɨ",
-        "expected": "i",
-        "count": 3
-      },
-      {
-        "got": "ɨ",
-        "expected": "e",
-        "count": 3
-      },
-      {
-        "got": "i",
-        "expected": "ɛ",
-        "count": 3
-      },
-      {
-        "got": "ɨ",
-        "expected": "",
-        "count": 3
+        "got": "ɾu",
+        "expected": "rw",
+        "count": 5
       }
     ],
-    "harness_version": "2.1"
+    "harness_version": "3.0"
   },
   {
     "dialect": "pt-PT-x-lisbon",
     "region": "pt-PT-x-lisboa",
     "n": 1000,
     "failed": 0,
-    "per": 0.0475,
-    "per_accepted": 0.0476,
-    "word_accuracy": 0.689,
+    "per": 0.0683,
+    "per_phoneme": 0.0556,
+    "per_accepted": 0.0685,
+    "word_accuracy": 0.575,
     "stress_acc": 0.998,
     "n_stress": 994,
     "top_confusions": [
       {
+        "got": "ʁ",
+        "expected": "ʀ",
+        "count": 101
+      },
+      {
         "got": "i",
         "expected": "j",
         "count": 92
+      },
+      {
+        "got": "̃",
+        "expected": "",
+        "count": 69
       },
       {
         "got": "u",
@@ -705,18 +722,13 @@
         "count": 52
       },
       {
-        "got": "ɨ",
-        "expected": "ɛ",
-        "count": 24
-      },
-      {
         "got": "u",
         "expected": "w",
         "count": 23
       },
       {
-        "got": "u",
-        "expected": "o",
+        "got": "ɨ",
+        "expected": "ɛ",
         "count": 22
       },
       {
@@ -725,9 +737,14 @@
         "count": 22
       },
       {
+        "got": "u",
+        "expected": "o",
+        "count": 21
+      },
+      {
         "got": "ɨ",
         "expected": "j",
-        "count": 21
+        "count": 17
       },
       {
         "got": "ɛ",
@@ -747,17 +764,12 @@
       {
         "got": "a",
         "expected": "ɐ",
-        "count": 7
+        "count": 6
       },
       {
         "got": "iɐ",
         "expected": "ja",
         "count": 6
-      },
-      {
-        "got": "",
-        "expected": "ŋ",
-        "count": 5
       },
       {
         "got": "ɨ",
@@ -770,63 +782,59 @@
         "count": 4
       },
       {
+        "got": "ʁɨ",
+        "expected": "ʀj",
+        "count": 4
+      },
+      {
+        "got": "",
+        "expected": "ŋ",
+        "count": 4
+      },
+      {
         "got": "uj",
         "expected": "wi",
         "count": 3
       },
       {
-        "got": "ʒ",
-        "expected": "z",
-        "count": 3
-      },
-      {
-        "got": "ɐj",
+        "got": "j",
         "expected": "i",
         "count": 3
-      },
-      {
-        "got": "ɨɨ",
-        "expected": "je",
-        "count": 3
-      },
-      {
-        "got": "uɐ",
-        "expected": "wa",
-        "count": 2
       }
     ],
-    "harness_version": "2.1"
+    "harness_version": "3.0"
   },
   {
     "dialect": "pt-TL",
     "region": "pt-TL-x-dili",
     "n": 1000,
     "failed": 0,
-    "per": 0.3418,
+    "per": 0.3644,
+    "per_phoneme": 0.3644,
     "per_accepted": null,
-    "word_accuracy": 0.017,
+    "word_accuracy": 0.014,
     "stress_acc": 0.997,
     "n_stress": 985,
     "top_confusions": [
       {
         "got": "a",
-        "expected": "ɐ",
-        "count": 626
+        "expected": "ə",
+        "count": 623
       },
       {
         "got": "e",
         "expected": "ɨ",
-        "count": 292
+        "count": 293
       },
       {
         "got": "o",
-        "expected": "u",
-        "count": 259
+        "expected": "ʊ",
+        "count": 260
       },
       {
         "got": "",
         "expected": "n",
-        "count": 217
+        "count": 219
       },
       {
         "got": "r",
@@ -839,9 +847,19 @@
         "count": 96
       },
       {
+        "got": "̃",
+        "expected": "",
+        "count": 82
+      },
+      {
         "got": "s",
         "expected": "ʃ",
-        "count": 79
+        "count": 76
+      },
+      {
+        "got": "ɐ",
+        "expected": "ə",
+        "count": 66
       },
       {
         "got": "ɔ",
@@ -851,6 +869,11 @@
       {
         "got": "i",
         "expected": "j",
+        "count": 43
+      },
+      {
+        "got": "e",
+        "expected": "ɐ",
         "count": 43
       },
       {
@@ -865,23 +888,18 @@
       },
       {
         "got": "ia",
-        "expected": "jɐ",
+        "expected": "jə",
         "count": 35
       },
       {
         "got": "ra",
-        "expected": "ɾɐ",
+        "expected": "ɾə",
         "count": 35
       },
       {
         "got": "re",
         "expected": "ɾɨ",
         "count": 33
-      },
-      {
-        "got": "e",
-        "expected": "ɐ",
-        "count": 32
       },
       {
         "got": "e",
@@ -897,18 +915,8 @@
         "got": "es",
         "expected": "ʃ",
         "count": 25
-      },
-      {
-        "got": "er",
-        "expected": "ɨɾ",
-        "count": 24
-      },
-      {
-        "got": "eɫ",
-        "expected": "ɛw",
-        "count": 23
       }
     ],
-    "harness_version": "2.1"
+    "harness_version": "3.0"
   }
 ]
