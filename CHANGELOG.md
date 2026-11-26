@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.1a1](https://github.com/TigreGotico/tugaphone/tree/1.12.1a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.12.0a1...1.12.1a1)
+
+**Merged pull requests:**
+
+- fix\(benchmark\): score the shipped phonemize path, not the deprecated cascade [\#402](https://github.com/TigreGotico/tugaphone/pull/402) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.12.0a1](https://github.com/TigreGotico/tugaphone/tree/1.12.0a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a5...1.12.0a1)
@@ -359,7 +367,6 @@
 **Merged pull requests:**
 
 - docs: sync README and docs with dev [\#289](https://github.com/TigreGotico/tugaphone/pull/289) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- feat: add the pt-BR-x-paraiba lect from orthography2ipa 7.124.2a2 [\#288](https://github.com/TigreGotico/tugaphone/pull/288) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.12a1](https://github.com/TigreGotico/tugaphone/tree/1.10.12a1) (2026-11-19)
 
