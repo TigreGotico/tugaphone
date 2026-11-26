@@ -366,3 +366,27 @@ class TestSourceNotation:
     def test_every_fixture_row_names_its_sources(self, dialect):
         rows = [r for v in benchmark.load_fixture_rows(dialect).values() for r in v]
         assert rows and all(sources for _, sources in rows)
+
+
+class TestBrazilianAcceptedScope:
+    """Each accepted step covers what its source covers (#459)."""
+
+    def score(self, hyp, gold, word):
+        return benchmark.score_word(hyp, [gold], word=word, brazilian=True)
+
+    def test_a_retroflex_coda_rhotic_is_one_segment(self):
+        assert self.score("noˈtuɾnɐ", "noˈtuɽnɐ", "noturna") == (0, 7)
+
+    def test_a_nasal_or_lax_epenthetic_vowel_drops(self):
+        assert self.score("adˈmitu", "adĩˈmitu", "admito") == (0, 6)
+        assert self.score("kɐɾɐkˈtɛɾis", "kɐɾɐkɪˈtɛɾis", "caracteres") == (0, 10)
+
+    def test_the_labial_nasal_triggers_epenthesis(self):
+        # Collischonn (2004: 66): "e a nasal labial", amnésia.
+        assert self.score("amˈnɛzjɐ", "amiˈnɛzjɐ", "amnésia") == (0, 7)
+
+    def test_a_lax_final_glide_before_s_drops(self):
+        assert self.score("ˈves", "ˈveɪs", "vez") == (0, 3)
+
+    def test_a_stressed_high_vowel_is_not_a_glide(self):
+        assert self.score("ˈtʃjɐ", "ˈtʃiɐ", "tia") == (1, 3)

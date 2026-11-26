@@ -37,11 +37,11 @@ Albano 2004: 228, 230), epenthesis in a written obstruent cluster
 | Dialect | Gold region | Words | PER | PER, variants accepted | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|---|
 | pt-AO | pt-AO | 1000 | 0.2395 | n/a | 0.1010 | 993 | 0.9970 |
-| pt-BR | pt-BR | 999 | 0.1041 | 0.0831 | 0.4655 | 900 | 0.9767 |
-| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1721 | 0.1320 | 0.1380 | 992 | 1.0000 |
-| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1535 | 0.1395 | 0.1930 | 992 | 0.9980 |
+| pt-BR | pt-BR | 999 | 0.1041 | 0.0837 | 0.4655 | 900 | 0.9767 |
+| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1721 | 0.1311 | 0.1380 | 992 | 1.0000 |
+| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1535 | 0.1388 | 0.1930 | 992 | 0.9980 |
 | pt-MZ | pt-MZ-x-maputo | 1000 | 0.1377 | n/a | 0.2940 | 992 | 1.0000 |
-| pt-PT | pt-PT | 1000 | 0.0929 | 0.0771 | 0.5060 | 978 | 0.9877 |
+| pt-PT | pt-PT | 1000 | 0.0929 | 0.0773 | 0.5060 | 978 | 0.9877 |
 | pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0683 | 0.0540 | 0.5750 | 994 | 0.9980 |
 | pt-TL | pt-TL-x-dili | 1000 | 0.3644 | n/a | 0.0140 | 985 | 0.9970 |
 

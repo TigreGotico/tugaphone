@@ -164,6 +164,28 @@ _ES_WORD = re.compile(r"^es[^aeiouáéíóúâêôãõàs]")
 #: source names /i u/ only, so a hypothesis [ɨ] there stays an edit.
 _FRONT_BEFORE_VOWEL = re.compile("i(?=[aɐeɛɨoɔu])")
 _BACK_BEFORE_VOWEL = re.compile("u(?=[aɐeɛɨioɔ])")
+_VOWEL = re.compile("[aɐeɛɨioɔuəʊɪʌ]")
+
+
+def _stressed_vowels(marked: str) -> frozenset:
+    """Indexes, in ``marked`` with the marks of ``_SEG_DROP`` removed, of each
+    vowel that is the first vowel after a stress mark."""
+    out, i, after_mark = set(), 0, False
+    for ch in marked:
+        if ch in "ˈˌ":
+            after_mark = True
+        if ch in _SEG_DROP:
+            continue
+        if after_mark and _VOWEL.match(ch):
+            out.add(i)
+            after_mark = False
+        i += 1
+    return frozenset(out)
+
+
+def _glide(pattern: re.Pattern, glide: str, ipa: str, stressed: frozenset) -> str:
+    """``ipa`` with each unstressed match of ``pattern`` read as ``glide``."""
+    return pattern.sub(lambda m: m.group() if m.start() in stressed else glide, ipa)
 
 
 #: Brazilian optional processes. Each reading of a process scores as one.
@@ -174,29 +196,35 @@ _BACK_BEFORE_VOWEL = re.compile("u(?=[aɐeɛɨioɔ])")
 #: - Vowel epenthesis in an obstruent cluster is variable (Collischonn 2004,
 #:   SIGNUM 7(1): 64, presence or absence as the dependent variable; 69%
 #:   pretonic, 24% postonic, p. 67), so an [i] between the two consonants of
-#:   a written obstruent cluster (cacto, obtuso, ignaro) is dropped. /n/ does
-#:   not trigger it (p. 66, n. 5).
+#:   a written obstruent cluster (cacto, obtuso, ignaro) is dropped. The labial
+#:   nasal triggers it too ("e a nasal labial", amnésia, p. 66), so ⟨mn⟩ is a
+#:   cluster; /n/ does not (p. 66, n. 5). The vowel may be written [i ɪ ĩ].
 #: - The glide of a final stressed syllable closed by /S/ is variable: Leiria
 #:   (Organon 28: 133) finds it in 41% of 1,725 contexts, and gives "a
 #:   ditongação é uma regra variável" as hypothesis 3 (p. 134). So the [j] of
 #:   a final stressed vowel + /S/ is dropped. The source has no unstressed data.
-_BR_CODA_R = re.compile("[ɾɹɻrʁχxhʀ](?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
-_CLUSTER = re.compile("([pbtdcgfv])(?=[bcçdfgjkmnpqstvxz])")
-_FIRST = {"p": "p", "b": "b", "t": "t", "d": "d", "c": "k", "g": "ɡ", "f": "f", "v": "v"}
+_BR_CODA_R = re.compile("[ɾɹɻɽrʁχxhʀ](?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
+_CLUSTER = re.compile("([pbtdcgfv])(?=[bcçdfgjkmnpqstvxz])|(m)(?=n)")
+_FIRST = {"p": "p", "b": "b", "t": "t", "d": "d", "c": "k", "g": "ɡ", "f": "f", "v": "v", "m": "m"}
 _SECOND = {"b": "b", "c": "[ks]", "ç": "s", "d": "d", "f": "f", "g": "[ɡʒ]", "j": "ʒ", "k": "k",
            "m": "m", "n": "n", "p": "p", "q": "k", "s": "[szʃʒ]", "t": "t", "v": "v", "x": "[ʃks]",
            "z": "z"}
 
 
 def _drop_epenthesis(word: str, ipa: str) -> str:
-    """``ipa`` with no [i] between the consonants of each written obstruent cluster."""
-    for m in _CLUSTER.finditer(word.lower()):
-        first, second = _FIRST[m.group(1)], _SECOND[word.lower()[m.end()]]
-        ipa = re.sub(f"({first})(?:\u0361[ʃʒ])?i(?={second})", r"\1", ipa, count=1)
+    """``ipa`` with no [i] between the consonants of each written cluster.
+    Clusters match left to right, each one after the last vowel dropped."""
+    lower, pos = word.lower(), 0
+    for m in _CLUSTER.finditer(lower):
+        first, second = _FIRST[m.group(m.lastindex)], _SECOND[lower[m.end()]]
+        hit = re.compile(f"({first})(?:\u0361[ʃʒ])?[iɪ]\u0303?(?={second})").search(ipa, pos)
+        if hit:
+            ipa = ipa[:hit.start()] + hit.group(1) + ipa[hit.end():]
+            pos = hit.start() + len(hit.group(1))
     return ipa
 
 
-_BR_FINAL_GLIDE_S = re.compile("([aɐeɛoɔu]\u0303?)j([sʃz])$")
+_BR_FINAL_GLIDE_S = re.compile("([aɐeɛoɔu]\u0303?)[jɪ]([sʃz])$")
 #: A written ⟨a e o⟩ in a final stressed syllable before ⟨s z⟩: accented,
 #: before ⟨z⟩ in a word with no written accent elsewhere, or the one vowel of a
 #: monosyllable. A written ⟨i⟩ or a written diphthong there (raiz, pais), a
@@ -208,10 +236,13 @@ _BR_CLITICS = frozenset({"as", "os", "das", "dos", "nas", "nos", "pelas", "pelos
 _WRITTEN_ACCENT = re.compile("[áéíóúâêô]")
 
 
-def accept_variants(word: str, ipa: str, brazilian: bool = False) -> str:
+def accept_variants(word: str, ipa: str, brazilian: bool = False,
+                    stressed: frozenset = frozenset()) -> str:
     """The normalized ``ipa`` with each sourced optional process read one way:
     for European Portuguese a word-initial ⟨es⟩ vowel removed, and for both
-    an unstressed high vowel before a vowel read as a glide."""
+    an unstressed high vowel before a vowel read as a glide. ``stressed``
+    holds the indexes of the stressed vowels of ``ipa``."""
+    ipa = _glide(_BACK_BEFORE_VOWEL, "w", _glide(_FRONT_BEFORE_VOWEL, "j", ipa, stressed), stressed)
     if brazilian:
         ipa = _BR_CODA_R.sub("ɾ", ipa)
         ipa = _drop_epenthesis(word, ipa)
@@ -221,23 +252,24 @@ def accept_variants(word: str, ipa: str, brazilian: bool = False) -> str:
             ipa = _BR_FINAL_GLIDE_S.sub(r"\1\2", ipa)
     elif _ES_WORD.match(word.lower()):
         ipa = _INITIAL_ES.sub(r"\1", ipa)
-    return _BACK_BEFORE_VOWEL.sub("w", _FRONT_BEFORE_VOWEL.sub("j", ipa))
+    return ipa
 
 
 def _folded(ipa: str, region: tuple) -> str:
     s = unicodedata.normalize("NFD", ipa)
     for written, sound in region + _NOTATION + _LIGATURES:
         s = s.replace(unicodedata.normalize("NFD", written), unicodedata.normalize("NFD", sound))
-    return "".join(ch for ch in s if ch not in _SEG_DROP and not ch.isspace())
+    return "".join(ch for ch in s if not ch.isspace())
 
 
 def segments(ipa: str, region: tuple = _INFOPEDIA, word: Optional[str] = None,
              brazilian: bool = False) -> List[str]:
     """The segments of ``ipa`` under the board's segment rule, after the
     notation folds. With ``word``, the accepted variants are one reading."""
-    s = _folded(ipa, region)
+    marked = _folded(ipa, region)
+    s = "".join(ch for ch in marked if ch not in _SEG_DROP)
     if word is not None:
-        s = accept_variants(word, s, brazilian)
+        s = accept_variants(word, s, brazilian, _stressed_vowels(marked))
     out: List[str] = []
     join = False
     for ch in s:
