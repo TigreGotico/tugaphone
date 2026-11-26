@@ -189,14 +189,19 @@ for the variants it did not choose. Reported per dialect:
   gold segments. The pt frontend gate uses this number, because a voice learns
   phones, not phonemes.
 - **phoneme PER** (`per_phoneme`): the same sum with the rhotic merge.
-- **PER, initial es- accepted** (`per_accepted`, European dialects only): the
-  same PER, with [iʃ], [ɨʃ] and [ʃ] scored as one reading of a word-initial
+- **PER, variants accepted** (`per_accepted`, European dialects only): the
+  same PER, with two cited variants of the sound scored as one reading. First, [iʃ], [ɨʃ] and [ʃ] scored as one reading of a word-initial
   ⟨es⟩ + consonant on both sides. This is a variant of the sound, not of the
   notation, so the plain PER keeps it as an error. Vázquez Diéguez (2015,
   *Anuario de Estudios Filológicos* 38) gives "esc- [(i)ʃk]" and "est- [(i)ʃt]"
   on p. 250 and "Na sequência <es- + consoante> pode desaparecer" on p. 265.
   Teyssier (1989: 28), quoted in Vázquez Diéguez (2015: 244), writes estar [(i)ʃ'tar]. A stressed ⟨e⟩ (este), a
   double ⟨ss⟩ (essência) and initial ⟨ex⟩ stay outside the step.
+  Second, an [i ɨ u] before a vowel scores as the glide [j w] on both sides.
+  Mateus & Andrade (1998, *D.E.L.T.A.* 14(1), §1.3) give the glide in casual
+  speech, "in casual speech glides may be followed by any vowel", and the vowel
+  in careful speech; §1.5 gives passear pas[i]ar / pas[j]ar. The step cannot see
+  stress, so a stressed hiatus such as [diɐ] also scores as [djɐ] on both sides.
 - **word accuracy**: exact matches after normalization.
 - **stress accuracy** (`stress_acc`, with its word count `n_stress`): the share
   of stress-eligible gold words whose primary stress lands on the gold's

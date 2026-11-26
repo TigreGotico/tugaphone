@@ -130,9 +130,20 @@ _INITIAL_ES = re.compile(r"^[iɨ]?([ʃʒ])")
 _ES_WORD = re.compile(r"^es[^aeiouáéíóúâêôãõàs]")
 
 
-def accept_initial_es(word: str, ipa: str) -> str:
-    """The normalized ``ipa`` with a word-initial ⟨es⟩ vowel removed."""
-    return _INITIAL_ES.sub(r"\1", ipa) if _ES_WORD.match(word.lower()) else ipa
+#: An unstressed high vowel before a vowel is a glide in casual European
+#: speech and a vowel in careful speech. Mateus & Andrade (1998, D.E.L.T.A.
+#: 14(1), §1.3): "in casual speech glides may be followed by any vowel"; §1.5
+#: gives passear pas[i]ar / pas[j]ar. Both readings score as the glide.
+_FRONT_BEFORE_VOWEL = re.compile("[iɨ](?=[aɐeɛɨoɔu])")
+_BACK_BEFORE_VOWEL = re.compile("u(?=[aɐeɛɨioɔ])")
+
+
+def accept_variants(word: str, ipa: str) -> str:
+    """The normalized ``ipa`` with a word-initial ⟨es⟩ vowel removed and an
+    unstressed high vowel before a vowel read as a glide."""
+    if _ES_WORD.match(word.lower()):
+        ipa = _INITIAL_ES.sub(r"\1", ipa)
+    return _BACK_BEFORE_VOWEL.sub("w", _FRONT_BEFORE_VOWEL.sub("j", ipa))
 
 
 def _folded(ipa: str, region: tuple) -> str:
@@ -147,7 +158,7 @@ def segments(ipa: str, region: tuple = _INFOPEDIA, word: Optional[str] = None) -
     notation folds. With ``word``, a word-initial ⟨es⟩ vowel is removed."""
     s = _folded(ipa, region)
     if word is not None:
-        s = accept_initial_es(word, s)
+        s = accept_variants(word, s)
     out: List[str] = []
     join = False
     for ch in s:
