@@ -31,7 +31,7 @@ from tugaphone import TugaPhonemizer, phonemize
 P, S = "ˈ", "ˌ"
 
 # A syllable nucleus: a run of vowel symbols. The glides [j w] are not nuclei.
-NUCLEUS = re.compile("[aɐeɛəɨioɔuʊɪ][\u0303]?(?:[aɐeɛəɨioɔuʊɪ][\u0303]?)*")
+NUCLEUS = re.compile("[aɐeɛəɨioɔuʊɪ][\u0303]?")
 
 
 def element_marks(ipa):

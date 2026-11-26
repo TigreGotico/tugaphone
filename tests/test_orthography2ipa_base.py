@@ -15,8 +15,9 @@ import orthography2ipa
 
 from tugaphone import phonemize
 
-# A syllable nucleus: a run of vowel symbols. The glides [j w] are not nuclei.
-NUCLEUS = re.compile("[aɐeɛəɨioɔuʊɪ]̃?(?:[aɐeɛəɨioɔuʊɪ]̃?)*")
+# A syllable nucleus: one vowel symbol. Two adjacent vowels are a hiatus, because
+# the output writes a diphthong with a glide [j w].
+NUCLEUS = re.compile("[aɐeɛəɨioɔuʊɪ]̃?")
 
 
 def stressed_index(word, lect="pt-PT"):
@@ -42,9 +43,16 @@ class TestStressDelegation:
         ("órgão", 0), ("manhã", 1), ("amável", 1),
         # monosyllables
         ("sol", 0), ("pé", 0),
+        # a hiatus after the stress is two syllables (gló·ri·a, his·tó·ri·a)
+        ("glória", 0), ("história", 1),
     ])
     def test_gold_positions(self, word, expected):
         assert stressed_index(word) == expected, phonemize(word, "pt-PT")
+
+    @pytest.mark.parametrize("lect,vowel", [("pt-PT", "ɨ"), ("pt-BR", "e")])
+    def test_pretonic_e_reduces_in_pt_pt_only(self, lect, vowel):
+        # Infopédia pedir [pɨˈdiɾ]; Michaelis pedir [peˈdʒiɾ].
+        assert phonemize("pedir", lect).partition("ˈ")[0] == "p" + vowel
 
     def test_spec_rules_present(self):
         assert orthography2ipa.get("pt-PT").stress is not None

@@ -24,7 +24,7 @@ from silabificador import Syllabifier
 from tugaphone import phonemize
 
 # A syllable nucleus: a run of vowel symbols. The glides [j w] are not nuclei.
-NUCLEUS = re.compile("[aɐeɛəɨioɔuʊɪ]\u0303?(?:[aɐeɛəɨioɔuʊɪ]\u0303?)*")
+NUCLEUS = re.compile("[aɐeɛəɨioɔuʊɪ]\u0303?")
 
 
 def stressed_index(word, syllables):
