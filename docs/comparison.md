@@ -40,4 +40,4 @@ languages and has years of field use. Its accuracy against the per-lect gold is
 measured openly, see [benchmarking.md](benchmarking.md).
 
 ---
-[← Quickstart](quickstart.md) · [Index](index.md) · [Architecture →](architecture.md)
+[← Quickstart](quickstart.md) · [Home](index.md) · [Architecture →](architecture.md)

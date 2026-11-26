@@ -10,11 +10,12 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).parent))
 from plot_style import save  # noqa: E402
 
-rows = sorted(json.loads((ROOT / "benchmarks" / "results.json").read_text(encoding="utf-8")),
-              key=lambda r: r["per"])
+rows = [{"dialect": r["dialect"], "per": r["per"], "stress_acc": r["stress_acc"]}
+        for r in sorted(json.loads((ROOT / "benchmarks" / "results.json").read_text(encoding="utf-8")),
+                        key=lambda r: r["per"])]
 
 
-def draw(fig, theme):
+def draw(fig, theme, rows):
     per, stress = fig.subplots(1, 2, sharey=True, width_ratios=[3, 2])
     y = range(len(rows))
     per.barh(y, [r["per"] for r in rows], height=0.6, color=theme["series"][0])
@@ -36,4 +37,4 @@ def draw(fig, theme):
     stress.grid(axis="y", visible=False)
 
 
-save(str(ROOT / "docs" / "img" / "scoreboard"), draw, width=8, height=3.4)
+save(str(ROOT / "docs" / "img" / "scoreboard"), draw, rows, width=8, height=3.4)

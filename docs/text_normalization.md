@@ -423,4 +423,4 @@ English loanword lexicon comes from the same project, see
 - [quickstart.md](quickstart.md), the pipeline in context
 
 ---
-[← Numbers](numbers.md) · [Index](index.md) · [API →](api.md)
+[← Numbers](numbers.md) · [Home](index.md) · [API →](api.md)

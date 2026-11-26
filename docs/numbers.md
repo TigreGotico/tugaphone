@@ -120,4 +120,4 @@ and its source.
 - [api.md](api.md), the function reference
 
 ---
-[← Code-switch](codeswitch.md) · [Index](index.md) · [Text normalization →](text_normalization.md)
+[← Code-switch](codeswitch.md) · [Home](index.md) · [Text normalization →](text_normalization.md)

@@ -367,4 +367,4 @@ and leaves the digits for `normalize_numbers`. Each rewrite is public:
 - [numbers.md](numbers.md), number normalization and gender agreement
 
 ---
-[← Text normalization](text_normalization.md) · [Index](index.md) · [Advanced →](advanced.md)
+[← Text normalization](text_normalization.md) · [Home](index.md) · [Advanced →](advanced.md)

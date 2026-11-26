@@ -262,4 +262,4 @@ names/personal names the upstream curation missed (`aberdeen`, `batman`,
 entries ship in the file.
 
 ---
-[← Homographs](homographs.md) · [Index](index.md) · [Numbers →](numbers.md)
+[← Homographs](homographs.md) · [Home](index.md) · [Numbers →](numbers.md)

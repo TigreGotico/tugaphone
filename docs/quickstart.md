@@ -138,4 +138,4 @@ sub-regional codes and the legacy aliases.
 - [advanced.md](advanced.md), the pipeline internals and integration
 
 ---
-[Index](index.md) · [Comparison →](comparison.md)
+[Home](index.md) · [Comparison →](comparison.md)
