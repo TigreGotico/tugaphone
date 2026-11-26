@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.3.0a1](https://github.com/TigreGotico/tugaphone/tree/3.3.0a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.2.0a1...3.3.0a1)
+
+**Merged pull requests:**
+
+- feat\(bench\): fold the Infopédia tap ⟨r⟩ to ⟨ɾ⟩ in phone PER [\#435](https://github.com/TigreGotico/tugaphone/pull/435) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.2.0a1](https://github.com/TigreGotico/tugaphone/tree/3.2.0a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.1.0a1...3.2.0a1)
@@ -375,10 +383,6 @@
 ## [1.11.5a2](https://github.com/TigreGotico/tugaphone/tree/1.11.5a2) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.5a1...1.11.5a2)
-
-**Merged pull requests:**
-
-- refactor: shorten tokenizer and number\_utils docstrings, drop dead helper [\#315](https://github.com/TigreGotico/tugaphone/pull/315) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.5a1](https://github.com/TigreGotico/tugaphone/tree/1.11.5a1) (2026-11-22)
 
