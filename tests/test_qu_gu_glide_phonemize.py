@@ -5,8 +5,8 @@ with "Grafia anterior ao Acordo Ortográfico de 1990: agüentar" and "sagüi":
 the trema marked the [w], and the Acordo Ortográfico 1990 (Base XIV, 1.º)
 removed the mark, not the sound. VOLP (ABL) writes aguentar. A verb form
 keeps the onset of its stem. Infopédia equidade [ekwiˈdad] and equivalve
-[ekwiˈvaɫv] and Michaelis equidade [ekwiˈdadi] give the [kw] of the equi-
-compounds.
+[ekwiˈvaɫv] and Michaelis equidade [ekwiˈdadi] and "e·qui·val·ve (ü)" give the [kw]
+of the equi- compounds.
 """
 import pytest
 
