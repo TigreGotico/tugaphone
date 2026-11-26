@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.1a2](https://github.com/TigreGotico/tugaphone/tree/1.12.1a2) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.12.1a1...1.12.1a2)
+
+**Merged pull requests:**
+
+- test: the marked-word lexicon xfail is not strict while o2i \#2644 lands [\#405](https://github.com/TigreGotico/tugaphone/pull/405) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.12.1a1](https://github.com/TigreGotico/tugaphone/tree/1.12.1a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.12.0a1...1.12.1a1)
@@ -363,10 +371,6 @@
 ## [1.11.0a1](https://github.com/TigreGotico/tugaphone/tree/1.11.0a1) (2026-11-19)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.12a1...1.11.0a1)
-
-**Merged pull requests:**
-
-- docs: sync README and docs with dev [\#289](https://github.com/TigreGotico/tugaphone/pull/289) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.12a1](https://github.com/TigreGotico/tugaphone/tree/1.10.12a1) (2026-11-19)
 
