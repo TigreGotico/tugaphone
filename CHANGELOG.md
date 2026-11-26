@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.0a1](https://github.com/TigreGotico/tugaphone/tree/3.4.0a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.3.0a1...3.4.0a1)
+
+**Merged pull requests:**
+
+- feat\(bench\): notation folds by the source of each gold row [\#438](https://github.com/TigreGotico/tugaphone/pull/438) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.3.0a1](https://github.com/TigreGotico/tugaphone/tree/3.3.0a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.2.0a1...3.3.0a1)
@@ -375,10 +383,6 @@
 ## [1.11.5a3](https://github.com/TigreGotico/tugaphone/tree/1.11.5a3) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.5a2...1.11.5a3)
-
-**Merged pull requests:**
-
-- build: require text2spoken 0.0.2a97 [\#317](https://github.com/TigreGotico/tugaphone/pull/317) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.5a2](https://github.com/TigreGotico/tugaphone/tree/1.11.5a2) (2026-11-22)
 
