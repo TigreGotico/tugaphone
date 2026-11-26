@@ -326,6 +326,17 @@ class TestBrazilianNasal:
     def test_an_unstressed_vowel_before_m_or_n_stays_nasal(self):
         assert benchmark.score_word("bɐ̃ˈnɐnɐ", ["baˈnɐnɐ"], word="banana", brazilian=True) == (1, 6)
 
+    def test_an_unstressed_a_is_one_reading(self):
+        assert benchmark.score_word("akõˈtesi", ["ɐkõˈtesi"], word="acontece", brazilian=True) == (0, 7)
+        assert benchmark.score_word("ˈsiɾɐ", ["ˈsiɾa"], word="Cira", brazilian=True) == (0, 4)
+        assert benchmark._score_rows("ˈsɛlulɐ", [("ˈsɛlulə", "wiktionary")], "pt-BR",
+                                     word="célula", brazilian=True)[:2] == (0, 6)
+
+    def test_a_stressed_a_and_a_pretonic_a_before_a_nasal_stay(self):
+        assert benchmark.score_word("ˈkasɐ", ["ˈkɐsɐ"], word="casa", brazilian=True) == (1, 4)
+        assert benchmark.score_word("bɐˈnɐnɐ", ["baˈnɐnɐ"], word="banana", brazilian=True) == (1, 6)
+        assert benchmark.score_word("ˈsiɾɐ", ["ˈsiɾa"], word="Cira") == (1, 4)
+
     def test_european_rows_keep_the_nasal_vowel(self):
         assert benchmark.score_word("ˈsĩmu", ["ˈsimu"], word="cimo") == (1, 4)
 

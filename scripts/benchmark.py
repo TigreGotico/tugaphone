@@ -244,6 +244,15 @@ _BR_STRONG_R = re.compile("[ʀχxh]")
 #: rows write a stressed vowel before [m n ɲ] + vowel nasal 55 times and oral
 #: 35 times. So a stressed vowel before a nasal onset, and any vowel before
 #: [ɲ], scores as oral.
+#: Before the stress BP keeps the quality of the stressed vowel, "[i e a o u
+#: ĩ ẽ ɐ̃ õ ũ]", and a final unstressed ⟨a⟩ is [ɐ] (Barbosa & Albano 2004:
+#: 229). The pt-BR Wiktionary rows write a pretonic oral ⟨a⟩ as [a] 431 times
+#: and [ɐ] 62 times, and a final unstressed ⟨a⟩ as [ɐ] 227 times, [a] 19 times
+#: and [ə] 10 times. So a pretonic oral [ɐ] not before a nasal consonant scores
+#: as [a], and a final unstressed [a ə] as [ɐ].
+_BR_PRETONIC_A = re.compile("ɐ(?![\u0303mnɲ])")
+_BR_FINAL_A = re.compile("[aə](?=[sʃz]?$)")
+
 _BR_NASAL_ONSET = re.compile("([aɐeɛioɔu])\u0303(?=([mnɲ])[aɐeɛioɔuɨəɪʊ])")
 _BR_CODA_R = re.compile("[ɾɹɻɽrʁχxhʀ](?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
 _CLUSTER = re.compile("([pbtdcgfv])(?=[bcçdfgjkmnpqstvxz])|(m)(?=n)")
@@ -303,6 +312,10 @@ def accept_variants(word: str, ipa: str, brazilian: bool = False,
     holds the indexes of the stressed vowels of ``ipa``."""
     ipa = _glide(_BACK_BEFORE_VOWEL, "w", _glide(_FRONT_BEFORE_VOWEL, "j", ipa, stressed), stressed)
     ipa = (_BR_STRONG_R if brazilian else _STRONG_R).sub("ʁ", ipa)
+    if brazilian and stressed:
+        first, last = min(stressed), max(stressed)
+        ipa = _BR_PRETONIC_A.sub(lambda m: "a" if m.start() < first else m.group(), ipa)
+        ipa = _BR_FINAL_A.sub(lambda m: "ɐ" if m.start() > last else m.group(), ipa)
     if brazilian:
         ipa = _BR_NASAL_ONSET.sub(
             lambda m: m.group(1) if m.start() in stressed or m.group(2) == "ɲ" else m.group(), ipa)
@@ -789,7 +802,7 @@ def write_reports(rows: List[dict]) -> None:
         "one: for European Portuguese a word-initial ⟨es⟩ vowel (Vázquez Diéguez",
         "2015: 250, 265), a glide before a vowel (Mateus & Andrade 1998;",
         "Cruz-Ferreira 1999: 128) and the phones of the strong R (Pereira 2020: iii);",
-        "for Brazilian Portuguese the strong R, a nasal vowel before a nasal onset, the coda /R/ and the glide before a",
+        "for Brazilian Portuguese the strong R, an unstressed ⟨a⟩, a nasal vowel before a nasal onset, the coda /R/ and the glide before a",
         "vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent cluster",
         "(Collischonn 2004: 64, 67) and the glide of a final stressed vowel before",
         "/S/ (Leiria, Organon 28: 133). See docs/benchmarking.md.",
