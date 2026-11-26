@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.1a6](https://github.com/TigreGotico/tugaphone/tree/3.4.1a6) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a5...3.4.1a6)
+
+**Merged pull requests:**
+
+- test: apply every matching orthography2ipa gold correction to the pt fixtures [\#455](https://github.com/TigreGotico/tugaphone/pull/455) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.4.1a5](https://github.com/TigreGotico/tugaphone/tree/3.4.1a5) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a4...3.4.1a5)
@@ -375,10 +383,6 @@
 ## [1.11.10a1](https://github.com/TigreGotico/tugaphone/tree/1.11.10a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.9a1...1.11.10a1)
-
-**Merged pull requests:**
-
-- fix: read an amount after as and a preposition with vírgula \(text2spoken a116\) [\#335](https://github.com/TigreGotico/tugaphone/pull/335) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.9a1](https://github.com/TigreGotico/tugaphone/tree/1.11.9a1) (2026-11-24)
 
