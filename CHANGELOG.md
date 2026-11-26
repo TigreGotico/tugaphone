@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.1a1](https://github.com/TigreGotico/tugaphone/tree/3.4.1a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.0a3...3.4.1a1)
+
+**Merged pull requests:**
+
+- fix: pt-BR reads an English onset r as the strong r and a final θ as f [\#444](https://github.com/TigreGotico/tugaphone/pull/444) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.4.0a3](https://github.com/TigreGotico/tugaphone/tree/3.4.0a3) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.0a2...3.4.0a3)
@@ -375,10 +383,6 @@
 ## [1.11.7a1](https://github.com/TigreGotico/tugaphone/tree/1.11.7a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.6a2...1.11.7a1)
-
-**Merged pull requests:**
-
-- fix: read a number masculine when tugalex gives the next word no gender [\#323](https://github.com/TigreGotico/tugaphone/pull/323) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.6a2](https://github.com/TigreGotico/tugaphone/tree/1.11.6a2) (2026-11-23)
 
