@@ -133,8 +133,9 @@ _ES_WORD = re.compile(r"^es[^aeiouáéíóúâêôãõàs]")
 #: An unstressed high vowel before a vowel is a glide in casual European
 #: speech and a vowel in careful speech. Mateus & Andrade (1998, D.E.L.T.A.
 #: 14(1), §1.3): "in casual speech glides may be followed by any vowel"; §1.5
-#: gives passear pas[i]ar / pas[j]ar. Both readings score as the glide.
-_FRONT_BEFORE_VOWEL = re.compile("[iɨ](?=[aɐeɛɨoɔu])")
+#: gives passear pas[i]ar / pas[j]ar. Both readings score as the glide. The
+#: source names /i u/ only, so a hypothesis [ɨ] there stays an edit.
+_FRONT_BEFORE_VOWEL = re.compile("i(?=[aɐeɛɨoɔu])")
 _BACK_BEFORE_VOWEL = re.compile("u(?=[aɐeɛɨioɔ])")
 
 

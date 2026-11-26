@@ -197,11 +197,13 @@ for the variants it did not choose. Reported per dialect:
   on p. 250 and "Na sequência <es- + consoante> pode desaparecer" on p. 265.
   Teyssier (1989: 28), quoted in Vázquez Diéguez (2015: 244), writes estar [(i)ʃ'tar]. A stressed ⟨e⟩ (este), a
   double ⟨ss⟩ (essência) and initial ⟨ex⟩ stay outside the step.
-  Second, an [i ɨ u] before a vowel scores as the glide [j w] on both sides.
+  Second, an [i u] before a vowel scores as the glide [j w] on both sides.
   Mateus & Andrade (1998, *D.E.L.T.A.* 14(1), §1.3) give the glide in casual
   speech, "in casual speech glides may be followed by any vowel", and the vowel
   in careful speech; §1.5 gives passear pas[i]ar / pas[j]ar. The step cannot see
   stress, so a stressed hiatus such as [diɐ] also scores as [djɐ] on both sides.
+  The source names /i u/ only, so an [ɨ] before a vowel (afeável [ɐfɨˈavɛɫ]
+  against [ɐˈfjavɛɫ]) stays an edit.
 - **word accuracy**: exact matches after normalization.
 - **stress accuracy** (`stress_acc`, with its word count `n_stress`): the share
   of stress-eligible gold words whose primary stress lands on the gold's
