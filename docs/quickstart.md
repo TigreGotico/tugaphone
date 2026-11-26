@@ -79,7 +79,7 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 | Code | Region |
 |------|--------|
 | `pt-PT` | European Portuguese (Lisbon) |
-| `pt-BR` | Brazilian Portuguese (Rio) |
+| `pt-BR` | Brazilian Portuguese (São Paulo norm; Rio is `pt-BR-x-rj`) |
 | `pt-AO` | Angolan Portuguese (Luanda) |
 | `pt-MZ` | Mozambican Portuguese (Maputo) |
 | `pt-TL` | Timorese Portuguese (Dili) |

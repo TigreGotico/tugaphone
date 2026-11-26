@@ -243,3 +243,12 @@ class TestInitialEs:
     ])
     def test_other_words_keep_the_vowel(self, word, hyp, gold):
         assert benchmark.score_word(hyp, [gold], word=word)[0] == 1
+
+
+class TestNasalGlide:
+    def test_a_nasal_glide_scores_as_the_bare_glide(self):
+        assert benchmark.normalize("kataˈlɐ̃w̃") == benchmark.normalize("kataˈlãw")
+        assert benchmark.normalize("ˈmɐ̃j̃") == benchmark.normalize("ˈmɐ̃j")
+
+    def test_an_oral_glide_stays_apart_from_the_nasal_vowel(self):
+        assert benchmark.normalize("ˈmaw") != benchmark.normalize("ˈmɐ̃w")
