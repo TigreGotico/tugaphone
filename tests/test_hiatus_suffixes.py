@@ -22,11 +22,13 @@ import pytest
 import re
 import unicodedata
 
+from orthography2ipa import transcribe
 from tugaphone import phonemize
 
-# A vowel, an optional stress mark, then the suffix [i] before [ɲ]: the [i]
-# is a nucleus of its own after another nucleus, so the two are in hiatus.
-HIATUS_BEFORE_NH = re.compile("[aɐeɛəɨioɔuʊ][\u0303]?[ˈˌ]?iɲ")
+# A vowel, an optional stress mark, then [i] before [ɲ]: the [i] is a nucleus
+# of its own after another nucleus, so the two are in hiatus. The mark after
+# [i] is the later stress of a verb (embainhar ẽbɐiˈɲaɾ).
+HIATUS_BEFORE_NH = re.compile("[aɐeɛəɨioɔuʊ][\u0303]?[ˈˌ]?i[ˈˌ]?ɲ")
 
 
 def ipa(word):
@@ -38,7 +40,9 @@ def ipa(word):
 HIATUS_WORDS = [
     "rainha", "rainhas", "moinho", "moinhos", "campainha", "bainha",
     "bainhas", "ladainha", "tainha", "sainha", "remoinho",
-    *[pytest.param(word, marks=pytest.mark.xfail(strict=True, reason=(
+    *[pytest.param(word, marks=pytest.mark.xfail(
+        not HIATUS_BEFORE_NH.search(unicodedata.normalize("NFD", transcribe(word, "pt-PT"))),
+        strict=True, raises=AssertionError, reason=(
         "orthography2ipa #2664: the atonic ⟨i⟩ before ⟨nh⟩ reads as the glide [j] "
         "when the stress falls after it: a diphthong, not the hiatus")))
       for word in ("embainhar", "amoinhar", "arruinhar")],
