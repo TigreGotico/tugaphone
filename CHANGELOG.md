@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.0a2](https://github.com/TigreGotico/tugaphone/tree/3.0.0a2) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.0a1...3.0.0a2)
+
+**Merged pull requests:**
+
+- docs: README, docs index, navigation and agent hints [\#411](https://github.com/TigreGotico/tugaphone/pull/411) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.0.0a1](https://github.com/TigreGotico/tugaphone/tree/3.0.0a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/2.0.0a1...3.0.0a1)
@@ -359,10 +367,6 @@
 ## [1.11.2a2](https://github.com/TigreGotico/tugaphone/tree/1.11.2a2) (2026-11-19)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.2a1...1.11.2a2)
-
-**Merged pull requests:**
-
-- test: pin pt-PT ex+consonant glide and pretonic a reduction [\#296](https://github.com/TigreGotico/tugaphone/pull/296) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.2a1](https://github.com/TigreGotico/tugaphone/tree/1.11.2a1) (2026-11-19)
 
