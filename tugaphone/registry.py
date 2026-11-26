@@ -21,7 +21,7 @@ import functools
 import warnings
 from typing import Dict, List, Optional, Tuple
 
-from linguatag import closest_lang, default_region, parse_tag, with_default_region
+from linguatag import closest_lang, parse_tag, with_default_region
 from orthography2ipa import ancestry_chain, available_codes, resolve, resolves_exactly
 
 from tugaphone.version import VERSION_MAJOR
@@ -197,33 +197,6 @@ def default_contact(lect: str) -> str:
 # --------------------------------------------------------------------------
 # Backwards-compatible shims (deprecated).
 # --------------------------------------------------------------------------
-
-def get_dialect_inventory(lang: str = "pt-PT"):
-    """Deprecated: a tugaphone :class:`~tugaphone.dialects.DialectInventory` for ``lang``.
-
-    Retained for the rules-only benchmark baseline and the token-feature API,
-    which read the private grapheme cascade rather than the lattice. The
-    phonemization path (:func:`tugaphone.lattice_core.phonemize`) does not use
-    it. The nearest national inventory is chosen from the resolved lect family.
-    It goes in the next major release, together with :mod:`tugaphone.dialects`.
-    """
-    warnings.warn(
-        "get_dialect_inventory() is deprecated and will be removed in tugaphone "
-        f"{VERSION_MAJOR + 1}.0.0, together with tugaphone.dialects.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    # The warning above names tugaphone.dialects, so its import stays silent.
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", DeprecationWarning)
-        from tugaphone.dialects import (EuropeanPortuguese, BrazilianPortuguese,
-                                        AngolanPortuguese, MozambicanPortuguese,
-                                        TimoresePortuguese)
-
-    inventories = {"BR": BrazilianPortuguese, "AO": AngolanPortuguese,
-                   "MZ": MozambicanPortuguese, "TL": TimoresePortuguese}
-    return inventories.get(default_region(resolve_lect(lang)), EuropeanPortuguese)()
-
 
 def normalize_dialect_code(lang: str) -> str:
     """Deprecated: normalize the casing of a BCP-47 tag (``PT-pt-X-PORTO`` → ``pt-PT-x-porto``).

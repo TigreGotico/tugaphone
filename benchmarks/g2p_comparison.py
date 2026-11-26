@@ -9,7 +9,7 @@ against all three G2P engines across the major Lusophone dialect regions.
 Usage:
     python benchmarks/g2p_comparison.py                          # all regions, 2000 words each
     python benchmarks/g2p_comparison.py --region pt-PT --limit 500
-    python benchmarks/g2p_comparison.py --modes tugaphone_full,tugaphone_rules,espeak,epitran
+    python benchmarks/g2p_comparison.py --modes tugaphone_full,espeak,epitran
 """
 
 from __future__ import annotations
@@ -65,7 +65,6 @@ def normalize(ipa: str) -> str:
 # ---------------------------------------------------------------------------
 
 _tugaphone_full: object = None
-_tugaphone_rules_cache: Dict[str, object] = {}
 _epitran_inst = None
 
 
@@ -75,33 +74,6 @@ def _get_tugaphone_full():
         from tugaphone import TugaPhonemizer
         _tugaphone_full = TugaPhonemizer()
     return _tugaphone_full
-
-
-def _get_tugaphone_rules_inventory(dialect: str):
-    inv = _tugaphone_rules_cache.get(dialect)
-    if inv is None:
-        from tugaphone.registry import get_dialect_inventory
-        inv = get_dialect_inventory(dialect)
-        try:
-            inv.IRREGULAR_WORDS = {}
-        except Exception:
-            object.__setattr__(inv, "IRREGULAR_WORDS", {})
-        _tugaphone_rules_cache[dialect] = inv
-    return inv
-
-
-def phonemize_tugaphone_full(word: str, dialect: str) -> str:
-    """Full tugaphone: lexicon + rule fallback."""
-    from tugaphone.tokenizer import Sentence
-    ph = _get_tugaphone_full()
-    return Sentence(word, dialect=ph._inventory_for_dialect(dialect)).ipa.strip()
-
-
-def phonemize_tugaphone_rules(word: str, dialect: str) -> str:
-    """Rules-only tugaphone (lexicon emptied)."""
-    from tugaphone.tokenizer import Sentence
-    inv = _get_tugaphone_rules_inventory(dialect)
-    return Sentence(word, dialect=inv).ipa.strip()
 
 
 def phonemize_tugaphone_simple(word: str, dialect: str) -> str:
@@ -234,7 +206,7 @@ def run_benchmark(
     if regions is None:
         regions = TUGAPHONE_REGIONS
     if modes is None:
-        modes = ["tugaphone_full", "tugaphone_rules", "espeak", "epitran"]
+        modes = ["tugaphone_full", "espeak", "epitran"]
 
     rows: List[dict] = []
 
@@ -268,8 +240,6 @@ def run_benchmark(
                 try:
                     if mode == "tugaphone_full":
                         hyp = phonemize_tugaphone_simple(word, region)
-                    elif mode == "tugaphone_rules":
-                        hyp = phonemize_tugaphone_rules(word, region)
                     elif mode == "espeak":
                         hyp = phonemize_espeak(word, espeak_voice)
                     elif mode == "epitran":
@@ -356,7 +326,7 @@ def print_table(rows: List[dict]) -> None:
         print("| " + " | ".join(f"{h:<12}" for h in headers) + " |")
         print("|" + "|".join(":" + "-"*11 for _ in headers) + "|")
 
-        for mode in ["tugaphone_full", "tugaphone_rules", "espeak", "epitran"]:
+        for mode in ["tugaphone_full", "espeak", "epitran"]:
             mode_rows = [r for r in rows if r["mode"] == mode]
             vals = {}
             for r in mode_rows:
@@ -397,7 +367,7 @@ def main() -> None:
     ap.add_argument("--region", help="Benchmark one region only.")
     ap.add_argument("--limit", type=int, default=WORDS_PER_REGION,
                     help=f"Words per region (default {WORDS_PER_REGION}).")
-    ap.add_argument("--modes", default="tugaphone_full,tugaphone_rules,espeak,epitran",
+    ap.add_argument("--modes", default="tugaphone_full,espeak,epitran",
                     help="Comma-separated modes to run.")
     ap.add_argument("--output", default=RESULTS_JSON,
                     help="JSON results path.")

@@ -43,11 +43,6 @@ def test_04_numbers():
     assert r.returncode == 0, r.stderr
 
 
-def test_05_token_tree():
-    r = _run(EXAMPLES_DIR / "05_token_tree.py")
-    assert r.returncode == 0, r.stderr
-
-
 def test_06_dialect_provenance():
     r = _run(EXAMPLES_DIR / "06_dialect_provenance.py")
     assert r.returncode == 0, r.stderr
@@ -55,11 +50,6 @@ def test_06_dialect_provenance():
 
 def test_07_homographs():
     r = _run(EXAMPLES_DIR / "07_homographs.py")
-    assert r.returncode == 0, r.stderr
-
-
-def test_08_rules_only():
-    r = _run(EXAMPLES_DIR / "08_rules_only.py")
     assert r.returncode == 0, r.stderr
 
 
