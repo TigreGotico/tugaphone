@@ -1,8 +1,20 @@
 # Changelog
 
+## [3.0.1a5](https://github.com/TigreGotico/tugaphone/tree/3.0.1a5) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a4...3.0.1a5)
+
+**Merged pull requests:**
+
+- test: pt-PT decimal units take the plural, text2spoken\>=0.0.2a149 [\#426](https://github.com/TigreGotico/tugaphone/pull/426) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.0.1a4](https://github.com/TigreGotico/tugaphone/tree/3.0.1a4) (2026-11-26)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a2...3.0.1a4)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a3...3.0.1a4)
+
+## [3.0.1a3](https://github.com/TigreGotico/tugaphone/tree/3.0.1a3) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a2...3.0.1a3)
 
 **Merged pull requests:**
 
@@ -371,10 +383,6 @@
 ## [1.11.3a3](https://github.com/TigreGotico/tugaphone/tree/1.11.3a3) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.3a2...1.11.3a3)
-
-**Merged pull requests:**
-
-- docs: README, docs index, navigation and agent hints [\#309](https://github.com/TigreGotico/tugaphone/pull/309) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.3a2](https://github.com/TigreGotico/tugaphone/tree/1.11.3a2) (2026-11-21)
 
