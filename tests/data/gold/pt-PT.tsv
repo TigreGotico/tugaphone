@@ -3,6 +3,7 @@
 # sample: seed=20260713 words=1000 (cap 1000)
 # columns: word<TAB>ipa_narrow<TAB>sources (one row per variant)
 # sources: portuguese-unified-pronunciation-lexicon@23898e1437dc77e84681bb7ce5580a9b3e2d04ba
+# corrections: orthography2ipa data/gold/corrections/portuguese_unified_pt.jsonl, every pt-PT row that matches (stress marks)
 AVC	aveˈse	infopedia
 Aldebarã	aɫdəbɐˈrɐ̃	infopedia
 Daiane	dajˈɐnɨ	wiktionary
@@ -661,8 +662,8 @@ exclusividade	ɐjʃkluziviˈdadə,iʃkluziviˈdadə	infopedia
 exclusividade	ɐjʃkluziviˈdadɨ	wiktionary
 excogitável	ɐjʃkuʒiˈtavɛɫ,ʃkuʒiˈtavɛɫ	infopedia
 excogitável	ɐjʃkuʒiˈtavɛɫ,iʃkuʒiˈtavɛɫ	infopedia
-excrementoso	ɐjʃkrəmẽˈtozu,ʃkrəmẽtozu	infopedia
-excrementoso	ɐjʃkrəmẽˈtozu,iʃkrəmẽtozu	infopedia
+excrementoso	ɐjʃkrəmẽˈtozu,ʃkrəmẽˈtozu	infopedia
+excrementoso	ɐjʃkrəmẽˈtozu,iʃkrəmẽˈtozu	infopedia
 facultamento	fɐkuɫtɐˈmẽtu	infopedia
 falangiídeo	fɐlɐ̃ʒiˈidju	infopedia
 falpórrias	faɫˈpɔʀjɐʃ	infopedia
