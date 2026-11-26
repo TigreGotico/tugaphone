@@ -14,7 +14,7 @@ caught as an output change.
 """
 import pytest
 
-from orthography2ipa.phonetok import PhonetokTokenizer
+from orthography2ipa import PhonetokTokenizer
 from orthography2ipa.vowels import is_front_vowel, is_orthographic_vowel
 
 from tugaphone.dialects import (

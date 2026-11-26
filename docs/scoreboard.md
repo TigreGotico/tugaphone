@@ -18,16 +18,24 @@ Stress accuracy is the share of the stress-eligible gold words
 (one word, one primary mark, two syllables or more) whose primary
 stress lands on the gold's syllable. PER cannot see that choice.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="img/scoreboard-dark.svg">
+  <img alt="Rules-only PER by dialect: pt-PT-x-lisbon 0.080, the lowest; pt-AO 0.247, the highest." src="img/scoreboard.svg">
+</picture>
+
+`img/plot_scoreboard.py` makes this figure from
+`benchmarks/results.json`.
+
 | Dialect | Gold region | Words | PER | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|
-| pt-AO | pt-AO | 1000 | 0.2477 | 0.0740 | 993 | 0.9950 |
-| pt-BR | pt-BR | 1000 | 0.2365 | 0.0840 | 893 | 0.9754 |
-| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1480 | 0.2140 | 992 | 1.0000 |
-| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1512 | 0.2070 | 992 | 0.9970 |
-| pt-MZ | pt-MZ-x-maputo | 1000 | 0.2236 | 0.1650 | 992 | 1.0000 |
-| pt-PT | pt-PT | 1000 | 0.2276 | 0.1540 | 979 | 0.9867 |
-| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0882 | 0.4920 | 994 | 0.9980 |
-| pt-TL | pt-TL-x-dili | 1000 | 0.2375 | 0.1240 | 985 | 1.0000 |
+| pt-AO | pt-AO | 1000 | 0.2472 | 0.0740 | 993 | 0.9950 |
+| pt-BR | pt-BR | 1000 | 0.1609 | 0.2590 | 893 | 0.9754 |
+| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1476 | 0.2150 | 992 | 1.0000 |
+| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1191 | 0.2940 | 992 | 0.9970 |
+| pt-MZ | pt-MZ-x-maputo | 1000 | 0.1881 | 0.1950 | 992 | 1.0000 |
+| pt-PT | pt-PT | 1000 | 0.1154 | 0.4420 | 979 | 0.9867 |
+| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0800 | 0.5300 | 994 | 0.9980 |
+| pt-TL | pt-TL-x-dili | 1000 | 0.2185 | 0.1370 | 985 | 1.0000 |
 
 
 ---

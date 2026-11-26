@@ -1,5 +1,66 @@
 # Changelog
 
+## [1.11.18a4](https://github.com/TigreGotico/tugaphone/tree/1.11.18a4) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a3...1.11.18a4)
+
+**Merged pull requests:**
+
+- refactor: import orthography2ipa names from its public package [\#397](https://github.com/TigreGotico/tugaphone/pull/397) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.11.18a3](https://github.com/TigreGotico/tugaphone/tree/1.11.18a3) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a2...1.11.18a3)
+
+**Merged pull requests:**
+
+- refactor: read language tags with the public linguatag.parse\_tag [\#393](https://github.com/TigreGotico/tugaphone/pull/393) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.11.18a2](https://github.com/TigreGotico/tugaphone/tree/1.11.18a2) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a1...1.11.18a2)
+
+**Merged pull requests:**
+
+- docs: scoreboard figure and index presentation [\#392](https://github.com/TigreGotico/tugaphone/pull/392) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.11.18a1](https://github.com/TigreGotico/tugaphone/tree/1.11.18a1) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.17a2...1.11.18a1)
+
+**Merged pull requests:**
+
+- fix: the benchmark folds notation variants of one sound before it scores \(\#389\) [\#391](https://github.com/TigreGotico/tugaphone/pull/391) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.11.17a2](https://github.com/TigreGotico/tugaphone/tree/1.11.17a2) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.17a1...1.11.17a2)
+
+**Merged pull requests:**
+
+- chore: pin linguatag\>=0.4.5a1 [\#384](https://github.com/TigreGotico/tugaphone/pull/384) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.11.17a1](https://github.com/TigreGotico/tugaphone/tree/1.11.17a1) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a4...1.11.17a1)
+
+**Merged pull requests:**
+
+- fix: content\_revision is the version strings of tugaphone and its dependencies \(\#372\) [\#374](https://github.com/TigreGotico/tugaphone/pull/374) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [1.11.16a4](https://github.com/TigreGotico/tugaphone/tree/1.11.16a4) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a3...1.11.16a4)
+
+## [1.11.16a3](https://github.com/TigreGotico/tugaphone/tree/1.11.16a3) (2026-11-25)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a2...1.11.16a3)
+
+**Merged pull requests:**
+
+- test: strict xfail for \#376 \(Flores, Corvo, Santa Maria tags unsupported\) [\#377](https://github.com/TigreGotico/tugaphone/pull/377) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- test: strict xfail for rio- place names and is\_supported [\#373](https://github.com/TigreGotico/tugaphone/pull/373) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.16a2](https://github.com/TigreGotico/tugaphone/tree/1.11.16a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a1...1.11.16a2)
@@ -309,19 +370,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.9a1...1.10.9a2)
 
-**Merged pull requests:**
-
-- test: drop the óptica xfail now that desacordo keeps the p [\#282](https://github.com/TigreGotico/tugaphone/pull/282) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- test: mark the number pair before a scale word against text2spoken\#283 [\#281](https://github.com/TigreGotico/tugaphone/pull/281) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- test: name the text2spoken issue of the século X xfail [\#280](https://github.com/TigreGotico/tugaphone/pull/280) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.10.9a1](https://github.com/TigreGotico/tugaphone/tree/1.10.9a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.8a1...1.10.9a1)
-
-**Merged pull requests:**
-
-- fix: require orthography2ipa 7.123.0a2, the first published release with spec\_revision [\#275](https://github.com/TigreGotico/tugaphone/pull/275) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.8a1](https://github.com/TigreGotico/tugaphone/tree/1.10.8a1) (2026-11-18)
 
@@ -335,19 +386,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.5a1...1.10.6a1)
 
-**Merged pull requests:**
-
-- test: pin pt-BR século X as a strict xfail on the text2spoken reading [\#273](https://github.com/TigreGotico/tugaphone/pull/273) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- fix: load orthography2ipa's benchmark, not tugaphone's, in two scripts [\#272](https://github.com/TigreGotico/tugaphone/pull/272) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- fix: read the product in digits, not an earlier product in words [\#271](https://github.com/TigreGotico/tugaphone/pull/271) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.10.5a1](https://github.com/TigreGotico/tugaphone/tree/1.10.5a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.4a2...1.10.5a1)
-
-**Merged pull requests:**
-
-- fix: read a number pair before a punctuation mark in the masculine [\#270](https://github.com/TigreGotico/tugaphone/pull/270) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.4a2](https://github.com/TigreGotico/tugaphone/tree/1.10.4a2) (2026-11-18)
 
@@ -357,18 +398,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.3a1...1.10.4a1)
 
-**Merged pull requests:**
-
-- docs: sync README and docs with dev [\#265](https://github.com/TigreGotico/tugaphone/pull/265) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- fix: spell a letter-digit code after a number unless it is a unit [\#263](https://github.com/TigreGotico/tugaphone/pull/263) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.10.3a1](https://github.com/TigreGotico/tugaphone/tree/1.10.3a1) (2026-11-18)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.2a1...1.10.3a1)
-
-**Merged pull requests:**
-
-- fix: adopt text2spoken 0.0.2a79 and read the number pairs it declines [\#264](https://github.com/TigreGotico/tugaphone/pull/264) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.2a1](https://github.com/TigreGotico/tugaphone/tree/1.10.2a1) (2026-11-18)
 

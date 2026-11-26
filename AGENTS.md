@@ -11,7 +11,7 @@ The documentation starts at [docs/index.md](docs/index.md).
 | `tugaphone/__init__.py` | `TugaPhonemizer` and the public names |
 | `tugaphone/lattice_core.py` | The orthography2ipa `Pipeline`: spelling step, `expand`, `mark`, lexicon |
 | `tugaphone/registry.py` | Lect codes, legacy aliases, `PACKAGED_LEXICON_LECTS` |
-| `tugaphone/content_revision.py` | `revision`, `RevisionError` and the digest helpers behind them |
+| `tugaphone/content_revision.py` | `revision`, `tugaphone==<version>` and the sorted dependency pins |
 | `tugaphone/number_utils.py`, `tugaphone/text_normalization.py` | The text2spoken step and the orthographic rewrites |
 | `tugaphone/codeswitch.py`, `tugaphone/langdetect.py`, `tugaphone/data/` | Contact-language routing, detector models and the loanword list |
 | `tugaphone/accent.py`, `tugaphone/__main__.py` | Accent forcing and the `tugaphone` command |

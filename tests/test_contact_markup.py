@@ -8,7 +8,7 @@ raises the same error as the engine raises with contact ``"none"``.
 """
 import pytest
 import orthography2ipa.g2p
-from orthography2ipa.markup import MarkupError
+from orthography2ipa import MarkupError
 
 from tugaphone.codeswitch import split_runs
 from tugaphone.lattice_core import phonemize

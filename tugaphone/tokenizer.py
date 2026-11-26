@@ -32,8 +32,8 @@ import warnings
 from functools import cached_property, lru_cache
 from typing import List, Optional, Dict, Set, Tuple
 
-from orthography2ipa.phonetok import PhonetokTokenizer, TokenKind
-from orthography2ipa.types import LanguageSpec
+from orthography2ipa import PhonetokTokenizer, TokenKind
+from orthography2ipa import LanguageSpec
 from orthography2ipa.vowels import is_front_vowel, is_orthographic_vowel
 
 from tugaphone.number_utils import normalize_numbers
@@ -101,7 +101,7 @@ def detect_stress_position(word: str, syllables: List[str], dialect: DialectInve
 
     rules = _spec_stress_rules(dialect.dialect_code)
     if rules is not None:
-        from orthography2ipa.stress import detect_stress
+        from orthography2ipa import detect_stress
         return detect_stress(word, rules, syllables=syllables)
 
     # Check for explicit accent marks (primary stress markers)
