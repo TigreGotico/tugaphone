@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.5.3a1](https://github.com/TigreGotico/tugaphone/tree/3.5.3a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.2a1...3.5.3a1)
+
+**Merged pull requests:**
+
+- test: drop the pt-BR gold rows that the orthography2ipa overlay drops [\#469](https://github.com/TigreGotico/tugaphone/pull/469) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- fix\(benchmark\): keep a written vowel left of an epenthesis cluster [\#467](https://github.com/TigreGotico/tugaphone/pull/467) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.5.2a1](https://github.com/TigreGotico/tugaphone/tree/3.5.2a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.1a1...3.5.2a1)
@@ -375,10 +384,6 @@
 ## [1.11.12a1](https://github.com/TigreGotico/tugaphone/tree/1.11.12a1) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.11a2...1.11.12a1)
-
-**Merged pull requests:**
-
-- fix: read language tags through linguatag [\#343](https://github.com/TigreGotico/tugaphone/pull/343) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.11a2](https://github.com/TigreGotico/tugaphone/tree/1.11.11a2) (2026-11-25)
 
