@@ -12,10 +12,8 @@ from pathlib import Path
 import pytest
 from text2spoken import normalize
 
-# text2spoken #650 reads a pt-PT unit after a decimal under 2 in the singular
-# (Ciberdúvidas 12132). Peres & Móia, Áreas Críticas, pp. 512-517 (FLiP,
-# "concordâncias com unidades (II)") give the plural. The text2spoken owner rules.
-DECIMAL_UNIT_DISPUTE = "text2spoken #650: singular after a pt-PT decimal under 2, against Peres & Móia"
+# A pt-PT unit after any decimal takes the plural: FLiP, Dúvida Linguística 1881,
+# https://www.flip.pt/Duvidas-Linguisticas/Duvida-Linguistica/DID/1881/
 
 from tugaphone import phonemize
 from tugaphone import number_utils
@@ -114,7 +112,7 @@ def test_every_fallback_names_its_text2spoken_issue():
     ("Tem 72,5 m2.", "pt-BR", "Tem setenta e dois vírgula cinco metros quadrados."),
     ("2,5 m3", "pt-PT", "dois vírgula cinco metros cúbicos"),
     ("2,5 m3", "pt-BR", "dois vírgula cinco metros cúbicos"),
-    pytest.param("0,5 km2", "pt-PT", "zero vírgula cinco quilómetros quadrados", marks=pytest.mark.xfail(strict=True, reason=DECIMAL_UNIT_DISPUTE)),
+    ("0,5 km2", "pt-PT", "zero vírgula cinco quilómetros quadrados"),
     ("0,5 km2", "pt-BR", "zero vírgula cinco quilômetro quadrado"),
     ("3,5 cm3", "pt-PT", "três vírgula cinco centímetros cúbicos"),
     ("3,5 cm3", "pt-BR", "três vírgula cinco centímetros cúbicos"),

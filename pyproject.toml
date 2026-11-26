@@ -32,7 +32,7 @@ dependencies = [
     "orthography2ipa>=7.131.2a5",
     "o2i-lexicons>=0.7.22a1",
     "desacordo_ortografico>=0.3.25a1",
-    "text2spoken[pt]>=0.0.2a129",
+    "text2spoken[pt]>=0.0.2a149",
     "packaging",
 ]
 

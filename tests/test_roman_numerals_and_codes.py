@@ -26,10 +26,8 @@ import pytest
 
 from tugaphone.text_normalization import expand_letter_digit_codes, expand_regnal_numerals, normalize_text
 
-# text2spoken #650 reads a pt-PT unit after a decimal under 2 in the singular
-# (Ciberdúvidas 12132). Peres & Móia, Áreas Críticas, pp. 512-517 (FLiP,
-# "concordâncias com unidades (II)") give the plural. The text2spoken owner rules.
-DECIMAL_UNIT_DISPUTE = "text2spoken #650: singular after a pt-PT decimal under 2, against Peres & Móia"
+# A pt-PT unit after any decimal takes the plural: FLiP, Dúvida Linguística 1881,
+# https://www.flip.pt/Duvidas-Linguisticas/Duvida-Linguistica/DID/1881/
 
 from tests.text2spoken_gaps import PRENOMINAL_CARDINAL
 
@@ -169,7 +167,7 @@ class TestCodeAfterANumber:
         assert read(text, lang) == expected
 
     @pytest.mark.parametrize("lang,expected", [
-        pytest.param("pt-PT", "um vírgula cinco milímetros quadrados", marks=pytest.mark.xfail(strict=True, reason=DECIMAL_UNIT_DISPUTE)),
+        ("pt-PT", "um vírgula cinco milímetros quadrados"),
         ("pt-BR", "um vírgula cinco milímetro quadrado"),
     ])
     def test_mm2_reads_as_a_unit(self, lang, expected):
