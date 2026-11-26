@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.5.2a1](https://github.com/TigreGotico/tugaphone/tree/3.5.2a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.1a1...3.5.2a1)
+
+**Merged pull requests:**
+
+- fix: label Portal LUPo references apart from human gold [\#464](https://github.com/TigreGotico/tugaphone/pull/464) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.5.1a1](https://github.com/TigreGotico/tugaphone/tree/3.5.1a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.0a1...3.5.1a1)
@@ -375,10 +383,6 @@
 ## [1.11.11a2](https://github.com/TigreGotico/tugaphone/tree/1.11.11a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.11a1...1.11.11a2)
-
-**Merged pull requests:**
-
-- refactor: stop reading the tugalex pronunciation dictionary in tugaphone.dialects [\#341](https://github.com/TigreGotico/tugaphone/pull/341) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.11a1](https://github.com/TigreGotico/tugaphone/tree/1.11.11a1) (2026-11-24)
 
