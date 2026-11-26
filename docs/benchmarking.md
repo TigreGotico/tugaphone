@@ -180,7 +180,7 @@ Phoneme PER adds the merge of the phones of one rhotic phoneme:
 | ⟨χ ʀ⟩ | ⟨ʁ⟩ | Pereira (2020), *R-forte do português europeu*: the trill [ʀ] and the uvular and velar fricatives are variants of one /ʀ/ |
 | ⟨ɹ⟩ | ⟨ɾ⟩ | Barbosa & Albano (2004: 228): the pt-BR /R/ "is extremely variable" |
 
-| ⟨ɪ ʊ⟩ | ⟨i u⟩ in the Wiktionary and Michaelis rows of pt-BR | the rows' own usage: in pt-BR rows from Wiktionary only (single words, no written accent in the last three letters, ⟨-e⟩ not after ⟨e i u⟩ and ⟨-o⟩ not after ⟨o i u⟩), Wiktionary writes final unstressed ⟨-e⟩ as [i] 258 times and [ɪ] 44 times, and ⟨-o⟩ as [u] 606 times and [ʊ] 139 times; Michaelis writes [ɪ ʊ] in 0 of 20,580 rows (`portuguese-unified-pronunciation-lexicon@23898e1`, `ipa_narrow`) |
+| ⟨ɪ ʊ⟩ | ⟨i u⟩ in the Wiktionary and Michaelis rows of pt-BR | the rows' own usage: in pt-BR rows from Wiktionary only (single words with no ⟨á é í ó ú â ê ô⟩ in the last three letters, ⟨-e⟩ not after ⟨e i u⟩ and ⟨-o⟩ not after ⟨o i u⟩), Wiktionary writes final unstressed ⟨-e⟩ as [i] 258 times and [ɪ] 44 times, and ⟨-o⟩ as [u] 606 times and [ʊ] 139 times; Michaelis writes [ɪ ʊ] in 0 of 20,580 rows (`portuguese-unified-pronunciation-lexicon@23898e1`, `ipa_narrow`) |
 
 A fold applies by the source of the gold row, which the third column of each
 fixture names. A row that several sources attest takes the folds of all of

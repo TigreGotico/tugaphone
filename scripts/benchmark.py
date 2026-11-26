@@ -119,7 +119,7 @@ _OTHER: tuple = ()
 
 #: The pt-BR Wiktionary and Michaelis rows write the post-stress vowels with
 #: no contrast between [ɪ ʊ] and [i u]. In the pt-BR rows from Wiktionary only,
-#: single words with no written accent in the last three letters, final ⟨-e⟩
+#: single words with no ⟨á é í ó ú â ê ô⟩ in the last three letters, final ⟨-e⟩
 #: (not after ⟨e i u⟩) is [i] 258 times and [ɪ] 44 times, and final ⟨-o⟩ is [u]
 #: 606 times and [ʊ] 139 times (⟨-o⟩ not after ⟨o i u⟩). Michaelis writes [ɪ ʊ] in 0 of 20,580 rows
 #: (portuguese-unified-pronunciation-lexicon@23898e1, ipa_narrow).
