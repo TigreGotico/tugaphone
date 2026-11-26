@@ -226,14 +226,30 @@ _SECOND = {"b": "b", "c": "[ks]", "ç": "s", "d": "d", "f": "f", "g": "[ɡʒ]", 
            "z": "z"}
 
 
+#: The spellings of each first consonant, for a written vowel after it.
+_FIRST_SPELLED = {"p": "p", "b": "b", "t": "t", "d": "d", "k": "(?:c|qu|k)", "ɡ": "(?:g|gu)",
+                  "f": "f", "v": "v", "m": "m"}
+
+
+def _second_spelled(second: str) -> str:
+    """The letters whose ``_SECOND`` class shares a sound with ``second``."""
+    sounds = set(re.sub("[][]", "", second))
+    return "[" + "".join(k for k, v in _SECOND.items() if sounds & set(re.sub("[][]", "", v))) + "]"
+
+
 def _drop_epenthesis(word: str, ipa: str) -> str:
     """``ipa`` with no [i] between the consonants of each written cluster.
-    Clusters match left to right, each one after the last vowel dropped."""
-    lower, pos = word.lower(), 0
+    Each written first consonant + ⟨i e⟩ + second consonant between the last
+    cluster and this one is a lexical vowel, so that many IPA matches are kept."""
+    lower, pos, written = word.lower(), 0, 0
     for m in _CLUSTER.finditer(lower):
         first, second = _FIRST[m.group(m.lastindex)], _SECOND[lower[m.end()]]
-        hit = re.compile(f"({first})(?:\u0361[ʃʒ])?[iɪ]\u0303?(?={second})").search(ipa, pos)
-        if hit:
+        lexical = len(re.findall(f"{_FIRST_SPELLED[first]}[iíeéê]{_second_spelled(second)}",
+                                 lower[written:m.start()]))
+        written = m.end()
+        hits = list(re.compile(f"({first})(?:\u0361[ʃʒ])?[iɪ]\u0303?(?={second})").finditer(ipa, pos))
+        if len(hits) > lexical:
+            hit = hits[lexical]
             ipa = ipa[:hit.start()] + hit.group(1) + ipa[hit.end():]
             pos = hit.start() + len(hit.group(1))
     return ipa

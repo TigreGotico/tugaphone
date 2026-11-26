@@ -410,3 +410,12 @@ class TestReferenceKind:
     def test_results_json_records_reference_kind(self):
         rows = json.load(open(benchmark.RESULTS_JSON, encoding="utf-8"))
         assert {r["dialect"]: r["reference_kind"] for r in rows} == benchmark.REFERENCE_KIND
+
+
+def test_a_written_vowel_left_of_the_cluster_stays():
+    # #459: a written C + ⟨i⟩ + C before the cluster is a lexical vowel.
+    def score(hyp, gold):
+        return benchmark.score_word(hyp, [gold], word="pitapto", brazilian=True)
+    assert score("pitaptu", "pitaptu") == (0, 7)
+    assert score("pitaptu", "pitapitu") == (0, 7)
+    assert score("ptaptu", "pitaptu") == (1, 7)
