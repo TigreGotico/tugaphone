@@ -211,20 +211,17 @@ class MarkovLangDetector:
         """
         try:
             from markovonnx import MarkovChain
-        except Exception:
+        except ImportError:
             return None
         models = {}
         for lang in LANGS:
             gz = model_dir / f"{lang}.json.gz"
             plain = model_dir / f"{lang}.json"
-            try:
-                if gz.is_file():
-                    models[lang] = _load_gz(MarkovChain, gz)
-                elif plain.is_file():
-                    models[lang] = MarkovChain.load(str(plain))
-                else:
-                    return None
-            except Exception:
+            if gz.is_file():
+                models[lang] = _load_gz(MarkovChain, gz)
+            elif plain.is_file():
+                models[lang] = MarkovChain.load(str(plain))
+            else:
                 return None
         return cls(models)
 

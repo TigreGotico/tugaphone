@@ -24,8 +24,7 @@ TugaPhonemizer()
 ```text
 phonemize_sentence(sentence: str,
                    lang: str = "pt-PT",
-                   contact: str = "none",
-                   regional_dialect=None) -> str
+                   contact: str = "none") -> str
 ```
 
 Transcribes `sentence` to IPA for the target dialect through the orthography2ipa
@@ -43,10 +42,6 @@ support, an unresolved code falls back to `pt-PT`. See
 every word as Portuguese, `"auto"` detects Spanish, French and English words,
 and `"es"`, `"fr"` or `"en"` forces one contact lattice. Any other value raises
 `ValueError`. See [codeswitch.md](codeswitch.md).
-
-`regional_dialect` is **deprecated and ignored**. The accent is selected
-entirely by `lang`, it is encoded in the orthography2ipa lect spec, not applied
-as a post-hoc transform. Passing it emits a `DeprecationWarning`.
 
 ```python
 from tugaphone import TugaPhonemizer
@@ -97,8 +92,7 @@ phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str
 ```
 
 The function behind `TugaPhonemizer.phonemize_sentence`, with the same `lang`
-and `contact` arguments and the same return value. It takes no
-`regional_dialect` argument.
+and `contact` arguments and the same return value.
 
 ```python
 import tugaphone
@@ -229,9 +223,6 @@ are re-exported from the package root.
 | `is_supported(lang)` | Whether `lang` names a lect, itself or through an alias. See [`is_supported`](#is_supported-staticmethod). |
 | `default_contact(lect)` | The contact language that `contact="auto"` gives an unclassified word: `"es"` for `pt-UY`, `"en"` for every other lect. |
 | `PACKAGED_LEXICON_LECTS` | The lects that take a packaged orthography2ipa lexicon: `pt-PT` and `pt-BR`. |
-| `lexicon_region(lect)` | **Deprecated**, returns `None`: no lect takes a `tugalex` region map. Emits a `DeprecationWarning` that names the removal release. |
-| `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`, emits a `DeprecationWarning`. |
-| `normalize_dialect_code(lang)` | **Deprecated**, BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). Use `linguatag.standardize_lang`. Emits a `DeprecationWarning` that names the removal release. |
 
 ```python
 from tugaphone import resolve_lect, list_dialects
@@ -303,31 +294,6 @@ The text2spoken variety that a lect reads: `"pt-PT"` for the lects of the
 from tugaphone.number_utils import text2spoken_tag
 text2spoken_tag("pt-AO")   # 'pt-PT'
 text2spoken_tag("pt-UY")   # 'pt-BR'
-```
-
-### `NumberParser`
-
-**Deprecated.** The token helper of tugaphone 1.7. Its readings come from
-text2spoken. Importing it emits a `DeprecationWarning` that names the removal
-release, the next major release (`VERSION_MAJOR + 1`). Use `normalize_numbers` instead.
-
-| Method | Returns |
-|--------|---------|
-| `pronounce_number_word(word, prev_word=None, next_word=None, gender=None, as_ordinal=None, is_brazilian=False, scale=None)` | Spelled-out form of one numeric token. |
-| `to_int(word)` / `is_int(word)` | Integer value (ordinal markers stripped) / membership test. |
-| `to_float(word)` / `is_float(word)` | Float value / membership test. |
-| `is_decimal(word)` | `True` for a non-scientific decimal like `"10,4"`. |
-| `is_scientific_notation(word)` | `True` for forms like `"1.5e10"`. |
-| `pronounce_scientific(word, is_brazilian=False, scale=None)` | Spoken form of scientific notation. |
-| `is_ordinal(word, next_word=None)` | Detects `º`/`ª` markers, attached or separate. |
-| `get_number_gender(word, prev_word=None, next_word=None)` | `"feminine"` or `"masculine"`. |
-
-```python
-from tugaphone.number_utils import NumberParser
-NumberParser.pronounce_number_word("19", is_brazilian=True)                    # 'dezenove'
-NumberParser.pronounce_number_word("19", is_brazilian=False)                   # 'dezanove'
-NumberParser.pronounce_number_word("1", as_ordinal=True, gender="masculine")   # 'primeiro'
-NumberParser.get_number_gender("1", next_word="casa")                          # 'feminine'
 ```
 
 ## `tugaphone.text_normalization`
