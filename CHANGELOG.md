@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.0a1](https://github.com/TigreGotico/tugaphone/tree/1.12.0a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a5...1.12.0a1)
+
+**Merged pull requests:**
+
+- feat\(benchmark\): pt-PT PER with the initial es- variant accepted [\#400](https://github.com/TigreGotico/tugaphone/pull/400) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.18a5](https://github.com/TigreGotico/tugaphone/tree/1.11.18a5) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a4...1.11.18a5)
