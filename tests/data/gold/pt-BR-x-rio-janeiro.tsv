@@ -1,1204 +1,1205 @@
 # gold fixture: TigreGotico/portuguese-unified-pronunciation-lexicon region=pt-BR-x-riodejaneiro
 # source sha256=0b4d5e86a94762fc9037f6b415f9100647acd5de2fefa3b47f57086233cc2027
 # sample: seed=20260713 words=1000 (cap 1000)
-# columns: word<TAB>ipa_narrow (one row per variant)
-abandalhado	abɐ̃daʎˈadʊ
-abate	abˈatʃɪ
-abirritável	abiɦitˈavew
-aboleado	aboliˈadʊ
-abolicionismo	abolisjõnˈiʒmʊ
-abominação	abõmĩnasˈɐ̃w
-absonância	absõnˈɐ̃sjɐ
-acampar	akɐ̃pˈa
-acampar	akɐ̃pˈaɾ
-acessório	asesˈɔɾjʊ
-achatamento	aʃatãmˈẽtʊ
-acomodadamente	akõmodadãmˈẽtʃɪ
-acompanhar	akõpãɲˈa
-acompanhar	akõpãɲˈaɾ
-aconselhar	akõseʎˈa
-aconselhar	akõseʎˈaɾ
-acrofobia	akɾofobˈiɐ
-adega	adˈɛɡɐ
-adentro	adˈẽtɾʊ
-adjetivar	adiʒetʃivˈa
-adjetivar	adiʒetʃivˈaɾ
-admitido	adĩmitʃˈidʊ
-adoradora	adoɾadˈoɾɐ
-adorar	adoɾˈa
-adorar	adoɾˈaɾ
-adoravelmente	adoɾavewmˈẽtʃɪ
-aduterino	aduteɾˈĩnʊ
-aeronáutica	aeɾõnˈawtʃikɐ
-afazer	afazˈe
-afazer	afazˈeɾ
-afincar	afĩkˈa
-afincar	afĩkˈaɾ
-afluência	afluˈẽsjɐ
-afluência	aflwˈẽsjɐ
-afogado	afoɡˈadʊ
-aforisticamente	afoɾiʃtʃikãmˈẽtʃɪ
-agendamento	aʒẽdãmˈẽtʊ
-agradecimento	aɡɾadesĩmˈẽtʊ
-agravamento	aɡɾavãmˈẽtʊ
-agridoce	aɡɾidˈosɪ
-agulha	aɡˈuʎɐ
-ajuda	aʒˈudɐ
-ajuntamento	aʒũtãmˈẽtʊ
-albino	awbˈĩnʊ
-alcoolismo	awkolˈiʒmʊ
-aligátor	aliɡˈato
-aligátor	aliɡˈatoɾ
-alinhavar	alĩɲavˈa
-alinhavar	alĩɲavˈaɾ
-alisar	alizˈa
-alisar	alizˈaɾ
-altercação	awtehkasˈɐ̃w
-altissonante	awtʃisõnˈɐ̃tʃɪ
-alunagem	alũnˈaʒẽj
-amaldiçoada	ãmawdʒisoˈadɐ
-amazônio	ãmazˈõnjʊ
-ambicionar	ɐ̃bisjõnˈa
-ambicionar	ɐ̃bisjõnˈaɾ
-ambientador	ɐ̃biẽtadˈo
-ambientador	ɐ̃bjẽtadˈoɾ
-ameaçadora	ãmeasadˈoɾɐ
-amolada	ãmolˈadɐ
-amolador	ãmoladˈo
-amolador	ãmoladˈoɾ
-amolar	ãmolˈa
-amolar	ãmolˈaɾ
-amolecer	ãmolesˈe
-amolecer	ãmolesˈeɾ
-amonite	ãmõnˈitʃɪ
-anacronismo	ãnakɾõnˈiʒmʊ
-anacrônico	ãnakɾˈõnikʊ
-anarquizante	ãnahkizˈɐ̃tʃɪ
-anestesista	ãneʃtezˈiʃtɐ
-anglófilo	ɐ̃ɡlˈɔfilʊ
-anglófona	ɐ̃ɡlˈɔfõnɐ
-ansiosamente	ɐ̃sjɔzãmˈẽtʃɪ
-antedito	ɐ̃tedʒˈitʊ
-antepassar	ɐ̃tepasˈa
-antepassar	ɐ̃tepasˈaɾ
-anti-humanista	ɐ̃tʃiũmãnˈiʃtɐ
-antiaristocrata	ɐ̃tʃiaɾiʃtokɾˈatɐ
-antiaristocrático	ɐ̃tʃiaɾiʃtokɾˈatʃikʊ
-anticristianismo	ɐ̃tʃikɾiʃtʃiãnˈiʒmʊ
-antilógico	ɐ̃tʃilˈɔʒikʊ
-antimonárquico	ɐ̃tʃĩmõnˈahkikʊ
-antimíssil	ɐ̃tʃĩmˈisiw
-antinevrálgico	ɐ̃tʃinevɾˈawʒikʊ
-antissubversão	ɐ̃tʃisubivehsˈɐ̃w
-apanha-bolas	apˌɐ̃ɲɐbˈɔlɐʃ
-apicultura	apikuwtˈuɾɐ
-apicultura	apikʊwtˈuɾɐ
-apurada	apuɾˈadɐ
-aquariano	akwaɾiˈɐ̃nʊ
-aquelar	akelˈa
-aquelar	akelˈaɾ
-argentaria	aɦʒẽtaɾˈiɐ
-ariscar	aɾiʃkˈa
-ariscar	aɾiʃkˈaɾ
-aritmético	aɾitĩmˈɛtʃikʊ
-arqueólogo	ahkjˈɔloɡʊ
-arquimimo	ahkimˈĩmʊ
-arquivisticamente	ahkiviʃtʃikãmˈẽtʃɪ
-arredondamento	aɦedõdãmˈẽtʊ
-arrematar	aɦẽmatˈa
-arrematar	aɦẽmatˈaɾ
-articulado	ahtʃikulˈadʊ
-asmática	aʒmˈatʃikɐ
-assiduidade	asidujdˈadʒɪ
-assiduidade	asidwidˈadʒɪ
-assimilada	asĩmilˈadɐ
-assuar	asuˈa
-assuar	asuˈaɾ
-atenuação	atẽnuasˈɐ̃w
-atiradora	atʃiɾadˈoɾɐ
-atolambado	atolɐ̃bˈadʊ
-atraentemente	atɾaẽtẽmˈẽtʃɪ
-atropelamento	atɾopelãmˈẽtʊ
-autocatálise	awtokatˈalizɪ
-avanço	avˈɐ̃sʊ
-avinhado	avĩɲˈadʊ
-avisado	avizˈadʊ
-azia	azˈiɐ
-açambarcador	asɐ̃bahkadˈo
-açambarcador	asɐ̃bahkadˈoɾ
-babar	babˈaɾ
-babar	babˈa
-bacano	bakˈɐ̃nʊ
-bacio	basˈiʊ
-bacteriologista	bakiteɾjoloʒˈiʃtɐ
-bagageiro	baɡaʒˈejɾʊ
-balanceamento	balɐ̃seãmˈẽtʊ
-baralhada	baɾaʎˈadɐ
-barateiro	baɾatˈejɾʊ
-barrigana	baɦiɡˈɐ̃nɐ
-basar	bazˈaɾ
-basar	bazˈa
-bateria	bateɾˈiɐ
-batráquio	batɾˈakjʊ
-beatificação	beatʃifikasˈɐ̃w
-beicinho	bejsˈĩɲʊ
-belfo	bˈɛwfʊ
-belicosidade	belikozidˈadʒɪ
-belveder	bewvedˈeɾ
-belveder	bewvedˈe
-bem-fazer	bˌẽjfazˈeɾ
-bem-fazer	bˌẽjfazˈe
-berçário	behsˈaɾjʊ
-besouro	bezˈoɾʊ
-bicalado	bikalˈadʊ
-bicho de sete cabeças	biʃʊdʒisˌɛtʃikabˈesɐʃ
-biologia	bjoloʒˈiɐ
-boa-noite	bˌoɐnˈojtʃɪ
-boa-nova	bˌoɐnˈɔvɐ
-bofetada	bofetˈadɐ
-bojo	bˈoʒʊ
-bolar	bolˈaɾ
-bolar	bolˈa
-bordô	boɦdˈo
-borrachão	boɦaʃˈɐ̃w
-botulismo	botulˈiʒmʊ
-bouçar	bosˈaɾ
-bouçar	bosˈa
-bravar	bɾavˈaɾ
-bravar	bɾavˈa
-breque	bɾˈɛkɪ
-brete	bɾˈetʃɪ
-brevetar	bɾevetˈaɾ
-brevetar	bɾevetˈa
-broche	bɾˈɔʃɪ
-bruteza	bɾutˈezɐ
-brônquio	bɾˈõkjʊ
-bujarrona	buʒaɦˈõnɐ
-burro	bˈuɦʊ
-bétula	bˈɛtulɐ
-cabalista	kabalˈiʃtɐ
-cabaz	kabˈaʃ
-cachecol	kaʃekˈɔw
-cachucho	kaʃˈuʃʊ
-cachão	kaʃˈɐ̃w
-cacimbar	kasĩbˈa
-cacimbar	kasĩbˈaɾ
-cainçar	kaĩsˈa
-cainçar	kaĩsˈaɾ
-cajueiro	kaʒuˈejɾʊ
-cajueiro	kaʒwˈejɾʊ
-calibragem	kalibɾˈaʒẽj
-caloiro	kalˈojɾʊ
-cancelamento	kɐ̃selãmˈẽtʊ
-candidato	kɐ̃dʒidˈatʊ
-canivete	kãnivˈɛtʃɪ
-cantábrico	kɐ̃tˈabɾikʊ
-capitalização	kapitalizasˈɐ̃w
-capitão de mar e guerra	kapitˌɐ̃wdʒimaɾeɡˈɛɦɐ
-carburante	kaɦbuɾˈɐ̃tʃɪ
-cariar	kaɾiˈa
-cariar	kaɾiˈaɾ
-carregado	kaɦeɡˈadʊ
-carruagem-cama	kaɦuˌaʒẽjkˈɐ̃mɐ
-casa-forte	kˌazɐfˈɔhtʃɪ
-casaria	kazaɾˈiɐ
-castanha	kaʃtˈɐ̃ɲɐ
-castelo	kaʃtˈɛlʊ
-castrado	kaʃtɾˈadʊ
-castrelo	kaʃtɾˈelʊ
-casula	kazˈulɐ
-cata-vento	kˌatɐvˈẽtʊ
-catraiar	katɾajˈa
-catraiar	katɾajˈaɾ
-catártico	katˈahtʃikʊ
-caíque	kaˈikɪ
-cebolada	sebolˈadɐ
-cedi	sedʒˈi
-cenoura	sẽnˈoɾɐ
-censitário	sẽsitˈaɾjʊ
-censo	sˈẽsʊ
-centrista	sẽtɾˈiʃtɐ
-charro	ʃˈaɦʊ
-chega	ʃˈeɡɐ
-cheta	ʃˈetɐ
-chocar	ʃokˈa
-chocar	ʃokˈaɾ
-chorrilho	ʃoɦˈiʎʊ
-choupo	ʃˈopʊ
-chuta	ʃˈutɐ
-chuvinha	ʃuvˈĩɲɐ
-cicatrizar	sikatɾizˈa
-cicatrizar	sikatɾizˈaɾ
-cidra	sˈidɾɐ
-cigarra	siɡˈaɦɐ
-cineclube	sĩneklˈubɪ
-cinemateca	sĩnẽmatˈɛkɐ
-cinzeiro	sĩzˈejɾʊ
-cirandado	siɾɐ̃dˈadʊ
-cisão-fusão	sizˌɐ̃wfuzˈɐ̃w
-cita	sˈitɐ
-civilizada	sivilizˈadɐ
-ciúme	siˈũmɪ
-clamidíase	klãmidʒˈiazɪ
-clamor	klãmˈo
-clamor	klãmˈoɾ
-classicamente	klasikãmˈẽtʃɪ
-clavicular	klavikulˈa
-clavicular	klavikulˈaɾ
-coabitação	koabitasˈɐ̃w
-codevedor	kodevedˈoɾ
-coisificação	kojzifikasˈɐ̃w
-colombo	kolˈõbʊ
-colorir	koloɾˈi
-colorir	koloɾˈiɾ
-combustivo	kõbuʃtʃˈivʊ
-combustivo	kõbʊʃtʃˈivʊ
-comemorável	komẽmoɾˈavew
-comezinhamente	kõmezĩɲãmˈẽtʃɪ
-comparador	kõpaɾadˈo
-comparador	kõpaɾadˈoɾ
-complicador	kõplikadˈo
-complicador	kõplikadˈoɾ
-comportavelmente	kõpohtavewmˈẽtʃɪ
-comprazer	kõpɾazˈe
-comprazer	kõpɾazˈeɾ
-compreendido	kõpɾeẽdʒˈidʊ
-compressão	kõpɾesˈɐ̃w
-comproprietário	kõpɾopɾietˈaɾjʊ
-comproprietário	kõpɾopɾjetˈaɾjʊ
-concelhia	kõseʎˈiɐ
-concessivamente	kõsesivãmˈẽtʃɪ
-concílio	kõsˈiljʊ
-conexo	kõnˈɛksʊ
-confeitaria	kõfejtaɾˈiɐ
-confidencialmente	kõfidẽsiawmˈẽtʃɪ
-conforme	kõfˈɔɦmɪ
-confraternização	kõfɾateɦnizasˈɐ̃w
-congenialmente	kõʒẽniawmˈẽtʃɪ
-congruência	kõɡɾuˈẽsjɐ
-congruência	kõɡɾwˈẽsjɐ
-conjuntar	kõʒũtˈa
-conjuntar	kõʒũtˈaɾ
-conservatória	kõseɦvatˈɔɾjɐ
-conspiradora	kõʃpiɾadˈoɾɐ
-constante	kõʃtˈɐ̃tʃɪ
-constatação	kõʃtatasˈɐ̃w
-constrição	kõʃtɾisˈɐ̃w
-construir	kõʃtɾuˈi
-construir	kõʃtɾwˈiɾ
-consumido	kõsũmˈidʊ
-consórcio	kõsˈɔhsjʊ
-contestação	kõteʃtasˈɐ̃w
-contingentação	kõtʃĩʒẽtasˈɐ̃w
-contramalhar	kõtɾamaʎˈaɾ
-contramestre	kõtɾãmˈɛʃtɾɪ
-contrapino	kõtɾapˈĩnʊ
-contrapreparação	kõtɾapɾepaɾasˈɐ̃w
-contrapropaganda	kõtɾapɾopaɡˈɐ̃dɐ
-contundência	kõtũdˈẽsjɐ
-contusão	kõtuzˈɐ̃w
-convalescente	kõvalesˈẽtʃɪ
-convencionado	kõvẽsjõnˈadʊ
-convocatória	kõvokatˈɔɾjɐ
-cooperativo	kopeɾatʃˈivʊ
-copela	kopˈɛlɐ
-copioso	kopjˈozʊ
-cordialidade	koɦdʒialidˈadʒɪ
-cordofone	koɦdofˈɔ̃nɪ
-coreana	koɾiˈɐ̃nɐ
-coriscar	koɾiʃkˈa
-coriscar	koɾiʃkˈaɾ
-corredatora	koɦedatˈoɾɐ
-corticite	kohtʃisˈitʃɪ
-cortês	kohtˈeʃ
-costear	koʃtʃiˈa
-costear	koʃtʃiˈaɾ
-cotim	kotʃˈĩ
-cotutora	kotutˈoɾɐ
-cretense	kɾetˈẽsɪ
-crisanto	kɾizˈɐ̃tʊ
-cristalizado	kɾiʃtalizˈadʊ
-crueza	kɾuˈezɐ
-crueza	kɾwˈezɐ
-cubana	kubˈɐ̃nɐ
-culatra	kulˈatɾɐ
-culpado	kuwpˈadʊ
-culpado	kʊwpˈadʊ
-culturalmente	kuwtuɾawmˈẽtʃɪ
-culturalmente	kʊwtuɾawmˈẽtʃɪ
-cumpliciar	kũplisiˈa
-cumpliciar	kũplisiˈaɾ
-cônscio	kˈõsjʊ
-decisivamente	desizivãmˈẽtʃɪ
-declamar	deklãmˈa
-declamar	deklãmˈaɾ
-declamação	deklãmasˈɐ̃w
-declivoso	deklivˈozʊ
-defecação	defekasˈɐ̃w
-delator	delatˈo
-delator	delatˈoɾ
-delegacia	deleɡasˈiɐ
-deleitoso	delejtˈozʊ
-delicioso	delisjˈozʊ
-delicodoce	delikodˈosɪ
-democratização	dẽmokɾatʃizasˈɐ̃w
-demonologia	dẽmõnoloʒˈiɐ
-denotativo	dẽnotatʃˈivʊ
-densificar	dẽsifikˈa
-densificar	dẽsifikˈaɾ
-depender	depẽdˈe
-depender	depẽdˈeɾ
-derruir	deɦuˈi
-derruir	deɦwˈiɾ
-desadoração	dezadoɾasˈɐ̃w
-desalijar	dezaliʒˈaɾ
-desambientação	dezɐ̃biẽtasˈɐ̃w
-desambientação	dezɐ̃bjẽtasˈɐ̃w
-desapossado	dezaposˈadʊ
-desapossamento	dezaposãmˈẽtʊ
-desarear	dezaɾiˈaɾ
-desartilhar	dezahtʃiʎˈaɾ
-desatinado	dezatʃĩnˈadʊ
-desatordoar	dezatoɦdoˈaɾ
-desbabar	dezbabˈaɾ
-descapitalizar	deʃkapitalizˈa
-descapitalizar	deʃkapitalizˈaɾ
-descarda	deskˈaɦdɐ
-descascar	deʃkaʃkˈa
-descascar	deʃkaʃkˈaɾ
-descoberta	deʃkobˈɛhtɐ
-descompostamente	deʃkõpɔʃtãmˈẽtʃɪ
-descompressão	deʃkõpɾesˈɐ̃w
-desconfiadamente	deskõfiadãmˈẽtʃɪ
-desconfiadamente	deʃkõfiadãmˈẽtʃɪ
-descuriosamente	deskuɾjozãmˈẽtʃɪ
-deselegância	dezeleɡˈɐ̃sjɐ
-desembraiagem	dezẽbɾajˈaʒẽj
-desemparedamento	dezẽpaɾedãmˈẽtʊ
-desemplumar	dezẽplũmˈaɾ
-desencorajar	dezẽkoɾaʒˈa
-desencorajar	dezẽkoɾaʒˈaɾ
-desengenhoso	dezẽʒẽɲˈozʊ
-desensopar	dezẽsopˈaɾ
-desentaramelar	dezẽtaɾãmelˈaɾ
-desenvolvidamente	dezẽvowvidãmˈẽtʃɪ
-desfolha	deʃfˈɔʎɐ
-desgoelar	dezɡoɛlˈaɾ
-deslindar	deʒlĩdˈa
-deslindar	deʒlĩdˈaɾ
-desmaranhar	dezmaɾãɲˈaɾ
-desmistificar	deʒmiʃtʃifikˈa
-desmistificar	deʒmiʃtʃifikˈaɾ
-desmiudar	dezmiudˈaɾ
-desmobilizável	dezmobilizˈavew
-desmonte	deʒmˈõtʃɪ
-desnecessidade	deʒnesesidˈadʒɪ
-desoficialização	dezofisializasˈɐ̃w
-desolhar	dezɔʎˈa
-desolhar	dezɔʎˈaɾ
-desoras	dezˈɔɾɐʃ
-desordenação	dezoɦdẽnasˈɐ̃w
-despapar	despapˈaɾ
-desparamentar	deʃpaɾãmẽtˈa
-desparamentar	deʃpaɾãmẽtˈaɾ
-despedrar	despedɾˈaɾ
-desperdiçada	deʃpeɦdʒisˈadɐ
-despicador	despikadˈoɾ
-despolarizador	despolaɾizadˈoɾ
-despreparado	despɾepaɾˈadʊ
-despretensiosamente	deʃpɾetẽsjozãmˈẽtʃɪ
-desquitar	deskitˈaɾ
-desregrado	deʒɦeɡɾˈadʊ
-desrugar	dezɦuɡˈaɾ
-destilaria	deʃtʃilaɾˈiɐ
-destorar	destoɾˈaɾ
-desvalidar	deʒvalidˈa
-desvalidar	deʒvalidˈaɾ
-desveladamente	dezveladãmˈẽtʃɪ
-desveladamente	deʒveladãmˈẽtʃɪ
-detectável	detekətˈavew
-detonação	detõnasˈɐ̃w
-deus	dˈewʃ
-dia	dʒˈiɐ
-diaconado	dʒiakõnˈadʊ
-diafonia	dʒiafõnˈiɐ
-diagnosticável	dʒiaɡə̃noʃtʃikˈavew
-dialogismo	dʒialoʒˈiʒmʊ
-dieléctrico	dʒielˈɛktɾikʊ
-difamação	dʒifãmasˈɐ̃w
-dinâmico	dʒĩnˈɐ̃mikʊ
-dionisíaco	dʒjõnizˈiakʊ
-diorama	dʒjoɾˈɐ̃mɐ
-diprismático	dʒipɾiʒmˈatʃikʊ
-direcionado	dʒiɾesjõnˈadʊ
-discreta	dʒiʃkɾˈɛtɐ
-discriminante	dʒiʃkɾĩmĩnˈɐ̃tʃɪ
-dissabor	dʒisabˈo
-dissabor	dʒisabˈoɾ
-dissimular	dʒisĩmulˈa
-dissimular	dʒisĩmulˈaɾ
-distração	dʒiʃtɾasˈɐ̃w
-ditar	dʒitˈa
-ditar	dʒitˈaɾ
-divisa	dʒivˈizɐ
-donzela	dõzˈɛlɐ
-dotação	dotasˈɐ̃w
-dote	dˈɔtʃɪ
-dourador	doɾadˈo
-dourador	doɾadˈoɾ
-dragona	dɾaɡˈõnɐ
-driblar	dɾiblˈa
-driblar	dɾiblˈaɾ
-duravelmente	duɾavewmˈẽtʃɪ
-eclíptico	eklˈipitʃikʊ
-ecopista	ekopˈiʃtɐ
-elasticidade	elaʃtʃisidˈadʒɪ
-eletromagnete	eletɾomaɡĩnˈɛtʃɪ
-eletroterapeuta	eletɾoteɾapˈewtɐ
-embelezamento	ĩbelezãmˈẽtʊ
-embriogénese	ĩbɾjoʒˈɛ̃nezɪ
-emocionado	ẽmosjõnˈadʊ
-encalhado	ĩkaʎˈadʊ
-encalçar	ĩkawsˈa
-encalçar	ĩkawsˈaɾ
-encharcada	ĩʃahkˈadɐ
-endeusar	ĩdewzˈa
-endeusar	ĩdewzˈaɾ
-enegrecimento	ẽneɡɾesĩmˈẽtʊ
-energeticamente	ẽneɦʒɛtʃikãmˈẽtʃɪ
-engraxador	ĩɡɾaʃadˈo
-engraxador	ĩɡɾaʃadˈoɾ
-engripar	ĩɡɾipˈa
-engripar	ĩɡɾipˈaɾ
-enigmático	ẽniɡə̃mˈatʃikʊ
-entrevar	ĩtɾevˈa
-entrevar	ĩtɾevˈaɾ
-enunciador	ẽnũsiadˈo
-enunciador	ẽnũsiadˈoɾ
-enviesamento	ĩviezãmˈẽtʊ
-enviesamento	ĩvjezãmˈẽtʊ
-enzimologia	ĩzĩmoloʒˈiɐ
-equalização	ekwalizasˈɐ̃w
-escachar	iʃkaʃˈa
-escachar	iʃkaʃˈaɾ
-escadinha	iʃkadʒˈĩɲɐ
-escalfeta	iʃkawfˈetɐ
-escoramento	iʃkoɾãmˈẽtʊ
-escorar	iʃkoɾˈa
-escorar	iʃkoɾˈaɾ
-escutador	iʃkutadˈo
-escutador	iʃkutadˈoɾ
-esfalfar	iʃfawfˈa
-esfalfar	iʃfawfˈaɾ
-esfriar	iʃfɾiˈa
-esfriar	iʃfɾiˈaɾ
-esfumarar	iʃfũmaɾˈa
-esfumarar	iʃfũmaɾˈaɾ
-esgalhado	iʒɡaʎˈadʊ
-esgar	iʒɡˈa
-esgar	iʒɡˈaɾ
-especialidade	iʃpesialidˈadʒɪ
-espetacularidade	iʃpetakulaɾidˈadʒɪ
-espevitadamente	iʃpevitadãmˈẽtʃɪ
-estacionariamente	iʃtasjõnaɾiãmˈẽtʃɪ
-estafeta	iʃtafˈetɐ
-estampido	iʃtɐ̃pˈidʊ
-esteticamente	iʃtetʃikãmˈẽtʃɪ
-estilhaçar	iʃtʃiʎasˈa
-estilhaçar	iʃtʃiʎasˈaɾ
-estilismo	iʃtʃilˈiʒmʊ
-estopinha	iʃtopˈĩɲɐ
-estranha	iʃtɾˈɐ̃ɲɐ
-estranhíssimo	iʃtɾãɲˈisĩmʊ
-estratocúmulo	iʃtɾatokˈũmulʊ
-estrumar	iʃtɾũmˈa
-estrumar	iʃtɾũmˈaɾ
-estufa	iʃtˈufɐ
-estágio	iʃtˈaʒjʊ
-etarra	etˈaɦɐ
-ex-ministro	eʒmĩnˈiʃtɾʊ
-exatidão	ezatʃidˈɐ̃w
-excecionalmente	esesjõnawmˈẽtʃɪ
-exceder	esedˈe
-exceder	esedˈeɾ
-expansivo	eʃpɐ̃sˈivʊ
-extensor	eʃtẽsˈo
-extensor	eʃtẽsˈoɾ
-exterioridade	eʃteɾjoɾidˈadʒɪ
-extracorporal	eʃtɾakohpoɾˈaw
-extrajudicialmente	eʃtɾaʒudʒisiawmˈẽtʃɪ
-extramundano	eʃtɾamũdˈɐ̃nʊ
-extranatural	eʃtɾanatuɾˈaw
-extroverter	eʃtɾovehtˈe
-extroverter	eʃtɾovehtˈeɾ
-faduncho	fadˈũʃʊ
-falsa	fˈawsɐ
-fanha	fˈɐ̃ɲɐ
-fantasista	fɐ̃tazˈiʃtɐ
-fantástico	fɐ̃tˈaʃtʃikʊ
-farte	fˈahtʃɪ
-fasto	fˈaʃtʊ
-faustosamente	fawʃtɔzãmˈẽtʃɪ
-faz-tudo	fˌaʃtˈudʊ
-fazer	fazˈe
-fazer	fazˈeɾ
-feirante	fejɾˈɐ̃tʃɪ
-ferida	feɾˈidɐ
-festejada	feʃteʒˈadɐ
-fieira	fiˈejɾɐ
-fieira	fjˈejɾɐ
-filantropia	filɐ̃tɾopˈiɐ
-filharar	fiʎaɾˈa
-filharar	fiʎaɾˈaɾ
-finar	fĩnˈa
-finar	fĩnˈaɾ
-fisgado	fiʒɡˈadʊ
-florescência	floɾesˈẽsjɐ
-focar	fokˈa
-focar	fokˈaɾ
-forasteira	foɾaʃtˈejɾɐ
-fotogénese	fotoʒˈɛ̃nezɪ
-fotominiaturista	fotomĩniatuɾˈiʃtɐ
-fotoquímico	fotokˈĩmikʊ
-fragrância	fɾaɡɾˈɐ̃sjɐ
-franga	fɾˈɐ̃ɡɐ
-franjado	fɾɐ̃ʒˈadʊ
-fraseado	fɾaziˈadʊ
-fraternalmente	fɾateɦnawmˈẽtʃɪ
-fraudulento	fɾawdulˈẽtʊ
-fricassé	fɾikasˈɛ
-friável	fɾiˈavew
-frota	fɾˈɔtɐ
-frísia	fɾˈizja
-fulgurante	fuwɡuɾˈɐ̃tʃɪ
-fulgurante	fʊwɡuɾˈɐ̃tʃɪ
-fumadora	fũmadˈoɾɐ
-funchal	fũʃˈaw
-fundear	fũdʒiˈa
-fundear	fũdʒiˈaɾ
-fustiga	fuʃtʃˈiɡɐ
-fustiga	fʊʃtʃˈiɡɐ
-fábrica	fˈabɾikɐ
-fécula	fˈɛkulɐ
-gafanhoto	ɡafãɲˈotʊ
-gaiatamente	ɡajatãmˈẽtʃɪ
-galanteador	ɡalɐ̃teadˈoɾ
-galanteador	ɡalɐ̃teadˈo
-galvanização	ɡawvãnizasˈɐ̃w
-gandular	ɡɐ̃dulˈaɾ
-gandular	ɡɐ̃dulˈa
-garimpo	ɡaɾˈĩpʊ
-garotice	ɡaɾotʃˈisɪ
-garrafal	ɡaɦafˈaw
-garrana	ɡaɦˈɐ̃nɐ
-garrar	ɡaɦˈaɾ
-garrar	ɡaɦˈa
-garrido	ɡaɦˈidʊ
-genealogia	ʒẽnealoʒˈiɐ
-giga	ʒˈiɡɐ
-gingar	ʒĩɡˈaɾ
-gingar	ʒĩɡˈa
-gomar	ɡõmˈaɾ
-gomar	ɡõmˈa
-gorda	ɡˈoɦdɐ
-gordura	ɡoɦdˈuɾɐ
-grafia	ɡɾafˈiɐ
-granulosidade	ɡɾãnulozidˈadʒɪ
-gruta	ɡɾˈutɐ
-guarda-vestidos	ɡwˌaɦdɐveʃtʃˈidʊʃ
-habilmente	abiwmˈẽtʃɪ
-harmonizado	aɦmõnizˈadʊ
-hibridar	ibɾidˈa
-hibridar	ibɾidˈaɾ
-hibridização	ibɾidʒizasˈɐ̃w
-hiperbólico	ipɛɦbˈɔlikʊ
-hiperdialético	iperdʒialˈɛtʃikʊ
-hiperexcitabilidade	iperesitabilidˈadʒɪ
-hipoteticamente	ipotɛtʃikãmˈẽtʃɪ
-hissope	isˈɔpɪ
-holocausto	olokˈawʃtʊ
-homogeneizante	õmoʒẽnejzˈɐ̃tʃɪ
-hospitalização	oʃpitalizasˈɐ̃w
-hércules	ˈɛhkulɪʃ
-ilegalmente	ileɡawmˈẽtʃɪ
-iluminista	ilũmĩnˈiʃtɐ
-ilustrar	iluʃtɾˈa
-ilustrar	ilʊʃtɾˈaɾ
-imaturidade	ĩmatuɾidˈadʒɪ
-imbebível	ĩbebˈiew
-imortalizado	ĩmohtalizˈadʊ
-impermeabilidade	ĩpeɦmeabilidˈadʒɪ
-implodir	ĩplodʒˈi
-implodir	ĩplodʒˈiɾ
-importunar	ĩpohtũnˈa
-importunar	ĩpohtũnˈaɾ
-impronunciar	ĩpɾõnũsiˈa
-impronunciar	ĩpɾõnũsiˈaɾ
-impávido	ĩpˈavidʊ
-inalcançável	ĩnawkɐ̃sˈavew
-inalienável	ĩnaliɛ̃nˈavew
-inassinável	ĩnasĩnˈavew
-inaugurativo	ĩnawɡuɾatʃˈivʊ
-incerto	ĩsˈɛhtʊ
-inconcebível	ĩkõsebˈivew
-inconstar	ĩŋkõʃtˈaɾ
-incorreção	ĩkoɦesˈɐ̃w
-increr	ĩŋkɾˈeɾ
-incrustado	ĩkɾuʃtˈadʊ
-incrustado	ĩkɾʊʃtˈadʊ
-incógnito	ĩkˈɔɡĩnitʊ
-indefensável	ĩdefẽsˈavew
-indesejável	ĩdezeʒˈavew
-indigitado	ĩdʒiʒitˈadʊ
-indonésio	ĩdõnˈɛzju
-indutor	ĩdutˈo
-indutor	ĩdutˈoɾ
-inexplicavelmente	ĩneʃplikavewmˈẽtʃɪ
-infantado	ĩfɐ̃tˈadʊ
-infantilidade	ĩfɐ̃tʃilidˈadʒɪ
-inflar	ĩflˈa
-inflar	ĩflˈaɾ
-ingratidão	ĩɡɾatʃidˈɐ̃w
-ingressão	ĩɡɾesˈɐ̃w
-inicialização	ĩnisializasˈɐ̃w
-iniciando	ĩnisiˈɐ̃dʊ
-inobre	ĩnˈɔbɾɪ
-inquebrável	ĩkebɾˈavew
-inscrição	ĩʃkɾisˈɐ̃w
-instruendo	ĩʃtɾuˈẽdʊ
-instruendo	ĩʃtɾwˈẽdʊ
-insurreição	ĩsuɦejsˈɐ̃w
-insustentabilidade	ĩsuʃtẽtabilidˈadʒɪ
-insustentabilidade	ĩsʊʃtẽtabilidˈadʒɪ
-intelectualidade	ĩtelekətualidˈadʒɪ
-intercensitário	ĩtehsẽsitˈaɾjʊ
-intercepto	ĩtehsˈɛpətʊ
-interestadual	ĩteɾeʃtaduˈaw
-internacionalismo	ĩteɦnasjõnalˈiʒmʊ
-interpelado	ĩtehpelˈadʊ
-intervencionismo	ĩteɦvẽsjõnˈiʒmʊ
-intervir	ĩteɦvˈi
-intervir	ĩteɦvˈiɾ
-intra-hepático	ĩtɾaepˈatʃikʊ
-intragável	ĩtɾaɡˈavew
-intravaginal	ĩtɾavaʒĩnˈaw
-invariável	ĩvaɾiˈavew
-invariância	ĩvaɾiˈɐ̃sjɐ
-inóspito	ĩnˈɔʃpitʊ
-irrequietismo	iɦekietʃˈiʒmʊ
-irrequietismo	iɦekjetʃˈiʒmʊ
-irresistibilidade	iɦeziʃtʃibilidˈadʒɪ
-irritabilidade	iɦitabilidˈadʒɪ
-irritável	iɦitˈavew
-italianização	italiãnizasˈɐ̃w
-janar	ʒãnˈaɾ
-janar	ʒãnˈa
-jarro	ʒˈaɦʊ
-joalharia	ʒoaʎaɾˈiɐ
-justo	ʒˈuʃtʊ
-laborar	laboɾˈaɾ
-laborar	laboɾˈa
-laboriosamente	laboɾjozãmˈẽtʃɪ
-lamuriento	lãmuɾjˈẽtʊ
-lamuriento	lãmuɾiˈẽtʊ
-landau	lɐ̃dˈaw
-lantejoula	lɐ̃teʒˈolɐ
-laçarote	lasaɾˈɔtʃɪ
-leito	lˈejtʊ
-leão	leˈɐ̃w
-liberalização	libeɾalizasˈɐ̃w
-limalhas	lĩmˈaʎɐʃ
-limusina	lĩmuzˈĩnɐ
-linguarudo	lĩɡwaɾˈudʊ
-lisonjear	lizõʒiˈaɾ
-lisonjear	lizõʒiˈa
-localismo	lokalˈiʒmʊ
-logarítmico	loɡaɾˈitĩmikʊ
-loteamento	loteãmˈẽtʊ
-lousão	lozˈɐ̃w
-loção	losˈɐ̃w
-lume	lˈũmɪ
-lácteo	lˈakitʃjʊ
-lúcido	lˈusidʊ
-madrigalista	madɾiɡalˈiʃtɐ
-magistralmente	maʒiʃtɾawmˈẽtʃɪ
-magnificente	maɡĩnifisˈẽtʃɪ
-maiata	majˈatɐ
-mala-posta	mˌalɐpˈɔʃtɐ
-malacia	malasˈiɐ
-maluco	malˈukʊ
-manca	mˈɐ̃kɐ
-manga de alpaca	mˌɐ̃ɡɐdʒiawpˈakɐ
-manhã	mãɲˈɐ̃
-maniacamente	mãniakãmˈẽtʃɪ
-manicómio	mãnikˈɔ̃mjʊ
-manietar	mãnjetˈaɾ
-manietar	mãnietˈa
-manjaco	mɐ̃ʒˈakʊ
-manta	mˈɐ̃tɐ
-marca	mˈahkɐ
-marinheiro	maɾĩɲˈejɾʊ
-maro	mˈaɾʊ
-maronita	maɾõnˈitɐ
-marte	mˈahtʃɪ
-massajar	masaʒˈaɾ
-massajar	masaʒˈa
-mastigado	maʃtʃiɡˈadʊ
-mastro	mˈaʃtɾʊ
-meca	mˈɛkɐ
-mediante	medʒiˈɐ̃tʃɪ
-melar	melˈaɾ
-melar	melˈa
-melómano	melˈɔ̃mãnʊ
-memoravelmente	mẽmoɾavewmˈẽtʃɪ
-menagem	mẽnˈaʒẽj
-meninge	mẽnˈĩʒɪ
-menisco	mẽnˈiʃkʊ
-mercantilismo	mehkɐ̃tʃilˈiʒmʊ
-mercantilização	mehkɐ̃tʃilizasˈɐ̃w
-merlim	meɦlˈĩ
-metacarpo	metakˈahpʊ
-microglia	mikɾoɡlˈiɐ
-micronutriente	mikɾõnutɾjˈẽtʃɪ
-micronutriente	mikɾõnutɾiˈẽtʃɪ
-microssonda	mikɾosˈõdɐ
-mictório	mikətˈɔɾjʊ
-micénico	misˈɛ̃nikʊ
-midas	mˈidɐʃ
-milagreiro	milaɡɾˈejɾʊ
-milagroso	milaɡɾˈozʊ
-milenar	milẽnˈaɾ
-milenar	milẽnˈa
-militarizado	militaɾizˈadʊ
-mindinho	mĩdʒˈĩɲʊ
-minimalismo	mĩnĩmalˈiʒmʊ
-mirabolante	miɾabolˈɐ̃tʃɪ
-misantropo	mizɐ̃tɾˈopʊ
-mobilizado	mobilizˈadʊ
-mochila	moʃˈilɐ
-modal	modˈaw
-modestamente	modɛʃtãmˈẽtʃɪ
-moldávio	mowdˈavjʊ
-momice	mõmˈisɪ
-monologar	mõnoloɡˈaɾ
-monologar	mõnoloɡˈa
-monopolizar	mõnopolizˈaɾ
-monopolizar	mõnopolizˈa
-montaria	mõtaɾˈiɐ
-mordente	moɦdˈẽtʃɪ
-motocultivador	motokʊwtʃivadˈoɾ
-motocultivador	motokuwtʃivadˈo
-mourisco	moɾˈiʃkʊ
-moçada	mosˈadɐ
-mucina	musˈĩnɐ
-mulherengo	muʎeɾˈẽɡʊ
-mulherio	muʎeɾˈiʊ
-mundanal	mũdãnˈaw
-mundanismo	mũdãnˈiʒmʊ
-murete	muɾˈetʃɪ
-mutualidade	mutualidˈadʒɪ
-médico-dentário	mˌɛdʒikʊdẽtˈaɾjʊ
-napoleónica	napoljˈɔ̃nikɐ
-narração	naɦasˈɐ̃w
-navegadora	naveɡadˈoɾɐ
-navegante	naveɡˈɐ̃tʃɪ
-negrura	neɡɾˈuɾɐ
-neocatolicismo	neɔkatolisˈiʒmʊ
-neogénese	neɔʒˈɛ̃nezɪ
-neurocientista	newɾosiẽtʃˈiʃtɐ
-neurocientista	newɾosjẽtʃˈiʃtɐ
-nevralgia	nevɾawʒˈiɐ
-ninguém	nĩɡˈẽj
-ninho	nˈĩɲʊ
-normativo	noɦmatʃˈivʊ
-nos	nˈuʃ
-nosso	nˈɔsʊ
-noturnamente	notuɦnãmˈẽtʃɪ
-noturnamente	notʊɦnãmˈẽtʃɪ
-néon	nˈɛõ
-objetivamente	obiʒetʃivãmˈẽtʃɪ
-obliteração	obliteɾasˈɐ̃w
-obstinação	obʃtʃĩnasˈɐ̃w
-obviável	obviˈavew
-oeste	oˈɛʃtʃɪ
-ogiva	oʒˈivɐ
-olho	ˈoʎʊ
-opal	ɔpˈaw
-orégão	ɔɾˈɛɡɐ̃w
-osso	ˈosʊ
-ostreícola	oʃtɾeˈikolɐ
-oura	ˈoɾɐ
-ouriçar	oɾisˈaɾ
-ouriçar	oɾisˈa
-oval	ovˈaw
-ovariano	ovaɾiˈɐ̃nʊ
-pacientar	pasiẽtˈa
-pacientar	pasjẽtˈaɾ
-pacóvia	pakˈɔvjɐ
-padroado	padɾoˈadʊ
-panejar	pãneʒˈa
-panejar	pãneʒˈaɾ
-pantanoso	pɐ̃tãnˈozʊ
-pantera	pɐ̃tˈɛɾɐ
-pantominice	pɐ̃tõmĩnˈisɪ
-par	pˈa
-par	pˈaɾ
-parafilia	paɾafilˈiɐ
-paralisar	paɾalizˈa
-paralisar	paɾalizˈaɾ
-paramilitar	paɾãmilitˈa
-paramilitar	paɾãmilitˈaɾ
-paraplégica	paɾaplˈɛʒikɐ
-paraplégico	paɾaplˈɛʒikʊ
-parcimoniosamente	pahsĩmõnjɔzãmˈẽtʃɪ
-passageiro	pasaʒˈejɾʊ
-passarinheiro	pasaɾĩɲˈejɾʊ
-pastorar	paʃtoɾˈa
-pastorar	paʃtoɾˈaɾ
-patogénese	patoʒˈɛ̃nezɪ
-patogénico	patoʒˈɛ̃nikʊ
-pavesar	pavezˈa
-pavesar	pavezˈaɾ
-pecar	pekˈa
-pecar	pekˈaɾ
-pedófila	pedˈɔfilɐ
-pele-vermelha	pˌɛliveɦmˈeʎɐ
-peluche	pelˈuʃɪ
-pemba	pˈẽbɐ
-penhor	pẽɲˈo
-penhor	pẽɲˈoɾ
-penoso	pẽnˈozʊ
-pensante	pẽsˈɐ̃tʃɪ
-perdedor	peɦdedˈo
-perdedor	peɦdedˈoɾ
-perdigueiro	peɦdʒiɡˈejɾʊ
-perduravelmente	peɦduɾavewmˈẽtʃɪ
-pergaminho	peɦɡãmˈĩɲʊ
-permissível	peɦmisˈivew
-permuta	peɦmˈutɐ
-perrum	peɦˈũ
-perseverante	pehseveɾˈɐ̃tʃɪ
-perspetivar	perʃpetʃivˈa
-perspetivar	perʃpetʃivˈaɾ
-persuasoriamente	pehsuazɔɾiãmˈẽtʃɪ
-persuasão	pehsuazˈɐ̃w
-perto	pˈɛhtʊ
-pianola	piãnˈɔlɐ
-piloso	pilˈozʊ
-pincel	pĩsˈɛw
-pioneirismo	pjõnejɾˈiʒmʊ
-pisado	pizˈadʊ
-placebo	plasˈɛbʊ
-plastificado	plaʃtʃifikˈadʊ
-platinar	platʃĩnˈa
-platinar	platʃĩnˈaɾ
-pneumologista	pɨ̃nẽwmoloʒˈiʃtɐ
-pneumática	pɨ̃nẽwmˈatʃikɐ
-pobremente	pɔbɾẽmˈẽtʃɪ
-poeta	pwˈɛtɐ
-poisada	pojzˈadɐ
-polifonicamente	polifɔ̃nikãmˈẽtʃɪ
-porca	pˈɔhkɐ
-porcina	pohsˈĩnɐ
-portucalense	pohtukalˈẽsɪ
-positivamente	pozitʃivãmˈẽtʃɪ
-positivo	pozitʃˈivʊ
-prazer	pɾazˈe
-prazer	pɾazˈeɾ
-precaridade	pɾekaɾidˈadʒɪ
-precatória	pɾekatˈɔɾjɐ
-preferivelmente	pɾefeɾivewmˈẽtʃɪ
-premoção	pɾemosˈɐ̃w
-prender	pɾẽdˈe
-prender	pɾẽdˈeɾ
-prenúncio	pɾẽnˈũsjʊ
-prepositivo	pɾepozitʃˈivʊ
-prevalecente	pɾevalesˈẽtʃɪ
-previstamente	pɾeviʃtãmˈẽtʃɪ
-prezar	pɾezˈa
-prezar	pɾezˈaɾ
-problematização	pɾoblẽmatʃizasˈɐ̃w
-progenitura	pɾoʒẽnitˈuɾɐ
-proliferar	pɾolifeɾˈa
-proliferar	pɾolifeɾˈaɾ
-promitente	pɾõmitˈẽtʃɪ
-propedêutica	pɾɔpedˈewtʃikɐ
-provado	pɾovˈadʊ
-proveta	pɾovˈetɐ
-próximo	pɾˈɔsĩmʊ
-psicogénico	psikoʒˈɛ̃nikʊ
-pudor	pudˈo
-pudor	pudˈoɾ
-pumba	pˈũbɐ
-pós	pˈɔʃ
-quadragésimo	kwadɾaʒˈɛzĩmʊ
-queiró	kejɾˈɔ
-queixada	kejʃˈadɐ
-quimicamente	kĩmikãmˈẽtʃɪ
-quissange	kisˈɐ̃ʒɪ
-rabugice	ɦabuʒˈisɪ
-ralão	ɦalˈɐ̃w
-raminho	ɦãmˈĩɲʊ
-ranhar	ɦãɲˈa
-ranhar	ɦãɲˈaɾ
-ratado	ɦatˈadʊ
-reabilitado	ɦeabilitˈadʊ
-readaptador	ɦeadapətadˈoɾ
-realização	ɦealizasˈɐ̃w
-reanexar	ɦeãneksˈaɾ
-reavultar	ɦeavuwtˈaɾ
-reavultar	ɦeavʊwtˈaɾ
-rebel	ɦebˈɛw
-recatadamente	ɦekatadãmˈẽtʃɪ
-receita	ɦesˈejtɐ
-reciclar	ɦesiklˈa
-reciclar	ɦesiklˈaɾ
-recoleção	ɦekolesˈɐ̃w
-recolher	ɦekoʎˈe
-recolher	ɦekoʎˈeɾ
-reconstitutivo	ɦekõʃtʃitutʃˈivʊ
-recontagem	ɦekõtˈaʒẽj
-recorrer	ɦekoɦˈe
-recorrer	ɦekoɦˈeɾ
-recoutar	ɦekotˈaɾ
-redator-chefe	ɦedatˌoɾʃˈɛfɪ
-redecretar	ɦedekɾetˈaɾ
-redondeza	ɦedõdˈezɐ
-reentregar	ɦeẽtɾeɡˈa
-reentregar	ɦeẽtɾeɡˈaɾ
-reenviado	ɦeẽviˈadʊ
-reequilibrar	ɦeekilibɾˈa
-reequilibrar	ɦeekilibɾˈaɾ
-refalsear	ɦefawsiˈaɾ
-refeitório	ɦefejtˈɔɾjʊ
-reflexivamente	ɦefleksivãmˈẽtʃɪ
-reformismo	ɦefoɦmˈiʒmʊ
-reforçar	ɦefohsˈa
-reforçar	ɦefohsˈaɾ
-regesto	ɦeʒˈɛʃtʊ
-regimental	ɦeʒĩmẽtˈaw
-reinflamar	ɦeĩflãmˈaɾ
-relacionado	ɦelasjõnˈadʊ
-relatividade	ɦelatʃividˈadʒɪ
-religioso	ɦeliʒjˈozʊ
-remanchar	ɦemɐ̃ʃˈaɾ
-remartelar	ɦemahtelˈaɾ
-remissamente	ɦẽmisãmˈẽtʃɪ
-remurmurejar	ɦemuɦmuɾeʒˈaɾ
-remurmurejar	ɦemʊɦmuɾeʒˈaɾ
-renegociação	ɦẽneɡosiasˈɐ̃w
-renegociável	ɦẽneɡosiˈavew
-repassagem	ɦepasˈaʒẽj
-repiscar	ɦepiʃkˈaɾ
-repreendido	ɦepɾeẽdʒˈidʊ
-representar	ɦepɾezẽtˈa
-representar	ɦepɾezẽtˈaɾ
-representatividade	ɦepɾezẽtatʃividˈadʒɪ
-reprocessamento	ɦepɾosesãmˈẽtʊ
-reprodutividade	ɦepɾodutʃividˈadʒɪ
-reprovador	ɦepɾovadˈo
-reprovador	ɦepɾovadˈoɾ
-requieto	ɦekiˈɛtʊ
-requieto	ɦekjˈɛtʊ
-residencial	ɦezidẽsiˈaw
-ressaciar	ɦesasiˈaɾ
-ressuscitado	ɦesusitˈadʊ
-restaurativo	ɦeʃtawɾatʃˈivʊ
-resvés	ɦeʒvˈɛʃ
-retesar	ɦetezˈa
-retesar	ɦetezˈaɾ
-retratador	ɦetɾatadˈoɾ
-retrocar	ɦetɾokˈaɾ
-retrovisor	ɦetɾovizˈo
-retrovisor	ɦetɾovizˈoɾ
-revelador	ɦeveladˈo
-revelador	ɦeveladˈoɾ
-revolucionária	ɦevolusjõnˈaɾjɐ
-riscada	ɦiʃkˈadɐ
-rissol	ɦisˈɔw
-rolhagem	ɦoʎˈaʒẽj
-romanesco	ɦõmãnˈeʃkʊ
-rompimento	ɦõpĩmˈẽtʊ
-romântico	ɦõmˈɐ̃tʃikʊ
-romãzeira	ɦõmˈɐ̃zejɾɐ
-roufenhar	ɦofẽɲˈa
-roufenhar	ɦofẽɲˈaɾ
-rudemente	ɦudẽmˈẽtʃɪ
-rufia	ɦufˈiɐ
-rábida	ɦˈabidɐ
-rábido	ɦˈabidʊ
-sacramento	sakɾãmˈẽtʊ
-sacudidamente	sakudʒidãmˈẽtʃɪ
-sageza	saʒˈezɐ
-saibrar	sajbɾˈaɾ
-saibrar	sajbɾˈa
-salientar	saljẽtˈaɾ
-salientar	saliẽtˈa
-salva-vidas	sˌawvɐvˈidɐʃ
-sanefa	sãnˈɛfɐ
-santigar	sɐ̃tʃiɡˈaɾ
-santigar	sɐ̃tʃiɡˈa
-saquito	sakˈitʊ
-satisfeito	satʃiʃfˈejtʊ
-saudação	sawdasˈɐ̃w
-sazonalmente	sazõnawmˈẽtʃɪ
-seara	siˈaɾɐ
-secagem	sekˈaʒẽj
-seccionar	sekisjõnˈaɾ
-seccionar	sekisjõnˈa
-seguidora	seɡidˈoɾɐ
-semafórico	sẽmafˈɔɾikʊ
-semiesférico	sẽmjeʃfˈɛɾikʊ
-semiesférico	sẽmieʃfˈɛɾikʊ
-semifinal	sẽmifĩnˈaw
-semipedal	sẽmipedˈaw
-semiquadrado	sẽmikwadɾˈadʊ
-senegalense	sẽneɡalˈẽsɪ
-sensacionalista	sẽsasjõnalˈiʃtɐ
-sepulcro	sepˈuwkɾʊ
-serpentão	sehpẽtˈɐ̃w
-serralheiro	seɦaʎˈejɾʊ
-sexológico	seksolˈɔʒikʊ
-shakespeariano	ʃajkeʃpeɾiˈɐ̃nʊ
-silenciosamente	silẽsjozãmˈẽtʃɪ
-simplória	simplˈɔɾjɐ
-sirgo	sˈiɦɡʊ
-sirgueiro	siɦɡˈejɾʊ
-sobrelevação	sobɾelevasˈɐ̃w
-sobremodo	sobɾẽmˈɔdʊ
-sobrenome	sobɾẽnˈõmɪ
-sobrepé	sobɾepˈɛ
-somatostatina	sõmatoʃtatʃˈĩnɐ
-sonolência	sõnolˈẽsjɐ
-soprador	sopɾadˈoɾ
-soprador	sopɾadˈo
-sub-roda	sʊbɦˈɔdɐ
-sub-roda	subɦˈɔdɐ
-subalternamente	sʊbawtɛɦnãmˈẽtʃɪ
-subalternamente	subawtɛɦnãmˈẽtʃɪ
-subcervical	sʊbseɦvikˈaw
-subcervical	subseɦvikˈaw
-subchefia	sʊbʃefˈiɐ
-subchefia	subʃefˈiɐ
-subcontinental	sʊbkõtʃĩnẽtˈaw
-subcontinental	subkõtʃĩnẽtˈaw
-subdiaconato	sʊbdʒiakõnˈatʊ
-subdiaconato	subdʒiakõnˈatʊ
-subentendimento	subẽtẽdʒĩmˈẽtʊ
-subgelatinoso	sʊbʒelatʃĩnˈozʊ
-subgelatinoso	subʒelatʃĩnˈozʊ
-submaciço	sʊbmasˈisʊ
-submaciço	submasˈisʊ
-subsecretariado	sʊbsekɾetaɾiˈadʊ
-subsecretariado	subsekɾetaɾiˈadʊ
-substituído	sʊbʃtʃitwˈidʊ
-substituído	subʃtʃituˈidʊ
-sufixar	sufiksˈaɾ
-sufixar	sufiksˈa
-superexcitar	sʊperesitˈaɾ
-superexcitar	superesitˈaɾ
-superfluido	sʊpehflwˈidʊ
-superfluido	supehflˈujdʊ
-supra	sˈupɾɐ
-suspensão	sʊʃpẽsˈɐ̃w
-suspensão	suʃpẽsˈɐ̃w
-sustar	sʊʃtˈaɾ
-sustar	suʃtˈa
-série	sˈɛɾɪ
-taciturnamente	tasituɦnãmˈẽtʃɪ
-taciturnamente	tasitʊɦnãmˈẽtʃɪ
-tacógrafo	takˈɔɡɾafʊ
-tamponamento	tɐ̃põnãmˈẽtʊ
-tangência	tɐ̃ʒˈẽsjɐ
-tapeceiro	tapesˈejɾʊ
-tarso	tˈahsʊ
-tasco	tˈaʃkʊ
-tauromáquico	tawɾõmˈakikʊ
-tauródromo	tawɾˈɔdɾõmʊ
-te	tʃɪ
-teledetetar	tɛlɛpbedetetˈaɾ
-telemático	telẽmˈatʃikʊ
-telespetadora	teleʃpɛtadˈoɾɐ
-temível	tẽmˈivew
-tentadora	tẽtadˈoɾɐ
-tentilhão	tẽtʃiʎˈɐ̃w
-teorético	tʃjoɾˈɛtʃikʊ
-tese	tˈɛzɪ
-testículo-de-cão	teʃtʃˌikulʊdʒikˈɐ̃w
-timoneira	tʃĩmõnˈejɾɐ
-timoneiro	tʃĩmõnˈejɾʊ
-tiquetaque	tʃiketˈakɪ
-tiroteio	tʃiɾotˈejʊ
-tição	tʃisˈɐ̃w
-totalização	totalizasˈɐ̃w
-toucado	tokˈadʊ
-toureiro	toɾˈejɾʊ
-traineira	tɾãjnˈejɾɐ
-trampolim	tɾɐ̃polˈĩ
-transcriptase	tɾɐ̃ʃkɾipətˈazɪ
-trapaceiro	tɾapasˈejɾʊ
-trapaça	tɾapˈasɐ
-tratável	tɾatˈavew
-treina	tɾˈẽjnɐ
-trepa	tɾˈɛpɐ
-tribofe	tɾibˈɔfɪ
-tribuna	tɾibˈũnɐ
-triestino	tɾieʃtʃˈĩnʊ
-triestino	tɾjeʃtʃˈĩnʊ
-trigésimo	tɾiʒˈɛzĩmʊ
-trilhado	tɾiʎˈadʊ
-trilogia	tɾiloʒˈiɐ
-trimestral	tɾĩmeʃtɾˈaw
-trinitária	tɾĩnitˈaɾjɐ
-tripeiro	tɾipˈejɾʊ
-trivializar	tɾivializˈa
-trivializar	tɾivializˈaɾ
-troiana	tɾojˈɐ̃nɐ
-tucano	tukˈɐ̃nʊ
-tule	tˈulɪ
-tungsténio	tũŋɡʃtˈɛ̃njʊ
-tuno	tˈũnʊ
-tártaro	tˈahtaɾʊ
-ugandês	uɡɐ̃dˈeʃ
-ultrajante	uwtɾaʒˈɐ̃tʃɪ
-ultrarreação	uwtɾaɦeasˈɐ̃w
-univocamente	ũnivokãmˈẽtʃɪ
-untar	ũtˈaɾ
-untar	ũtˈa
-uracilo	uɾasˈilʊ
-utopismo	utopˈiʒmʊ
-ventilado	vẽtʃilˈadʊ
-verificável	veɾifikˈavew
-verrinoso	veɦĩnˈozʊ
-verso	vˈɛhsʊ
-vestibular	veʃtʃibulˈa
-vestibular	veʃtʃibulˈaɾ
-vetor	vetˈo
-vetor	vetˈoɾ
-vice-campeonato	vˌisikɐ̃pjõnˈatʊ
-videogravador	vidʒjoɡɾavadˈo
-videogravador	vidʒjoɡɾavadˈoɾ
-vigoroso	viɡoɾˈozʊ
-vigária	viɡˈaɾjɐ
-vinagreta	vĩnaɡɾˈetɐ
-vincado	vĩkˈadʊ
-vincular	vĩkulˈa
-vincular	vĩkulˈaɾ
-vinicultor	vĩnikuwtˈo
-vinicultor	vĩnikʊwtˈoɾ
-vinícola	vĩnˈikolɐ
-violeiro	vjolˈejɾʊ
-viscondessa	viʃkõdˈesɐ
-visitável	vizitˈavew
-vistosamente	viʃtɔzãmˈẽtʃɪ
-vivissecção	vivisekəsˈɐ̃w
-vulva	vˈuwvɐ
-vértice	vˈɛhtʃisɪ
-weberiano	wɛbeɾiˈɐ̃nʊ
-zebra	zˈebɾɐ
-zimbo	zˈĩbʊ
-zimbrar	zĩbɾˈaɾ
-zimbrar	zĩbɾˈa
-íntimo	ˈĩtʃĩmʊ
-órficas	ˈɔhfikɐʃ
-ônibus	ˈõnibʊʃ
+# columns: word<TAB>ipa_narrow<TAB>sources (one row per variant)
+# sources: portuguese-unified-pronunciation-lexicon@23898e1437dc77e84681bb7ce5580a9b3e2d04ba
+abandalhado	abɐ̃daʎˈadʊ	none
+abate	abˈatʃɪ	none
+abirritável	abiɦitˈavew	none
+aboleado	aboliˈadʊ	none
+abolicionismo	abolisjõnˈiʒmʊ	none
+abominação	abõmĩnasˈɐ̃w	none
+absonância	absõnˈɐ̃sjɐ	none
+acampar	akɐ̃pˈa	none
+acampar	akɐ̃pˈaɾ	none
+acessório	asesˈɔɾjʊ	none
+achatamento	aʃatãmˈẽtʊ	none
+acomodadamente	akõmodadãmˈẽtʃɪ	none
+acompanhar	akõpãɲˈa	none
+acompanhar	akõpãɲˈaɾ	none
+aconselhar	akõseʎˈa	none
+aconselhar	akõseʎˈaɾ	none
+acrofobia	akɾofobˈiɐ	none
+adega	adˈɛɡɐ	none
+adentro	adˈẽtɾʊ	none
+adjetivar	adiʒetʃivˈa	none
+adjetivar	adiʒetʃivˈaɾ	none
+admitido	adĩmitʃˈidʊ	none
+adoradora	adoɾadˈoɾɐ	none
+adorar	adoɾˈa	none
+adorar	adoɾˈaɾ	none
+adoravelmente	adoɾavewmˈẽtʃɪ	none
+aduterino	aduteɾˈĩnʊ	none
+aeronáutica	aeɾõnˈawtʃikɐ	none
+afazer	afazˈe	none
+afazer	afazˈeɾ	none
+afincar	afĩkˈa	none
+afincar	afĩkˈaɾ	none
+afluência	afluˈẽsjɐ	none
+afluência	aflwˈẽsjɐ	none
+afogado	afoɡˈadʊ	none
+aforisticamente	afoɾiʃtʃikãmˈẽtʃɪ	none
+agendamento	aʒẽdãmˈẽtʊ	none
+agradecimento	aɡɾadesĩmˈẽtʊ	none
+agravamento	aɡɾavãmˈẽtʊ	none
+agridoce	aɡɾidˈosɪ	none
+agulha	aɡˈuʎɐ	none
+ajuda	aʒˈudɐ	none
+ajuntamento	aʒũtãmˈẽtʊ	none
+albino	awbˈĩnʊ	none
+alcoolismo	awkolˈiʒmʊ	none
+aligátor	aliɡˈato	none
+aligátor	aliɡˈatoɾ	none
+alinhavar	alĩɲavˈa	none
+alinhavar	alĩɲavˈaɾ	none
+alisar	alizˈa	none
+alisar	alizˈaɾ	none
+altercação	awtehkasˈɐ̃w	none
+altissonante	awtʃisõnˈɐ̃tʃɪ	none
+alunagem	alũnˈaʒẽj	none
+amaldiçoada	ãmawdʒisoˈadɐ	none
+amazônio	ãmazˈõnjʊ	none
+ambicionar	ɐ̃bisjõnˈa	none
+ambicionar	ɐ̃bisjõnˈaɾ	none
+ambientador	ɐ̃biẽtadˈo	none
+ambientador	ɐ̃bjẽtadˈoɾ	none
+ameaçadora	ãmeasadˈoɾɐ	none
+amolada	ãmolˈadɐ	none
+amolador	ãmoladˈo	none
+amolador	ãmoladˈoɾ	none
+amolar	ãmolˈa	none
+amolar	ãmolˈaɾ	none
+amolecer	ãmolesˈe	none
+amolecer	ãmolesˈeɾ	none
+amonite	ãmõnˈitʃɪ	none
+anacronismo	ãnakɾõnˈiʒmʊ	none
+anacrônico	ãnakɾˈõnikʊ	none
+anarquizante	ãnahkizˈɐ̃tʃɪ	none
+anestesista	ãneʃtezˈiʃtɐ	none
+anglófilo	ɐ̃ɡlˈɔfilʊ	none
+anglófona	ɐ̃ɡlˈɔfõnɐ	none
+ansiosamente	ɐ̃sjɔzãmˈẽtʃɪ	none
+antedito	ɐ̃tedʒˈitʊ	none
+antepassar	ɐ̃tepasˈa	none
+antepassar	ɐ̃tepasˈaɾ	none
+anti-humanista	ɐ̃tʃiũmãnˈiʃtɐ	none
+antiaristocrata	ɐ̃tʃiaɾiʃtokɾˈatɐ	none
+antiaristocrático	ɐ̃tʃiaɾiʃtokɾˈatʃikʊ	none
+anticristianismo	ɐ̃tʃikɾiʃtʃiãnˈiʒmʊ	none
+antilógico	ɐ̃tʃilˈɔʒikʊ	none
+antimonárquico	ɐ̃tʃĩmõnˈahkikʊ	none
+antimíssil	ɐ̃tʃĩmˈisiw	none
+antinevrálgico	ɐ̃tʃinevɾˈawʒikʊ	none
+antissubversão	ɐ̃tʃisubivehsˈɐ̃w	none
+apanha-bolas	apˌɐ̃ɲɐbˈɔlɐʃ	none
+apicultura	apikuwtˈuɾɐ	none
+apicultura	apikʊwtˈuɾɐ	none
+apurada	apuɾˈadɐ	none
+aquariano	akwaɾiˈɐ̃nʊ	none
+aquelar	akelˈa	none
+aquelar	akelˈaɾ	none
+argentaria	aɦʒẽtaɾˈiɐ	none
+ariscar	aɾiʃkˈa	none
+ariscar	aɾiʃkˈaɾ	none
+aritmético	aɾitĩmˈɛtʃikʊ	none
+arqueólogo	ahkjˈɔloɡʊ	none
+arquimimo	ahkimˈĩmʊ	none
+arquivisticamente	ahkiviʃtʃikãmˈẽtʃɪ	none
+arredondamento	aɦedõdãmˈẽtʊ	none
+arrematar	aɦẽmatˈa	none
+arrematar	aɦẽmatˈaɾ	none
+articulado	ahtʃikulˈadʊ	none
+asmática	aʒmˈatʃikɐ	none
+assiduidade	asidujdˈadʒɪ	none
+assiduidade	asidwidˈadʒɪ	none
+assimilada	asĩmilˈadɐ	none
+assuar	asuˈa	none
+assuar	asuˈaɾ	none
+atenuação	atẽnuasˈɐ̃w	none
+atiradora	atʃiɾadˈoɾɐ	none
+atolambado	atolɐ̃bˈadʊ	none
+atraentemente	atɾaẽtẽmˈẽtʃɪ	none
+atropelamento	atɾopelãmˈẽtʊ	none
+autocatálise	awtokatˈalizɪ	none
+avanço	avˈɐ̃sʊ	none
+avinhado	avĩɲˈadʊ	none
+avisado	avizˈadʊ	none
+azia	azˈiɐ	none
+açambarcador	asɐ̃bahkadˈo	none
+açambarcador	asɐ̃bahkadˈoɾ	none
+babar	babˈaɾ	none
+babar	babˈa	none
+bacano	bakˈɐ̃nʊ	none
+bacio	basˈiʊ	none
+bacteriologista	bakiteɾjoloʒˈiʃtɐ	none
+bagageiro	baɡaʒˈejɾʊ	none
+balanceamento	balɐ̃seãmˈẽtʊ	none
+baralhada	baɾaʎˈadɐ	none
+barateiro	baɾatˈejɾʊ	none
+barrigana	baɦiɡˈɐ̃nɐ	none
+basar	bazˈaɾ	none
+basar	bazˈa	none
+bateria	bateɾˈiɐ	none
+batráquio	batɾˈakjʊ	none
+beatificação	beatʃifikasˈɐ̃w	none
+beicinho	bejsˈĩɲʊ	none
+belfo	bˈɛwfʊ	none
+belicosidade	belikozidˈadʒɪ	none
+belveder	bewvedˈeɾ	none
+belveder	bewvedˈe	none
+bem-fazer	bˌẽjfazˈeɾ	none
+bem-fazer	bˌẽjfazˈe	none
+berçário	behsˈaɾjʊ	none
+besouro	bezˈoɾʊ	none
+bicalado	bikalˈadʊ	none
+bicho de sete cabeças	biʃʊdʒisˌɛtʃikabˈesɐʃ	none
+biologia	bjoloʒˈiɐ	none
+boa-noite	bˌoɐnˈojtʃɪ	none
+boa-nova	bˌoɐnˈɔvɐ	none
+bofetada	bofetˈadɐ	none
+bojo	bˈoʒʊ	none
+bolar	bolˈaɾ	none
+bolar	bolˈa	none
+bordô	boɦdˈo	none
+borrachão	boɦaʃˈɐ̃w	none
+botulismo	botulˈiʒmʊ	none
+bouçar	bosˈaɾ	none
+bouçar	bosˈa	none
+bravar	bɾavˈaɾ	none
+bravar	bɾavˈa	none
+breque	bɾˈɛkɪ	none
+brete	bɾˈetʃɪ	none
+brevetar	bɾevetˈaɾ	none
+brevetar	bɾevetˈa	none
+broche	bɾˈɔʃɪ	none
+bruteza	bɾutˈezɐ	none
+brônquio	bɾˈõkjʊ	none
+bujarrona	buʒaɦˈõnɐ	none
+burro	bˈuɦʊ	none
+bétula	bˈɛtulɐ	none
+cabalista	kabalˈiʃtɐ	none
+cabaz	kabˈaʃ	none
+cachecol	kaʃekˈɔw	none
+cachucho	kaʃˈuʃʊ	none
+cachão	kaʃˈɐ̃w	none
+cacimbar	kasĩbˈa	none
+cacimbar	kasĩbˈaɾ	none
+cainçar	kaĩsˈa	none
+cainçar	kaĩsˈaɾ	none
+cajueiro	kaʒuˈejɾʊ	none
+cajueiro	kaʒwˈejɾʊ	none
+calibragem	kalibɾˈaʒẽj	none
+caloiro	kalˈojɾʊ	none
+cancelamento	kɐ̃selãmˈẽtʊ	none
+candidato	kɐ̃dʒidˈatʊ	none
+canivete	kãnivˈɛtʃɪ	none
+cantábrico	kɐ̃tˈabɾikʊ	none
+capitalização	kapitalizasˈɐ̃w	none
+capitão de mar e guerra	kapitˌɐ̃wdʒimaɾeɡˈɛɦɐ	none
+carburante	kaɦbuɾˈɐ̃tʃɪ	none
+cariar	kaɾiˈa	none
+cariar	kaɾiˈaɾ	none
+carregado	kaɦeɡˈadʊ	none
+carruagem-cama	kaɦuˌaʒẽjkˈɐ̃mɐ	none
+casa-forte	kˌazɐfˈɔhtʃɪ	none
+casaria	kazaɾˈiɐ	none
+castanha	kaʃtˈɐ̃ɲɐ	none
+castelo	kaʃtˈɛlʊ	none
+castrado	kaʃtɾˈadʊ	none
+castrelo	kaʃtɾˈelʊ	none
+casula	kazˈulɐ	none
+cata-vento	kˌatɐvˈẽtʊ	none
+catraiar	katɾajˈa	none
+catraiar	katɾajˈaɾ	none
+catártico	katˈahtʃikʊ	none
+caíque	kaˈikɪ	none
+cebolada	sebolˈadɐ	none
+cedi	sedʒˈi	none
+cenoura	sẽnˈoɾɐ	none
+censitário	sẽsitˈaɾjʊ	none
+censo	sˈẽsʊ	none
+centrista	sẽtɾˈiʃtɐ	none
+charro	ʃˈaɦʊ	none
+chega	ʃˈeɡɐ	none
+cheta	ʃˈetɐ	none
+chocar	ʃokˈa	none
+chocar	ʃokˈaɾ	none
+chorrilho	ʃoɦˈiʎʊ	none
+choupo	ʃˈopʊ	none
+chuta	ʃˈutɐ	none
+chuvinha	ʃuvˈĩɲɐ	none
+cicatrizar	sikatɾizˈa	none
+cicatrizar	sikatɾizˈaɾ	none
+cidra	sˈidɾɐ	none
+cigarra	siɡˈaɦɐ	none
+cineclube	sĩneklˈubɪ	none
+cinemateca	sĩnẽmatˈɛkɐ	none
+cinzeiro	sĩzˈejɾʊ	none
+cirandado	siɾɐ̃dˈadʊ	none
+cisão-fusão	sizˌɐ̃wfuzˈɐ̃w	none
+cita	sˈitɐ	none
+civilizada	sivilizˈadɐ	none
+ciúme	siˈũmɪ	none
+clamidíase	klãmidʒˈiazɪ	none
+clamor	klãmˈo	none
+clamor	klãmˈoɾ	none
+classicamente	klasikãmˈẽtʃɪ	none
+clavicular	klavikulˈa	none
+clavicular	klavikulˈaɾ	none
+coabitação	koabitasˈɐ̃w	none
+codevedor	kodevedˈoɾ	none
+coisificação	kojzifikasˈɐ̃w	none
+colombo	kolˈõbʊ	none
+colorir	koloɾˈi	none
+colorir	koloɾˈiɾ	none
+combustivo	kõbuʃtʃˈivʊ	none
+combustivo	kõbʊʃtʃˈivʊ	none
+comemorável	komẽmoɾˈavew	none
+comezinhamente	kõmezĩɲãmˈẽtʃɪ	none
+comparador	kõpaɾadˈo	none
+comparador	kõpaɾadˈoɾ	none
+complicador	kõplikadˈo	none
+complicador	kõplikadˈoɾ	none
+comportavelmente	kõpohtavewmˈẽtʃɪ	none
+comprazer	kõpɾazˈe	none
+comprazer	kõpɾazˈeɾ	none
+compreendido	kõpɾeẽdʒˈidʊ	none
+compressão	kõpɾesˈɐ̃w	none
+comproprietário	kõpɾopɾietˈaɾjʊ	none
+comproprietário	kõpɾopɾjetˈaɾjʊ	none
+concelhia	kõseʎˈiɐ	none
+concessivamente	kõsesivãmˈẽtʃɪ	none
+concílio	kõsˈiljʊ	none
+conexo	kõnˈɛksʊ	none
+confeitaria	kõfejtaɾˈiɐ	none
+confidencialmente	kõfidẽsiawmˈẽtʃɪ	none
+conforme	kõfˈɔɦmɪ	none
+confraternização	kõfɾateɦnizasˈɐ̃w	none
+congenialmente	kõʒẽniawmˈẽtʃɪ	none
+congruência	kõɡɾuˈẽsjɐ	none
+congruência	kõɡɾwˈẽsjɐ	none
+conjuntar	kõʒũtˈa	none
+conjuntar	kõʒũtˈaɾ	none
+conservatória	kõseɦvatˈɔɾjɐ	none
+conspiradora	kõʃpiɾadˈoɾɐ	none
+constante	kõʃtˈɐ̃tʃɪ	none
+constatação	kõʃtatasˈɐ̃w	none
+constrição	kõʃtɾisˈɐ̃w	none
+construir	kõʃtɾuˈi	none
+construir	kõʃtɾwˈiɾ	none
+consumido	kõsũmˈidʊ	none
+consórcio	kõsˈɔhsjʊ	none
+contestação	kõteʃtasˈɐ̃w	none
+contingentação	kõtʃĩʒẽtasˈɐ̃w	none
+contramalhar	kõtɾamaʎˈaɾ	none
+contramestre	kõtɾãmˈɛʃtɾɪ	none
+contrapino	kõtɾapˈĩnʊ	none
+contrapreparação	kõtɾapɾepaɾasˈɐ̃w	none
+contrapropaganda	kõtɾapɾopaɡˈɐ̃dɐ	none
+contundência	kõtũdˈẽsjɐ	none
+contusão	kõtuzˈɐ̃w	none
+convalescente	kõvalesˈẽtʃɪ	none
+convencionado	kõvẽsjõnˈadʊ	none
+convocatória	kõvokatˈɔɾjɐ	none
+cooperativo	kopeɾatʃˈivʊ	none
+copela	kopˈɛlɐ	none
+copioso	kopjˈozʊ	none
+cordialidade	koɦdʒialidˈadʒɪ	none
+cordofone	koɦdofˈɔ̃nɪ	none
+coreana	koɾiˈɐ̃nɐ	none
+coriscar	koɾiʃkˈa	none
+coriscar	koɾiʃkˈaɾ	none
+corredatora	koɦedatˈoɾɐ	none
+corticite	kohtʃisˈitʃɪ	none
+cortês	kohtˈeʃ	none
+costear	koʃtʃiˈa	none
+costear	koʃtʃiˈaɾ	none
+cotim	kotʃˈĩ	none
+cotutora	kotutˈoɾɐ	none
+cretense	kɾetˈẽsɪ	none
+crisanto	kɾizˈɐ̃tʊ	none
+cristalizado	kɾiʃtalizˈadʊ	none
+crueza	kɾuˈezɐ	none
+crueza	kɾwˈezɐ	none
+cubana	kubˈɐ̃nɐ	none
+culatra	kulˈatɾɐ	none
+culpado	kuwpˈadʊ	none
+culpado	kʊwpˈadʊ	none
+culturalmente	kuwtuɾawmˈẽtʃɪ	none
+culturalmente	kʊwtuɾawmˈẽtʃɪ	none
+cumpliciar	kũplisiˈa	none
+cumpliciar	kũplisiˈaɾ	none
+cônscio	kˈõsjʊ	none
+decisivamente	desizivãmˈẽtʃɪ	none
+declamar	deklãmˈa	none
+declamar	deklãmˈaɾ	none
+declamação	deklãmasˈɐ̃w	none
+declivoso	deklivˈozʊ	none
+defecação	defekasˈɐ̃w	none
+delator	delatˈo	none
+delator	delatˈoɾ	none
+delegacia	deleɡasˈiɐ	none
+deleitoso	delejtˈozʊ	none
+delicioso	delisjˈozʊ	none
+delicodoce	delikodˈosɪ	none
+democratização	dẽmokɾatʃizasˈɐ̃w	none
+demonologia	dẽmõnoloʒˈiɐ	none
+denotativo	dẽnotatʃˈivʊ	none
+densificar	dẽsifikˈa	none
+densificar	dẽsifikˈaɾ	none
+depender	depẽdˈe	none
+depender	depẽdˈeɾ	none
+derruir	deɦuˈi	none
+derruir	deɦwˈiɾ	none
+desadoração	dezadoɾasˈɐ̃w	none
+desalijar	dezaliʒˈaɾ	none
+desambientação	dezɐ̃biẽtasˈɐ̃w	none
+desambientação	dezɐ̃bjẽtasˈɐ̃w	none
+desapossado	dezaposˈadʊ	none
+desapossamento	dezaposãmˈẽtʊ	none
+desarear	dezaɾiˈaɾ	none
+desartilhar	dezahtʃiʎˈaɾ	none
+desatinado	dezatʃĩnˈadʊ	none
+desatordoar	dezatoɦdoˈaɾ	none
+desbabar	dezbabˈaɾ	none
+descapitalizar	deʃkapitalizˈa	none
+descapitalizar	deʃkapitalizˈaɾ	none
+descarda	deskˈaɦdɐ	none
+descascar	deʃkaʃkˈa	none
+descascar	deʃkaʃkˈaɾ	none
+descoberta	deʃkobˈɛhtɐ	none
+descompostamente	deʃkõpɔʃtãmˈẽtʃɪ	none
+descompressão	deʃkõpɾesˈɐ̃w	none
+desconfiadamente	deskõfiadãmˈẽtʃɪ	none
+desconfiadamente	deʃkõfiadãmˈẽtʃɪ	none
+descuriosamente	deskuɾjozãmˈẽtʃɪ	none
+deselegância	dezeleɡˈɐ̃sjɐ	none
+desembraiagem	dezẽbɾajˈaʒẽj	none
+desemparedamento	dezẽpaɾedãmˈẽtʊ	none
+desemplumar	dezẽplũmˈaɾ	none
+desencorajar	dezẽkoɾaʒˈa	none
+desencorajar	dezẽkoɾaʒˈaɾ	none
+desengenhoso	dezẽʒẽɲˈozʊ	none
+desensopar	dezẽsopˈaɾ	none
+desentaramelar	dezẽtaɾãmelˈaɾ	none
+desenvolvidamente	dezẽvowvidãmˈẽtʃɪ	none
+desfolha	deʃfˈɔʎɐ	none
+desgoelar	dezɡoɛlˈaɾ	none
+deslindar	deʒlĩdˈa	none
+deslindar	deʒlĩdˈaɾ	none
+desmaranhar	dezmaɾãɲˈaɾ	none
+desmistificar	deʒmiʃtʃifikˈa	none
+desmistificar	deʒmiʃtʃifikˈaɾ	none
+desmiudar	dezmiudˈaɾ	none
+desmobilizável	dezmobilizˈavew	none
+desmonte	deʒmˈõtʃɪ	none
+desnecessidade	deʒnesesidˈadʒɪ	none
+desoficialização	dezofisializasˈɐ̃w	none
+desolhar	dezɔʎˈa	none
+desolhar	dezɔʎˈaɾ	none
+desoras	dezˈɔɾɐʃ	none
+desordenação	dezoɦdẽnasˈɐ̃w	none
+despapar	despapˈaɾ	none
+desparamentar	deʃpaɾãmẽtˈa	none
+desparamentar	deʃpaɾãmẽtˈaɾ	none
+despedrar	despedɾˈaɾ	none
+desperdiçada	deʃpeɦdʒisˈadɐ	none
+despicador	despikadˈoɾ	none
+despolarizador	despolaɾizadˈoɾ	none
+despreparado	despɾepaɾˈadʊ	none
+despretensiosamente	deʃpɾetẽsjozãmˈẽtʃɪ	none
+desquitar	deskitˈaɾ	none
+desregrado	deʒɦeɡɾˈadʊ	none
+desrugar	dezɦuɡˈaɾ	none
+destilaria	deʃtʃilaɾˈiɐ	none
+destorar	destoɾˈaɾ	none
+desvalidar	deʒvalidˈa	none
+desvalidar	deʒvalidˈaɾ	none
+desveladamente	dezveladãmˈẽtʃɪ	none
+desveladamente	deʒveladãmˈẽtʃɪ	none
+detectável	detekətˈavew	none
+detonação	detõnasˈɐ̃w	none
+deus	dˈewʃ	none
+dia	dʒˈiɐ	none
+diaconado	dʒiakõnˈadʊ	none
+diafonia	dʒiafõnˈiɐ	none
+diagnosticável	dʒiaɡə̃noʃtʃikˈavew	none
+dialogismo	dʒialoʒˈiʒmʊ	none
+dieléctrico	dʒielˈɛktɾikʊ	none
+difamação	dʒifãmasˈɐ̃w	none
+dinâmico	dʒĩnˈɐ̃mikʊ	none
+dionisíaco	dʒjõnizˈiakʊ	none
+diorama	dʒjoɾˈɐ̃mɐ	none
+diprismático	dʒipɾiʒmˈatʃikʊ	none
+direcionado	dʒiɾesjõnˈadʊ	none
+discreta	dʒiʃkɾˈɛtɐ	none
+discriminante	dʒiʃkɾĩmĩnˈɐ̃tʃɪ	none
+dissabor	dʒisabˈo	none
+dissabor	dʒisabˈoɾ	none
+dissimular	dʒisĩmulˈa	none
+dissimular	dʒisĩmulˈaɾ	none
+distração	dʒiʃtɾasˈɐ̃w	none
+ditar	dʒitˈa	none
+ditar	dʒitˈaɾ	none
+divisa	dʒivˈizɐ	none
+donzela	dõzˈɛlɐ	none
+dotação	dotasˈɐ̃w	none
+dote	dˈɔtʃɪ	none
+dourador	doɾadˈo	none
+dourador	doɾadˈoɾ	none
+dragona	dɾaɡˈõnɐ	none
+driblar	dɾiblˈa	none
+driblar	dɾiblˈaɾ	none
+duravelmente	duɾavewmˈẽtʃɪ	none
+eclíptico	eklˈipitʃikʊ	none
+ecopista	ekopˈiʃtɐ	none
+elasticidade	elaʃtʃisidˈadʒɪ	none
+eletromagnete	eletɾomaɡĩnˈɛtʃɪ	none
+eletroterapeuta	eletɾoteɾapˈewtɐ	none
+embelezamento	ĩbelezãmˈẽtʊ	none
+embriogénese	ĩbɾjoʒˈɛ̃nezɪ	none
+emocionado	ẽmosjõnˈadʊ	none
+encalhado	ĩkaʎˈadʊ	none
+encalçar	ĩkawsˈa	none
+encalçar	ĩkawsˈaɾ	none
+encharcada	ĩʃahkˈadɐ	none
+endeusar	ĩdewzˈa	none
+endeusar	ĩdewzˈaɾ	none
+enegrecimento	ẽneɡɾesĩmˈẽtʊ	none
+energeticamente	ẽneɦʒɛtʃikãmˈẽtʃɪ	none
+engraxador	ĩɡɾaʃadˈo	none
+engraxador	ĩɡɾaʃadˈoɾ	none
+engripar	ĩɡɾipˈa	none
+engripar	ĩɡɾipˈaɾ	none
+enigmático	ẽniɡə̃mˈatʃikʊ	none
+entrevar	ĩtɾevˈa	none
+entrevar	ĩtɾevˈaɾ	none
+enunciador	ẽnũsiadˈo	none
+enunciador	ẽnũsiadˈoɾ	none
+enviesamento	ĩviezãmˈẽtʊ	none
+enviesamento	ĩvjezãmˈẽtʊ	none
+enzimologia	ĩzĩmoloʒˈiɐ	none
+equalização	ekwalizasˈɐ̃w	none
+escachar	iʃkaʃˈa	none
+escachar	iʃkaʃˈaɾ	none
+escadinha	iʃkadʒˈĩɲɐ	none
+escalfeta	iʃkawfˈetɐ	none
+escoramento	iʃkoɾãmˈẽtʊ	none
+escorar	iʃkoɾˈa	none
+escorar	iʃkoɾˈaɾ	none
+escutador	iʃkutadˈo	none
+escutador	iʃkutadˈoɾ	none
+esfalfar	iʃfawfˈa	none
+esfalfar	iʃfawfˈaɾ	none
+esfriar	iʃfɾiˈa	none
+esfriar	iʃfɾiˈaɾ	none
+esfumarar	iʃfũmaɾˈa	none
+esfumarar	iʃfũmaɾˈaɾ	none
+esgalhado	iʒɡaʎˈadʊ	none
+esgar	iʒɡˈa	none
+esgar	iʒɡˈaɾ	none
+especialidade	iʃpesialidˈadʒɪ	none
+espetacularidade	iʃpetakulaɾidˈadʒɪ	none
+espevitadamente	iʃpevitadãmˈẽtʃɪ	none
+estacionariamente	iʃtasjõnaɾiãmˈẽtʃɪ	none
+estafeta	iʃtafˈetɐ	none
+estampido	iʃtɐ̃pˈidʊ	none
+esteticamente	iʃtetʃikãmˈẽtʃɪ	none
+estilhaçar	iʃtʃiʎasˈa	none
+estilhaçar	iʃtʃiʎasˈaɾ	none
+estilismo	iʃtʃilˈiʒmʊ	none
+estopinha	iʃtopˈĩɲɐ	none
+estranha	iʃtɾˈɐ̃ɲɐ	none
+estranhíssimo	iʃtɾãɲˈisĩmʊ	none
+estratocúmulo	iʃtɾatokˈũmulʊ	none
+estrumar	iʃtɾũmˈa	none
+estrumar	iʃtɾũmˈaɾ	none
+estufa	iʃtˈufɐ	none
+estágio	iʃtˈaʒjʊ	none
+etarra	etˈaɦɐ	none
+ex-ministro	eʒmĩnˈiʃtɾʊ	none
+exatidão	ezatʃidˈɐ̃w	none
+excecionalmente	esesjõnawmˈẽtʃɪ	none
+exceder	esedˈe	none
+exceder	esedˈeɾ	none
+expansivo	eʃpɐ̃sˈivʊ	none
+extensor	eʃtẽsˈo	none
+extensor	eʃtẽsˈoɾ	none
+exterioridade	eʃteɾjoɾidˈadʒɪ	none
+extracorporal	eʃtɾakohpoɾˈaw	none
+extrajudicialmente	eʃtɾaʒudʒisiawmˈẽtʃɪ	none
+extramundano	eʃtɾamũdˈɐ̃nʊ	none
+extranatural	eʃtɾanatuɾˈaw	none
+extroverter	eʃtɾovehtˈe	none
+extroverter	eʃtɾovehtˈeɾ	none
+faduncho	fadˈũʃʊ	none
+falsa	fˈawsɐ	none
+fanha	fˈɐ̃ɲɐ	none
+fantasista	fɐ̃tazˈiʃtɐ	none
+fantástico	fɐ̃tˈaʃtʃikʊ	none
+farte	fˈahtʃɪ	none
+fasto	fˈaʃtʊ	none
+faustosamente	fawʃtɔzãmˈẽtʃɪ	none
+faz-tudo	fˌaʃtˈudʊ	none
+fazer	fazˈe	none
+fazer	fazˈeɾ	none
+feirante	fejɾˈɐ̃tʃɪ	none
+ferida	feɾˈidɐ	none
+festejada	feʃteʒˈadɐ	none
+fieira	fiˈejɾɐ	none
+fieira	fjˈejɾɐ	none
+filantropia	filɐ̃tɾopˈiɐ	none
+filharar	fiʎaɾˈa	none
+filharar	fiʎaɾˈaɾ	none
+finar	fĩnˈa	none
+finar	fĩnˈaɾ	none
+fisgado	fiʒɡˈadʊ	none
+florescência	floɾesˈẽsjɐ	none
+focar	fokˈa	none
+focar	fokˈaɾ	none
+forasteira	foɾaʃtˈejɾɐ	none
+fotogénese	fotoʒˈɛ̃nezɪ	none
+fotominiaturista	fotomĩniatuɾˈiʃtɐ	none
+fotoquímico	fotokˈĩmikʊ	none
+fragrância	fɾaɡɾˈɐ̃sjɐ	none
+franga	fɾˈɐ̃ɡɐ	none
+franjado	fɾɐ̃ʒˈadʊ	none
+fraseado	fɾaziˈadʊ	none
+fraternalmente	fɾateɦnawmˈẽtʃɪ	none
+fraudulento	fɾawdulˈẽtʊ	none
+fricassé	fɾikasˈɛ	none
+friável	fɾiˈavew	none
+frota	fɾˈɔtɐ	none
+frísia	fɾˈizja	none
+fulgurante	fuwɡuɾˈɐ̃tʃɪ	none
+fulgurante	fʊwɡuɾˈɐ̃tʃɪ	none
+fumadora	fũmadˈoɾɐ	none
+funchal	fũʃˈaw	none
+fundear	fũdʒiˈa	none
+fundear	fũdʒiˈaɾ	none
+fustiga	fuʃtʃˈiɡɐ	none
+fustiga	fʊʃtʃˈiɡɐ	none
+fábrica	fˈabɾikɐ	none
+fécula	fˈɛkulɐ	none
+gafanhoto	ɡafãɲˈotʊ	none
+gaiatamente	ɡajatãmˈẽtʃɪ	none
+galanteador	ɡalɐ̃teadˈoɾ	none
+galanteador	ɡalɐ̃teadˈo	none
+galvanização	ɡawvãnizasˈɐ̃w	none
+gandular	ɡɐ̃dulˈaɾ	none
+gandular	ɡɐ̃dulˈa	none
+garimpo	ɡaɾˈĩpʊ	none
+garotice	ɡaɾotʃˈisɪ	none
+garrafal	ɡaɦafˈaw	none
+garrana	ɡaɦˈɐ̃nɐ	none
+garrar	ɡaɦˈaɾ	none
+garrar	ɡaɦˈa	none
+garrido	ɡaɦˈidʊ	none
+genealogia	ʒẽnealoʒˈiɐ	none
+giga	ʒˈiɡɐ	none
+gingar	ʒĩɡˈaɾ	none
+gingar	ʒĩɡˈa	none
+gomar	ɡõmˈaɾ	none
+gomar	ɡõmˈa	none
+gorda	ɡˈoɦdɐ	none
+gordura	ɡoɦdˈuɾɐ	none
+grafia	ɡɾafˈiɐ	none
+granulosidade	ɡɾãnulozidˈadʒɪ	none
+gruta	ɡɾˈutɐ	none
+guarda-vestidos	ɡwˌaɦdɐveʃtʃˈidʊʃ	none
+habilmente	abiwmˈẽtʃɪ	none
+harmonizado	aɦmõnizˈadʊ	none
+hibridar	ibɾidˈa	none
+hibridar	ibɾidˈaɾ	none
+hibridização	ibɾidʒizasˈɐ̃w	none
+hiperbólico	ipɛɦbˈɔlikʊ	none
+hiperdialético	iperdʒialˈɛtʃikʊ	none
+hiperexcitabilidade	iperesitabilidˈadʒɪ	none
+hipoteticamente	ipotɛtʃikãmˈẽtʃɪ	none
+hissope	isˈɔpɪ	none
+holocausto	olokˈawʃtʊ	none
+homogeneizante	õmoʒẽnejzˈɐ̃tʃɪ	none
+hospitalização	oʃpitalizasˈɐ̃w	none
+hércules	ˈɛhkulɪʃ	none
+ilegalmente	ileɡawmˈẽtʃɪ	none
+iluminista	ilũmĩnˈiʃtɐ	none
+ilustrar	iluʃtɾˈa	none
+ilustrar	ilʊʃtɾˈaɾ	none
+imaturidade	ĩmatuɾidˈadʒɪ	none
+imbebível	ĩbebˈiew	none
+imortalizado	ĩmohtalizˈadʊ	none
+impermeabilidade	ĩpeɦmeabilidˈadʒɪ	none
+implodir	ĩplodʒˈi	none
+implodir	ĩplodʒˈiɾ	none
+importunar	ĩpohtũnˈa	none
+importunar	ĩpohtũnˈaɾ	none
+impronunciar	ĩpɾõnũsiˈa	none
+impronunciar	ĩpɾõnũsiˈaɾ	none
+impávido	ĩpˈavidʊ	none
+inalcançável	ĩnawkɐ̃sˈavew	none
+inalienável	ĩnaliɛ̃nˈavew	none
+inassinável	ĩnasĩnˈavew	none
+inaugurativo	ĩnawɡuɾatʃˈivʊ	none
+incerto	ĩsˈɛhtʊ	none
+inconcebível	ĩkõsebˈivew	none
+inconstar	ĩŋkõʃtˈaɾ	none
+incorreção	ĩkoɦesˈɐ̃w	none
+increr	ĩŋkɾˈeɾ	none
+incrustado	ĩkɾuʃtˈadʊ	none
+incrustado	ĩkɾʊʃtˈadʊ	none
+incógnito	ĩkˈɔɡĩnitʊ	none
+indefensável	ĩdefẽsˈavew	none
+indesejável	ĩdezeʒˈavew	none
+indigitado	ĩdʒiʒitˈadʊ	none
+indonésio	ĩdõnˈɛzju	none
+indutor	ĩdutˈo	none
+indutor	ĩdutˈoɾ	none
+inexplicavelmente	ĩneʃplikavewmˈẽtʃɪ	none
+infantado	ĩfɐ̃tˈadʊ	none
+infantilidade	ĩfɐ̃tʃilidˈadʒɪ	none
+inflar	ĩflˈa	none
+inflar	ĩflˈaɾ	none
+ingratidão	ĩɡɾatʃidˈɐ̃w	none
+ingressão	ĩɡɾesˈɐ̃w	none
+inicialização	ĩnisializasˈɐ̃w	none
+iniciando	ĩnisiˈɐ̃dʊ	none
+inobre	ĩnˈɔbɾɪ	none
+inquebrável	ĩkebɾˈavew	none
+inscrição	ĩʃkɾisˈɐ̃w	none
+instruendo	ĩʃtɾuˈẽdʊ	none
+instruendo	ĩʃtɾwˈẽdʊ	none
+insurreição	ĩsuɦejsˈɐ̃w	none
+insustentabilidade	ĩsuʃtẽtabilidˈadʒɪ	none
+insustentabilidade	ĩsʊʃtẽtabilidˈadʒɪ	none
+intelectualidade	ĩtelekətualidˈadʒɪ	none
+intercensitário	ĩtehsẽsitˈaɾjʊ	none
+intercepto	ĩtehsˈɛpətʊ	none
+interestadual	ĩteɾeʃtaduˈaw	none
+internacionalismo	ĩteɦnasjõnalˈiʒmʊ	none
+interpelado	ĩtehpelˈadʊ	none
+intervencionismo	ĩteɦvẽsjõnˈiʒmʊ	none
+intervir	ĩteɦvˈi	none
+intervir	ĩteɦvˈiɾ	none
+intra-hepático	ĩtɾaepˈatʃikʊ	none
+intragável	ĩtɾaɡˈavew	none
+intravaginal	ĩtɾavaʒĩnˈaw	none
+invariável	ĩvaɾiˈavew	none
+invariância	ĩvaɾiˈɐ̃sjɐ	none
+inóspito	ĩnˈɔʃpitʊ	none
+irrequietismo	iɦekietʃˈiʒmʊ	none
+irrequietismo	iɦekjetʃˈiʒmʊ	none
+irresistibilidade	iɦeziʃtʃibilidˈadʒɪ	none
+irritabilidade	iɦitabilidˈadʒɪ	none
+irritável	iɦitˈavew	none
+italianização	italiãnizasˈɐ̃w	none
+janar	ʒãnˈaɾ	none
+janar	ʒãnˈa	none
+jarro	ʒˈaɦʊ	none
+joalharia	ʒoaʎaɾˈiɐ	none
+justo	ʒˈuʃtʊ	none
+laborar	laboɾˈaɾ	none
+laborar	laboɾˈa	none
+laboriosamente	laboɾjozãmˈẽtʃɪ	none
+lamuriento	lãmuɾjˈẽtʊ	none
+lamuriento	lãmuɾiˈẽtʊ	none
+landau	lɐ̃dˈaw	none
+lantejoula	lɐ̃teʒˈolɐ	none
+laçarote	lasaɾˈɔtʃɪ	none
+leito	lˈejtʊ	none
+leão	leˈɐ̃w	none
+liberalização	libeɾalizasˈɐ̃w	none
+limalhas	lĩmˈaʎɐʃ	none
+limusina	lĩmuzˈĩnɐ	none
+linguarudo	lĩɡwaɾˈudʊ	none
+lisonjear	lizõʒiˈaɾ	none
+lisonjear	lizõʒiˈa	none
+localismo	lokalˈiʒmʊ	none
+logarítmico	loɡaɾˈitĩmikʊ	none
+loteamento	loteãmˈẽtʊ	none
+lousão	lozˈɐ̃w	none
+loção	losˈɐ̃w	none
+lume	lˈũmɪ	none
+lácteo	lˈakitʃjʊ	none
+lúcido	lˈusidʊ	none
+madrigalista	madɾiɡalˈiʃtɐ	none
+magistralmente	maʒiʃtɾawmˈẽtʃɪ	none
+magnificente	maɡĩnifisˈẽtʃɪ	none
+maiata	majˈatɐ	none
+mala-posta	mˌalɐpˈɔʃtɐ	none
+malacia	malasˈiɐ	none
+maluco	malˈukʊ	none
+manca	mˈɐ̃kɐ	none
+manga de alpaca	mˌɐ̃ɡɐdʒiawpˈakɐ	none
+manhã	mãɲˈɐ̃	none
+maniacamente	mãniakãmˈẽtʃɪ	none
+manicómio	mãnikˈɔ̃mjʊ	none
+manietar	mãnjetˈaɾ	none
+manietar	mãnietˈa	none
+manjaco	mɐ̃ʒˈakʊ	none
+manta	mˈɐ̃tɐ	none
+marca	mˈahkɐ	none
+marinheiro	maɾĩɲˈejɾʊ	none
+maro	mˈaɾʊ	none
+maronita	maɾõnˈitɐ	none
+marte	mˈahtʃɪ	none
+massajar	masaʒˈaɾ	none
+massajar	masaʒˈa	none
+mastigado	maʃtʃiɡˈadʊ	none
+mastro	mˈaʃtɾʊ	none
+meca	mˈɛkɐ	none
+mediante	medʒiˈɐ̃tʃɪ	none
+melar	melˈaɾ	none
+melar	melˈa	none
+melómano	melˈɔ̃mãnʊ	none
+memoravelmente	mẽmoɾavewmˈẽtʃɪ	none
+menagem	mẽnˈaʒẽj	none
+meninge	mẽnˈĩʒɪ	none
+menisco	mẽnˈiʃkʊ	none
+mercantilismo	mehkɐ̃tʃilˈiʒmʊ	none
+mercantilização	mehkɐ̃tʃilizasˈɐ̃w	none
+merlim	meɦlˈĩ	none
+metacarpo	metakˈahpʊ	none
+microglia	mikɾoɡlˈiɐ	none
+micronutriente	mikɾõnutɾjˈẽtʃɪ	none
+micronutriente	mikɾõnutɾiˈẽtʃɪ	none
+microssonda	mikɾosˈõdɐ	none
+mictório	mikətˈɔɾjʊ	none
+micénico	misˈɛ̃nikʊ	none
+midas	mˈidɐʃ	none
+milagreiro	milaɡɾˈejɾʊ	none
+milagroso	milaɡɾˈozʊ	none
+milenar	milẽnˈaɾ	none
+milenar	milẽnˈa	none
+militarizado	militaɾizˈadʊ	none
+mindinho	mĩdʒˈĩɲʊ	none
+minimalismo	mĩnĩmalˈiʒmʊ	none
+mirabolante	miɾabolˈɐ̃tʃɪ	none
+misantropo	mizɐ̃tɾˈopʊ	none
+mobilizado	mobilizˈadʊ	none
+mochila	moʃˈilɐ	none
+modal	modˈaw	none
+modestamente	modɛʃtãmˈẽtʃɪ	none
+moldávio	mowdˈavjʊ	none
+momice	mõmˈisɪ	none
+monologar	mõnoloɡˈaɾ	none
+monologar	mõnoloɡˈa	none
+monopolizar	mõnopolizˈaɾ	none
+monopolizar	mõnopolizˈa	none
+montaria	mõtaɾˈiɐ	none
+mordente	moɦdˈẽtʃɪ	none
+motocultivador	motokʊwtʃivadˈoɾ	none
+motocultivador	motokuwtʃivadˈo	none
+mourisco	moɾˈiʃkʊ	none
+moçada	mosˈadɐ	none
+mucina	musˈĩnɐ	none
+mulherengo	muʎeɾˈẽɡʊ	none
+mulherio	muʎeɾˈiʊ	none
+mundanal	mũdãnˈaw	none
+mundanismo	mũdãnˈiʒmʊ	none
+murete	muɾˈetʃɪ	none
+mutualidade	mutualidˈadʒɪ	none
+médico-dentário	mˌɛdʒikʊdẽtˈaɾjʊ	none
+napoleónica	napoljˈɔ̃nikɐ	none
+narração	naɦasˈɐ̃w	none
+navegadora	naveɡadˈoɾɐ	none
+navegante	naveɡˈɐ̃tʃɪ	none
+negrura	neɡɾˈuɾɐ	none
+neocatolicismo	neɔkatolisˈiʒmʊ	none
+neogénese	neɔʒˈɛ̃nezɪ	none
+neurocientista	newɾosiẽtʃˈiʃtɐ	none
+neurocientista	newɾosjẽtʃˈiʃtɐ	none
+nevralgia	nevɾawʒˈiɐ	none
+ninguém	nĩɡˈẽj	none
+ninho	nˈĩɲʊ	none
+normativo	noɦmatʃˈivʊ	none
+nos	nˈuʃ	none
+nosso	nˈɔsʊ	none
+noturnamente	notuɦnãmˈẽtʃɪ	none
+noturnamente	notʊɦnãmˈẽtʃɪ	none
+néon	nˈɛõ	none
+objetivamente	obiʒetʃivãmˈẽtʃɪ	none
+obliteração	obliteɾasˈɐ̃w	none
+obstinação	obʃtʃĩnasˈɐ̃w	none
+obviável	obviˈavew	none
+oeste	oˈɛʃtʃɪ	none
+ogiva	oʒˈivɐ	none
+olho	ˈoʎʊ	none
+opal	ɔpˈaw	none
+orégão	ɔɾˈɛɡɐ̃w	none
+osso	ˈosʊ	none
+ostreícola	oʃtɾeˈikolɐ	none
+oura	ˈoɾɐ	none
+ouriçar	oɾisˈaɾ	none
+ouriçar	oɾisˈa	none
+oval	ovˈaw	none
+ovariano	ovaɾiˈɐ̃nʊ	none
+pacientar	pasiẽtˈa	none
+pacientar	pasjẽtˈaɾ	none
+pacóvia	pakˈɔvjɐ	none
+padroado	padɾoˈadʊ	none
+panejar	pãneʒˈa	none
+panejar	pãneʒˈaɾ	none
+pantanoso	pɐ̃tãnˈozʊ	none
+pantera	pɐ̃tˈɛɾɐ	none
+pantominice	pɐ̃tõmĩnˈisɪ	none
+par	pˈa	none
+par	pˈaɾ	none
+parafilia	paɾafilˈiɐ	none
+paralisar	paɾalizˈa	none
+paralisar	paɾalizˈaɾ	none
+paramilitar	paɾãmilitˈa	none
+paramilitar	paɾãmilitˈaɾ	none
+paraplégica	paɾaplˈɛʒikɐ	none
+paraplégico	paɾaplˈɛʒikʊ	none
+parcimoniosamente	pahsĩmõnjɔzãmˈẽtʃɪ	none
+passageiro	pasaʒˈejɾʊ	none
+passarinheiro	pasaɾĩɲˈejɾʊ	none
+pastorar	paʃtoɾˈa	none
+pastorar	paʃtoɾˈaɾ	none
+patogénese	patoʒˈɛ̃nezɪ	none
+patogénico	patoʒˈɛ̃nikʊ	none
+pavesar	pavezˈa	none
+pavesar	pavezˈaɾ	none
+pecar	pekˈa	none
+pecar	pekˈaɾ	none
+pedófila	pedˈɔfilɐ	none
+pele-vermelha	pˌɛliveɦmˈeʎɐ	none
+peluche	pelˈuʃɪ	none
+pemba	pˈẽbɐ	none
+penhor	pẽɲˈo	none
+penhor	pẽɲˈoɾ	none
+penoso	pẽnˈozʊ	none
+pensante	pẽsˈɐ̃tʃɪ	none
+perdedor	peɦdedˈo	none
+perdedor	peɦdedˈoɾ	none
+perdigueiro	peɦdʒiɡˈejɾʊ	none
+perduravelmente	peɦduɾavewmˈẽtʃɪ	none
+pergaminho	peɦɡãmˈĩɲʊ	none
+permissível	peɦmisˈivew	none
+permuta	peɦmˈutɐ	none
+perrum	peɦˈũ	none
+perseverante	pehseveɾˈɐ̃tʃɪ	none
+perspetivar	perʃpetʃivˈa	none
+perspetivar	perʃpetʃivˈaɾ	none
+persuasoriamente	pehsuazɔɾiãmˈẽtʃɪ	none
+persuasão	pehsuazˈɐ̃w	none
+perto	pˈɛhtʊ	none
+pianola	piãnˈɔlɐ	none
+piloso	pilˈozʊ	none
+pincel	pĩsˈɛw	none
+pioneirismo	pjõnejɾˈiʒmʊ	none
+pisado	pizˈadʊ	none
+placebo	plasˈɛbʊ	none
+plastificado	plaʃtʃifikˈadʊ	none
+platinar	platʃĩnˈa	none
+platinar	platʃĩnˈaɾ	none
+pneumologista	pɨ̃nẽwmoloʒˈiʃtɐ	none
+pneumática	pɨ̃nẽwmˈatʃikɐ	none
+pobremente	pɔbɾẽmˈẽtʃɪ	none
+poeta	pwˈɛtɐ	none
+poisada	pojzˈadɐ	none
+polifonicamente	polifɔ̃nikãmˈẽtʃɪ	none
+porca	pˈɔhkɐ	none
+porcina	pohsˈĩnɐ	none
+portucalense	pohtukalˈẽsɪ	none
+positivamente	pozitʃivãmˈẽtʃɪ	none
+positivo	pozitʃˈivʊ	none
+prazer	pɾazˈe	none
+prazer	pɾazˈeɾ	none
+precaridade	pɾekaɾidˈadʒɪ	none
+precatória	pɾekatˈɔɾjɐ	none
+preferivelmente	pɾefeɾivewmˈẽtʃɪ	none
+premoção	pɾemosˈɐ̃w	none
+prender	pɾẽdˈe	none
+prender	pɾẽdˈeɾ	none
+prenúncio	pɾẽnˈũsjʊ	none
+prepositivo	pɾepozitʃˈivʊ	none
+prevalecente	pɾevalesˈẽtʃɪ	none
+previstamente	pɾeviʃtãmˈẽtʃɪ	none
+prezar	pɾezˈa	none
+prezar	pɾezˈaɾ	none
+problematização	pɾoblẽmatʃizasˈɐ̃w	none
+progenitura	pɾoʒẽnitˈuɾɐ	none
+proliferar	pɾolifeɾˈa	none
+proliferar	pɾolifeɾˈaɾ	none
+promitente	pɾõmitˈẽtʃɪ	none
+propedêutica	pɾɔpedˈewtʃikɐ	none
+provado	pɾovˈadʊ	none
+proveta	pɾovˈetɐ	none
+próximo	pɾˈɔsĩmʊ	none
+psicogénico	psikoʒˈɛ̃nikʊ	none
+pudor	pudˈo	none
+pudor	pudˈoɾ	none
+pumba	pˈũbɐ	none
+pós	pˈɔʃ	none
+quadragésimo	kwadɾaʒˈɛzĩmʊ	none
+queiró	kejɾˈɔ	none
+queixada	kejʃˈadɐ	none
+quimicamente	kĩmikãmˈẽtʃɪ	none
+quissange	kisˈɐ̃ʒɪ	none
+rabugice	ɦabuʒˈisɪ	none
+ralão	ɦalˈɐ̃w	none
+raminho	ɦãmˈĩɲʊ	none
+ranhar	ɦãɲˈa	none
+ranhar	ɦãɲˈaɾ	none
+ratado	ɦatˈadʊ	none
+reabilitado	ɦeabilitˈadʊ	none
+readaptador	ɦeadapətadˈoɾ	none
+realização	ɦealizasˈɐ̃w	none
+reanexar	ɦeãneksˈaɾ	none
+reavultar	ɦeavuwtˈaɾ	none
+reavultar	ɦeavʊwtˈaɾ	none
+rebel	ɦebˈɛw	none
+recatadamente	ɦekatadãmˈẽtʃɪ	none
+receita	ɦesˈejtɐ	none
+reciclar	ɦesiklˈa	none
+reciclar	ɦesiklˈaɾ	none
+recoleção	ɦekolesˈɐ̃w	none
+recolher	ɦekoʎˈe	none
+recolher	ɦekoʎˈeɾ	none
+reconstitutivo	ɦekõʃtʃitutʃˈivʊ	none
+recontagem	ɦekõtˈaʒẽj	none
+recorrer	ɦekoɦˈe	none
+recorrer	ɦekoɦˈeɾ	none
+recoutar	ɦekotˈaɾ	none
+redator-chefe	ɦedatˌoɾʃˈɛfɪ	none
+redecretar	ɦedekɾetˈaɾ	none
+redondeza	ɦedõdˈezɐ	none
+reentregar	ɦeẽtɾeɡˈa	none
+reentregar	ɦeẽtɾeɡˈaɾ	none
+reenviado	ɦeẽviˈadʊ	none
+reequilibrar	ɦeekilibɾˈa	none
+reequilibrar	ɦeekilibɾˈaɾ	none
+refalsear	ɦefawsiˈaɾ	none
+refeitório	ɦefejtˈɔɾjʊ	none
+reflexivamente	ɦefleksivãmˈẽtʃɪ	none
+reformismo	ɦefoɦmˈiʒmʊ	none
+reforçar	ɦefohsˈa	none
+reforçar	ɦefohsˈaɾ	none
+regesto	ɦeʒˈɛʃtʊ	none
+regimental	ɦeʒĩmẽtˈaw	none
+reinflamar	ɦeĩflãmˈaɾ	none
+relacionado	ɦelasjõnˈadʊ	none
+relatividade	ɦelatʃividˈadʒɪ	none
+religioso	ɦeliʒjˈozʊ	none
+remanchar	ɦemɐ̃ʃˈaɾ	none
+remartelar	ɦemahtelˈaɾ	none
+remissamente	ɦẽmisãmˈẽtʃɪ	none
+remurmurejar	ɦemuɦmuɾeʒˈaɾ	none
+remurmurejar	ɦemʊɦmuɾeʒˈaɾ	none
+renegociação	ɦẽneɡosiasˈɐ̃w	none
+renegociável	ɦẽneɡosiˈavew	none
+repassagem	ɦepasˈaʒẽj	none
+repiscar	ɦepiʃkˈaɾ	none
+repreendido	ɦepɾeẽdʒˈidʊ	none
+representar	ɦepɾezẽtˈa	none
+representar	ɦepɾezẽtˈaɾ	none
+representatividade	ɦepɾezẽtatʃividˈadʒɪ	none
+reprocessamento	ɦepɾosesãmˈẽtʊ	none
+reprodutividade	ɦepɾodutʃividˈadʒɪ	none
+reprovador	ɦepɾovadˈo	none
+reprovador	ɦepɾovadˈoɾ	none
+requieto	ɦekiˈɛtʊ	none
+requieto	ɦekjˈɛtʊ	none
+residencial	ɦezidẽsiˈaw	none
+ressaciar	ɦesasiˈaɾ	none
+ressuscitado	ɦesusitˈadʊ	none
+restaurativo	ɦeʃtawɾatʃˈivʊ	none
+resvés	ɦeʒvˈɛʃ	none
+retesar	ɦetezˈa	none
+retesar	ɦetezˈaɾ	none
+retratador	ɦetɾatadˈoɾ	none
+retrocar	ɦetɾokˈaɾ	none
+retrovisor	ɦetɾovizˈo	none
+retrovisor	ɦetɾovizˈoɾ	none
+revelador	ɦeveladˈo	none
+revelador	ɦeveladˈoɾ	none
+revolucionária	ɦevolusjõnˈaɾjɐ	none
+riscada	ɦiʃkˈadɐ	none
+rissol	ɦisˈɔw	none
+rolhagem	ɦoʎˈaʒẽj	none
+romanesco	ɦõmãnˈeʃkʊ	none
+rompimento	ɦõpĩmˈẽtʊ	none
+romântico	ɦõmˈɐ̃tʃikʊ	none
+romãzeira	ɦõmˈɐ̃zejɾɐ	none
+roufenhar	ɦofẽɲˈa	none
+roufenhar	ɦofẽɲˈaɾ	none
+rudemente	ɦudẽmˈẽtʃɪ	none
+rufia	ɦufˈiɐ	none
+rábida	ɦˈabidɐ	none
+rábido	ɦˈabidʊ	none
+sacramento	sakɾãmˈẽtʊ	none
+sacudidamente	sakudʒidãmˈẽtʃɪ	none
+sageza	saʒˈezɐ	none
+saibrar	sajbɾˈaɾ	none
+saibrar	sajbɾˈa	none
+salientar	saljẽtˈaɾ	none
+salientar	saliẽtˈa	none
+salva-vidas	sˌawvɐvˈidɐʃ	none
+sanefa	sãnˈɛfɐ	none
+santigar	sɐ̃tʃiɡˈaɾ	none
+santigar	sɐ̃tʃiɡˈa	none
+saquito	sakˈitʊ	none
+satisfeito	satʃiʃfˈejtʊ	none
+saudação	sawdasˈɐ̃w	none
+sazonalmente	sazõnawmˈẽtʃɪ	none
+seara	siˈaɾɐ	none
+secagem	sekˈaʒẽj	none
+seccionar	sekisjõnˈaɾ	none
+seccionar	sekisjõnˈa	none
+seguidora	seɡidˈoɾɐ	none
+semafórico	sẽmafˈɔɾikʊ	none
+semiesférico	sẽmjeʃfˈɛɾikʊ	none
+semiesférico	sẽmieʃfˈɛɾikʊ	none
+semifinal	sẽmifĩnˈaw	none
+semipedal	sẽmipedˈaw	none
+semiquadrado	sẽmikwadɾˈadʊ	none
+senegalense	sẽneɡalˈẽsɪ	none
+sensacionalista	sẽsasjõnalˈiʃtɐ	none
+sepulcro	sepˈuwkɾʊ	none
+serpentão	sehpẽtˈɐ̃w	none
+serralheiro	seɦaʎˈejɾʊ	none
+sexológico	seksolˈɔʒikʊ	none
+shakespeariano	ʃajkeʃpeɾiˈɐ̃nʊ	none
+silenciosamente	silẽsjozãmˈẽtʃɪ	none
+simplória	simplˈɔɾjɐ	none
+sirgo	sˈiɦɡʊ	none
+sirgueiro	siɦɡˈejɾʊ	none
+sobrelevação	sobɾelevasˈɐ̃w	none
+sobremodo	sobɾẽmˈɔdʊ	none
+sobrenome	sobɾẽnˈõmɪ	none
+sobrepé	sobɾepˈɛ	none
+somatostatina	sõmatoʃtatʃˈĩnɐ	none
+sonolência	sõnolˈẽsjɐ	none
+soprador	sopɾadˈoɾ	none
+soprador	sopɾadˈo	none
+sub-roda	sʊbɦˈɔdɐ	none
+sub-roda	subɦˈɔdɐ	none
+subalternamente	sʊbawtɛɦnãmˈẽtʃɪ	none
+subalternamente	subawtɛɦnãmˈẽtʃɪ	none
+subcervical	sʊbseɦvikˈaw	none
+subcervical	subseɦvikˈaw	none
+subchefia	sʊbʃefˈiɐ	none
+subchefia	subʃefˈiɐ	none
+subcontinental	sʊbkõtʃĩnẽtˈaw	none
+subcontinental	subkõtʃĩnẽtˈaw	none
+subdiaconato	sʊbdʒiakõnˈatʊ	none
+subdiaconato	subdʒiakõnˈatʊ	none
+subentendimento	subẽtẽdʒĩmˈẽtʊ	none
+subgelatinoso	sʊbʒelatʃĩnˈozʊ	none
+subgelatinoso	subʒelatʃĩnˈozʊ	none
+submaciço	sʊbmasˈisʊ	none
+submaciço	submasˈisʊ	none
+subsecretariado	sʊbsekɾetaɾiˈadʊ	none
+subsecretariado	subsekɾetaɾiˈadʊ	none
+substituído	sʊbʃtʃitwˈidʊ	none
+substituído	subʃtʃituˈidʊ	none
+sufixar	sufiksˈaɾ	none
+sufixar	sufiksˈa	none
+superexcitar	sʊperesitˈaɾ	none
+superexcitar	superesitˈaɾ	none
+superfluido	sʊpehflwˈidʊ	none
+superfluido	supehflˈujdʊ	none
+supra	sˈupɾɐ	none
+suspensão	sʊʃpẽsˈɐ̃w	none
+suspensão	suʃpẽsˈɐ̃w	none
+sustar	sʊʃtˈaɾ	none
+sustar	suʃtˈa	none
+série	sˈɛɾɪ	none
+taciturnamente	tasituɦnãmˈẽtʃɪ	none
+taciturnamente	tasitʊɦnãmˈẽtʃɪ	none
+tacógrafo	takˈɔɡɾafʊ	none
+tamponamento	tɐ̃põnãmˈẽtʊ	none
+tangência	tɐ̃ʒˈẽsjɐ	none
+tapeceiro	tapesˈejɾʊ	none
+tarso	tˈahsʊ	none
+tasco	tˈaʃkʊ	none
+tauromáquico	tawɾõmˈakikʊ	none
+tauródromo	tawɾˈɔdɾõmʊ	none
+te	tʃɪ	none
+teledetetar	tɛlɛpbedetetˈaɾ	none
+telemático	telẽmˈatʃikʊ	none
+telespetadora	teleʃpɛtadˈoɾɐ	none
+temível	tẽmˈivew	none
+tentadora	tẽtadˈoɾɐ	none
+tentilhão	tẽtʃiʎˈɐ̃w	none
+teorético	tʃjoɾˈɛtʃikʊ	none
+tese	tˈɛzɪ	none
+testículo-de-cão	teʃtʃˌikulʊdʒikˈɐ̃w	none
+timoneira	tʃĩmõnˈejɾɐ	none
+timoneiro	tʃĩmõnˈejɾʊ	none
+tiquetaque	tʃiketˈakɪ	none
+tiroteio	tʃiɾotˈejʊ	none
+tição	tʃisˈɐ̃w	none
+totalização	totalizasˈɐ̃w	none
+toucado	tokˈadʊ	none
+toureiro	toɾˈejɾʊ	none
+traineira	tɾãjnˈejɾɐ	none
+trampolim	tɾɐ̃polˈĩ	none
+transcriptase	tɾɐ̃ʃkɾipətˈazɪ	none
+trapaceiro	tɾapasˈejɾʊ	none
+trapaça	tɾapˈasɐ	none
+tratável	tɾatˈavew	none
+treina	tɾˈẽjnɐ	none
+trepa	tɾˈɛpɐ	none
+tribofe	tɾibˈɔfɪ	none
+tribuna	tɾibˈũnɐ	none
+triestino	tɾieʃtʃˈĩnʊ	none
+triestino	tɾjeʃtʃˈĩnʊ	none
+trigésimo	tɾiʒˈɛzĩmʊ	none
+trilhado	tɾiʎˈadʊ	none
+trilogia	tɾiloʒˈiɐ	none
+trimestral	tɾĩmeʃtɾˈaw	none
+trinitária	tɾĩnitˈaɾjɐ	none
+tripeiro	tɾipˈejɾʊ	none
+trivializar	tɾivializˈa	none
+trivializar	tɾivializˈaɾ	none
+troiana	tɾojˈɐ̃nɐ	none
+tucano	tukˈɐ̃nʊ	none
+tule	tˈulɪ	none
+tungsténio	tũŋɡʃtˈɛ̃njʊ	none
+tuno	tˈũnʊ	none
+tártaro	tˈahtaɾʊ	none
+ugandês	uɡɐ̃dˈeʃ	none
+ultrajante	uwtɾaʒˈɐ̃tʃɪ	none
+ultrarreação	uwtɾaɦeasˈɐ̃w	none
+univocamente	ũnivokãmˈẽtʃɪ	none
+untar	ũtˈaɾ	none
+untar	ũtˈa	none
+uracilo	uɾasˈilʊ	none
+utopismo	utopˈiʒmʊ	none
+ventilado	vẽtʃilˈadʊ	none
+verificável	veɾifikˈavew	none
+verrinoso	veɦĩnˈozʊ	none
+verso	vˈɛhsʊ	none
+vestibular	veʃtʃibulˈa	none
+vestibular	veʃtʃibulˈaɾ	none
+vetor	vetˈo	none
+vetor	vetˈoɾ	none
+vice-campeonato	vˌisikɐ̃pjõnˈatʊ	none
+videogravador	vidʒjoɡɾavadˈo	none
+videogravador	vidʒjoɡɾavadˈoɾ	none
+vigoroso	viɡoɾˈozʊ	none
+vigária	viɡˈaɾjɐ	none
+vinagreta	vĩnaɡɾˈetɐ	none
+vincado	vĩkˈadʊ	none
+vincular	vĩkulˈa	none
+vincular	vĩkulˈaɾ	none
+vinicultor	vĩnikuwtˈo	none
+vinicultor	vĩnikʊwtˈoɾ	none
+vinícola	vĩnˈikolɐ	none
+violeiro	vjolˈejɾʊ	none
+viscondessa	viʃkõdˈesɐ	none
+visitável	vizitˈavew	none
+vistosamente	viʃtɔzãmˈẽtʃɪ	none
+vivissecção	vivisekəsˈɐ̃w	none
+vulva	vˈuwvɐ	none
+vértice	vˈɛhtʃisɪ	none
+weberiano	wɛbeɾiˈɐ̃nʊ	none
+zebra	zˈebɾɐ	none
+zimbo	zˈĩbʊ	none
+zimbrar	zĩbɾˈaɾ	none
+zimbrar	zĩbɾˈa	none
+íntimo	ˈĩtʃĩmʊ	none
+órficas	ˈɔhfikɐʃ	none
+ônibus	ˈõnibʊʃ	none

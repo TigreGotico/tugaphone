@@ -1,1206 +1,1207 @@
 # gold fixture: TigreGotico/portuguese-unified-pronunciation-lexicon region=pt-PT
 # source sha256=0b4d5e86a94762fc9037f6b415f9100647acd5de2fefa3b47f57086233cc2027
 # sample: seed=20260713 words=1000 (cap 1000)
-# columns: word<TAB>ipa_narrow (one row per variant)
-AVC	aveˈse
-Aldebarã	aɫdəbɐˈrɐ̃
-Daiane	dajˈɐnɨ
-Oríon	ɔˈriõ
-Viseano	viˈzjɐnu
-abadejo	ɐbɐˈdɐʒu,ɐbɐˈdeʒu
-abadejo	ɐbɐˈdɐjʒu,ɐbɐˈdeʒu
-abarregado	ɐbɐʀəˈɡadu
-abatocado	ɐbɐtuˈkadu
-abnorme	ɐbˈnɔrm
-abnorme	ɐbˈnɔrmə
-abobador	ɐbubɐˈdor
-abocanhador	ɐbukɐɲɐˈdor
-abolorar	ɐbuluˈrar
-aborregado	ɐbuʀəˈɡadu
-abostelar	ɐbuʃtəˈlar
-abrolhar	ɐbruˈʎar
-abular	ɐbuˈlar
-acamado	ɐkɐˈmadu
-acantizídeo	ɐkɐ̃tiˈzidju
-acastelar	ɐkɐʃtəˈlar
-acaustobiólito	ɐkawʃtɔˈbjɔlitu
-acetabulária	ɐsətɐbuˈlarjɐ
-acetonémico	ɐsətuˈnɛmiku
-acochar	ɐkoˈʃar
-aconselhavelmente	ɐkõsəʎavɛɫˈmẽt
-aconselhavelmente	ɐkõsəʎavɛɫˈmẽtə
-acotovelamento	ɐkutuvəlɐˈmẽtu
-acrescer	ɐkrəʃˈser
-acrescer	ɐkɾɨʃˈseɾ
-acrimântico	ɐkriˈmɐ̃tiku
-acupunturista	ɐkupũtuˈriʃtɐ
-acusativo	ɐkuzɐˈtivu
-adiamento	ɐdjɐˈmẽtu
-adligação	ɐdliɡɐˈsɐ̃w̃
-adscritício	ɐdʃkriˈtisju
-adur	ɐˈdur
-adução	ɐduˈsɐ̃w̃
-adê	ɐˈde
-aeropalinologia	ɐɛrɔpɐlinuluˈʒiɐ
-aerossol	ɐɛrɔˈsɔɫ
-afegão	ɐfəˈɡɐ̃w̃
-afegão	ɐfɨˈɡɐ̃w̃
-afeável	ɐˈfjavɛɫ
-afobação	ɐfubɐˈsɐ̃w̃
-afreguesamento	ɐfrɛɡəzɐˈmẽtu
-agapeta	ɐɡɐˈpetɐ
-agoniação	ɐɡunjɐˈsɐ̃w̃
-aguagem	aˈɡwaʒɐ̃j̃
-airo-de-freio	ajrudəˈfrɐju
-aiurveda	ajurˈvɛdɐ
-alacremente	ɐlakrəˈmẽt
-alacremente	ɐlakrəˈmẽtə
-alardeamento	ɐlɐrdjɐˈmẽtu
-albatroz-de-bico-pintado-do-índico	aɫbɐtrɔʃdəbikupĩtaduduˈĩdiku
-albense	aɫˈbẽs
-albense	aɫˈbẽsə
-albergar	aɫbərˈɡar
-alcalescente	aɫkɐləʃˈsẽt
-alcalescente	aɫkɐləʃˈsẽtə
-alcalicidade	aɫkɐlisiˈdad
-alcalicidade	aɫkɐlisiˈdadə
-alcoolemia	aɫkwuləˈmiɐ
-alcoolemia	aɫkwulɨˈmiɐ
-alcoranista	aɫkurɐˈniʃtɐ
-alegar	ɐləˈɡar
-alegar	ɐlɨˈɡaɾ
-alergénio	ɐlərˈʒɛnju
-alfandegamento	aɫfɐ̃dəɡɐˈmẽtu
-alfombrar	aɫfõˈbrar
-algésico	aɫˈʒɛziku
-alienante	ɐljeˈnɐ̃t
-alienante	ɐljeˈnɐ̃tə
-aljuba	aɫˈʒubɐ
-alogístico	ɐluˈʒiʃtiku
-alossómico	ɐlɔˈsɔmiku
-alotriomorfo	ɐlɔtrjɔˈmorfu
-alrute	aɫˈʀut
-alrute	aɫˈʀutə
-alternadamente	aɫtɨɾnadɐˈmẽtɨ
-altimétrico	aɫtiˈmɛtriku
-alto-astral	aɫtwɐʃˈtraɫ
-alumbrado	ɐlũˈbradu
-alvazil	aɫvɐˈziɫ
-alvéola-de-madagáscar	aɫvɛulɐdəmɐdɐˈɡaʃkɐr
-alógrafo	ɐˈlɔɡrɐfu
-amadeirar	ɐmɐdɐjˈrar
-ambotraço	ɐ̃buˈtrasu
-amebócito	ɐməˈbɔsitu
-ameijoar	ɐmɐjˈʒwar
-amoestar	ɐmwɛʃˈtar
-amoreira-negra	ɐmurɐjrɐˈneɡrɐ
-amotivacional	ɐmutivɐsjuˈnaɫ
-amura	ɐˈmurɐ
-anacrúsico	ɐnɐˈkruziku
-anadal	ɐnɐˈdaɫ
-analfabeto	ɐnaɫfɐˈbɛtu
-anambé-dos-tepuis	ɐnɐ̃bɛduʃˈtɛpujʃ
-anaplasmose	ɐnɐplɐʒˈmɔz
-anaplasmose	ɐnɐplɐʒˈmɔzə
-anastomosar	ɐnɐʃtumuˈzar
-andaimada	ɐ̃dajˈmadɐ
-andorinha-dos-charcos-africana	ɐ̃duriɲɐduʒʃarkuʒɐfriˈkɐnɐ
-andorinhão-de-rabo-curto	ɐ̃duriɲɐ̃w̃dəʀabuˈkurtu
-andrófago	ɐ̃ˈdrɔfɐɡu
-anelho	ɐˈnɐʎu,ɐˈneʎu
-anelho	ɐˈnɐjʎu,ɐˈneʎu
-anemoterápico	ɐnəmɔtəˈrapiku
-anfetamina	ɐ̃fətɐˈminɐ
-anfibológico	ɐ̃fibuˈlɔʒiku
-anfísmila	ɐ̃ˈfiʃmilɐ
-angiocardiografia	ɐ̃ʒjukardjuɡrɐˈfiɐ
-angolinha	ɐ̃ɡɔˈliɲɐ
-anisóptero	ɐniˈzɔptəru
-anoitecer	ɐnojtəˈser
-anoitecer	ɐnojtɨˈseɾ
-anoque	ɐˈnɔk
-anoque	ɐˈnɔkə
-ansiógeno	ɐ̃sjˈɔʒənu
-anso	ˈɐ̃su
-anta	ˈɐ̃tɐ
-antedar	ɐ̃təˈdar
-antedatável	ɐ̃tədɐˈtavɛɫ
-anterior	ɐ̃təˈrjor
-anterior	ɐ̃tɨˈɾjoɾ
-anti-humanista	ɐ̃tiumɐˈniʃtɐ
-antibioterapia	ɐ̃tibjɔtərɐˈpiɐ
-anticópia	ɐ̃tiˈkɔpjɐ
-antidetonante	ɐ̃tidətuˈnɐ̃t
-antidetonante	ɐ̃tidətuˈnɐ̃tə
-antidiarreico	ɐ̃tidjɐˈʀɐjku
-antidrogas	ɐ̃tiˈdrɔɡɐʃ
-antifricção	ɐ̃tifriˈksɐ̃w̃
-antinormativo	ɐ̃tinɔrmɐˈtivu
-antipneumocócico	ɐ̃tipnewmɔˈkɔsiku
-antiquariato	ɐ̃tikwɐˈrjatu
-antissociável	ɐ̃tisuˈsjavɛɫ
-antissubmarino	ɐ̃tisubmɐˈrinu
-antlofóbico	ɐ̃tlɔˈfɔbiku
-antocerota	ɐ̃tɔsəˈrotɐ
-antomaníaco	ɐ̃tɔmɐˈniɐku
-antífrase	ɐ̃ˈtifrɐz
-antífrase	ɐ̃ˈtifrɐzə
-anu-coroca	ɐnukuˈrɔkɐ
-anâmico	ɐˈnɐmiku
-anúria	ɐˈnurjɐ
-apantropo	ɐpɐ̃ˈtropu
-apartheid	ɐparˈtajd
-apendectomia	ɐpẽdɛktuˈmiɐ
-apologal	ɐpuluˈɡaɫ
-apoplexia	ɐpɔplɛˈksiɐ
-apostilhar	ɐpuʃtiˈʎar
-apréstamo	ɐˈprɛʃtɐmu
-aquém-fronteiras	akɐ̃j̃frõˈtɐjrɐʃ
-aracanga	ɐrɐˈkɐ̃ɡɐ
-aranheiro-de-peito-riscado	ɐrɐɲɐjrudəpɐjtuʀiʃˈkadu
-araucariáceo	ɐrawkɐˈrjasju
-araçari-de-bico-de-marfim	arasaridəbikudəmɐrˈfĩ
-arborizador	ɐrburizɐˈdor
-arcaico	ɐrˈkajku
-arcano	ɐrˈkɐnu
-arenoso	ɐrəˈnozu
-arenoso	ɐɾɨˈnozu
-aresta	ɐˈrɛʃtɐ
-argila	ɐrˈʒilɐ
-argilo-xistoso	ɐrʒiloʃiʃˈtozu
-argilofagia	ɐrʒilɔfɐˈʒiɐ
-argolada	ɐrɡuˈladɐ
-argueireiro	ɐrɡɐjˈrɐjru
-ariciídeos	ɐrisiˈidju
-aritmética	ɐriˈtmɛtikɐ
-arjoar	ɐrˈʒwar
-armarinho	ɐrmɐˈriɲu
-armígero	ɐrˈmiʒəru
-arquense	ɐrˈkẽs
-arquense	ɐrˈkẽsə
-arqueogeneticista	ɐrkjuʒənɛtiˈsiʃtɐ
-arquetípico	ɐrkəˈtipiku
-arquicantor	ɐrkikɐ̃ˈtor
-arquiclavo	ɐrkiˈklavu
-arrebitaço	ɐʀəbiˈtasu
-arremetedor	ɐʀəmətəˈdor
-arrendável	ɐʀẽˈdavɛɫ
-arretar	ɐʀəˈtar
-arretar	ɐʀɐjˈtar
-arretrasado	ɐʀətrɐˈzadu
-arrieiral	ɐʀjɐjˈraɫ
-arrombadela	ɐʀõbɐˈdɛlɐ
-arrufo	ɐˈʀufu
-arsenita	ɐrsəˈnitɐ
-arteiroso	ɐrtɐjˈrozu
-artroplástico	ɐrtrɔˈplaʃtiku
-aruenda	ɐˈrwẽdɐ
-arvorismo	ɐrvuˈriʒmu
-arábigo	ɐˈrabiɡu
-asinoterapia	ɐsinɔtərɐˈpiɐ
-assalmoado	ɐsaɫˈmwadu
-assassino	ɐsɐˈsinu
-assedamento	ɐsədɐˈmẽtu
-asseptização	ɐsɛptizɐˈsɐ̃w̃
-asseptol	ɐsɛˈptɔɫ
-assexualizar	ɐsɛkswɐliˈzar
-assistência	ɐsiʃˈtẽsjɐ
-assistência	ɐsiʃˈtẽsjɐ
-assolar	ɐsuˈlar
-atabacado	ɐtɐbɐˈkadu
-atabafamento	ɐtɐbɐfɐˈmẽtu
-atalense	ɐtɐˈlẽs
-atalense	ɐtɐˈlẽsə
-atalhada	ɐtɐˈʎadɐ
-atanasiano	ɐtɐnɐˈzjɐnu
-ataurense	ɐtɐuˈrẽs
-ataurense	ɐtɐuˈrẽsə
-atenção	ɐtẽˈsɐ̃w̃
-aterrizar	ɐtəʀiˈzar
-atinadamente	ɐtinadɐˈmẽt
-atinadamente	ɐtinadɐˈmẽtə
-aturador	ɐturɐˈdor
-audiolivro	awdjɔˈlivru
-auriclípeo	awriˈklipju
-aurígico	awˈriʒiku
-autoderrisório	awtɔdəʀiˈzɔrju
-autofinanciável	awtɔfinɐ̃ˈsjavɛɫ
-autogerir	awtɔʒəˈrir
-autolítico	awtɔˈlitiku
-ave-do-paraíso	avədupɐrɐˈizu
-avencão-peludo	ɐvẽkɐ̃w̃pəˈludu
-aviação	ɐvjɐˈsɐ̃w̃
-avio	ɐˈviu
-avoásseis	ɐˈvwasɐjʃ
-azeda	ɐˈzedɐ
-azeda-de-folha-larga	ɐzedɐdəfoʎɐˈlarɡɐ
-azáfama	ɐˈzafɐmɐ
-açorado	ɐsuˈradu
-açoutador	ɐsotɐˈdor
-açoutador	ɐsowtɐˈdor
-babilónia	bɐbiˈlɔnjɐ
-baixa-mar	bajʃɐˈmar
-balastro	bɐˈlaʃtru
-baleia-azul	bɐlɐjɐˈzuɫ
-baleia-de-bossas	bɐlɐjɐdəˈbɔsɐʃ
-baleia-piloto-de-aleta-comprida	bɐlɐjɐpilotudəɐletɐkõˈpridɐ
-balneoterapia	baɫnjɔtərɐˈpiɐ
-balona	bɐˈlonɐ
-baltistanês	baɫtiʃtɐˈneʃ
-baluarte	bɐˈlwart
-baluarte	bɐˈlwartə
-baluarte	bɐˈlwaɾtɨ
-balção	baɫˈsɐ̃w̃
-bambas	ˈbɐ̃bu
-banidor	bɐniˈdor
-barbatana	bɐrbɐˈtɐnɐ
-barbudo-de-bigodes	bɐrbududəbiˈɡɔdəʃ
-barrilha	bɐˈʀiʎɐ
-baré	bɐˈrɛ
-bate	ˈbat
-bate	ˈbatə
-batiscafo	bɐtiʃˈkafu
-beija-flor-dos-vulcões	bɐjʒɐflorduʃvuɫˈkõj̃ʃ
-beirute	bɐjˈrut
-beirute	bɐjˈrutə
-belatriz	bəlɐˈtriʃ
-beligerante	bɨliʒɨˈɾɐ̃tɨ
-bem-soante	bɐ̃jˈswɐ̃t
-bem-soante	bɐ̃jˈswɐ̃tə
-bergistano	bərʒiʃˈtɐnu
-berlinde	bərˈlĩd
-berlinde	bərˈlĩdə
-bernardo	bərˈnardu
-berração	bəʀɐˈsɐ̃w̃
-berrão	bəˈʀɐ̃w̃
-betuminizar	bətuminiˈzar
-biaculeado	biɐkuˈljadu
-bibliátrico	biˈbljatriku
-bifar	biˈfar
-bifloro	biˈflɔru
-bigodear	biɡuˈdjar
-bilocular	bilɔkuˈlar
-bilontragem	bilõˈtraʒɐ̃j̃
-bimbice	bĩˈbis
-bimbice	bĩˈbisə
-bimilenário	bimiləˈnarju
-bioarqueólogo	biɔɐrˈkjɔluɡu
-bioativo	biɔaˈtivu
-biochip	biɔˈʃip
-biofuncional	biɔfũsjuˈnaɫ
-biofuncionalização	biɔfũsjunɐlizɐˈsɐ̃w̃
-biotítico	biɔˈtitiku
-bipartidário	bipɐrtiˈdarju
-bispote	biʃˈpɔt
-bispote	biʃˈpɔtə
-bissensorial	bisẽsuˈrjaɫ
-bitafe	biˈtaf
-bitafe	biˈtafə
-bitoque	biˈtɔk
-bitoque	biˈtɔkə
-boa-presa	boɐˈprezɐ
-bochinche	buˈʃĩʃ
-bochinche	buˈʃĩʃə
-bordo-japonês	borduʒɐpuˈneʃ
-borlista	bɔrˈliʃtɐ
-braseiro	brɐˈzɐjru
-brasiliofobia	brɐziljɔfuˈbiɐ
-braço	ˈbrasu
-braço	ˈbräsu
-brilhante	briˈʎɐ̃t
-brilhante	briˈʎɐ̃tə
-brilhante	bɾiˈʎɐ̃tɨ
-bringido	brĩˈʒidu
-bromatométrico	brumɐtuˈmɛtriku
-broncoalveolar	brõkɔaɫvjuˈlar
-burocratizante	burukrɐtiˈzɐ̃t
-burocratizante	burukrɐtiˈzɐ̃tə
-buseira	buˈzɐjrɐ
-butiráceo	butiˈrasju
-cabalista	kɐbɐˈliʃtɐ
-cabineiro	kɐbiˈnɐjru
-cabrilha	kɐˈbriʎɐ
-cabrim	kɐˈbrĩ
-cabrindade	kɐbrĩˈdad
-cabrindade	kɐbrĩˈdadə
-cachir	kɐˈʃir
-cadência	kɐˈdẽsjɐ
-cadência	kɐˈdẽsjɐ
-cainofóbico	kajnɔˈfɔbiku
-caixilho	kajˈʃiʎu
-calaminta	kɐlɐˈmĩtɐ
-caldeirão	kaɫdɐjˈrɐ̃w̃
-calhambeque	kɐʎɐ̃ˈbɛk
-calhambeque	kɐʎɐ̃ˈbɛkə
-calhambeque	kɐʎɐ̃ˈbɛkɨ
-calhordice	kɐʎurˈdis
-calhordice	kɐʎurˈdisə
-calo	ˈkalu
-caloptérix	kɐlɔˈptɛriks
-calorescência	kɐlurəʃˈsẽsjɐ
-calço	ˈkaɫsu
-camacoza	kɐmɐˈkɔzɐ
-camauro	kɐˈmawru
-camecéfalo	kɐməˈsɛfɐlu
-cameleontídeo	kɐməljõˈtidju
-caminhar	kɐmiˈɲar
-campaniço	kɐ̃pɐˈnisu
-campina	kɐ̃ˈpinɐ
-caneláceo	kɐnəˈlasju
-cantina	kɐ̃ˈtinɐ
-canção	kɐ̃ˈsɐ̃w̃
-capim-pé-de-galinha	kɐpĩpɛdəɡɐˈliɲɐ
-caprariense	kɐprɐˈrjẽs
-caprariense	kɐprɐˈrjẽsə
-caprária	kɐˈprarjɐ
-cara	ˈkarɐ
-caracará	kɐrɐkɐˈra
-caralhota	kɐrɐˈʎɔtɐ
-carbureto	kɐrbuˈretu
-cariamídeo	kɐrjɐˈmidju
-cariciar	kɐriˈsjar
-carja	ˈkarʒɐ
-carnal	kɐrˈnaɫ
-carpiano	kɐrˈpjɐnu
-casaca-de-couro	kɐzakɐdəˈkoru
-casaca-de-couro	kɐzakɐdəˈkowru
-casaleiro	kɐzɐˈlɐjru
-casinhota	kɐziˈɲɔtɐ
-cassanha	kɐˈsɐɲɐ
-casteloa	kɐʃtəˈloɐ
-catecumenato	kɐtəkuməˈnatu
-catoptromante	kɐtɔptrɔˈmɐ̃t
-catoptromante	kɐtɔptrɔˈmɐ̃tə
-catorze	kɐˈtoɾzɨ
-cavalo-rinchão	kɐvaluʀĩˈʃɐ̃w̃
-celuliforme	səluliˈfɔrm
-celuliforme	səluliˈfɔrmə
-censurador	sẽsurɐˈdor
-centrossómico	sẽtrɔˈsɔmiku
-cerezino	sərəˈzinu
-cerradouro	səʀɐˈdoru
-cerradouro	səʀɐˈdowru
-ceutense	sewˈtẽs
-ceutense	sewˈtẽsə
-chapa-branca	ʃapɐˈbrɐ̃kɐ
-chapalheta	ʃɐpɐˈʎetɐ
-charlatanismo	ʃɐrlɐtɐˈniʒmu
-chasquiçar	ʃɐʃkiˈsar
-chavascar	ʃɐvɐʃˈkar
-chavasqueiro	ʃɐvɐʃˈkɐjru
-chazeiro	ʃaˈzɐjru
-chibança	ʃiˈbɐ̃sɐ
-chibato	ʃiˈbatu
-chibéu	ʃiˈbɛw
-cianurato	sjɐnuˈratu
-ciberarma	sibɛˈrarmɐ
-ciberespionagem	sibɛrʃpjuˈnaʒɐj̃
-ciberespionagem	sibɛriʃpjuˈnaʒɐj̃
-cicladense	siklɐˈdẽs
-cicladense	siklɐˈdẽsə
-cilício	siˈlisju
-cinzento	sĩˈzẽtu
-claramente	klarɐˈmẽt
-claramente	klarɐˈmẽtə
-claramente	klaɾɐˈmẽtɨ
-clavicórneo	klɐviˈkɔrnju
-clematite-branca	kləmɐtitˈbrɐ̃kɐ
-clematite-branca	kləmɐtitəˈbrɐ̃kɐ
-clítico	ˈklitiku
-coatividade	kwɐtiviˈdad
-coatividade	kwɐtiviˈdadə
-cobra-cega	kɔbrɐˈsɛɡɐ
-cocainização	kɔkɐinizɐˈsɐ̃w̃
-cocar	kɔˈkar
-cochada	kuˈʃadɐ
-coesão	kweˈzɐ̃w̃
-cogerir	koʒəˈrir
-coleio	kuˈlɐju
-colherim	kuʎəˈrĩ
-colostração	kuluʃtrɐˈsɐ̃w̃
-comedouro	kuməˈdoru
-comedouro	kuməˈdowru
-cominho	kuˈmiɲu
-companheirão	kõpɐɲɐjˈrɐ̃w̃
-complexidade	kõplɛksiˈdad
-complexidade	kõplɛksiˈdadə
-complexidade	kõplɛksiˈdadɨ
-comível	kuˈmivɛɫ
-condicionar	kõdisjuˈnar
-conheira	koˈɲɐjrɐ
-conjuntura	kõʒũˈturɐ
-consagrar	kõsɐˈɡrar
-consignatário	kõsiɡnɐˈtarju
-consonantizar	kõsunɐ̃tiˈzar
-constrição	kõʃtriˈsɐ̃w̃
-consumista	kõsuˈmiʃtɐ
-contorcer	kõturˈser
-contracrítica	kõtrɐˈkritikɐ
-contraguerrilha	kõtrɐɡəˈʀiʎɐ
-contrarrevolução	kõtrɐʀəvuluˈsɐ̃w̃
-contrátil	kõˈtratiɫ
-convalidar	kõvɐliˈdar
-convulsivante	kõvuɫsiˈvɐ̃t
-convulsivante	kõvuɫsiˈvɐ̃tə
-coplista	kɔˈpliʃtɐ
-copofone	kɔpɔˈfɔn
-copofone	kɔpɔˈfɔnə
-coqueificação	kɔkɐjfikɐˈsɐ̃w̃
-coracomante	kɔrɐkuˈmɐ̃t
-coracomante	kɔrɐkuˈmɐ̃tə
-cornogodinho	kurnuɡuˈdiɲu
-corujento	kuruˈʒẽtu
-corval	kurˈvaɫ
-cosmogonista	kɔʒmɔɡuˈniʃtɐ
-crampão	krɐ̃ˈpɐ̃w̃
-craniado	krɐˈnjadu
-craniologia	krɐnjuluˈʒiɐ
-credível	krəˈdivɛɫ
-cremadouro	krəmɐˈdoru
-cremadouro	krəmɐˈdowru
-criança-soldado	kriɐ̃sɐsoɫˈdadu
-criptomonetário	kriptɔmunəˈtarju
-crisográfico	krizuˈɡrafiku
-cristalotomia	kriʃtɐlɔtuˈmiɐ
-cromatoscópio	krɔmɐtɔʃˈkɔpju
-crosta	ˈkroʃtɐ
-cruamente	kruɐˈmẽt
-cruamente	kruɐˈmẽtə
-crítico	ˈkritiku
-culpabilizador	kuɫpɐbəlizɐˈdor,kuɫpɐbilizɐˈdor
-culumim	kuluˈmĩ
-cumari	kumaˈri
-cunquate	kũˈkwat
-cunquate	kũˈkwatə
-cuspinheira	kuʃpiˈɲɐjrɐ
-cáqui	ˈkaki
-cítreo	ˈsitrju
-córnico	ˈkɔrniku
-cônscio	ˈkõʃsju
-daroês	dɐˈrweʃ
-debotar	dəbuˈtar
-deleitado	dəlɐjˈtadu
-demolitório	dəmuliˈtɔrju
-demoniomania	dəmɔnjɔmɐˈniɐ
-demófobo	dəˈmɔfubu
-denotação	dənutɐˈsɐ̃w̃
-desabrimento	dəzɐbriˈmẽtu
-desajeitar	dəzɐʒɐjˈtar
-desalcatroar	dəzaɫkɐˈtrwar
-desatencioso	dezɐtẽˈsjozu
-desbancar	dəʒbɐ̃ˈkar
-desbarbar	dəʒbɐrˈbar
-desejador	dəzəʒɐˈdor
-desemborradela	dəzẽbuʀɐˈdɛlɐ
-desenervação	dəzinərvɐˈsɐ̃w̃
-desenfezar	dəzẽfɛˈzar
-desengravatado	dəzẽɡrɐvɐˈtadu
-desfalque	dəʃˈfaɫk
-desfalque	dəʃˈfaɫkə
-desfalque	dɨʃˈfaɫkɨ
-desimantação	dəzimɐ̃tɐˈsɐ̃w̃
-desinsetização	dəzĩsɛtizɐˈsɐ̃w̃
-deslizar	dəʒliˈzar
-deslizar	dɨʒliˈzaɾ
-deslocador	dəʒlukɐˈdor
-desmodulador	dəʒmudulɐˈdor
-desmodular	dəʒmuduˈlar
-despadrar	dəʃpɐˈdrar
-despojo	dəsˈpoʒu
-desponta	dəʃˈpõtɐ
-despublicação	dəʃpublikɐˈsɐ̃w̃
-desrolhamento	dəʒʀuʎɐˈmẽtu
-desvalorizador	dəʒvɐlurizɐˈdor
-desviável	dəʒˈvjavɛɫ
-desídia	dəˈzidjɐ
-devanear	dəvɐˈnjar
-devanear	dɨvɐˈnjaɾ
-devorista	dəvuˈriʃtɐ
-diamida	djɐˈmidɐ
-dificuldade	dəfikuɫˈdad,difikuɫˈdad
-dificuldade	dəfikuɫˈdadə,difikuɫˈdadə
-dificuldade	dɨfikuɫˈdadɨ
-dimensível	dimẽˈsivɛɫ
-dinossáurico	dinɔˈsawriku
-diplomatista	diplumɐˈtiʃtɐ
-direitura	dirɐjˈturɐ
-discricionariamente	diʃkrisjunarjɐˈmẽt
-discricionariamente	diʃkrisjunarjɐˈmẽtə
-disortografia	dizurtuɡrɐˈfiɐ
-disromper	diʃʀõˈper
-distratar	diʃtrɐˈtar
-ditério	diˈtɛrju
-divulgar	divuɫˈɡar
-divórcio	diˈvɔrsju
-dom-quixote	dõkiˈʃɔt
-dom-quixote	dõkiˈʃɔtə
-doma	ˈdomɐ
-doze	ˈdoz
-doze	ˈdozə
-doze	ˈdozɨ
-dragalina	drɐɡɐˈlinɐ
-dragão-marinho-folhoso	drɐɡɐ̃w̃mɐriɲufuˈʎozu
-dão-dão	dɐ̃w̃ˈdɐ̃w̃
-eciano	ɛˈsjɐnu
-editar	idiˈtar
-elaterina	elɐtəˈrinɐ
-eletropositividade	ilɛtrɔpuzitiviˈdad
-eletropositividade	ilɛtrɔpuzitiviˈdadə
-elutriação	ilutrjɐˈsɐ̃w̃
-elétron	iˈlɛtrɔn
-embarretar	ẽbɐʀəˈtar
-embuçar	ẽbuˈsar
-emordaçar	imurdɐˈsars
-emordaçar	imurdɐˈsarsə
-empapado	ẽpɐˈpadu
-empestador	ẽpɛʃtɐˈdor
-empregue	ẽˈprɛɡ
-empregue	ẽˈprɛɡə
-encampanar	ẽkɐ̃pɐˈnar
-encangotar	ẽkɐ̃ɡuˈtar
-encarceramento	ẽkɐrsərɐˈmẽtu
-encarceramento	ẽkɐɾsɨɾɐˈmẽtu
-encorrear	ẽkuˈʀjar
-encostadela	ẽkuʃtɐˈdɛlɐ
-encriptação	ẽkriptɐˈsɐ̃w̃
-encriptação	ẽkɾiptɐˈsɐ̃w̃
-endogâmico	ẽdɔˈɡɐmiku
-endossador	ẽdusɐˈdor
-endozoário	ẽdɔˈzwarju
-enfado	ẽˈfadu
-enfado	ẽˈfadu
-enfear	ẽˈfear
-engaranhar	ẽɡɐrɐˈɲar
-engodador	ẽɡudɐˈdor
-enruçar	ẽʀuˈsar
-ensecar	ẽsəˈkar
-entomófago	ẽtuˈmɔfɐɡu
-envergonhadela	ẽvərɡuɲɐˈdɛlɐ
-epactal	epɐˈktaɫ
-epifisário	epifiˈzarju
-epituitário	epitwiˈtarju
-erasmismo	erɐʒˈmiʒmu
-erva-rapa	ɛrvɐˈʀapɐ
-ervilhal	irviˈʎaɫ,erviˈʎaɫ
-ervilhar	erviˈʎar,irviˈʎar
-escachoar	ʃkɐˈʃwar
-escachoar	iʃkɐˈʃwar
-escalpelada	ʃkaɫpəˈladɐ
-escalpelada	iʃkaɫpəˈladɐ
-escarapão	ʃkɐrɐˈpɐ̃w̃
-escarapão	iʃkɐrɐˈpɐ̃w̃
-escarepe	ʃkɐˈrɛp
-escarepe	iʃkɐˈrɛpə
-escarpar	ʃkɐrˈpar
-escarpar	iʃkɐrˈpar
-escorripichar	iʃkuʀipiˈʃaɾ
-escrava	ʃˈkravɐ
-escrava	iʃˈkravɐ
-escurentar	ʃkurẽˈtar
-escurentar	iʃkurẽˈtar
-esfirra	ʃˈfiʀɐ
-esfirra	iʃˈfiʀɐ
-esfossador	ʃfusɐˈdor
-esfossador	iʃfusɐˈdor
-esganar	ʒɡɐˈnar
-esganar	iʒɡɐˈnar
-esgrilar	ʒɡriˈlar
-esgrilar	iʒɡriˈlar
-esmagada	ʒmɐˈɡadɐ
-esmagada	iʒmɐˈɡadɐ
-esmaltar	ʒmaɫˈtar
-esmaltar	iʒmaɫˈtar
-espaventado	ʃpɐvẽˈtadu
-espaventado	iʃpɐvẽˈtadu
-espetroscopista	ʃpɛtrɔʃkuˈpiʃtɐ
-espetroscopista	iʃpɛtrɔʃkuˈpiʃtɐ
-espeçar	ʃpəˈsar
-espeçar	iʃpəˈsar
-espiração	ʃpirɐˈsɐ̃w̃
-espiração	iʃpirɐˈsɐ̃w̃
-esponsal	(i)ʃpõˈsal
-espécie-tipo	ʃpɛsjiˈtipu
-espécie-tipo	iʃpɛsjiˈtipu
-esquadronar	ʃkwɐdruˈnar
-esquadronar	iʃkwɐdruˈnar
-esquilo-da-sibéria	ʃkiludɐsiˈbɛrjɐ
-esquilo-da-sibéria	iʃkiludɐsiˈbɛrjɐ
-esquinote	ʃkiˈnɔt
-esquinote	iʃkiˈnɔtə
-estande	ʃˈtɐ̃d
-estande	iʃˈtɐ̃də
-estatoblasto	ʃtɐtɔˈblaʃtu
-estatoblasto	iʃtɐtɔˈblaʃtu
-estendido	ʃtẽˈdidu
-estendido	iʃtẽˈdidu
-estenograma	ʃtənɔˈɡrɐmɐ
-estenograma	iʃtənɔˈɡrɐmɐ
-estoicidade	ʃtɔjsiˈdad
-estoicidade	iʃtɔjsiˈdadə
-estoico	ʃˈtɔjku
-estoico	iʃˈtɔjku
-estupidificado	ʃtupidifiˈkadu
-estupidificado	iʃtupidifiˈkadu
-etilizar	ɛtiliˈzar,etiliˈzar
-etilo	ɛˈtilu,eˈtilu
-evergetismo	evərʒəˈtiʒmu
-ex-mulher	ɐjʃmuˈʎɛr
-exalçamento	izaɫsɐˈmẽtu
-excecional	ɐjʃsɛsjuˈnaɫ,ʃsɛsjuˈnaɫ
-excecional	ɐjʃsɛsjuˈnaɫ,iʃsɛsjuˈnaɫ
-excitador	ɐjʃsitɐˈdor,ʃsitɐˈdor
-excitador	ɐjʃsitɐˈdor,iʃsitɐˈdor
-excluir	ɐjʃˈklwir,ʃˈklwir
-excluir	ɐjʃˈklwir,iʃˈklwir
-excluir	ɐjʃˈklwiɾ
-exclusive	ɐjʃkluˈzivɛ,ʃkluˈzivɛ
-exclusive	ɐjʃkluˈzivɛ,iʃkluˈzivɛ
-exclusividade	ɐjʃkluziviˈdad,ʃkluziviˈdad
-exclusividade	ɐjʃkluziviˈdadə,iʃkluziviˈdadə
-exclusividade	ɐjʃkluziviˈdadɨ
-excogitável	ɐjʃkuʒiˈtavɛɫ,ʃkuʒiˈtavɛɫ
-excogitável	ɐjʃkuʒiˈtavɛɫ,iʃkuʒiˈtavɛɫ
-excrementoso	ɐjʃkrəmẽˈtozu,ʃkrəmẽtozu
-excrementoso	ɐjʃkrəmẽˈtozu,iʃkrəmẽtozu
-facultamento	fɐkuɫtɐˈmẽtu
-falangiídeo	fɐlɐ̃ʒiˈidju
-falpórrias	faɫˈpɔʀjɐʃ
-falsidade	faɫsiˈdad
-falsidade	faɫsiˈdadə
-fasciolar	fɐʃsjuˈlar
-fatalista	fɐtɐˈliʃtɐ
-fedorento	fəduˈrẽtu
-feijão-tropeiro	fɐjʒɐ̃w̃truˈpɐjru
-felosa	fəˈlɔzɐ
-femeaço	fəˈmjasu
-ferrofluido	fɛʀuˈflujdu
-fertilizador	fərtəlizɐˈdor,fərtilizɐˈdor
-festão	fəʃˈtɐ̃w̃
-fibroblasto	fibrɔˈblaʃtu
-filarquia	filɐrˈkiɐ
-filogenético	filɔʒəˈnɛtiku
-filogenético	filuʒɨˈnɛtiku
-fisioterapia	fizjɔtərɐˈpiɐ
-fitilha	fiˈtiʎɐ
-fitáceo	fiˈtasju
-flor-mel	florˈmɛɫ
-florejante	flurəˈʒɐ̃t
-florejante	flurəˈʒɐ̃tə
-folheteiro	fuʎəˈtɐjru
-forjagem	furˈʒaʒɐ̃j̃
-formadura	furmɐˈdurɐ
-forqueta	furˈketɐ
-força-tarefa	forsɐtɐˈrɛfɐ
-fotoalergia	fɔtɔɐlərˈʒiɐ
-fotocompositora	fɔtɔkõpuziˈtorɐ
-fotocopiadora	fɔtɔkupjɐˈdorɐ
-fragiforme	frɐʒiˈfɔrm
-fragiforme	frɐʒiˈfɔrmə
-francesiar	frɐ̃səˈzjar
-fratria	frɐˈtriɐ
-fratricídio	fɾɐtɾiˈsidju
-frenicoques	frəniˈkɔkəʃ
-frequentação	frəkwẽtɐˈsɐ̃w̃
-frequentismo	frəkwẽˈtiʒmu
-fronta	ˈfrõtɐ
-frutícola	fruˈtikulɐ
-frutífero	fruˈtifəru
-frâncico	ˈfrɐ̃siku
-full-contact	fuɫkõˈtakt
-fumoso	fuˈmozu
-funéreo	fuˈnɛrju
-furadeira	furɐˈdɐjrɐ
-furta-capa	furtɐˈkapɐ
-futrico	fuˈtriku
-fãozense	fɐ̃w̃ˈzẽs
-fãozense	fɐ̃w̃ˈzẽsə
-gabiru	ɡabiˈru
-gajas	ˈɡaʒɐʃ
-galenismo	ɡɐləˈniʒmu
-galvanopunctura	ɡaɫvɐnɔpũˈturɐ
-galvanopunctura	ɡaɫvɐnɔpũˈkturɐ
-gambelo	ɡɐ̃ˈbelu
-gamofilo	ɡɐmɔˈfilu
-ganchoso	ɡɐ̃ˈʃozu
-geométrico	ʒjuˈmɛtriku
-girassol-batateiro	ʒirɐsɔɫbɐtɐˈtɐjru
-glícido	ˈɡlisidu
-gordurento	ɡurduˈrẽtu
-gradação	ɡrɐdɐˈsɐ̃w̃
-graffiti	ɡraˈfiti
-gravana	ɡrɐˈvɐnɐ
-gravataria	ɡrɐvɐtɐˈriɐ
-gripe	ˈɡrip
-gripe	ˈɡripə
-gripe	ˈɡɾipɨ
-grisões	ɡriˈzɐ̃w̃
-gritada	ɡriˈtadɐ
-guarda-vidas	saɫvɐˈvidɐʃ
-gálico	ˈɡaliku
-haiduque	ajˈduk
-haiduque	ajˈdukə
-hemimorfia	ɛmimurˈfiɐ
-heráldico	eˈɾaɫdiku
-heterocariose	ɛtərɔkɐˈrjoz
-heterocariose	ɛtərɔkɐˈrjozə
-hidrônfalo	iˈdrõfɐlu
-hipocristalino	ipɔkriʃtɐˈlinu
-hipogamia	ipɔɡɐˈmiɐ
-hipopótamo-anão-de-chipre	ipɔpɔtɐmuɐnɐ̃w̃dəˈʃipr
-hipopótamo-anão-de-chipre	ipɔpɔtɐmuɐnɐ̃w̃dəˈʃiprə
-hispanófilo	iʃpɐˈnɔfilu
-homoaxial	ɔmɔɐˈksjaɫ
-homomorfo	ɔmɔˈmɔrfu
-homoparental	ɔmɔpɐrẽˈtaɫ
-hortícola	ɔrˈtikulɐ
-iaque	ˈjak
-iaque	ˈjakə
-iaque	ˈjakɨ
-iconomia	ikunuˈmiɐ
-identidade	idẽtiˈdad
-identidade	idẽtiˈdadə
-identidade	idẽtiˈdadɨ
-ideário	iˈdjarju
-idouro	ĩˈdoru
-idouro	ĩˈdowru
-igualdade	iɡwaɫˈdad
-igualdade	iɡwaɫˈdadə
-igualdade	iɡwaɫˈdadɨ
-ilibatório	ilibɐˈtɔrju
-iliquidez	ilikiˈdeʃ
-imaginar	imɐʒiˈnar
-imamato	imɐˈmatu
-importe	ĩˈpɔrt
-importe	ĩˈpɔrtə
-imprevisível	ĩprəviˈzivɛɫ
-imprevisível	ĩpɾɨviˈzivɛɫ
-inabitualidade	inɐbitwɐliˈdad
-inabitualidade	inɐbitwɐliˈdadə
-inalar	inɐˈlar
-inaproveitado	inɐpruvɐjˈtadu
-incomparabilidade	ĩkõpɐrɐbiliˈdad
-incomparabilidade	ĩkõpɐrɐbiliˈdadə
-incriável	ĩˈkrjavɛɫ
-indeterminador	ĩdətərminɐˈdor
-indeterminar	ĩdətərmiˈnar
-indicador-pequeno-de-pinta-branca	ĩdikɐdorpəkenudəpĩtɐˈbrɐ̃kɐ
-indisposição	ĩdiʃpuziˈsɐ̃w̃
-induzimento	ĩduziˈmẽtu
-inexperto	inɐjʃˈpɛrtu
-infumável	ĩfuˈmavɛɫ
-inofensivo	inufẽˈsivu
-inoportunamente	inɔpurtunɐˈmẽt,inupurtunɐˈmẽt
-inoportunamente	inɔpurtunɐˈmẽtə,inupurtunɐˈmẽtə
-inteiro	ĩˈtɐjru
-inteiro	ĩˈtɐjɾu
-interposição	ĩtərpuziˈsɐ̃w̃
-interprandial	ĩtərprɐ̃ˈdjaɫ
-invite	ĩˈvit
-invite	ĩˈvitə
-isoglosso	izɔˈɡlosu
-isolado	izuˈladu
-isógamo	iˈzɔɡɐmu
-jacinto-de-água	ʒɐsĩtuˈdaɡwɐ
-jambalão	ʒɐ̃bɐˈlɐ̃w̃
-jambelegíaco	ʒɐ̃bələˈʒiɐku
-janotada	ʒɐnuˈtadɐ
-jansenista	ʒɐ̃səˈniʃtɐ
-japoneira	ʒɐpuˈnɐjrɐ
-jiboiar	ʒibojˈar
-jingoísmo	ʒĩˈɡwiʒmu
-jornadear	ʒurnɐˈdjar
-joviano	ʒuˈvjɐnu
-jugueiro	ʒuˈɡɐjru
-jurisconsulto	ʒuriʃkõˈsuɫtu
-juspsicológico	ʒuʃpsikuˈlɔʒiku
-jáculo	ˈʒakulu
-jóquei	ˈʒɔkɐj
-lacíada	lɐˈsiɐdɐ
-lada	ˈladɐ
-ladravão	lɐdrɐˈvɐ̃w̃
-lagartixa-adamastor	lɐɡɐrtiʃɐɐdɐmɐʃˈtor
-lançaço	lɐ̃ˈsasu
-lapiez	lɐˈpjeʃ
-lapuzice	lɐpuˈzis
-lapuzice	lɐpuˈzisə
-laranja-amarga	lɐrɐ̃ʒɐɐˈmarɡɐ
-larote	lɐˈrɔt
-larote	lɐˈrɔtə
-lauráceas	lawˈrasjɐ
-lavrada	lɐˈvradɐ
-lazarento	lɐzɐˈrẽtu
-leixamento	lɐjʃɐˈmẽtu
-lerica	ləˈrikɐ
-leucótomo	lewˈkɔtumu
-limenho	liˈmɐɲu,liˈmeɲu
-limenho	liˈmɐjɲu,liˈmeɲu
-livónio	liˈvɔnju
-lixamento	liʃɐˈmẽtu
-lobélia-azul	lubɛljɐɐˈzuɫ
-lombeiro	lõˈbɐjru
-loquete	luˈket
-loquete	luˈketə
-lula-bicuda	lulɐbiˈkudɐ
-luminol	lumiˈnɔɫ
-lusango	luˈzɐ̃ɡu
-lírio-de-água	lirjudəˈaɡwɐ
-macedoniano	mɐsəduˈnjɐnu
-macieza	mɐˈsjezɐ
-maculopapular	makulɔpɐpuˈlar
-magma	ˈmaɡmɐ
-maksoik	mɐkˈsɔjk
-malacão	mɐlɐˈkɐ̃w̃
-malhar	mɐˈʎar
-malquerença	maɫkəˈrẽsɐ
-malunga	mɐˈlũɡɐ
-malva-mourisca	maɫvɐmoˈriʃkɐ
-malva-mourisca	maɫvɐmowˈriʃkɐ
-mameliforme	mɐməliˈfɔrm
-mameliforme	mɐməliˈfɔrmə
-manchua	mɐ̃ˈʃuɐ
-mandrianar	mɐ̃drjɐˈnar
-mangonar	mɐ̃ɡuˈnar
-mani-	mɐni
-manjado	mɐ̃ˈʒadu
-manobra	mɐˈnɔbrɐ
-mansura	mɐ̃ˈsurɐ
-maquiar	mɐˈkjar
-mariquita-aquática-boreal	mɐrikitɐɐkwatikɐbuˈrjaɫ
-marroio-negro	mɐʀojuˈneɡru
-massudo	mɐˈsudu
-mastectomia	mɐʃtɛktuˈmiɐ
-mateba	mɐˈtebɐ
-matronaria	mɐtrunɐˈriɐ
-maximamente	masimɐˈmẽt
-maximamente	masimɐˈmẽtə
-maçudo	mɐˈsudu
-mecanização	məkɐnizɐˈsɐ̃w̃
-medícua	mˈdikwɐ
-medícua	məˈdikwɐ
-megaeletrão-volt	mɛɡɐilɛtrɐ̃w̃ˈvɔɫt
-megalegoria	mɛɡɐləɡuˈriɐ
-melanargia-mediterrânica	məlɐnɐrʒiɐməditəˈʀɐnikɐ
-melanogenético	məlɐnɔʒəˈnɛtiku
-melanogénico	məlɐnɔˈʒɛniku
-melhoras	məˈʎɔrɐʃ
-memorabília	məmɔraˈbiljɐ
-mercantilagem	mərkɐ̃tiˈlaʒɐ̃j̃
-meroítico	məˈrwitiku
-microgravidade	mikrɔɡrɐviˈdad
-microgravidade	mikrɔɡrɐviˈdadə
-milagrosamente	milɐɡrɔzɐˈmẽt
-milagrosamente	milɐɡrɔzɐˈmẽtə
-milheirós	miʎɐjˈrɔʃ
-miliare	miˈljar
-miliare	miˈljarə
-milicurie	milikuˈʀi
-mimalho	miˈmaʎu
-minucioso	minuˈsjozu
-miserabilista	mizərɐbiˈliʃtɐ
-mixomicetes	miksɔmiˈsɛtəʃ
-moleiro-parasítico	mulɐjrupɐrɐˈzitiku
-momesco	moˈmeʃku
-monera	muˈnɛrɐ
-monotemático	mɔnɔtəˈmatiku
-monsenhoria	mõsəɲuˈriɐ
-monórquido	mɔˈnɔrkidu
-morangar	murɐ̃ˈɡar
-morcego-negro	murseɡuˈneɡru
-mormonismo	mɔrmuˈniʒmu
-moscar	muʃˈkar
-motocultivador	mɔtɔkuɫtivɐˈdor
-mouro	ˈmoru
-mouro	ˈmowru
-mucocutâneo	mukɔkuˈtɐnju
-mugódi	muˈɡɔdi
-multa	ˈmuɫtɐ
-mundão	mũˈdɐ̃w̃
-mutagénese	mutɐˈʒɛnəz
-mutagénese	mutɐˈʒɛnəzə
-muxagatense	muʃɐɡɐˈtẽs
-muxagatense	muʃɐɡɐˈtẽsə
-mão-tenente	mɐ̃w̃təˈnẽt
-mão-tenente	mɐ̃w̃təˈnẽtə
-mó	ˈmɔ
-nacrite	nɐˈkrit
-nacrite	nɐˈkritə
-namibiano	nɐmiˈbjɐnu
-nanocompósito	nɐnɔkõˈpɔzitu
-neodarwinismo	nɛɔdarwiˈniʒmu
-neologia	njuluˈʒiɐ,nɛɔluˈʒiɐ
-nerónico	nəˈrɔniku
-neuma	ˈnewmɐ
-nevoso	nəˈvozu
-newton	ˈnjutɔn
-nguê-godô	nɡeɡɔˈdo
-niala	ˈnjalɐ
-nisso	ˈnisu
-nomeável	nuˈmjavɛɫ
-norito	nɔˈritu
-novidade	nuviˈdad
-novidade	nuviˈdadə
-novidade	nuviˈdadɨ
-obração	ɔbrɐˈsɐ̃w̃
-obrigatório	ɔbɾiɡɐˈtɔɾju
-obrigação	ɔbriɡɐˈsɐ̃w̃
-obumbrar	ɔbũˈbrar
-ogúzico	ɔˈuziku
-onerar	ɔnəˈrar
-onerar	ɔnɨˈɾaɾ
-ortológico	ɔrtuˈlɔʒiku
-oscilante	ɔʃsiˈlɐ̃t,oʃsiˈlɐ̃t
-oscilante	ɔʃsiˈlɐ̃tə,oʃsiˈlɐ̃tə
-oscilante	ɔʃsiˈlɐ̃tɨ
-oscilográfico	ɔʃsiluˈɡrafiku
-otesino	ɔtəˈzinu
-ovarite	ɔvɐˈrit
-ovarite	ɔvɐˈritə
-oxitocina	ɔksitɔˈsinɐ
-padronizar	pɐdruniˈzar
-palilalia	pɐlilɐˈliɐ
-palpadela	paɫpɐˈdɛlɐ
-panamá	pɐnɐˈma
-panegirizar	pɐnəʒəriˈzar
-panteologista	pɐ̃tjuluˈʒiʃtɐ
-panteónimo	pɐ̃ˈtjɔnimu
-papa-ovo	papɐˈovu
-paracletiano	pɐrɐkləˈtjɐnu
-paracurricular	pɐrɐkuʀikuˈlar
-parainfluenza	pɐrɐĩfluˈẽzɐ
-parinervado	pɐrinərˈvadu
-parlapatice	pɐrlɐpɐˈtis
-parlapatice	pɐrlɐpɐˈtisə
-partidarista	pɐrtidɐˈriʃtɐ
-partitivo	pɐrtiˈtivu
-passareiro	pɐsɐˈrɐjru
-patrimonialismo	pɐtrimunjɐˈliʒmu
-pavoroso	pɐvuˈɾozu
-pedoiro	pɛˈdojru
-peixe-roda	pɐjʃəˈʀɔdɐ
-pentatlo	pẽˈtatlu
-pentatlo	pẽˈtatlu
-percepcionista	pərsɛpsjuˈniʃtɐ
-perfectivo	pərfɛˈtivu
-perfectivo	pərfɛˈktivu
-persuadido	pərswɐˈdidu
-pesa-mosto	pɛzɐˈmoʃtu
-pescador	pəʃkɐˈdor
-petaloide	pətɐˈlɔjd
-petaloide	pətɐˈlɔjdə
-petinga	pəˈtĩɡɐ
-peto-real	petuˈʀjaɫ
-petrificar	pətrifiˈkar
-pianista	pjɐˈniʃtɐ
-picrolite	pikrɔˈlit
-picrolite	pikrɔˈlitə
-pilrito-de-bico-fino	piɫʀitudəbikuˈfinu
-pineno	piˈnenu
-pinguim-de-magalhães	pĩɡwĩdəmɐɡɐˈʎɐ̃j̃ʃ
-pinoca	piˈnɔkɐ
-pirimídico	piriˈmidiku
-pistilado	piʃtiˈladu
-plausível	plawˈzivɛɫ
-pleuropatia	plewrɔpɐˈtiɐ
-plumacho	pluˈmaʃu
-poiquilotermia	pojkilɔtərˈmiɐ
-politizável	pulitiˈzavɛɫ
-pontederiáceas	põtədəriˈasjɐ
-porriginoso	puʀiʒiˈnozu
-postergável	puʃtərˈɡavɛɫ
-potenciómetro	putẽˈsjɔmətru
-predestinação	pɾɨdɨʃtinɐˈsɐ̃w̃
-presilheiro	prəziˈʎɐjru
-pressorrecetor	prɛsɔʀəsɛˈtor
-prestímano	prəʃˈtimɐnu
-previsto	prəˈviʃtu
-previsto	pɾɨˈviʃtu
-primeira-bailarina	primɐjrɐbajlɐˈrinɐ
-profligador	prufliɡɐˈdor
-prolamina	prɔlɐˈminɐ
-propulsionar	prupuɫsjuˈnar
-pré-pagamento	prɛpɐɡɐˈmẽtu
-prévio	ˈpɾɛvju
-puimento	pwiˈmẽtu
-punga	ˈpũɡɐ
-pungitivo	pũʒiˈtivu
-quaresma	kwɐˈrɛʒmɐ
-questor	kəʃˈtor
-quilodieresia	kilɔdjɛrəˈziɐ
-quinama	kiˈnamɐ
-quinjango	kĩˈʒɐ̃ɡu
-quiosque	ˈkjɔʃk
-quiosque	ˈkjɔʃkə
-quiosque	ˈkjɔʃkɨ
-quitata	kiˈtatɐ
-rabinado	ʀɐbiˈnadu
-raboto	ʀɐˈbotu
-racionar	ʀɐsjuˈnar
-ramaldense	ʀɐmaɫˈdẽs
-ramaldense	ʀɐmaɫˈdẽsə
-ramilhete	ʀɐmiˈʎet
-ramilhete	ʀɐmiˈʎetə
-rapelho	ʀɐˈpɐʎu,ʀɐˈpeʎu
-rapelho	ʀɐˈpɐjʎu,ʀɐˈpeʎu
-rastafarianismo	ʀɐʃtɐfarjɐˈniʒmu
-reacionarismo	ʀjasjunɐˈriʒmu
-recetível	ʀəsɛˈtivɛɫ
-recidivar	ʀəsidiˈvar
-reconto	ʀəˈkõtu
-recorrido	ʀəkuˈʀidu
-recrudescer	ʀəkrudəʃˈser
-redescontável	ʀədəʃkõˈtavɛɫ
-reencaixar	ʀjẽkajˈʃar
-referido	ʀɨfɨˈɾidu
-refiltrar	ʀəfiɫˈtrar
-regamboleio	ʀəɡɐ̃buˈlɐju
-remador	ʀəmɐˈdor
-remixagem	ʀəmiˈksaʒɐ̃j̃
-reposteiro	ʀɨpuʃˈtɐjɾu
-resedal	ʀəzəˈdaɫ
-resina	ʀəˈzinɐ
-resina	ʀɨˈzinɐ
-resineiro	ʀəziˈnɐjru
-responsório	ʀəʃpõˈsɔrju
-ressurgência	ʀəsurˈʒẽsjɐ
-resto	ˈʀɛʃtu
-retentriz	ʀətẽˈtriʃ
-reticular	ʀətikuˈlar
-retratado	ʀətrɐˈtadu
-revendição	ʀəvẽdiˈsɐ̃w̃
-revigorante	ʀəviɡuˈrɐ̃t
-revigorante	ʀəviɡuˈrɐ̃tə
-revigorante	ʀɨviɡuˈɾɐ̃tɨ
-reviralho	ʀəviˈraʎu
-revisável	ʀəviˈzavɛɫ
-rexerta	ʀəˈʃɛrtɐ
-rodovalho	ʀuduˈvaʎu
-roncador-bravura	ʀõkɐdorbrɐˈvurɐ
-rooibos	ˈʀojbuʃ
-roscar	ʀuʃˈkar
-rádio-gravador	ʀadjuɡrɐvɐˈdor
-râmola	ˈʀɐmulɐ
-saborizar	sɐburiˈzar
-sabotagem	sɐbuˈtaʒɐ̃j̃
-sacramentalismo	sɐkrɐmẽtɐˈliʒmu
-safena	sɐˈfenɐ
-saideira	saiˈdɐjrɐ
-sainha	saˈiɲɐ
-sanduba	sɐ̃ˈdubɐ
-sanhudo	sɐˈɲudu
-sapiroquento	sɐpiruˈkẽtu
-saramela	sɐrɐˈmɛlɐ
-seisdobro	sɐjʒˈdobru
-sem-cerimonioso	sɐ̃j̃sərimuˈnjozu
-senatriz	sənɐˈtriʃ
-senectude	sənɛˈktud
-senectude	sənɛˈktudə
-sensualizante	sẽswɐliˈzɐ̃t
-sensualizante	sẽswɐliˈzɐ̃tə
-sepultante	səpuɫˈtɐ̃t
-sepultante	səpuɫˈtɐ̃tə
-sepultar	səpuɫˈtar
-sepultar	sɨpuɫˈtaɾ
-sepulto	səˈpuɫtu
-sepulto	sɨpˈuɫtu
-sermoa	sərˈmoɐ
-short	ˈʃɔrt
-short	ˈʃɔrtə
-silvite	siɫˈvit
-silvite	siɫˈvitə
-sindicante	sĩdiˈkɐ̃t
-sindicante	sĩdiˈkɐ̃tə
-site	ˈsajt
-site	ˈsajtə
-site	ˈsajtɨ
-sobretudo	sobɾɨˈtudu
-sofrologia	sufruluˈʒiɐ
-sogar	suˈɡar
-solidarizar	sulidɐriˈzar
-solucionador	sulusjunɐˈdor
-sopro	ˈsopru
-soçaite	suˈsajt
-soçaite	suˈsajtə
-stent	ˈstẽt
-subnuclear	subnuˈkljar
-subtropical	ˌsubtɾupiˈkal
-supermercado	supɛrmərˈkadu
-suprematista	suprəmɐˈtiʃtɐ
-sádico	ˈsadiku
-séquito	ˈsɛkitu
-tarantulismo	tɐrɐ̃tuˈliʒmu
-tardorromânico	tardɔʀuˈmɐniku
-tarracho	tɐˈʀaʃu
-tascadeira	tɐʃkɐˈdɐjrɐ
-teiú-açu	tɐjuaˈsu
-teleformação	tɛlɛfurmɐˈsɐ̃w̃
-telex	tɛˈlɛks
-telotismo	təluˈtiʒmu
-tendente	tẽˈdẽt
-tendente	tẽˈdẽtə
-teosófico	tjuˈzɔfiku
-terçol	tərˈsɔɫ
-tibar	tiˈbar
-tilo	ˈtilu
-tincaleira	tĩkɐˈlɐjrɐ
-tipificar	tipifiˈkar
-titânio	tiˈtɐnju
-titímalo-menor	titimɐluməˈnɔr
-todinho	tuˈdiɲu
-tom	ˈtõ
-tonitruoso	tuniˈtrwozu
-trabuquete	trɐbuˈket
-trabuquete	trɐbuˈketə
-tragar	trɐˈɡar
-trancar	trɐ̃ˈkar
-transgressão	tɾɐ̃ʒɡɾɨˈsɐ̃w̃
-transnadar	trɐ̃ʒnɐˈdar
-tranvia	trɐ̃ˈviɐ
-trasanteontem	trazɐ̃ˈtjõtɐ̃j̃
-trastejado	trɐʃtəˈʒadu
-trescalante	trəʃkɐˈlɐ̃t
-trescalante	trəʃkɐˈlɐ̃tə
-triplicata	tripliˈkatɐ
-trocadilho	trukɐˈdiʎu
-trogloditídeos	truɡludiˈtidju
-troteada	truˈtjadɐ
-trufa-branca	trufɐˈbrɐ̃kɐ
-uacari	wakaˈri
-uauaçu	wawaˈsu
-umari	umaˈri
-untuosidade	ũtwuziˈdad
-untuosidade	ũtwuziˈdadə
-uretroscópico	urɛtrɔʃˈkɔpiku
-uvaia	uˈvajɐ
-vagão-restaurante	vaɡɐ̃w̃ʀəʃtawˈrɐ̃t
-vagão-restaurante	vaɡɐ̃w̃ʀəʃtawˈrɐ̃tə
-veganismo	vəɡɐˈniʒmu
-veirado	vɐjˈradu
-venéreo	vɨˈnɛɾju
-veredicto	vərəˈditu
-veredicto	vərəˈdiktu
-vessas	ˈvɛsɐʃ
-vexilar	vɛksiˈlar
-viabilização	vjɐbilizɐˈsɐ̃w̃
-viajada	vjɐˈʒadɐ
-vice-comissário	visəkumiˈsarju
-vice-reino	visəˈʀɐjnu
-vicente	viˈsẽt
-vicente	viˈsẽtə
-vicentino	visẽˈtinu
-vidairada	vidajˈrada
-videograma	vidjɔˈɡrɐmɐ
-vingamento	vĩɡɐˈmẽtu
-vitrófiro	viˈtrɔfiru
-viável	ˈvjavɛɫ
-viés	ˈvjɛʃ
-víbora	ˈviburɐ
-xonas	ʃɔˈnar
-yazidi	jaˈzidi
-zelação	zəlɐˈsɐ̃w̃
-àquelas	aˈkɛlɐʃ
-ádax	ˈadaks
-água-chilra	aɡwɐˈʃiɫʀɐ
-água-mel	aɡwɐˈmɛɫ
-árvore-da-castidade	arvurədɐkɐʃtiˈdad
-árvore-da-castidade	arvurədɐkɐʃtiˈdadə
-ântero-septal	ɐ̃tərɔsɛˈptaɫ
+# columns: word<TAB>ipa_narrow<TAB>sources (one row per variant)
+# sources: portuguese-unified-pronunciation-lexicon@23898e1437dc77e84681bb7ce5580a9b3e2d04ba
+AVC	aveˈse	infopedia
+Aldebarã	aɫdəbɐˈrɐ̃	infopedia
+Daiane	dajˈɐnɨ	wiktionary
+Oríon	ɔˈriõ	infopedia
+Viseano	viˈzjɐnu	infopedia
+abadejo	ɐbɐˈdɐʒu,ɐbɐˈdeʒu	infopedia
+abadejo	ɐbɐˈdɐjʒu,ɐbɐˈdeʒu	infopedia
+abarregado	ɐbɐʀəˈɡadu	infopedia
+abatocado	ɐbɐtuˈkadu	infopedia
+abnorme	ɐbˈnɔrm	infopedia
+abnorme	ɐbˈnɔrmə	infopedia
+abobador	ɐbubɐˈdor	infopedia
+abocanhador	ɐbukɐɲɐˈdor	infopedia
+abolorar	ɐbuluˈrar	infopedia
+aborregado	ɐbuʀəˈɡadu	infopedia
+abostelar	ɐbuʃtəˈlar	infopedia
+abrolhar	ɐbruˈʎar	infopedia
+abular	ɐbuˈlar	infopedia
+acamado	ɐkɐˈmadu	infopedia
+acantizídeo	ɐkɐ̃tiˈzidju	infopedia
+acastelar	ɐkɐʃtəˈlar	infopedia
+acaustobiólito	ɐkawʃtɔˈbjɔlitu	infopedia
+acetabulária	ɐsətɐbuˈlarjɐ	infopedia
+acetonémico	ɐsətuˈnɛmiku	infopedia
+acochar	ɐkoˈʃar	infopedia
+aconselhavelmente	ɐkõsəʎavɛɫˈmẽt	infopedia
+aconselhavelmente	ɐkõsəʎavɛɫˈmẽtə	infopedia
+acotovelamento	ɐkutuvəlɐˈmẽtu	infopedia
+acrescer	ɐkrəʃˈser	infopedia
+acrescer	ɐkɾɨʃˈseɾ	wiktionary
+acrimântico	ɐkriˈmɐ̃tiku	infopedia
+acupunturista	ɐkupũtuˈriʃtɐ	infopedia
+acusativo	ɐkuzɐˈtivu	infopedia
+adiamento	ɐdjɐˈmẽtu	infopedia
+adligação	ɐdliɡɐˈsɐ̃w̃	infopedia
+adscritício	ɐdʃkriˈtisju	infopedia
+adur	ɐˈdur	infopedia
+adução	ɐduˈsɐ̃w̃	infopedia
+adê	ɐˈde	infopedia
+aeropalinologia	ɐɛrɔpɐlinuluˈʒiɐ	infopedia
+aerossol	ɐɛrɔˈsɔɫ	infopedia
+afegão	ɐfəˈɡɐ̃w̃	infopedia
+afegão	ɐfɨˈɡɐ̃w̃	wiktionary
+afeável	ɐˈfjavɛɫ	infopedia
+afobação	ɐfubɐˈsɐ̃w̃	infopedia
+afreguesamento	ɐfrɛɡəzɐˈmẽtu	infopedia
+agapeta	ɐɡɐˈpetɐ	infopedia
+agoniação	ɐɡunjɐˈsɐ̃w̃	infopedia
+aguagem	aˈɡwaʒɐ̃j̃	wiktionary+infopedia
+airo-de-freio	ajrudəˈfrɐju	infopedia
+aiurveda	ajurˈvɛdɐ	infopedia
+alacremente	ɐlakrəˈmẽt	infopedia
+alacremente	ɐlakrəˈmẽtə	infopedia
+alardeamento	ɐlɐrdjɐˈmẽtu	infopedia
+albatroz-de-bico-pintado-do-índico	aɫbɐtrɔʃdəbikupĩtaduduˈĩdiku	infopedia
+albense	aɫˈbẽs	infopedia
+albense	aɫˈbẽsə	infopedia
+albergar	aɫbərˈɡar	infopedia
+alcalescente	aɫkɐləʃˈsẽt	infopedia
+alcalescente	aɫkɐləʃˈsẽtə	infopedia
+alcalicidade	aɫkɐlisiˈdad	infopedia
+alcalicidade	aɫkɐlisiˈdadə	infopedia
+alcoolemia	aɫkwuləˈmiɐ	infopedia
+alcoolemia	aɫkwulɨˈmiɐ	wiktionary
+alcoranista	aɫkurɐˈniʃtɐ	infopedia
+alegar	ɐləˈɡar	infopedia
+alegar	ɐlɨˈɡaɾ	wiktionary
+alergénio	ɐlərˈʒɛnju	infopedia
+alfandegamento	aɫfɐ̃dəɡɐˈmẽtu	infopedia
+alfombrar	aɫfõˈbrar	infopedia
+algésico	aɫˈʒɛziku	infopedia
+alienante	ɐljeˈnɐ̃t	infopedia
+alienante	ɐljeˈnɐ̃tə	infopedia
+aljuba	aɫˈʒubɐ	infopedia
+alogístico	ɐluˈʒiʃtiku	infopedia
+alossómico	ɐlɔˈsɔmiku	infopedia
+alotriomorfo	ɐlɔtrjɔˈmorfu	infopedia
+alrute	aɫˈʀut	infopedia
+alrute	aɫˈʀutə	infopedia
+alternadamente	aɫtɨɾnadɐˈmẽtɨ	wiktionary
+altimétrico	aɫtiˈmɛtriku	infopedia
+alto-astral	aɫtwɐʃˈtraɫ	infopedia
+alumbrado	ɐlũˈbradu	infopedia
+alvazil	aɫvɐˈziɫ	infopedia
+alvéola-de-madagáscar	aɫvɛulɐdəmɐdɐˈɡaʃkɐr	infopedia
+alógrafo	ɐˈlɔɡrɐfu	infopedia
+amadeirar	ɐmɐdɐjˈrar	infopedia
+ambotraço	ɐ̃buˈtrasu	infopedia
+amebócito	ɐməˈbɔsitu	infopedia
+ameijoar	ɐmɐjˈʒwar	infopedia
+amoestar	ɐmwɛʃˈtar	infopedia
+amoreira-negra	ɐmurɐjrɐˈneɡrɐ	infopedia
+amotivacional	ɐmutivɐsjuˈnaɫ	infopedia
+amura	ɐˈmurɐ	infopedia
+anacrúsico	ɐnɐˈkruziku	infopedia
+anadal	ɐnɐˈdaɫ	infopedia
+analfabeto	ɐnaɫfɐˈbɛtu	infopedia
+anambé-dos-tepuis	ɐnɐ̃bɛduʃˈtɛpujʃ	infopedia
+anaplasmose	ɐnɐplɐʒˈmɔz	infopedia
+anaplasmose	ɐnɐplɐʒˈmɔzə	infopedia
+anastomosar	ɐnɐʃtumuˈzar	infopedia
+andaimada	ɐ̃dajˈmadɐ	infopedia
+andorinha-dos-charcos-africana	ɐ̃duriɲɐduʒʃarkuʒɐfriˈkɐnɐ	infopedia
+andorinhão-de-rabo-curto	ɐ̃duriɲɐ̃w̃dəʀabuˈkurtu	infopedia
+andrófago	ɐ̃ˈdrɔfɐɡu	infopedia
+anelho	ɐˈnɐʎu,ɐˈneʎu	infopedia
+anelho	ɐˈnɐjʎu,ɐˈneʎu	infopedia
+anemoterápico	ɐnəmɔtəˈrapiku	infopedia
+anfetamina	ɐ̃fətɐˈminɐ	infopedia
+anfibológico	ɐ̃fibuˈlɔʒiku	infopedia
+anfísmila	ɐ̃ˈfiʃmilɐ	infopedia
+angiocardiografia	ɐ̃ʒjukardjuɡrɐˈfiɐ	infopedia
+angolinha	ɐ̃ɡɔˈliɲɐ	infopedia
+anisóptero	ɐniˈzɔptəru	infopedia
+anoitecer	ɐnojtəˈser	infopedia
+anoitecer	ɐnojtɨˈseɾ	wiktionary
+anoque	ɐˈnɔk	infopedia
+anoque	ɐˈnɔkə	infopedia
+ansiógeno	ɐ̃sjˈɔʒənu	infopedia
+anso	ˈɐ̃su	infopedia
+anta	ˈɐ̃tɐ	infopedia
+antedar	ɐ̃təˈdar	infopedia
+antedatável	ɐ̃tədɐˈtavɛɫ	infopedia
+anterior	ɐ̃təˈrjor	infopedia
+anterior	ɐ̃tɨˈɾjoɾ	wiktionary
+anti-humanista	ɐ̃tiumɐˈniʃtɐ	infopedia
+antibioterapia	ɐ̃tibjɔtərɐˈpiɐ	infopedia
+anticópia	ɐ̃tiˈkɔpjɐ	infopedia
+antidetonante	ɐ̃tidətuˈnɐ̃t	infopedia
+antidetonante	ɐ̃tidətuˈnɐ̃tə	infopedia
+antidiarreico	ɐ̃tidjɐˈʀɐjku	infopedia
+antidrogas	ɐ̃tiˈdrɔɡɐʃ	infopedia
+antifricção	ɐ̃tifriˈksɐ̃w̃	infopedia
+antinormativo	ɐ̃tinɔrmɐˈtivu	infopedia
+antipneumocócico	ɐ̃tipnewmɔˈkɔsiku	infopedia
+antiquariato	ɐ̃tikwɐˈrjatu	infopedia
+antissociável	ɐ̃tisuˈsjavɛɫ	infopedia
+antissubmarino	ɐ̃tisubmɐˈrinu	infopedia
+antlofóbico	ɐ̃tlɔˈfɔbiku	infopedia
+antocerota	ɐ̃tɔsəˈrotɐ	infopedia
+antomaníaco	ɐ̃tɔmɐˈniɐku	infopedia
+antífrase	ɐ̃ˈtifrɐz	infopedia
+antífrase	ɐ̃ˈtifrɐzə	infopedia
+anu-coroca	ɐnukuˈrɔkɐ	infopedia
+anâmico	ɐˈnɐmiku	infopedia
+anúria	ɐˈnurjɐ	infopedia
+apantropo	ɐpɐ̃ˈtropu	infopedia
+apartheid	ɐparˈtajd	infopedia
+apendectomia	ɐpẽdɛktuˈmiɐ	infopedia
+apologal	ɐpuluˈɡaɫ	infopedia
+apoplexia	ɐpɔplɛˈksiɐ	wiktionary+infopedia
+apostilhar	ɐpuʃtiˈʎar	infopedia
+apréstamo	ɐˈprɛʃtɐmu	infopedia
+aquém-fronteiras	akɐ̃j̃frõˈtɐjrɐʃ	infopedia
+aracanga	ɐrɐˈkɐ̃ɡɐ	infopedia
+aranheiro-de-peito-riscado	ɐrɐɲɐjrudəpɐjtuʀiʃˈkadu	infopedia
+araucariáceo	ɐrawkɐˈrjasju	infopedia
+araçari-de-bico-de-marfim	arasaridəbikudəmɐrˈfĩ	infopedia
+arborizador	ɐrburizɐˈdor	infopedia
+arcaico	ɐrˈkajku	wiktionary+infopedia
+arcano	ɐrˈkɐnu	infopedia
+arenoso	ɐrəˈnozu	infopedia
+arenoso	ɐɾɨˈnozu	wiktionary
+aresta	ɐˈrɛʃtɐ	infopedia
+argila	ɐrˈʒilɐ	infopedia
+argilo-xistoso	ɐrʒiloʃiʃˈtozu	infopedia
+argilofagia	ɐrʒilɔfɐˈʒiɐ	infopedia
+argolada	ɐrɡuˈladɐ	wiktionary+infopedia
+argueireiro	ɐrɡɐjˈrɐjru	infopedia
+ariciídeos	ɐrisiˈidju	infopedia
+aritmética	ɐriˈtmɛtikɐ	infopedia
+arjoar	ɐrˈʒwar	infopedia
+armarinho	ɐrmɐˈriɲu	infopedia
+armígero	ɐrˈmiʒəru	infopedia
+arquense	ɐrˈkẽs	infopedia
+arquense	ɐrˈkẽsə	infopedia
+arqueogeneticista	ɐrkjuʒənɛtiˈsiʃtɐ	infopedia
+arquetípico	ɐrkəˈtipiku	infopedia
+arquicantor	ɐrkikɐ̃ˈtor	infopedia
+arquiclavo	ɐrkiˈklavu	infopedia
+arrebitaço	ɐʀəbiˈtasu	infopedia
+arremetedor	ɐʀəmətəˈdor	infopedia
+arrendável	ɐʀẽˈdavɛɫ	infopedia
+arretar	ɐʀəˈtar	infopedia
+arretar	ɐʀɐjˈtar	infopedia
+arretrasado	ɐʀətrɐˈzadu	infopedia
+arrieiral	ɐʀjɐjˈraɫ	infopedia
+arrombadela	ɐʀõbɐˈdɛlɐ	infopedia
+arrufo	ɐˈʀufu	wiktionary+infopedia
+arsenita	ɐrsəˈnitɐ	infopedia
+arteiroso	ɐrtɐjˈrozu	infopedia
+artroplástico	ɐrtrɔˈplaʃtiku	infopedia
+aruenda	ɐˈrwẽdɐ	infopedia
+arvorismo	ɐrvuˈriʒmu	infopedia
+arábigo	ɐˈrabiɡu	infopedia
+asinoterapia	ɐsinɔtərɐˈpiɐ	infopedia
+assalmoado	ɐsaɫˈmwadu	infopedia
+assassino	ɐsɐˈsinu	infopedia
+assedamento	ɐsədɐˈmẽtu	infopedia
+asseptização	ɐsɛptizɐˈsɐ̃w̃	infopedia
+asseptol	ɐsɛˈptɔɫ	infopedia
+assexualizar	ɐsɛkswɐliˈzar	infopedia
+assistência	ɐsiʃˈtẽsjɐ	infopedia
+assistência	ɐsiʃˈtẽsjɐ	wiktionary
+assolar	ɐsuˈlar	wiktionary+infopedia
+atabacado	ɐtɐbɐˈkadu	infopedia
+atabafamento	ɐtɐbɐfɐˈmẽtu	infopedia
+atalense	ɐtɐˈlẽs	infopedia
+atalense	ɐtɐˈlẽsə	infopedia
+atalhada	ɐtɐˈʎadɐ	infopedia
+atanasiano	ɐtɐnɐˈzjɐnu	infopedia
+ataurense	ɐtɐuˈrẽs	infopedia
+ataurense	ɐtɐuˈrẽsə	infopedia
+atenção	ɐtẽˈsɐ̃w̃	infopedia
+aterrizar	ɐtəʀiˈzar	infopedia
+atinadamente	ɐtinadɐˈmẽt	infopedia
+atinadamente	ɐtinadɐˈmẽtə	infopedia
+aturador	ɐturɐˈdor	infopedia
+audiolivro	awdjɔˈlivru	infopedia
+auriclípeo	awriˈklipju	infopedia
+aurígico	awˈriʒiku	infopedia
+autoderrisório	awtɔdəʀiˈzɔrju	infopedia
+autofinanciável	awtɔfinɐ̃ˈsjavɛɫ	infopedia
+autogerir	awtɔʒəˈrir	infopedia
+autolítico	awtɔˈlitiku	infopedia
+ave-do-paraíso	avədupɐrɐˈizu	infopedia
+avencão-peludo	ɐvẽkɐ̃w̃pəˈludu	infopedia
+aviação	ɐvjɐˈsɐ̃w̃	wiktionary+infopedia
+avio	ɐˈviu	infopedia
+avoásseis	ɐˈvwasɐjʃ	wiktionary
+azeda	ɐˈzedɐ	infopedia
+azeda-de-folha-larga	ɐzedɐdəfoʎɐˈlarɡɐ	infopedia
+azáfama	ɐˈzafɐmɐ	wiktionary+infopedia
+açorado	ɐsuˈradu	infopedia
+açoutador	ɐsotɐˈdor	infopedia
+açoutador	ɐsowtɐˈdor	infopedia
+babilónia	bɐbiˈlɔnjɐ	infopedia
+baixa-mar	bajʃɐˈmar	infopedia
+balastro	bɐˈlaʃtru	infopedia
+baleia-azul	bɐlɐjɐˈzuɫ	infopedia
+baleia-de-bossas	bɐlɐjɐdəˈbɔsɐʃ	infopedia
+baleia-piloto-de-aleta-comprida	bɐlɐjɐpilotudəɐletɐkõˈpridɐ	infopedia
+balneoterapia	baɫnjɔtərɐˈpiɐ	infopedia
+balona	bɐˈlonɐ	infopedia
+baltistanês	baɫtiʃtɐˈneʃ	infopedia
+baluarte	bɐˈlwart	infopedia
+baluarte	bɐˈlwartə	infopedia
+baluarte	bɐˈlwaɾtɨ	wiktionary
+balção	baɫˈsɐ̃w̃	infopedia
+bambas	ˈbɐ̃bu	infopedia
+banidor	bɐniˈdor	infopedia
+barbatana	bɐrbɐˈtɐnɐ	wiktionary+infopedia
+barbudo-de-bigodes	bɐrbududəbiˈɡɔdəʃ	infopedia
+barrilha	bɐˈʀiʎɐ	infopedia
+baré	bɐˈrɛ	infopedia
+bate	ˈbat	infopedia
+bate	ˈbatə	infopedia
+batiscafo	bɐtiʃˈkafu	wiktionary+infopedia
+beija-flor-dos-vulcões	bɐjʒɐflorduʃvuɫˈkõj̃ʃ	infopedia
+beirute	bɐjˈrut	infopedia
+beirute	bɐjˈrutə	infopedia
+belatriz	bəlɐˈtriʃ	infopedia
+beligerante	bɨliʒɨˈɾɐ̃tɨ	wiktionary
+bem-soante	bɐ̃jˈswɐ̃t	infopedia
+bem-soante	bɐ̃jˈswɐ̃tə	infopedia
+bergistano	bərʒiʃˈtɐnu	infopedia
+berlinde	bərˈlĩd	infopedia
+berlinde	bərˈlĩdə	infopedia
+bernardo	bərˈnardu	infopedia
+berração	bəʀɐˈsɐ̃w̃	infopedia
+berrão	bəˈʀɐ̃w̃	infopedia
+betuminizar	bətuminiˈzar	infopedia
+biaculeado	biɐkuˈljadu	infopedia
+bibliátrico	biˈbljatriku	infopedia
+bifar	biˈfar	infopedia
+bifloro	biˈflɔru	infopedia
+bigodear	biɡuˈdjar	infopedia
+bilocular	bilɔkuˈlar	infopedia
+bilontragem	bilõˈtraʒɐ̃j̃	infopedia
+bimbice	bĩˈbis	infopedia
+bimbice	bĩˈbisə	infopedia
+bimilenário	bimiləˈnarju	infopedia
+bioarqueólogo	biɔɐrˈkjɔluɡu	infopedia
+bioativo	biɔaˈtivu	infopedia
+biochip	biɔˈʃip	infopedia
+biofuncional	biɔfũsjuˈnaɫ	infopedia
+biofuncionalização	biɔfũsjunɐlizɐˈsɐ̃w̃	infopedia
+biotítico	biɔˈtitiku	infopedia
+bipartidário	bipɐrtiˈdarju	infopedia
+bispote	biʃˈpɔt	infopedia
+bispote	biʃˈpɔtə	infopedia
+bissensorial	bisẽsuˈrjaɫ	infopedia
+bitafe	biˈtaf	infopedia
+bitafe	biˈtafə	infopedia
+bitoque	biˈtɔk	infopedia
+bitoque	biˈtɔkə	infopedia
+boa-presa	boɐˈprezɐ	infopedia
+bochinche	buˈʃĩʃ	infopedia
+bochinche	buˈʃĩʃə	infopedia
+bordo-japonês	borduʒɐpuˈneʃ	infopedia
+borlista	bɔrˈliʃtɐ	infopedia
+braseiro	brɐˈzɐjru	wiktionary+infopedia
+brasiliofobia	brɐziljɔfuˈbiɐ	infopedia
+braço	ˈbrasu	infopedia
+braço	ˈbräsu	wiktionary
+brilhante	briˈʎɐ̃t	infopedia
+brilhante	briˈʎɐ̃tə	infopedia
+brilhante	bɾiˈʎɐ̃tɨ	wiktionary
+bringido	brĩˈʒidu	infopedia
+bromatométrico	brumɐtuˈmɛtriku	infopedia
+broncoalveolar	brõkɔaɫvjuˈlar	infopedia
+burocratizante	burukrɐtiˈzɐ̃t	infopedia
+burocratizante	burukrɐtiˈzɐ̃tə	infopedia
+buseira	buˈzɐjrɐ	infopedia
+butiráceo	butiˈrasju	infopedia
+cabalista	kɐbɐˈliʃtɐ	infopedia
+cabineiro	kɐbiˈnɐjru	infopedia
+cabrilha	kɐˈbriʎɐ	infopedia
+cabrim	kɐˈbrĩ	infopedia
+cabrindade	kɐbrĩˈdad	infopedia
+cabrindade	kɐbrĩˈdadə	infopedia
+cachir	kɐˈʃir	infopedia
+cadência	kɐˈdẽsjɐ	infopedia
+cadência	kɐˈdẽsjɐ	wiktionary
+cainofóbico	kajnɔˈfɔbiku	infopedia
+caixilho	kajˈʃiʎu	wiktionary+infopedia
+calaminta	kɐlɐˈmĩtɐ	infopedia
+caldeirão	kaɫdɐjˈrɐ̃w̃	infopedia
+calhambeque	kɐʎɐ̃ˈbɛk	infopedia
+calhambeque	kɐʎɐ̃ˈbɛkə	infopedia
+calhambeque	kɐʎɐ̃ˈbɛkɨ	wiktionary
+calhordice	kɐʎurˈdis	infopedia
+calhordice	kɐʎurˈdisə	infopedia
+calo	ˈkalu	wiktionary+infopedia
+caloptérix	kɐlɔˈptɛriks	infopedia
+calorescência	kɐlurəʃˈsẽsjɐ	infopedia
+calço	ˈkaɫsu	wiktionary+infopedia
+camacoza	kɐmɐˈkɔzɐ	infopedia
+camauro	kɐˈmawru	infopedia
+camecéfalo	kɐməˈsɛfɐlu	infopedia
+cameleontídeo	kɐməljõˈtidju	infopedia
+caminhar	kɐmiˈɲar	wiktionary+infopedia
+campaniço	kɐ̃pɐˈnisu	infopedia
+campina	kɐ̃ˈpinɐ	wiktionary+infopedia
+caneláceo	kɐnəˈlasju	infopedia
+cantina	kɐ̃ˈtinɐ	wiktionary+infopedia
+canção	kɐ̃ˈsɐ̃w̃	infopedia
+capim-pé-de-galinha	kɐpĩpɛdəɡɐˈliɲɐ	infopedia
+caprariense	kɐprɐˈrjẽs	infopedia
+caprariense	kɐprɐˈrjẽsə	infopedia
+caprária	kɐˈprarjɐ	infopedia
+cara	ˈkarɐ	infopedia
+caracará	kɐrɐkɐˈra	infopedia
+caralhota	kɐrɐˈʎɔtɐ	infopedia
+carbureto	kɐrbuˈretu	infopedia
+cariamídeo	kɐrjɐˈmidju	infopedia
+cariciar	kɐriˈsjar	infopedia
+carja	ˈkarʒɐ	infopedia
+carnal	kɐrˈnaɫ	wiktionary+infopedia
+carpiano	kɐrˈpjɐnu	infopedia
+casaca-de-couro	kɐzakɐdəˈkoru	infopedia
+casaca-de-couro	kɐzakɐdəˈkowru	infopedia
+casaleiro	kɐzɐˈlɐjru	infopedia
+casinhota	kɐziˈɲɔtɐ	infopedia
+cassanha	kɐˈsɐɲɐ	infopedia
+casteloa	kɐʃtəˈloɐ	infopedia
+catecumenato	kɐtəkuməˈnatu	infopedia
+catoptromante	kɐtɔptrɔˈmɐ̃t	infopedia
+catoptromante	kɐtɔptrɔˈmɐ̃tə	infopedia
+catorze	kɐˈtoɾzɨ	wiktionary
+cavalo-rinchão	kɐvaluʀĩˈʃɐ̃w̃	infopedia
+celuliforme	səluliˈfɔrm	infopedia
+celuliforme	səluliˈfɔrmə	infopedia
+censurador	sẽsurɐˈdor	infopedia
+centrossómico	sẽtrɔˈsɔmiku	infopedia
+cerezino	sərəˈzinu	infopedia
+cerradouro	səʀɐˈdoru	infopedia
+cerradouro	səʀɐˈdowru	infopedia
+ceutense	sewˈtẽs	infopedia
+ceutense	sewˈtẽsə	infopedia
+chapa-branca	ʃapɐˈbrɐ̃kɐ	infopedia
+chapalheta	ʃɐpɐˈʎetɐ	infopedia
+charlatanismo	ʃɐrlɐtɐˈniʒmu	infopedia
+chasquiçar	ʃɐʃkiˈsar	infopedia
+chavascar	ʃɐvɐʃˈkar	infopedia
+chavasqueiro	ʃɐvɐʃˈkɐjru	infopedia
+chazeiro	ʃaˈzɐjru	infopedia
+chibança	ʃiˈbɐ̃sɐ	infopedia
+chibato	ʃiˈbatu	infopedia
+chibéu	ʃiˈbɛw	infopedia
+cianurato	sjɐnuˈratu	infopedia
+ciberarma	sibɛˈrarmɐ	infopedia
+ciberespionagem	sibɛrʃpjuˈnaʒɐj̃	infopedia
+ciberespionagem	sibɛriʃpjuˈnaʒɐj̃	infopedia
+cicladense	siklɐˈdẽs	infopedia
+cicladense	siklɐˈdẽsə	infopedia
+cilício	siˈlisju	infopedia
+cinzento	sĩˈzẽtu	infopedia
+claramente	klarɐˈmẽt	infopedia
+claramente	klarɐˈmẽtə	infopedia
+claramente	klaɾɐˈmẽtɨ	wiktionary
+clavicórneo	klɐviˈkɔrnju	infopedia
+clematite-branca	kləmɐtitˈbrɐ̃kɐ	infopedia
+clematite-branca	kləmɐtitəˈbrɐ̃kɐ	infopedia
+clítico	ˈklitiku	infopedia
+coatividade	kwɐtiviˈdad	infopedia
+coatividade	kwɐtiviˈdadə	infopedia
+cobra-cega	kɔbrɐˈsɛɡɐ	infopedia
+cocainização	kɔkɐinizɐˈsɐ̃w̃	infopedia
+cocar	kɔˈkar	wiktionary+infopedia
+cochada	kuˈʃadɐ	infopedia
+coesão	kweˈzɐ̃w̃	wiktionary+infopedia
+cogerir	koʒəˈrir	infopedia
+coleio	kuˈlɐju	infopedia
+colherim	kuʎəˈrĩ	infopedia
+colostração	kuluʃtrɐˈsɐ̃w̃	infopedia
+comedouro	kuməˈdoru	infopedia
+comedouro	kuməˈdowru	infopedia
+cominho	kuˈmiɲu	infopedia
+companheirão	kõpɐɲɐjˈrɐ̃w̃	infopedia
+complexidade	kõplɛksiˈdad	infopedia
+complexidade	kõplɛksiˈdadə	infopedia
+complexidade	kõplɛksiˈdadɨ	wiktionary
+comível	kuˈmivɛɫ	infopedia
+condicionar	kõdisjuˈnar	wiktionary+infopedia
+conheira	koˈɲɐjrɐ	infopedia
+conjuntura	kõʒũˈturɐ	wiktionary+infopedia
+consagrar	kõsɐˈɡrar	wiktionary+infopedia
+consignatário	kõsiɡnɐˈtarju	infopedia
+consonantizar	kõsunɐ̃tiˈzar	infopedia
+constrição	kõʃtriˈsɐ̃w̃	infopedia
+consumista	kõsuˈmiʃtɐ	infopedia
+contorcer	kõturˈser	wiktionary+infopedia
+contracrítica	kõtrɐˈkritikɐ	infopedia
+contraguerrilha	kõtrɐɡəˈʀiʎɐ	infopedia
+contrarrevolução	kõtrɐʀəvuluˈsɐ̃w̃	infopedia
+contrátil	kõˈtratiɫ	infopedia
+convalidar	kõvɐliˈdar	infopedia
+convulsivante	kõvuɫsiˈvɐ̃t	infopedia
+convulsivante	kõvuɫsiˈvɐ̃tə	infopedia
+coplista	kɔˈpliʃtɐ	infopedia
+copofone	kɔpɔˈfɔn	infopedia
+copofone	kɔpɔˈfɔnə	infopedia
+coqueificação	kɔkɐjfikɐˈsɐ̃w̃	infopedia
+coracomante	kɔrɐkuˈmɐ̃t	infopedia
+coracomante	kɔrɐkuˈmɐ̃tə	infopedia
+cornogodinho	kurnuɡuˈdiɲu	infopedia
+corujento	kuruˈʒẽtu	infopedia
+corval	kurˈvaɫ	infopedia
+cosmogonista	kɔʒmɔɡuˈniʃtɐ	infopedia
+crampão	krɐ̃ˈpɐ̃w̃	infopedia
+craniado	krɐˈnjadu	infopedia
+craniologia	krɐnjuluˈʒiɐ	infopedia
+credível	krəˈdivɛɫ	infopedia
+cremadouro	krəmɐˈdoru	infopedia
+cremadouro	krəmɐˈdowru	infopedia
+criança-soldado	kriɐ̃sɐsoɫˈdadu	infopedia
+criptomonetário	kriptɔmunəˈtarju	infopedia
+crisográfico	krizuˈɡrafiku	infopedia
+cristalotomia	kriʃtɐlɔtuˈmiɐ	infopedia
+cromatoscópio	krɔmɐtɔʃˈkɔpju	infopedia
+crosta	ˈkroʃtɐ	wiktionary+infopedia
+cruamente	kruɐˈmẽt	infopedia
+cruamente	kruɐˈmẽtə	infopedia
+crítico	ˈkritiku	infopedia
+culpabilizador	kuɫpɐbəlizɐˈdor,kuɫpɐbilizɐˈdor	infopedia
+culumim	kuluˈmĩ	infopedia
+cumari	kumaˈri	infopedia
+cunquate	kũˈkwat	infopedia
+cunquate	kũˈkwatə	infopedia
+cuspinheira	kuʃpiˈɲɐjrɐ	infopedia
+cáqui	ˈkaki	infopedia
+cítreo	ˈsitrju	infopedia
+córnico	ˈkɔrniku	infopedia
+cônscio	ˈkõʃsju	infopedia
+daroês	dɐˈrweʃ	infopedia
+debotar	dəbuˈtar	infopedia
+deleitado	dəlɐjˈtadu	infopedia
+demolitório	dəmuliˈtɔrju	infopedia
+demoniomania	dəmɔnjɔmɐˈniɐ	infopedia
+demófobo	dəˈmɔfubu	infopedia
+denotação	dənutɐˈsɐ̃w̃	infopedia
+desabrimento	dəzɐbriˈmẽtu	infopedia
+desajeitar	dəzɐʒɐjˈtar	infopedia
+desalcatroar	dəzaɫkɐˈtrwar	infopedia
+desatencioso	dezɐtẽˈsjozu	infopedia
+desbancar	dəʒbɐ̃ˈkar	infopedia
+desbarbar	dəʒbɐrˈbar	infopedia
+desejador	dəzəʒɐˈdor	infopedia
+desemborradela	dəzẽbuʀɐˈdɛlɐ	infopedia
+desenervação	dəzinərvɐˈsɐ̃w̃	infopedia
+desenfezar	dəzẽfɛˈzar	infopedia
+desengravatado	dəzẽɡrɐvɐˈtadu	infopedia
+desfalque	dəʃˈfaɫk	infopedia
+desfalque	dəʃˈfaɫkə	infopedia
+desfalque	dɨʃˈfaɫkɨ	wiktionary
+desimantação	dəzimɐ̃tɐˈsɐ̃w̃	infopedia
+desinsetização	dəzĩsɛtizɐˈsɐ̃w̃	infopedia
+deslizar	dəʒliˈzar	infopedia
+deslizar	dɨʒliˈzaɾ	wiktionary
+deslocador	dəʒlukɐˈdor	infopedia
+desmodulador	dəʒmudulɐˈdor	infopedia
+desmodular	dəʒmuduˈlar	infopedia
+despadrar	dəʃpɐˈdrar	infopedia
+despojo	dəsˈpoʒu	infopedia
+desponta	dəʃˈpõtɐ	infopedia
+despublicação	dəʃpublikɐˈsɐ̃w̃	infopedia
+desrolhamento	dəʒʀuʎɐˈmẽtu	infopedia
+desvalorizador	dəʒvɐlurizɐˈdor	infopedia
+desviável	dəʒˈvjavɛɫ	infopedia
+desídia	dəˈzidjɐ	infopedia
+devanear	dəvɐˈnjar	infopedia
+devanear	dɨvɐˈnjaɾ	wiktionary
+devorista	dəvuˈriʃtɐ	infopedia
+diamida	djɐˈmidɐ	infopedia
+dificuldade	dəfikuɫˈdad,difikuɫˈdad	infopedia
+dificuldade	dəfikuɫˈdadə,difikuɫˈdadə	infopedia
+dificuldade	dɨfikuɫˈdadɨ	wiktionary
+dimensível	dimẽˈsivɛɫ	infopedia
+dinossáurico	dinɔˈsawriku	infopedia
+diplomatista	diplumɐˈtiʃtɐ	infopedia
+direitura	dirɐjˈturɐ	infopedia
+discricionariamente	diʃkrisjunarjɐˈmẽt	infopedia
+discricionariamente	diʃkrisjunarjɐˈmẽtə	infopedia
+disortografia	dizurtuɡrɐˈfiɐ	infopedia
+disromper	diʃʀõˈper	infopedia
+distratar	diʃtrɐˈtar	infopedia
+ditério	diˈtɛrju	infopedia
+divulgar	divuɫˈɡar	wiktionary+infopedia
+divórcio	diˈvɔrsju	infopedia
+dom-quixote	dõkiˈʃɔt	infopedia
+dom-quixote	dõkiˈʃɔtə	infopedia
+doma	ˈdomɐ	infopedia
+doze	ˈdoz	infopedia
+doze	ˈdozə	infopedia
+doze	ˈdozɨ	wiktionary
+dragalina	drɐɡɐˈlinɐ	infopedia
+dragão-marinho-folhoso	drɐɡɐ̃w̃mɐriɲufuˈʎozu	infopedia
+dão-dão	dɐ̃w̃ˈdɐ̃w̃	infopedia
+eciano	ɛˈsjɐnu	infopedia
+editar	idiˈtar	infopedia
+elaterina	elɐtəˈrinɐ	infopedia
+eletropositividade	ilɛtrɔpuzitiviˈdad	infopedia
+eletropositividade	ilɛtrɔpuzitiviˈdadə	infopedia
+elutriação	ilutrjɐˈsɐ̃w̃	infopedia
+elétron	iˈlɛtrɔn	infopedia
+embarretar	ẽbɐʀəˈtar	infopedia
+embuçar	ẽbuˈsar	infopedia
+emordaçar	imurdɐˈsars	infopedia
+emordaçar	imurdɐˈsarsə	infopedia
+empapado	ẽpɐˈpadu	infopedia
+empestador	ẽpɛʃtɐˈdor	infopedia
+empregue	ẽˈprɛɡ	infopedia
+empregue	ẽˈprɛɡə	infopedia
+encampanar	ẽkɐ̃pɐˈnar	infopedia
+encangotar	ẽkɐ̃ɡuˈtar	infopedia
+encarceramento	ẽkɐrsərɐˈmẽtu	infopedia
+encarceramento	ẽkɐɾsɨɾɐˈmẽtu	wiktionary
+encorrear	ẽkuˈʀjar	infopedia
+encostadela	ẽkuʃtɐˈdɛlɐ	infopedia
+encriptação	ẽkriptɐˈsɐ̃w̃	infopedia
+encriptação	ẽkɾiptɐˈsɐ̃w̃	wiktionary
+endogâmico	ẽdɔˈɡɐmiku	infopedia
+endossador	ẽdusɐˈdor	infopedia
+endozoário	ẽdɔˈzwarju	infopedia
+enfado	ẽˈfadu	infopedia
+enfado	ẽˈfadu	wiktionary
+enfear	ẽˈfear	infopedia
+engaranhar	ẽɡɐrɐˈɲar	infopedia
+engodador	ẽɡudɐˈdor	infopedia
+enruçar	ẽʀuˈsar	infopedia
+ensecar	ẽsəˈkar	infopedia
+entomófago	ẽtuˈmɔfɐɡu	infopedia
+envergonhadela	ẽvərɡuɲɐˈdɛlɐ	infopedia
+epactal	epɐˈktaɫ	infopedia
+epifisário	epifiˈzarju	infopedia
+epituitário	epitwiˈtarju	infopedia
+erasmismo	erɐʒˈmiʒmu	infopedia
+erva-rapa	ɛrvɐˈʀapɐ	infopedia
+ervilhal	irviˈʎaɫ,erviˈʎaɫ	infopedia
+ervilhar	erviˈʎar,irviˈʎar	infopedia
+escachoar	ʃkɐˈʃwar	infopedia
+escachoar	iʃkɐˈʃwar	infopedia
+escalpelada	ʃkaɫpəˈladɐ	infopedia
+escalpelada	iʃkaɫpəˈladɐ	infopedia
+escarapão	ʃkɐrɐˈpɐ̃w̃	infopedia
+escarapão	iʃkɐrɐˈpɐ̃w̃	infopedia
+escarepe	ʃkɐˈrɛp	infopedia
+escarepe	iʃkɐˈrɛpə	infopedia
+escarpar	ʃkɐrˈpar	wiktionary+infopedia
+escarpar	iʃkɐrˈpar	infopedia
+escorripichar	iʃkuʀipiˈʃaɾ	wiktionary
+escrava	ʃˈkravɐ	infopedia
+escrava	iʃˈkravɐ	infopedia
+escurentar	ʃkurẽˈtar	infopedia
+escurentar	iʃkurẽˈtar	infopedia
+esfirra	ʃˈfiʀɐ	infopedia
+esfirra	iʃˈfiʀɐ	infopedia
+esfossador	ʃfusɐˈdor	infopedia
+esfossador	iʃfusɐˈdor	infopedia
+esganar	ʒɡɐˈnar	infopedia
+esganar	iʒɡɐˈnar	wiktionary+infopedia
+esgrilar	ʒɡriˈlar	infopedia
+esgrilar	iʒɡriˈlar	infopedia
+esmagada	ʒmɐˈɡadɐ	infopedia
+esmagada	iʒmɐˈɡadɐ	infopedia
+esmaltar	ʒmaɫˈtar	infopedia
+esmaltar	iʒmaɫˈtar	wiktionary+infopedia
+espaventado	ʃpɐvẽˈtadu	infopedia
+espaventado	iʃpɐvẽˈtadu	infopedia
+espetroscopista	ʃpɛtrɔʃkuˈpiʃtɐ	infopedia
+espetroscopista	iʃpɛtrɔʃkuˈpiʃtɐ	infopedia
+espeçar	ʃpəˈsar	infopedia
+espeçar	iʃpəˈsar	infopedia
+espiração	ʃpirɐˈsɐ̃w̃	infopedia
+espiração	iʃpirɐˈsɐ̃w̃	infopedia
+esponsal	(i)ʃpõˈsal	wiktionary
+espécie-tipo	ʃpɛsjiˈtipu	infopedia
+espécie-tipo	iʃpɛsjiˈtipu	infopedia
+esquadronar	ʃkwɐdruˈnar	infopedia
+esquadronar	iʃkwɐdruˈnar	infopedia
+esquilo-da-sibéria	ʃkiludɐsiˈbɛrjɐ	infopedia
+esquilo-da-sibéria	iʃkiludɐsiˈbɛrjɐ	infopedia
+esquinote	ʃkiˈnɔt	infopedia
+esquinote	iʃkiˈnɔtə	infopedia
+estande	ʃˈtɐ̃d	infopedia
+estande	iʃˈtɐ̃də	infopedia
+estatoblasto	ʃtɐtɔˈblaʃtu	infopedia
+estatoblasto	iʃtɐtɔˈblaʃtu	infopedia
+estendido	ʃtẽˈdidu	infopedia
+estendido	iʃtẽˈdidu	infopedia
+estenograma	ʃtənɔˈɡrɐmɐ	infopedia
+estenograma	iʃtənɔˈɡrɐmɐ	infopedia
+estoicidade	ʃtɔjsiˈdad	infopedia
+estoicidade	iʃtɔjsiˈdadə	infopedia
+estoico	ʃˈtɔjku	infopedia
+estoico	iʃˈtɔjku	infopedia
+estupidificado	ʃtupidifiˈkadu	infopedia
+estupidificado	iʃtupidifiˈkadu	infopedia
+etilizar	ɛtiliˈzar,etiliˈzar	infopedia
+etilo	ɛˈtilu,eˈtilu	infopedia
+evergetismo	evərʒəˈtiʒmu	infopedia
+ex-mulher	ɐjʃmuˈʎɛr	infopedia
+exalçamento	izaɫsɐˈmẽtu	infopedia
+excecional	ɐjʃsɛsjuˈnaɫ,ʃsɛsjuˈnaɫ	infopedia
+excecional	ɐjʃsɛsjuˈnaɫ,iʃsɛsjuˈnaɫ	infopedia
+excitador	ɐjʃsitɐˈdor,ʃsitɐˈdor	infopedia
+excitador	ɐjʃsitɐˈdor,iʃsitɐˈdor	infopedia
+excluir	ɐjʃˈklwir,ʃˈklwir	infopedia
+excluir	ɐjʃˈklwir,iʃˈklwir	infopedia
+excluir	ɐjʃˈklwiɾ	wiktionary
+exclusive	ɐjʃkluˈzivɛ,ʃkluˈzivɛ	infopedia
+exclusive	ɐjʃkluˈzivɛ,iʃkluˈzivɛ	infopedia
+exclusividade	ɐjʃkluziviˈdad,ʃkluziviˈdad	infopedia
+exclusividade	ɐjʃkluziviˈdadə,iʃkluziviˈdadə	infopedia
+exclusividade	ɐjʃkluziviˈdadɨ	wiktionary
+excogitável	ɐjʃkuʒiˈtavɛɫ,ʃkuʒiˈtavɛɫ	infopedia
+excogitável	ɐjʃkuʒiˈtavɛɫ,iʃkuʒiˈtavɛɫ	infopedia
+excrementoso	ɐjʃkrəmẽˈtozu,ʃkrəmẽtozu	infopedia
+excrementoso	ɐjʃkrəmẽˈtozu,iʃkrəmẽtozu	infopedia
+facultamento	fɐkuɫtɐˈmẽtu	infopedia
+falangiídeo	fɐlɐ̃ʒiˈidju	infopedia
+falpórrias	faɫˈpɔʀjɐʃ	infopedia
+falsidade	faɫsiˈdad	infopedia
+falsidade	faɫsiˈdadə	infopedia
+fasciolar	fɐʃsjuˈlar	infopedia
+fatalista	fɐtɐˈliʃtɐ	infopedia
+fedorento	fəduˈrẽtu	infopedia
+feijão-tropeiro	fɐjʒɐ̃w̃truˈpɐjru	infopedia
+felosa	fəˈlɔzɐ	infopedia
+femeaço	fəˈmjasu	infopedia
+ferrofluido	fɛʀuˈflujdu	infopedia
+fertilizador	fərtəlizɐˈdor,fərtilizɐˈdor	infopedia
+festão	fəʃˈtɐ̃w̃	infopedia
+fibroblasto	fibrɔˈblaʃtu	infopedia
+filarquia	filɐrˈkiɐ	infopedia
+filogenético	filɔʒəˈnɛtiku	infopedia
+filogenético	filuʒɨˈnɛtiku	wiktionary
+fisioterapia	fizjɔtərɐˈpiɐ	infopedia
+fitilha	fiˈtiʎɐ	infopedia
+fitáceo	fiˈtasju	infopedia
+flor-mel	florˈmɛɫ	infopedia
+florejante	flurəˈʒɐ̃t	infopedia
+florejante	flurəˈʒɐ̃tə	infopedia
+folheteiro	fuʎəˈtɐjru	infopedia
+forjagem	furˈʒaʒɐ̃j̃	infopedia
+formadura	furmɐˈdurɐ	infopedia
+forqueta	furˈketɐ	infopedia
+força-tarefa	forsɐtɐˈrɛfɐ	infopedia
+fotoalergia	fɔtɔɐlərˈʒiɐ	infopedia
+fotocompositora	fɔtɔkõpuziˈtorɐ	infopedia
+fotocopiadora	fɔtɔkupjɐˈdorɐ	infopedia
+fragiforme	frɐʒiˈfɔrm	infopedia
+fragiforme	frɐʒiˈfɔrmə	infopedia
+francesiar	frɐ̃səˈzjar	infopedia
+fratria	frɐˈtriɐ	infopedia
+fratricídio	fɾɐtɾiˈsidju	wiktionary
+frenicoques	frəniˈkɔkəʃ	infopedia
+frequentação	frəkwẽtɐˈsɐ̃w̃	infopedia
+frequentismo	frəkwẽˈtiʒmu	infopedia
+fronta	ˈfrõtɐ	infopedia
+frutícola	fruˈtikulɐ	infopedia
+frutífero	fruˈtifəru	infopedia
+frâncico	ˈfrɐ̃siku	infopedia
+full-contact	fuɫkõˈtakt	infopedia
+fumoso	fuˈmozu	infopedia
+funéreo	fuˈnɛrju	infopedia
+furadeira	furɐˈdɐjrɐ	infopedia
+furta-capa	furtɐˈkapɐ	infopedia
+futrico	fuˈtriku	infopedia
+fãozense	fɐ̃w̃ˈzẽs	infopedia
+fãozense	fɐ̃w̃ˈzẽsə	infopedia
+gabiru	ɡabiˈru	infopedia
+gajas	ˈɡaʒɐʃ	infopedia
+galenismo	ɡɐləˈniʒmu	infopedia
+galvanopunctura	ɡaɫvɐnɔpũˈturɐ	infopedia
+galvanopunctura	ɡaɫvɐnɔpũˈkturɐ	infopedia
+gambelo	ɡɐ̃ˈbelu	infopedia
+gamofilo	ɡɐmɔˈfilu	infopedia
+ganchoso	ɡɐ̃ˈʃozu	infopedia
+geométrico	ʒjuˈmɛtriku	wiktionary+infopedia
+girassol-batateiro	ʒirɐsɔɫbɐtɐˈtɐjru	infopedia
+glícido	ˈɡlisidu	infopedia
+gordurento	ɡurduˈrẽtu	infopedia
+gradação	ɡrɐdɐˈsɐ̃w̃	wiktionary+infopedia
+graffiti	ɡraˈfiti	infopedia
+gravana	ɡrɐˈvɐnɐ	infopedia
+gravataria	ɡrɐvɐtɐˈriɐ	infopedia
+gripe	ˈɡrip	infopedia
+gripe	ˈɡripə	infopedia
+gripe	ˈɡɾipɨ	wiktionary
+grisões	ɡriˈzɐ̃w̃	infopedia
+gritada	ɡriˈtadɐ	infopedia
+guarda-vidas	saɫvɐˈvidɐʃ	infopedia
+gálico	ˈɡaliku	infopedia
+haiduque	ajˈduk	infopedia
+haiduque	ajˈdukə	infopedia
+hemimorfia	ɛmimurˈfiɐ	infopedia
+heráldico	eˈɾaɫdiku	wiktionary
+heterocariose	ɛtərɔkɐˈrjoz	infopedia
+heterocariose	ɛtərɔkɐˈrjozə	infopedia
+hidrônfalo	iˈdrõfɐlu	infopedia
+hipocristalino	ipɔkriʃtɐˈlinu	infopedia
+hipogamia	ipɔɡɐˈmiɐ	infopedia
+hipopótamo-anão-de-chipre	ipɔpɔtɐmuɐnɐ̃w̃dəˈʃipr	infopedia
+hipopótamo-anão-de-chipre	ipɔpɔtɐmuɐnɐ̃w̃dəˈʃiprə	infopedia
+hispanófilo	iʃpɐˈnɔfilu	infopedia
+homoaxial	ɔmɔɐˈksjaɫ	infopedia
+homomorfo	ɔmɔˈmɔrfu	infopedia
+homoparental	ɔmɔpɐrẽˈtaɫ	infopedia
+hortícola	ɔrˈtikulɐ	wiktionary+infopedia
+iaque	ˈjak	infopedia
+iaque	ˈjakə	infopedia
+iaque	ˈjakɨ	wiktionary
+iconomia	ikunuˈmiɐ	infopedia
+identidade	idẽtiˈdad	infopedia
+identidade	idẽtiˈdadə	infopedia
+identidade	idẽtiˈdadɨ	wiktionary
+ideário	iˈdjarju	infopedia
+idouro	ĩˈdoru	infopedia
+idouro	ĩˈdowru	infopedia
+igualdade	iɡwaɫˈdad	infopedia
+igualdade	iɡwaɫˈdadə	infopedia
+igualdade	iɡwaɫˈdadɨ	wiktionary
+ilibatório	ilibɐˈtɔrju	infopedia
+iliquidez	ilikiˈdeʃ	infopedia
+imaginar	imɐʒiˈnar	wiktionary+infopedia
+imamato	imɐˈmatu	infopedia
+importe	ĩˈpɔrt	infopedia
+importe	ĩˈpɔrtə	infopedia
+imprevisível	ĩprəviˈzivɛɫ	infopedia
+imprevisível	ĩpɾɨviˈzivɛɫ	wiktionary
+inabitualidade	inɐbitwɐliˈdad	infopedia
+inabitualidade	inɐbitwɐliˈdadə	infopedia
+inalar	inɐˈlar	wiktionary+infopedia
+inaproveitado	inɐpruvɐjˈtadu	infopedia
+incomparabilidade	ĩkõpɐrɐbiliˈdad	infopedia
+incomparabilidade	ĩkõpɐrɐbiliˈdadə	infopedia
+incriável	ĩˈkrjavɛɫ	infopedia
+indeterminador	ĩdətərminɐˈdor	infopedia
+indeterminar	ĩdətərmiˈnar	infopedia
+indicador-pequeno-de-pinta-branca	ĩdikɐdorpəkenudəpĩtɐˈbrɐ̃kɐ	infopedia
+indisposição	ĩdiʃpuziˈsɐ̃w̃	infopedia
+induzimento	ĩduziˈmẽtu	infopedia
+inexperto	inɐjʃˈpɛrtu	infopedia
+infumável	ĩfuˈmavɛɫ	infopedia
+inofensivo	inufẽˈsivu	infopedia
+inoportunamente	inɔpurtunɐˈmẽt,inupurtunɐˈmẽt	infopedia
+inoportunamente	inɔpurtunɐˈmẽtə,inupurtunɐˈmẽtə	infopedia
+inteiro	ĩˈtɐjru	infopedia
+inteiro	ĩˈtɐjɾu	wiktionary
+interposição	ĩtərpuziˈsɐ̃w̃	infopedia
+interprandial	ĩtərprɐ̃ˈdjaɫ	infopedia
+invite	ĩˈvit	infopedia
+invite	ĩˈvitə	infopedia
+isoglosso	izɔˈɡlosu	infopedia
+isolado	izuˈladu	wiktionary+infopedia
+isógamo	iˈzɔɡɐmu	infopedia
+jacinto-de-água	ʒɐsĩtuˈdaɡwɐ	infopedia
+jambalão	ʒɐ̃bɐˈlɐ̃w̃	infopedia
+jambelegíaco	ʒɐ̃bələˈʒiɐku	infopedia
+janotada	ʒɐnuˈtadɐ	infopedia
+jansenista	ʒɐ̃səˈniʃtɐ	infopedia
+japoneira	ʒɐpuˈnɐjrɐ	infopedia
+jiboiar	ʒibojˈar	infopedia
+jingoísmo	ʒĩˈɡwiʒmu	infopedia
+jornadear	ʒurnɐˈdjar	infopedia
+joviano	ʒuˈvjɐnu	infopedia
+jugueiro	ʒuˈɡɐjru	infopedia
+jurisconsulto	ʒuriʃkõˈsuɫtu	infopedia
+juspsicológico	ʒuʃpsikuˈlɔʒiku	infopedia
+jáculo	ˈʒakulu	infopedia
+jóquei	ˈʒɔkɐj	infopedia
+lacíada	lɐˈsiɐdɐ	infopedia
+lada	ˈladɐ	infopedia
+ladravão	lɐdrɐˈvɐ̃w̃	infopedia
+lagartixa-adamastor	lɐɡɐrtiʃɐɐdɐmɐʃˈtor	infopedia
+lançaço	lɐ̃ˈsasu	infopedia
+lapiez	lɐˈpjeʃ	infopedia
+lapuzice	lɐpuˈzis	infopedia
+lapuzice	lɐpuˈzisə	infopedia
+laranja-amarga	lɐrɐ̃ʒɐɐˈmarɡɐ	infopedia
+larote	lɐˈrɔt	infopedia
+larote	lɐˈrɔtə	infopedia
+lauráceas	lawˈrasjɐ	infopedia
+lavrada	lɐˈvradɐ	infopedia
+lazarento	lɐzɐˈrẽtu	infopedia
+leixamento	lɐjʃɐˈmẽtu	infopedia
+lerica	ləˈrikɐ	infopedia
+leucótomo	lewˈkɔtumu	infopedia
+limenho	liˈmɐɲu,liˈmeɲu	infopedia
+limenho	liˈmɐjɲu,liˈmeɲu	infopedia
+livónio	liˈvɔnju	infopedia
+lixamento	liʃɐˈmẽtu	infopedia
+lobélia-azul	lubɛljɐɐˈzuɫ	infopedia
+lombeiro	lõˈbɐjru	infopedia
+loquete	luˈket	infopedia
+loquete	luˈketə	infopedia
+lula-bicuda	lulɐbiˈkudɐ	infopedia
+luminol	lumiˈnɔɫ	infopedia
+lusango	luˈzɐ̃ɡu	infopedia
+lírio-de-água	lirjudəˈaɡwɐ	infopedia
+macedoniano	mɐsəduˈnjɐnu	infopedia
+macieza	mɐˈsjezɐ	infopedia
+maculopapular	makulɔpɐpuˈlar	infopedia
+magma	ˈmaɡmɐ	infopedia
+maksoik	mɐkˈsɔjk	infopedia
+malacão	mɐlɐˈkɐ̃w̃	infopedia
+malhar	mɐˈʎar	wiktionary+infopedia
+malquerença	maɫkəˈrẽsɐ	infopedia
+malunga	mɐˈlũɡɐ	infopedia
+malva-mourisca	maɫvɐmoˈriʃkɐ	infopedia
+malva-mourisca	maɫvɐmowˈriʃkɐ	infopedia
+mameliforme	mɐməliˈfɔrm	infopedia
+mameliforme	mɐməliˈfɔrmə	infopedia
+manchua	mɐ̃ˈʃuɐ	infopedia
+mandrianar	mɐ̃drjɐˈnar	infopedia
+mangonar	mɐ̃ɡuˈnar	infopedia
+mani-	mɐni	wiktionary
+manjado	mɐ̃ˈʒadu	infopedia
+manobra	mɐˈnɔbrɐ	wiktionary+infopedia
+mansura	mɐ̃ˈsurɐ	infopedia
+maquiar	mɐˈkjar	infopedia
+mariquita-aquática-boreal	mɐrikitɐɐkwatikɐbuˈrjaɫ	infopedia
+marroio-negro	mɐʀojuˈneɡru	infopedia
+massudo	mɐˈsudu	infopedia
+mastectomia	mɐʃtɛktuˈmiɐ	infopedia
+mateba	mɐˈtebɐ	infopedia
+matronaria	mɐtrunɐˈriɐ	infopedia
+maximamente	masimɐˈmẽt	infopedia
+maximamente	masimɐˈmẽtə	infopedia
+maçudo	mɐˈsudu	infopedia
+mecanização	məkɐnizɐˈsɐ̃w̃	infopedia
+medícua	mˈdikwɐ	infopedia
+medícua	məˈdikwɐ	infopedia
+megaeletrão-volt	mɛɡɐilɛtrɐ̃w̃ˈvɔɫt	infopedia
+megalegoria	mɛɡɐləɡuˈriɐ	infopedia
+melanargia-mediterrânica	məlɐnɐrʒiɐməditəˈʀɐnikɐ	infopedia
+melanogenético	məlɐnɔʒəˈnɛtiku	infopedia
+melanogénico	məlɐnɔˈʒɛniku	infopedia
+melhoras	məˈʎɔrɐʃ	infopedia
+memorabília	məmɔraˈbiljɐ	infopedia
+mercantilagem	mərkɐ̃tiˈlaʒɐ̃j̃	infopedia
+meroítico	məˈrwitiku	infopedia
+microgravidade	mikrɔɡrɐviˈdad	infopedia
+microgravidade	mikrɔɡrɐviˈdadə	infopedia
+milagrosamente	milɐɡrɔzɐˈmẽt	infopedia
+milagrosamente	milɐɡrɔzɐˈmẽtə	infopedia
+milheirós	miʎɐjˈrɔʃ	infopedia
+miliare	miˈljar	infopedia
+miliare	miˈljarə	infopedia
+milicurie	milikuˈʀi	infopedia
+mimalho	miˈmaʎu	infopedia
+minucioso	minuˈsjozu	wiktionary+infopedia
+miserabilista	mizərɐbiˈliʃtɐ	infopedia
+mixomicetes	miksɔmiˈsɛtəʃ	infopedia
+moleiro-parasítico	mulɐjrupɐrɐˈzitiku	infopedia
+momesco	moˈmeʃku	infopedia
+monera	muˈnɛrɐ	infopedia
+monotemático	mɔnɔtəˈmatiku	infopedia
+monsenhoria	mõsəɲuˈriɐ	infopedia
+monórquido	mɔˈnɔrkidu	infopedia
+morangar	murɐ̃ˈɡar	infopedia
+morcego-negro	murseɡuˈneɡru	infopedia
+mormonismo	mɔrmuˈniʒmu	infopedia
+moscar	muʃˈkar	infopedia
+motocultivador	mɔtɔkuɫtivɐˈdor	infopedia
+mouro	ˈmoru	infopedia
+mouro	ˈmowru	infopedia
+mucocutâneo	mukɔkuˈtɐnju	infopedia
+mugódi	muˈɡɔdi	infopedia
+multa	ˈmuɫtɐ	wiktionary+infopedia
+mundão	mũˈdɐ̃w̃	infopedia
+mutagénese	mutɐˈʒɛnəz	infopedia
+mutagénese	mutɐˈʒɛnəzə	infopedia
+muxagatense	muʃɐɡɐˈtẽs	infopedia
+muxagatense	muʃɐɡɐˈtẽsə	infopedia
+mão-tenente	mɐ̃w̃təˈnẽt	infopedia
+mão-tenente	mɐ̃w̃təˈnẽtə	infopedia
+mó	ˈmɔ	wiktionary+infopedia
+nacrite	nɐˈkrit	infopedia
+nacrite	nɐˈkritə	infopedia
+namibiano	nɐmiˈbjɐnu	infopedia
+nanocompósito	nɐnɔkõˈpɔzitu	infopedia
+neodarwinismo	nɛɔdarwiˈniʒmu	infopedia
+neologia	njuluˈʒiɐ,nɛɔluˈʒiɐ	infopedia
+nerónico	nəˈrɔniku	infopedia
+neuma	ˈnewmɐ	infopedia
+nevoso	nəˈvozu	infopedia
+newton	ˈnjutɔn	infopedia
+nguê-godô	nɡeɡɔˈdo	infopedia
+niala	ˈnjalɐ	infopedia
+nisso	ˈnisu	infopedia
+nomeável	nuˈmjavɛɫ	infopedia
+norito	nɔˈritu	infopedia
+novidade	nuviˈdad	infopedia
+novidade	nuviˈdadə	infopedia
+novidade	nuviˈdadɨ	wiktionary
+obração	ɔbrɐˈsɐ̃w̃	infopedia
+obrigatório	ɔbɾiɡɐˈtɔɾju	wiktionary
+obrigação	ɔbriɡɐˈsɐ̃w̃	wiktionary+infopedia
+obumbrar	ɔbũˈbrar	infopedia
+ogúzico	ɔˈuziku	infopedia
+onerar	ɔnəˈrar	infopedia
+onerar	ɔnɨˈɾaɾ	wiktionary
+ortológico	ɔrtuˈlɔʒiku	infopedia
+oscilante	ɔʃsiˈlɐ̃t,oʃsiˈlɐ̃t	infopedia
+oscilante	ɔʃsiˈlɐ̃tə,oʃsiˈlɐ̃tə	infopedia
+oscilante	ɔʃsiˈlɐ̃tɨ	wiktionary
+oscilográfico	ɔʃsiluˈɡrafiku	infopedia
+otesino	ɔtəˈzinu	infopedia
+ovarite	ɔvɐˈrit	infopedia
+ovarite	ɔvɐˈritə	infopedia
+oxitocina	ɔksitɔˈsinɐ	infopedia
+padronizar	pɐdruniˈzar	infopedia
+palilalia	pɐlilɐˈliɐ	infopedia
+palpadela	paɫpɐˈdɛlɐ	infopedia
+panamá	pɐnɐˈma	infopedia
+panegirizar	pɐnəʒəriˈzar	infopedia
+panteologista	pɐ̃tjuluˈʒiʃtɐ	infopedia
+panteónimo	pɐ̃ˈtjɔnimu	infopedia
+papa-ovo	papɐˈovu	infopedia
+paracletiano	pɐrɐkləˈtjɐnu	infopedia
+paracurricular	pɐrɐkuʀikuˈlar	infopedia
+parainfluenza	pɐrɐĩfluˈẽzɐ	infopedia
+parinervado	pɐrinərˈvadu	infopedia
+parlapatice	pɐrlɐpɐˈtis	infopedia
+parlapatice	pɐrlɐpɐˈtisə	infopedia
+partidarista	pɐrtidɐˈriʃtɐ	infopedia
+partitivo	pɐrtiˈtivu	wiktionary+infopedia
+passareiro	pɐsɐˈrɐjru	infopedia
+patrimonialismo	pɐtrimunjɐˈliʒmu	infopedia
+pavoroso	pɐvuˈɾozu	wiktionary
+pedoiro	pɛˈdojru	infopedia
+peixe-roda	pɐjʃəˈʀɔdɐ	infopedia
+pentatlo	pẽˈtatlu	infopedia
+pentatlo	pẽˈtatlu	wiktionary
+percepcionista	pərsɛpsjuˈniʃtɐ	infopedia
+perfectivo	pərfɛˈtivu	infopedia
+perfectivo	pərfɛˈktivu	infopedia
+persuadido	pərswɐˈdidu	infopedia
+pesa-mosto	pɛzɐˈmoʃtu	infopedia
+pescador	pəʃkɐˈdor	infopedia
+petaloide	pətɐˈlɔjd	infopedia
+petaloide	pətɐˈlɔjdə	infopedia
+petinga	pəˈtĩɡɐ	infopedia
+peto-real	petuˈʀjaɫ	infopedia
+petrificar	pətrifiˈkar	infopedia
+pianista	pjɐˈniʃtɐ	wiktionary+infopedia
+picrolite	pikrɔˈlit	infopedia
+picrolite	pikrɔˈlitə	infopedia
+pilrito-de-bico-fino	piɫʀitudəbikuˈfinu	infopedia
+pineno	piˈnenu	infopedia
+pinguim-de-magalhães	pĩɡwĩdəmɐɡɐˈʎɐ̃j̃ʃ	infopedia
+pinoca	piˈnɔkɐ	infopedia
+pirimídico	piriˈmidiku	infopedia
+pistilado	piʃtiˈladu	infopedia
+plausível	plawˈzivɛɫ	wiktionary+infopedia
+pleuropatia	plewrɔpɐˈtiɐ	infopedia
+plumacho	pluˈmaʃu	infopedia
+poiquilotermia	pojkilɔtərˈmiɐ	infopedia
+politizável	pulitiˈzavɛɫ	infopedia
+pontederiáceas	põtədəriˈasjɐ	infopedia
+porriginoso	puʀiʒiˈnozu	infopedia
+postergável	puʃtərˈɡavɛɫ	infopedia
+potenciómetro	putẽˈsjɔmətru	infopedia
+predestinação	pɾɨdɨʃtinɐˈsɐ̃w̃	wiktionary
+presilheiro	prəziˈʎɐjru	infopedia
+pressorrecetor	prɛsɔʀəsɛˈtor	infopedia
+prestímano	prəʃˈtimɐnu	infopedia
+previsto	prəˈviʃtu	infopedia
+previsto	pɾɨˈviʃtu	wiktionary
+primeira-bailarina	primɐjrɐbajlɐˈrinɐ	infopedia
+profligador	prufliɡɐˈdor	infopedia
+prolamina	prɔlɐˈminɐ	infopedia
+propulsionar	prupuɫsjuˈnar	infopedia
+pré-pagamento	prɛpɐɡɐˈmẽtu	infopedia
+prévio	ˈpɾɛvju	wiktionary
+puimento	pwiˈmẽtu	infopedia
+punga	ˈpũɡɐ	infopedia
+pungitivo	pũʒiˈtivu	infopedia
+quaresma	kwɐˈrɛʒmɐ	infopedia
+questor	kəʃˈtor	infopedia
+quilodieresia	kilɔdjɛrəˈziɐ	infopedia
+quinama	kiˈnamɐ	infopedia
+quinjango	kĩˈʒɐ̃ɡu	infopedia
+quiosque	ˈkjɔʃk	infopedia
+quiosque	ˈkjɔʃkə	infopedia
+quiosque	ˈkjɔʃkɨ	wiktionary
+quitata	kiˈtatɐ	infopedia
+rabinado	ʀɐbiˈnadu	infopedia
+raboto	ʀɐˈbotu	infopedia
+racionar	ʀɐsjuˈnar	infopedia
+ramaldense	ʀɐmaɫˈdẽs	infopedia
+ramaldense	ʀɐmaɫˈdẽsə	infopedia
+ramilhete	ʀɐmiˈʎet	infopedia
+ramilhete	ʀɐmiˈʎetə	infopedia
+rapelho	ʀɐˈpɐʎu,ʀɐˈpeʎu	infopedia
+rapelho	ʀɐˈpɐjʎu,ʀɐˈpeʎu	infopedia
+rastafarianismo	ʀɐʃtɐfarjɐˈniʒmu	infopedia
+reacionarismo	ʀjasjunɐˈriʒmu	infopedia
+recetível	ʀəsɛˈtivɛɫ	infopedia
+recidivar	ʀəsidiˈvar	infopedia
+reconto	ʀəˈkõtu	infopedia
+recorrido	ʀəkuˈʀidu	infopedia
+recrudescer	ʀəkrudəʃˈser	infopedia
+redescontável	ʀədəʃkõˈtavɛɫ	infopedia
+reencaixar	ʀjẽkajˈʃar	infopedia
+referido	ʀɨfɨˈɾidu	wiktionary
+refiltrar	ʀəfiɫˈtrar	infopedia
+regamboleio	ʀəɡɐ̃buˈlɐju	infopedia
+remador	ʀəmɐˈdor	infopedia
+remixagem	ʀəmiˈksaʒɐ̃j̃	infopedia
+reposteiro	ʀɨpuʃˈtɐjɾu	wiktionary
+resedal	ʀəzəˈdaɫ	infopedia
+resina	ʀəˈzinɐ	infopedia
+resina	ʀɨˈzinɐ	wiktionary
+resineiro	ʀəziˈnɐjru	infopedia
+responsório	ʀəʃpõˈsɔrju	infopedia
+ressurgência	ʀəsurˈʒẽsjɐ	infopedia
+resto	ˈʀɛʃtu	wiktionary+infopedia
+retentriz	ʀətẽˈtriʃ	infopedia
+reticular	ʀətikuˈlar	infopedia
+retratado	ʀətrɐˈtadu	infopedia
+revendição	ʀəvẽdiˈsɐ̃w̃	infopedia
+revigorante	ʀəviɡuˈrɐ̃t	infopedia
+revigorante	ʀəviɡuˈrɐ̃tə	infopedia
+revigorante	ʀɨviɡuˈɾɐ̃tɨ	wiktionary
+reviralho	ʀəviˈraʎu	infopedia
+revisável	ʀəviˈzavɛɫ	infopedia
+rexerta	ʀəˈʃɛrtɐ	infopedia
+rodovalho	ʀuduˈvaʎu	wiktionary+infopedia
+roncador-bravura	ʀõkɐdorbrɐˈvurɐ	infopedia
+rooibos	ˈʀojbuʃ	infopedia
+roscar	ʀuʃˈkar	infopedia
+rádio-gravador	ʀadjuɡrɐvɐˈdor	infopedia
+râmola	ˈʀɐmulɐ	infopedia
+saborizar	sɐburiˈzar	infopedia
+sabotagem	sɐbuˈtaʒɐ̃j̃	wiktionary
+sacramentalismo	sɐkrɐmẽtɐˈliʒmu	infopedia
+safena	sɐˈfenɐ	infopedia
+saideira	saiˈdɐjrɐ	infopedia
+sainha	saˈiɲɐ	infopedia
+sanduba	sɐ̃ˈdubɐ	infopedia
+sanhudo	sɐˈɲudu	infopedia
+sapiroquento	sɐpiruˈkẽtu	infopedia
+saramela	sɐrɐˈmɛlɐ	infopedia
+seisdobro	sɐjʒˈdobru	infopedia
+sem-cerimonioso	sɐ̃j̃sərimuˈnjozu	infopedia
+senatriz	sənɐˈtriʃ	infopedia
+senectude	sənɛˈktud	infopedia
+senectude	sənɛˈktudə	infopedia
+sensualizante	sẽswɐliˈzɐ̃t	infopedia
+sensualizante	sẽswɐliˈzɐ̃tə	infopedia
+sepultante	səpuɫˈtɐ̃t	infopedia
+sepultante	səpuɫˈtɐ̃tə	infopedia
+sepultar	səpuɫˈtar	infopedia
+sepultar	sɨpuɫˈtaɾ	wiktionary
+sepulto	səˈpuɫtu	infopedia
+sepulto	sɨpˈuɫtu	wiktionary
+sermoa	sərˈmoɐ	infopedia
+short	ˈʃɔrt	infopedia
+short	ˈʃɔrtə	infopedia
+silvite	siɫˈvit	infopedia
+silvite	siɫˈvitə	infopedia
+sindicante	sĩdiˈkɐ̃t	infopedia
+sindicante	sĩdiˈkɐ̃tə	infopedia
+site	ˈsajt	infopedia
+site	ˈsajtə	infopedia
+site	ˈsajtɨ	wiktionary
+sobretudo	sobɾɨˈtudu	wiktionary
+sofrologia	sufruluˈʒiɐ	infopedia
+sogar	suˈɡar	infopedia
+solidarizar	sulidɐriˈzar	infopedia
+solucionador	sulusjunɐˈdor	infopedia
+sopro	ˈsopru	wiktionary+infopedia
+soçaite	suˈsajt	infopedia
+soçaite	suˈsajtə	infopedia
+stent	ˈstẽt	infopedia
+subnuclear	subnuˈkljar	infopedia
+subtropical	ˌsubtɾupiˈkal	wiktionary
+supermercado	supɛrmərˈkadu	infopedia
+suprematista	suprəmɐˈtiʃtɐ	infopedia
+sádico	ˈsadiku	infopedia
+séquito	ˈsɛkitu	wiktionary+infopedia
+tarantulismo	tɐrɐ̃tuˈliʒmu	infopedia
+tardorromânico	tardɔʀuˈmɐniku	infopedia
+tarracho	tɐˈʀaʃu	infopedia
+tascadeira	tɐʃkɐˈdɐjrɐ	infopedia
+teiú-açu	tɐjuaˈsu	infopedia
+teleformação	tɛlɛfurmɐˈsɐ̃w̃	infopedia
+telex	tɛˈlɛks	infopedia
+telotismo	təluˈtiʒmu	infopedia
+tendente	tẽˈdẽt	infopedia
+tendente	tẽˈdẽtə	infopedia
+teosófico	tjuˈzɔfiku	infopedia
+terçol	tərˈsɔɫ	infopedia
+tibar	tiˈbar	infopedia
+tilo	ˈtilu	infopedia
+tincaleira	tĩkɐˈlɐjrɐ	infopedia
+tipificar	tipifiˈkar	infopedia
+titânio	tiˈtɐnju	wiktionary+infopedia
+titímalo-menor	titimɐluməˈnɔr	infopedia
+todinho	tuˈdiɲu	infopedia
+tom	ˈtõ	wiktionary+infopedia
+tonitruoso	tuniˈtrwozu	infopedia
+trabuquete	trɐbuˈket	infopedia
+trabuquete	trɐbuˈketə	infopedia
+tragar	trɐˈɡar	infopedia
+trancar	trɐ̃ˈkar	infopedia
+transgressão	tɾɐ̃ʒɡɾɨˈsɐ̃w̃	wiktionary
+transnadar	trɐ̃ʒnɐˈdar	infopedia
+tranvia	trɐ̃ˈviɐ	infopedia
+trasanteontem	trazɐ̃ˈtjõtɐ̃j̃	infopedia
+trastejado	trɐʃtəˈʒadu	infopedia
+trescalante	trəʃkɐˈlɐ̃t	infopedia
+trescalante	trəʃkɐˈlɐ̃tə	infopedia
+triplicata	tripliˈkatɐ	infopedia
+trocadilho	trukɐˈdiʎu	wiktionary+infopedia
+trogloditídeos	truɡludiˈtidju	infopedia
+troteada	truˈtjadɐ	infopedia
+trufa-branca	trufɐˈbrɐ̃kɐ	infopedia
+uacari	wakaˈri	infopedia
+uauaçu	wawaˈsu	infopedia
+umari	umaˈri	infopedia
+untuosidade	ũtwuziˈdad	infopedia
+untuosidade	ũtwuziˈdadə	infopedia
+uretroscópico	urɛtrɔʃˈkɔpiku	infopedia
+uvaia	uˈvajɐ	infopedia
+vagão-restaurante	vaɡɐ̃w̃ʀəʃtawˈrɐ̃t	infopedia
+vagão-restaurante	vaɡɐ̃w̃ʀəʃtawˈrɐ̃tə	infopedia
+veganismo	vəɡɐˈniʒmu	infopedia
+veirado	vɐjˈradu	infopedia
+venéreo	vɨˈnɛɾju	wiktionary
+veredicto	vərəˈditu	infopedia
+veredicto	vərəˈdiktu	infopedia
+vessas	ˈvɛsɐʃ	infopedia
+vexilar	vɛksiˈlar	infopedia
+viabilização	vjɐbilizɐˈsɐ̃w̃	infopedia
+viajada	vjɐˈʒadɐ	infopedia
+vice-comissário	visəkumiˈsarju	infopedia
+vice-reino	visəˈʀɐjnu	infopedia
+vicente	viˈsẽt	infopedia
+vicente	viˈsẽtə	infopedia
+vicentino	visẽˈtinu	infopedia
+vidairada	vidajˈrada	infopedia
+videograma	vidjɔˈɡrɐmɐ	infopedia
+vingamento	vĩɡɐˈmẽtu	infopedia
+vitrófiro	viˈtrɔfiru	infopedia
+viável	ˈvjavɛɫ	wiktionary+infopedia
+viés	ˈvjɛʃ	wiktionary+infopedia
+víbora	ˈviburɐ	infopedia
+xonas	ʃɔˈnar	infopedia
+yazidi	jaˈzidi	infopedia
+zelação	zəlɐˈsɐ̃w̃	infopedia
+àquelas	aˈkɛlɐʃ	wiktionary
+ádax	ˈadaks	infopedia
+água-chilra	aɡwɐˈʃiɫʀɐ	infopedia
+água-mel	aɡwɐˈmɛɫ	infopedia
+árvore-da-castidade	arvurədɐkɐʃtiˈdad	infopedia
+árvore-da-castidade	arvurədɐkɐʃtiˈdadə	infopedia
+ântero-septal	ɐ̃tərɔsɛˈptaɫ	infopedia

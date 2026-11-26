@@ -33,12 +33,12 @@ of a word-initial ⟨es⟩ + consonant in the European dialects
 | Dialect | Gold region | Words | PER | PER, initial es- accepted | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|---|
 | pt-AO | pt-AO | 1000 | 0.2395 | n/a | 0.1010 | 993 | 0.9970 |
-| pt-BR | pt-BR | 1000 | 0.1250 | n/a | 0.4200 | 893 | 0.9731 |
+| pt-BR | pt-BR | 1000 | 0.1068 | n/a | 0.4570 | 893 | 0.9731 |
 | pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1721 | n/a | 0.1380 | 992 | 1.0000 |
 | pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1535 | n/a | 0.1930 | 992 | 0.9980 |
 | pt-MZ | pt-MZ-x-maputo | 1000 | 0.1377 | n/a | 0.2940 | 992 | 1.0000 |
 | pt-PT | pt-PT | 1000 | 0.0929 | 0.0771 | 0.5060 | 979 | 0.9867 |
-| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0682 | 0.0539 | 0.5750 | 994 | 0.9980 |
+| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0683 | 0.0540 | 0.5750 | 994 | 0.9980 |
 | pt-TL | pt-TL-x-dili | 1000 | 0.3644 | n/a | 0.0140 | 985 | 0.9970 |
 
 

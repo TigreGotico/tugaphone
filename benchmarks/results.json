@@ -119,32 +119,22 @@
     "region": "pt-BR",
     "n": 1000,
     "failed": 0,
-    "per": 0.125,
-    "per_phoneme": 0.1215,
+    "per": 0.1068,
+    "per_phoneme": 0.1032,
     "per_accepted": null,
-    "word_accuracy": 0.42,
+    "word_accuracy": 0.457,
     "stress_acc": 0.9731,
     "n_stress": 893,
     "top_confusions": [
       {
-        "got": "i",
-        "expected": "ɪ",
-        "count": 74
-      },
-      {
         "got": "̃",
         "expected": "",
-        "count": 73
+        "count": 74
       },
       {
         "got": "a",
         "expected": "ɐ",
-        "count": 71
-      },
-      {
-        "got": "u",
-        "expected": "ʊ",
-        "count": 67
+        "count": 72
       },
       {
         "got": "ɾ",
@@ -157,14 +147,14 @@
         "count": 49
       },
       {
-        "got": "ɐ",
-        "expected": "a",
+        "got": "i",
+        "expected": "j",
         "count": 35
       },
       {
-        "got": "i",
-        "expected": "j",
-        "count": 32
+        "got": "ɐ",
+        "expected": "a",
+        "count": 35
       },
       {
         "got": "o",
@@ -225,6 +215,16 @@
         "got": "",
         "expected": "w",
         "count": 10
+      },
+      {
+        "got": "ʁ",
+        "expected": "χ",
+        "count": 10
+      },
+      {
+        "got": "",
+        "expected": "χ",
+        "count": 9
       }
     ],
     "harness_version": "3.0"
@@ -694,9 +694,9 @@
     "region": "pt-PT-x-lisboa",
     "n": 1000,
     "failed": 0,
-    "per": 0.0682,
-    "per_phoneme": 0.0554,
-    "per_accepted": 0.0539,
+    "per": 0.0683,
+    "per_phoneme": 0.0556,
+    "per_accepted": 0.054,
     "word_accuracy": 0.575,
     "stress_acc": 0.998,
     "n_stress": 994,
@@ -722,14 +722,14 @@
         "count": 52
       },
       {
-        "got": "ɨ",
-        "expected": "ɛ",
-        "count": 23
-      },
-      {
         "got": "u",
         "expected": "w",
         "count": 23
+      },
+      {
+        "got": "ɨ",
+        "expected": "ɛ",
+        "count": 22
       },
       {
         "got": "ɐ",

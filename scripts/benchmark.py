@@ -116,7 +116,31 @@ _NOTATION = (("ã", "ɐ̃"), ("tʃ", "t͡ʃ"), ("dʒ", "d͡ʒ"),
 #: (TigreGotico/portuguese-unified-pronunciation-lexicon@23898e1, ipa_narrow).
 _INFOPEDIA = (("ə", "ɨ"), ("r", "ɾ"))
 _OTHER: tuple = ()
-_REGION_NOTATION: Dict[str, tuple] = {"pt-PT": _INFOPEDIA, "pt-PT-x-lisbon": _INFOPEDIA}
+
+#: The pt-BR Wiktionary and Michaelis rows write the post-stress vowels with
+#: no contrast between [ɪ ʊ] and [i u]. In the pt-BR rows from Wiktionary only,
+#: single words with no written accent in the last three letters, final ⟨-e⟩
+#: (not after ⟨e i u⟩) is [i] 258 times and [ɪ] 44 times, and final ⟨-o⟩ is [u]
+#: 606 times and [ʊ] 139 times (⟨-o⟩ not after ⟨o i u⟩). Michaelis writes [ɪ ʊ] in 0 of 20,580 rows
+#: (portuguese-unified-pronunciation-lexicon@23898e1, ipa_narrow).
+_NO_LAX_HIGH = (("ɪ", "i"), ("ʊ", "u"))
+
+#: The folds of a gold row, by the source and the region of the row. A row
+#: that several sources attest is the same string in each source's notation,
+#: so it takes the folds of all its sources.
+_SOURCE_NOTATION: Dict[Tuple[str, str], tuple] = {
+    ("infopedia", "pt-PT"): _INFOPEDIA,
+    ("wiktionary", "pt-BR"): _NO_LAX_HIGH,
+    ("michaelis", "pt-BR"): _NO_LAX_HIGH,
+}
+
+
+def source_notation(sources: str, region: str) -> tuple:
+    """The folds of the sources in ``sources``, joined by ``+``."""
+    folds: list = []
+    for src in sources.split("+"):
+        folds += [pair for pair in _SOURCE_NOTATION.get((src, region), ()) if pair not in folds]
+    return tuple(folds)
 
 #: Phoneme PER also merges the phones of one rhotic phoneme: [χ ʀ] with [ʁ]
 #: (Pereira 2020, R-forte do português europeu) and the pt-BR coda [ɹ] with
@@ -394,9 +418,9 @@ def refresh_fixtures() -> None:
         ipa = (row.get("ipa_narrow") or "").strip()
         if not region or not word or not ipa:
             continue
-        variants = by_region.setdefault(region, {}).setdefault(word, [])
-        if ipa not in variants:
-            variants.append(ipa)
+        variants = by_region.setdefault(region, {}).setdefault(word, {})
+        known = variants.get(ipa, "none").split("+")
+        variants[ipa] = merge_sources(known + row_sources(row).split("+"))
 
     os.makedirs(FIXTURE_DIR, exist_ok=True)
     for dialect, region in sorted(DIALECT_TO_REGION.items()):
@@ -413,31 +437,60 @@ def refresh_fixtures() -> None:
                 f"# source sha256={digest}\n"
                 f"# sample: seed={SAMPLE_SEED} words={len(sample)}"
                 f" (cap {FIXTURE_WORDS})\n"
-                "# columns: word<TAB>ipa_narrow (one row per variant)\n"
+                "# columns: word<TAB>ipa_narrow<TAB>sources (one row per variant)\n"
             )
             for word, variants in sample:
-                for ipa in variants:
-                    fh.write(f"{word}\t{ipa}\n")
+                for ipa, sources in variants.items():
+                    fh.write(f"{word}\t{ipa}\t{sources}\n")
         print(f"wrote {path} ({len(sample)} words)", file=sys.stderr)
 
 
-def load_fixture(dialect: str) -> Dict[str, List[str]]:
-    """word → attested IPA variants, from the committed fixture."""
-    golds: Dict[str, List[str]] = {}
+_SOURCES = ("wiktionary", "infopedia", "michaelis")
+
+
+def merge_sources(names: List[str]) -> str:
+    """``names`` in a fixed order, joined by ``+``, or ``none``."""
+    return "+".join(name for name in _SOURCES if name in names) or "none"
+
+
+def row_sources(row: dict) -> str:
+    """The sources of a gold row, joined by ``+``, or ``none``."""
+    return merge_sources([name for name in _SOURCES if row.get(f"{name}_url")])
+
+
+def load_fixture_rows(dialect: str) -> Dict[str, List[Tuple[str, str]]]:
+    """word → (ipa, sources) for each attested variant, from the fixture."""
+    golds: Dict[str, List[Tuple[str, str]]] = {}
     with open(fixture_path(dialect), encoding="utf-8") as fh:
         for line in fh:
             if line.startswith("#") or not line.strip():
                 continue
-            word, ipa = line.rstrip("\n").split("\t")
-            golds.setdefault(word, []).append(ipa)
+            word, ipa, sources = line.rstrip("\n").split("\t")
+            golds.setdefault(word, []).append((ipa, sources))
     return golds
+
+
+def load_fixture(dialect: str) -> Dict[str, List[str]]:
+    """word → attested IPA variants, from the committed fixture."""
+    return {word: [ipa for ipa, _ in rows] for word, rows in load_fixture_rows(dialect).items()}
+
+
+def _score_rows(hyp: str, rows: List[Tuple[str, str]], region: str, extra: tuple = (),
+                word: Optional[str] = None) -> Tuple[int, int, tuple]:
+    """(edits, gold segments, folds) against the closest variant, each variant
+    under the folds of its own sources."""
+    by_folds: Dict[tuple, List[str]] = {}
+    for ipa, sources in rows:
+        by_folds.setdefault(source_notation(sources, region), []).append(ipa)
+    return min(score_word(hyp, golds, folds + extra, word) + (folds,)
+               for folds, golds in by_folds.items())
 
 
 # ─── scoring ────────────────────────────────────────────────────────────────
 
 def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
-    golds = load_fixture(dialect)
-    region = _REGION_NOTATION.get(dialect, _OTHER)
+    golds = load_fixture_rows(dialect)
+    region = DIALECT_TO_REGION[dialect]
     words = sorted(golds)
     if limit is not None:
         words = words[:limit]
@@ -451,24 +504,26 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         except Exception:
             failed += 1
             continue
-        hit = score_stress(word, hyp, golds[word])
+        rows = golds[word]
+        variants = [ipa for ipa, _ in rows]
+        hit = score_stress(word, hyp, variants)
         if hit is not None:
             n_stress += 1
             stress_hits += hit
-        d, n = score_word(hyp, golds[word], region)
+        d, n, folds = _score_rows(hyp, rows, region)
         err += d
         tot += n
-        d_ph, n_ph = score_word(hyp, golds[word], region + _PHONEME_MERGES)
+        d_ph, n_ph, _ = _score_rows(hyp, rows, region, _PHONEME_MERGES)
         err_ph += d_ph
         tot_ph += n_ph
         if european:
-            d_acc, n_acc = score_word(hyp, golds[word], region, word)
+            d_acc, n_acc, _ = _score_rows(hyp, rows, region, word=word)
             err_acc += d_acc
             tot_acc += n_acc
         if d == 0:
             exact += 1
         else:
-            _count_confusions(hyp, golds[word], confusion, region)
+            _count_confusions(hyp, variants, confusion, folds)
     top_confusions = sorted(confusion.items(),
                             key=lambda kv: kv[1], reverse=True)[:20]
     return {

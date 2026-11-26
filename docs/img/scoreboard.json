@@ -1,7 +1,7 @@
 [
  {
   "dialect": "pt-PT-x-lisbon",
-  "per": 0.0682,
+  "per": 0.0683,
   "stress_acc": 0.998
  },
  {
@@ -11,7 +11,7 @@
  },
  {
   "dialect": "pt-BR",
-  "per": 0.125,
+  "per": 0.1068,
   "stress_acc": 0.9731
  },
  {
