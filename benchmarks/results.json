@@ -2,6 +2,7 @@
   {
     "dialect": "pt-AO",
     "region": "pt-AO",
+    "reference_kind": "portal_lupo",
     "n": 1000,
     "failed": 0,
     "per": 0.2395,
@@ -117,6 +118,7 @@
   {
     "dialect": "pt-BR",
     "region": "pt-BR",
+    "reference_kind": "human",
     "n": 999,
     "failed": 0,
     "per": 0.1041,
@@ -232,6 +234,7 @@
   {
     "dialect": "pt-BR-x-rio-janeiro",
     "region": "pt-BR-x-riodejaneiro",
+    "reference_kind": "portal_lupo",
     "n": 1000,
     "failed": 0,
     "per": 0.1721,
@@ -347,6 +350,7 @@
   {
     "dialect": "pt-BR-x-sao-paulo",
     "region": "pt-BR-x-saopaulo",
+    "reference_kind": "portal_lupo",
     "n": 1000,
     "failed": 0,
     "per": 0.1535,
@@ -462,6 +466,7 @@
   {
     "dialect": "pt-MZ",
     "region": "pt-MZ-x-maputo",
+    "reference_kind": "portal_lupo",
     "n": 1000,
     "failed": 0,
     "per": 0.1377,
@@ -577,6 +582,7 @@
   {
     "dialect": "pt-PT",
     "region": "pt-PT",
+    "reference_kind": "human",
     "n": 1000,
     "failed": 0,
     "per": 0.0929,
@@ -692,6 +698,7 @@
   {
     "dialect": "pt-PT-x-lisbon",
     "region": "pt-PT-x-lisboa",
+    "reference_kind": "portal_lupo",
     "n": 1000,
     "failed": 0,
     "per": 0.0683,
@@ -807,6 +814,7 @@
   {
     "dialect": "pt-TL",
     "region": "pt-TL-x-dili",
+    "reference_kind": "portal_lupo",
     "n": 1000,
     "failed": 0,
     "per": 0.3644,

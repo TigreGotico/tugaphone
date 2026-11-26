@@ -11,7 +11,7 @@ see: README.md, AGENTS.md
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/scoreboard-dark.svg">
-  <img alt="Rules-only phoneme error rate and stress accuracy for each of eight Lusophone dialects. The Scoreboard page lists every value." src="img/scoreboard.svg">
+  <img alt="Rules-only phoneme error rate and stress accuracy of pt-PT and pt-BR against human gold. The Scoreboard page lists every value, and the agreement of six more dialects with Portal LUPo machine output." src="img/scoreboard.svg">
 </picture>
 
 The [Scoreboard](scoreboard.md) gives every value of this figure.

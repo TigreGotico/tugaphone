@@ -1,4 +1,4 @@
-"""Draw docs/img/scoreboard.svg: rules-only PER and stress accuracy of each dialect.
+"""Draw docs/img/scoreboard.svg: rules-only PER and stress accuracy of each dialect with human gold.
 
 Run from the repo root: python docs/img/plot_scoreboard.py
 """
@@ -12,7 +12,8 @@ from plot_style import save  # noqa: E402
 
 rows = [{"dialect": r["dialect"], "per": r["per"], "stress_acc": r["stress_acc"]}
         for r in sorted(json.loads((ROOT / "benchmarks" / "results.json").read_text(encoding="utf-8")),
-                        key=lambda r: r["per"])]
+                        key=lambda r: r["per"])
+        if r["reference_kind"] == "human"]
 
 
 def draw(fig, theme, rows):
