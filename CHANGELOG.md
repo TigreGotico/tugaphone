@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.1a2](https://github.com/TigreGotico/tugaphone/tree/3.4.1a2) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a1...3.4.1a2)
+
+**Merged pull requests:**
+
+- test: expect the pinguins failure only while orthography2ipa drops the glide [\#449](https://github.com/TigreGotico/tugaphone/pull/449) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.4.1a1](https://github.com/TigreGotico/tugaphone/tree/3.4.1a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.0a3...3.4.1a1)
@@ -375,10 +383,6 @@
 ## [1.11.7a2](https://github.com/TigreGotico/tugaphone/tree/1.11.7a2) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.7a1...1.11.7a2)
-
-**Merged pull requests:**
-
-- test: read the number gender through text2spoken 0.0.2a106 [\#326](https://github.com/TigreGotico/tugaphone/pull/326) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.7a1](https://github.com/TigreGotico/tugaphone/tree/1.11.7a1) (2026-11-24)
 
