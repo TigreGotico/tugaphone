@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.1a5](https://github.com/TigreGotico/tugaphone/tree/3.4.1a5) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a4...3.4.1a5)
+
+**Merged pull requests:**
+
+- test: apply the cited a/ɐ gold corrections to the pt-BR fixture [\#454](https://github.com/TigreGotico/tugaphone/pull/454) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.4.1a4](https://github.com/TigreGotico/tugaphone/tree/3.4.1a4) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a3...3.4.1a4)
@@ -375,10 +383,6 @@
 ## [1.11.9a1](https://github.com/TigreGotico/tugaphone/tree/1.11.9a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.8a1...1.11.9a1)
-
-**Merged pull requests:**
-
-- fix: read a bare dot number with "ponto"; amounts after a clock word keep "vírgula" [\#333](https://github.com/TigreGotico/tugaphone/pull/333) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.8a1](https://github.com/TigreGotico/tugaphone/tree/1.11.8a1) (2026-11-24)
 
