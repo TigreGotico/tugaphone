@@ -3,7 +3,7 @@
 # sample: seed=20260713 words=1000 (cap 1000)
 # columns: word<TAB>ipa_narrow<TAB>sources (one row per variant)
 # sources: portuguese-unified-pronunciation-lexicon@23898e1437dc77e84681bb7ce5580a9b3e2d04ba
-# corrections: orthography2ipa data/gold/corrections/portuguese_unified_pt.jsonl, every pt-BR row that matches (a_quality: Barbosa & Albano 2004, JIPA 34(2): 229–230; stress marks; one wrong headword dropped)
+# corrections: orthography2ipa data/gold/corrections/portuguese_unified_pt.jsonl, every pt-BR row that matches (a_quality: Barbosa & Albano 2004, JIPA 34(2): 229–230; stress marks; wrong headwords, non-IPA readings and one wrong segment dropped)
 -abilidade	abiliˈdad͡ʒi	wiktionary
 -arquia	aʁˈkiɐ	wiktionary
 ABC	aˌbeˈse	wiktionary
@@ -207,7 +207,6 @@ azar	ɐˈzaɾ	wiktionary
 azinhavre	azĩˈɲavɾi	wiktionary
 aônio	aˈõniu	wiktionary
 babado	baˈbadu	wiktionary+michaelis
-bacteriemia	{{AFIbakteɾieˈmiɐ}}	wiktionary
 baguete	baˈɡɛt͡ʃi	wiktionary
 balalão	balaˈlɐ̃w̃	wiktionary
 balangandã	balɐ̃ɡɐ̃ˈdɐ̃	wiktionary
@@ -259,7 +258,6 @@ boneco de palito	boˈnɛko̝dᴣe̝paˈlito̝	wiktionary
 bonopolino	bonopoˈlĩnu	wiktionary
 boquete	bo'kɛʧɪ	wiktionary
 borboletário	boʁboleˈtaɾiu	wiktionary
-borguinhão	boɹɡoˈɲejs	wiktionary
 bornal	boχˈnaw	wiktionary
 borralheiro	boʁaˈʎe(j)ɾu	wiktionary
 botar os pingos nos is	ˌbɔˈta(ɾ)usˈpĩɡuznuzˈis	wiktionary
@@ -349,7 +347,6 @@ coautor	ˌkɔawˈtoχ	wiktionary
 cobogós	koboˈɡɔ(j)s	wiktionary
 cobrar	koˈbɾaχ	wiktionary
 cobre	ˈkɔbɾi	wiktionary+michaelis
-coesposa	{{AFIkoesˈpozɑ}}	wiktionary
 coice	ˈkojsi	wiktionary+michaelis
 colaboração	kolaboɾaˈsɐ̃w̃	wiktionary
 colarinho	kolaˈɾiɲu	wiktionary+michaelis
@@ -461,10 +458,8 @@ em todo lado	ĩˈtoduˈladu	wiktionary
 embira	ẽˈbiɾɐ	wiktionary
 eminente	emɪˈnẽⁿʧɪ	wiktionary
 empireumático	ẽpiɾewˈmaʧiku	wiktionary
-empregatício	ẽȷ͂pɾeɡaˈtᶴisi̯o̝	wiktionary
 empresabilidade	ẽpɾezabiliˈdadʒi	wiktionary
 encosto	eŋˈkoʃtu	wiktionary
-endemoninhado	e~demonI"JadU	wiktionary
 enfaixando	ẽfajˈʃɐ̃du	wiktionary
 enferrujadíssimas	ẽfeʁuʒaˈd͡ʒisimɐs	wiktionary
 enferrujadíssimos	ẽfeʁuʒaˈd͡ʒisimus	wiktionary
@@ -982,7 +977,6 @@ vereadores	veɾɪɐˈdoɾɪs	wiktionary
 verossímil	veɾoˈsĩmiw	wiktionary
 vexilologia	veksiloloˈʒiɐ	wiktionary
 vez	ˈveɪs	wiktionary
-vida	ˈvita	wiktionary
 violoncelo	violõ'sɛlʊ	wiktionary
 vitalismo	vitaˈlizmu	wiktionary
 vogal de ligação	voˈɡawd͡ʒiliɡaˈsɐ̃w̃	wiktionary

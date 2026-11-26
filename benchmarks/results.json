@@ -119,14 +119,14 @@
     "dialect": "pt-BR",
     "region": "pt-BR",
     "reference_kind": "human",
-    "n": 999,
+    "n": 993,
     "failed": 0,
-    "per": 0.1041,
-    "per_phoneme": 0.1006,
-    "per_accepted": 0.0837,
-    "word_accuracy": 0.4655,
-    "stress_acc": 0.9767,
-    "n_stress": 900,
+    "per": 0.1007,
+    "per_phoneme": 0.0973,
+    "per_accepted": 0.0804,
+    "word_accuracy": 0.4683,
+    "stress_acc": 0.9765,
+    "n_stress": 895,
     "top_confusions": [
       {
         "got": "̃",
@@ -166,7 +166,7 @@
       {
         "got": "i",
         "expected": "",
-        "count": 26
+        "count": 25
       },
       {
         "got": "ɐ",
@@ -176,7 +176,7 @@
       {
         "got": "i",
         "expected": "e",
-        "count": 18
+        "count": 17
       },
       {
         "got": "ɾ",
@@ -206,7 +206,7 @@
       {
         "got": "ɾ",
         "expected": "ɹ",
-        "count": 12
+        "count": 11
       },
       {
         "got": "ɾ",
