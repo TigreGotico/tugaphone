@@ -1,12 +1,21 @@
 # Changelog
 
+## [3.0.1a2](https://github.com/TigreGotico/tugaphone/tree/3.0.1a2) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a1...3.0.1a2)
+
+**Merged pull requests:**
+
+- test: settle three pt-PT xfails by the orthography2ipa rulings [\#423](https://github.com/TigreGotico/tugaphone/pull/423) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- test: count a hiatus as two syllables in the stress helpers [\#422](https://github.com/TigreGotico/tugaphone/pull/422) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- chore: pin orthography2ipa\>=7.131.2a5 for the equi- glide [\#419](https://github.com/TigreGotico/tugaphone/pull/419) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.0.1a1](https://github.com/TigreGotico/tugaphone/tree/3.0.1a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.0a4...3.0.1a1)
 
 **Merged pull requests:**
 
-- chore: pin orthography2ipa\>=7.131.2a5 for the equi- glide [\#419](https://github.com/TigreGotico/tugaphone/pull/419) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 - fix\(benchmark\): score a nasal glide as the bare glide \(harness 2.1\) [\#417](https://github.com/TigreGotico/tugaphone/pull/417) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [3.0.0a4](https://github.com/TigreGotico/tugaphone/tree/3.0.0a4) (2026-11-26)
@@ -368,17 +377,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.2a4...1.11.3a1)
 
-**Merged pull requests:**
-
-- fix: pt-PT and Lisbon ⟨ex⟩ + consonant take the ⟨ei⟩ diphthong [\#306](https://github.com/TigreGotico/tugaphone/pull/306) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.11.2a4](https://github.com/TigreGotico/tugaphone/tree/1.11.2a4) (2026-11-21)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.2a3...1.11.2a4)
-
-**Merged pull requests:**
-
-- docs: a dot decimal reads only before a unit text2spoken knows [\#304](https://github.com/TigreGotico/tugaphone/pull/304) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.2a3](https://github.com/TigreGotico/tugaphone/tree/1.11.2a3) (2026-11-20)
 
