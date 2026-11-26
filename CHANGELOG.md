@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.1a3](https://github.com/TigreGotico/tugaphone/tree/3.4.1a3) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a2...3.4.1a3)
+
+**Merged pull requests:**
+
+- test: expect the atonic nh hiatus failures only while orthography2ipa reads a glide [\#450](https://github.com/TigreGotico/tugaphone/pull/450) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.4.1a2](https://github.com/TigreGotico/tugaphone/tree/3.4.1a2) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a1...3.4.1a2)
@@ -375,10 +383,6 @@
 ## [1.11.7a3](https://github.com/TigreGotico/tugaphone/tree/1.11.7a3) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.7a2...1.11.7a3)
-
-**Merged pull requests:**
-
-- refactor: inline forwarding helpers and cut narrating comments [\#328](https://github.com/TigreGotico/tugaphone/pull/328) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.7a2](https://github.com/TigreGotico/tugaphone/tree/1.11.7a2) (2026-11-24)
 
