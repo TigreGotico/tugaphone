@@ -266,3 +266,18 @@ class TestNasalGlide:
 
     def test_an_oral_glide_stays_apart_from_the_nasal_vowel(self):
         assert benchmark.normalize("ˈmaw") != benchmark.normalize("ˈmɐ̃w")
+
+
+class TestAcceptedGlide:
+    # Mateus & Andrade (1998, §1.3, §1.5): pas[i]ar / pas[j]ar.
+    def test_a_high_vowel_before_a_vowel_accepts_the_glide(self):
+        assert benchmark.score_word("ɐdiɐˈmẽtu", ["ɐdjɐˈmẽtu"], word="adiamento") == (0, 8)
+        assert benchmark.score_word("pɐsiˈaɾ", ["pɐsjˈaɾ"], word="passear") == (0, 6)
+
+    def test_a_reduced_vowel_before_a_vowel_stays_an_edit(self):
+        # The source names /i u/ only: [ɨ] against [j] is a vowel-quality error.
+        assert benchmark.score_word("ɐfɨˈavɛɫ", ["ɐˈfjavɛɫ"], word="afeável") == (1, 7)
+        assert benchmark.score_word("ɐmɐjʒuˈaɾ", ["ɐmɐjʒˈwaɾ"], word="ameijoar") == (0, 8)
+
+    def test_phone_per_keeps_the_glide_an_edit(self):
+        assert benchmark.score_word("ɐdiɐˈmẽtu", ["ɐdjɐˈmẽtu"]) == (1, 8)
