@@ -20,7 +20,7 @@ stress lands on the gold's syllable. PER cannot see that choice.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="img/scoreboard-dark.svg">
-  <img alt="Rules-only PER by dialect: pt-PT-x-lisbon 0.080, the lowest; pt-AO 0.247, the highest." src="img/scoreboard.svg">
+  <img alt="Rules-only PER by dialect: pt-PT-x-lisbon 0.056, the lowest; pt-TL 0.351, the highest." src="img/scoreboard.svg">
 </picture>
 
 `img/plot_scoreboard.py` makes this figure from
@@ -32,14 +32,14 @@ of a word-initial ⟨es⟩ + consonant in the European dialects
 
 | Dialect | Gold region | Words | PER | PER, initial es- accepted | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|---|
-| pt-AO | pt-AO | 1000 | 0.2472 | — | 0.0740 | 993 | 0.9950 |
-| pt-BR | pt-BR | 1000 | 0.1609 | — | 0.2590 | 893 | 0.9754 |
-| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1476 | — | 0.2150 | 992 | 1.0000 |
-| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1191 | — | 0.2940 | 992 | 0.9970 |
-| pt-MZ | pt-MZ-x-maputo | 1000 | 0.1881 | — | 0.1950 | 992 | 1.0000 |
-| pt-PT | pt-PT | 1000 | 0.1154 | 0.1142 | 0.4420 | 979 | 0.9867 |
-| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0800 | 0.0782 | 0.5300 | 994 | 0.9980 |
-| pt-TL | pt-TL-x-dili | 1000 | 0.2185 | — | 0.1370 | 985 | 1.0000 |
+| pt-AO | pt-AO | 1000 | 0.2395 | — | 0.1010 | 993 | 0.9970 |
+| pt-BR | pt-BR | 1000 | 0.1025 | — | 0.4760 | 893 | 0.9731 |
+| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1153 | — | 0.3100 | 992 | 1.0000 |
+| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.0748 | — | 0.4960 | 992 | 0.9980 |
+| pt-MZ | pt-MZ-x-maputo | 1000 | 0.1376 | — | 0.2960 | 992 | 1.0000 |
+| pt-PT | pt-PT | 1000 | 0.0826 | 0.0829 | 0.5620 | 979 | 0.9867 |
+| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0555 | 0.0557 | 0.6420 | 994 | 0.9980 |
+| pt-TL | pt-TL-x-dili | 1000 | 0.3512 | — | 0.0140 | 985 | 0.9970 |
 
 
 ---
