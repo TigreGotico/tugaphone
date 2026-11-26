@@ -223,7 +223,7 @@ for the variants it did not choose. Reported per dialect:
   | Coda /R/ | Each rhotic before a consonant or at the word end is [ɾ]. | Barbosa & Albano (2004: 228): /R/ "is extremely variable in BP". |
   | Glide before a vowel | [i u] before a vowel is [j w], as for European Portuguese. | Barbosa & Albano (2004: 230): "In casual and fast speech, adjacent heterosyllabic vowels usually turn into diphthongs". |
   | Epenthesis | No [i] between the two consonants of a written obstruent cluster: cacto [ˈkaktu] for [ˈkakitu], advogado [advoˈɡadu] for [ad͡ʒivoˈɡadu]. | Collischonn (2004, *SIGNUM* 7(1): 64): presence or absence of the vowel is the dependent variable; 69% before the stress and 24% after it (p. 67). |
-  | Glide before /S/ | No [j] after a written ⟨a e o⟩ of a final stressed syllable before ⟨s z⟩: escocês [eskoˈses] for [eskoˈsejs], três, arroz. | Leiria (*Organon* 28: 133): "a ditongação é uma regra variável", 41% of 1,725 contexts. The source has no unstressed data, so lápis stays outside the step. |
+  | Glide before /S/ | No [j] after a written ⟨a e o⟩ of a final stressed syllable before ⟨s z⟩: escocês [eskoˈses] for [eskoˈsejs], três, arroz. | Leiria (*Organon* 28: 133): the glide in 41% of 1,725 contexts; hypothesis 3 (p. 134): "a ditongação é uma regra variável". The source has no unstressed data, so lápis, Pérez and the clitics nos and dos stay outside the step. |
 
   The epenthesis step reads the spelling, so a written vowel (Guiné, bidê)
   stays. A written ⟨i⟩ or diphthong before the final ⟨s z⟩ (raiz, pais) is not

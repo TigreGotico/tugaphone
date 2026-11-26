@@ -121,7 +121,7 @@
     "failed": 0,
     "per": 0.1041,
     "per_phoneme": 0.1006,
-    "per_accepted": 0.0829,
+    "per_accepted": 0.0831,
     "word_accuracy": 0.4655,
     "stress_acc": 0.9767,
     "n_stress": 900,

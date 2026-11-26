@@ -176,10 +176,11 @@ _BACK_BEFORE_VOWEL = re.compile("u(?=[aɐeɛɨioɔ])")
 #:   pretonic, 24% postonic, p. 67), so an [i] between the two consonants of
 #:   a written obstruent cluster (cacto, obtuso, ignaro) is dropped. /n/ does
 #:   not trigger it (p. 66, n. 5).
-#: - "a ditongação é uma regra variável" for a final stressed syllable closed
-#:   by /S/ (Leiria, Organon 28: 133, 41% of 1,725 contexts), so the [j] of a
-#:   final stressed vowel + /S/ is dropped. The source has no unstressed data.
-_BR_CODA_R = re.compile("[ɾɹɻrʁχxhʀ](?![aɐeɛiɪoɔuʊ\u0303])")
+#: - The glide of a final stressed syllable closed by /S/ is variable: Leiria
+#:   (Organon 28: 133) finds it in 41% of 1,725 contexts, and gives "a
+#:   ditongação é uma regra variável" as hypothesis 3 (p. 134). So the [j] of
+#:   a final stressed vowel + /S/ is dropped. The source has no unstressed data.
+_BR_CODA_R = re.compile("[ɾɹɻrʁχxhʀ](?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
 _CLUSTER = re.compile("([pbtdcgfv])(?=[bcçdfgjkmnpqstvxz])")
 _FIRST = {"p": "p", "b": "b", "t": "t", "d": "d", "c": "k", "g": "ɡ", "f": "f", "v": "v"}
 _SECOND = {"b": "b", "c": "[ks]", "ç": "s", "d": "d", "f": "f", "g": "[ɡʒ]", "j": "ʒ", "k": "k",
@@ -197,10 +198,14 @@ def _drop_epenthesis(word: str, ipa: str) -> str:
 
 _BR_FINAL_GLIDE_S = re.compile("([aɐeɛoɔu]\u0303?)j([sʃz])$")
 #: A written ⟨a e o⟩ in a final stressed syllable before ⟨s z⟩: accented,
-#: before ⟨z⟩, or the one vowel of a monosyllable. A written ⟨i⟩ or a written
-#: diphthong there (raiz, pais) is not the inserted glide.
+#: before ⟨z⟩ in a word with no written accent elsewhere, or the one vowel of a
+#: monosyllable. A written ⟨i⟩ or a written diphthong there (raiz, pais), a
+#: paroxytone (Pérez) and an unstressed clitic (nos, dos) are outside the step.
 _BR_OXYTONE_S = re.compile(
     "(?<![aeiouáéíóúâêô])(?:[áéóâêô]s|[aeo]z|(?<=^[^aeiouáéíóúâêô])[aeo]s|(?<=^[^aeiouáéíóúâêô]{2})[aeo]s)$")
+
+_BR_CLITICS = frozenset({"as", "os", "das", "dos", "nas", "nos", "pelas", "pelos", "vos", "lhes", "mas"})
+_WRITTEN_ACCENT = re.compile("[áéíóúâêô]")
 
 
 def accept_variants(word: str, ipa: str, brazilian: bool = False) -> str:
@@ -210,7 +215,9 @@ def accept_variants(word: str, ipa: str, brazilian: bool = False) -> str:
     if brazilian:
         ipa = _BR_CODA_R.sub("ɾ", ipa)
         ipa = _drop_epenthesis(word, ipa)
-        if _BR_OXYTONE_S.search(word.lower()):
+        lower = word.lower()
+        if (_BR_OXYTONE_S.search(lower) and lower not in _BR_CLITICS
+                and not (lower.endswith("z") and _WRITTEN_ACCENT.search(lower[:-2]))):
             ipa = _BR_FINAL_GLIDE_S.sub(r"\1\2", ipa)
     elif _ES_WORD.match(word.lower()):
         ipa = _INITIAL_ES.sub(r"\1", ipa)

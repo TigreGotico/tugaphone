@@ -313,6 +313,16 @@ class TestBrazilianAccepted:
         assert self.score("ˈʁas", "ʁaˈjs", "raiz") == (1, 4)
         assert self.score("ˈlapis", "ˈlapijs", "lápis") == (1, 6)
 
+    def test_an_onset_rhotic_before_a_glide_or_schwa_stays_an_edit(self):
+        # Barbosa & Albano (2004: 228) cover coda /R/ only.
+        assert self.score("siˈɡaɾə", "siˈɡaʁə", "cigarra") == (1, 6)
+        assert self.score("deɾˈwi", "deʁˈwi", "derruir") == (1, 5)
+
+    def test_an_unstressed_final_s_keeps_its_glide_an_edit(self):
+        # Leiria (Organon 28: 133-134) studies stressed final syllables only.
+        assert self.score("ˈpɛɾes", "ˈpɛɾejs", "Pérez") == (1, 6)
+        assert self.score("nus", "nujs", "nos") == (1, 4)
+
     def test_strict_phone_per_keeps_each_process_an_edit(self):
         assert benchmark.score_word("ˈkakitu", ["ˈkaktu"], word="cacto") == (1, 5)
         assert benchmark.score_word("eskoˈses", ["eskoˈsejs"]) == (1, 8)
