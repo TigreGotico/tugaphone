@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.0a4](https://github.com/TigreGotico/tugaphone/tree/3.0.0a4) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.0a3...3.0.0a4)
+
+**Merged pull requests:**
+
+- test: strict xfails for the pt-PT decimal unit dispute \(text2spoken \#650\) [\#420](https://github.com/TigreGotico/tugaphone/pull/420) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.0.0a3](https://github.com/TigreGotico/tugaphone/tree/3.0.0a3) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.0a2...3.0.0a3)
