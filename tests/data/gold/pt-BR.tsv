@@ -3,6 +3,7 @@
 # sample: seed=20260713 words=1000 (cap 1000)
 # columns: word<TAB>ipa_narrow<TAB>sources (one row per variant)
 # sources: portuguese-unified-pronunciation-lexicon@23898e1437dc77e84681bb7ce5580a9b3e2d04ba
+# corrections: orthography2ipa data/gold/corrections/portuguese_unified_pt.jsonl, kind a_quality (Barbosa & Albano 2004, JIPA 34(2): 229), 15 rows
 -abilidade	abiliˈdad͡ʒi	wiktionary
 -arquia	aʁˈkiɐ	wiktionary
 ABC	aˌbeˈse	wiktionary
@@ -12,7 +13,7 @@ Acelinas	aseˈlĩnɐs	wiktionary
 Acelino	aseˈlĩnu	wiktionary
 Acelinos	aseˈlĩnus	wiktionary
 Adalberto	adawˈbɛʁtu	wiktionary
-Albânia	ɐwˈbãnjɐ	wiktionary
+Albânia	awˈbãnjɐ	wiktionary
 Amélio	aˈmɛliu	wiktionary
 Anastásio	anasˈtaziu	wiktionary
 Anastásios	anasˈtazius	wiktionary
@@ -74,7 +75,7 @@ Sudene	suˈdẽni	wiktionary
 Tchecoslováquia	ˌt͡ʃɛkozloˈvakiɐ	wiktionary
 Teodora	teoˈdɔɾɐ	wiktionary
 Teodoro	teoˈdɔɾu	wiktionary
-Terra	ˈtɛha	wiktionary
+Terra	ˈtɛhɐ	wiktionary
 Tio Hugo	t͡ʃiu̯'uɡu̯	wiktionary
 Togo	ˈtoɡʊ	wiktionary
 Uchoa	uˈʃoɐ	wiktionary
@@ -106,7 +107,7 @@ acre	ˈakɾɪ	wiktionary
 ad hoc	ˈadˈɔk	wiktionary
 adenopatia	adenopaˈt͡ʃiɐ	wiktionary
 adossado	adoˈsadu	wiktionary
-adotar	ɐdɔˈtaɾ	wiktionary
+adotar	adɔˈtaɾ	wiktionary
 aduana	aduˈɐ̃nɐ	wiktionary
 adutora	aduˈtoɾɐ	wiktionary
 advogado	aʤvo'ɡadu	wiktionary
@@ -161,11 +162,11 @@ análise sintática	aˈnalizisĩˈtat͡ʃikɐ	wiktionary
 anúncio	ɐˈnũsjʊ	wiktionary
 apa	ˈapɐ	wiktionary
 apache	aˈpaʃi	wiktionary
-apesar	ɐpeˈzaɾ	wiktionary
+apesar	apeˈzaɾ	wiktionary
 apiacá	apiaˈka	wiktionary
 apreciar	apɾesiˈaɾ	wiktionary+michaelis
 apócope	aˈpɔkopi	wiktionary
-aquemunéris	ɐkemʊˈnɛɾɪs	wiktionary
+aquemunéris	akemʊˈnɛɾɪs	wiktionary
 aquário	aˈkwaɾju	wiktionary+michaelis
 argutíssimo	aʁɡuˈt͡ʃisimu	wiktionary
 argônio	aɦˈɡõnɪu	wiktionary
@@ -182,7 +183,7 @@ asnada	azˈnadə	wiktionary
 asnáticas	aʒˈnat͡ʃikaʃ	wiktionary
 assamês	asaˈmejs	wiktionary
 assinatura de tempo	asinaˈtuɾa̝dᴣe̝ˈtẽpo̝	wiktionary
-assincronia	ɐsɪŋkɾoˈniɐ	wiktionary
+assincronia	asɪŋkɾoˈniɐ	wiktionary
 astrólogo	ɐsˈtɾɔloɡʊ	wiktionary
 audiovisual	awd͡ʒjoviˈzwaw	wiktionary
 aueté	awweˈtɛ	wiktionary
@@ -320,7 +321,7 @@ catupiry	katupiˈɾi	wiktionary
 cecília	seˈsiliɐ	wiktionary
 cefalão	sefaˈlɐ̃w̃	wiktionary
 cego	ˈsɛɡu	wiktionary+michaelis
-cela	ˈsɛla	wiktionary
+cela	ˈsɛlɐ	wiktionary
 cem	'sẽj̃	wiktionary
 cesta	ˈseʃtɐ	wiktionary
 ceutense	ˈsewˈtẽsi	wiktionary
@@ -396,7 +397,7 @@ cárter	ˈkaɹteɹ	wiktionary
 cãs	ˈkãs	wiktionary
 célula	ˈsɛlulə	wiktionary
 dactiloscopia	daʧiloʃkoˈpiɐ	wiktionary
-dalguma	dawˈɡuma	wiktionary
+dalguma	dawˈɡumɐ	wiktionary
 dalgumas	dawˈɡũmɐs	wiktionary
 dalhures	daˈʎuɾis	wiktionary
 dança das cadeiras	ˈdɐ̃sɐdaskaˈde(j)ɾɐs	wiktionary
@@ -516,7 +517,7 @@ facílima	faˈsilimɐ	wiktionary
 facílimos	faˈsilimus	wiktionary
 faialense	fɐjɐˈlẽsɪ	wiktionary
 fanqueiro	fɐ̃ˈkejɾu	wiktionary
-fantasma	fãˈtazma	wiktionary
+fantasma	fãˈtazmɐ	wiktionary
 farinha de mandioca	faˈɾĩɲɐd͡ʒimɐ̃d͡ʒiˈɔkɐ	wiktionary
 farmacológica	faɾmakoˈlɔʒikɐ	wiktionary
 farpa	ˈfaʁpɐ	wiktionary
@@ -538,7 +539,7 @@ fonética sincrônica	foˈnɛt͡ʃikɐsĩˈkɾõnikɐ	wiktionary
 fonômetro	foˈnometɾu	wiktionary
 forja	ˈfɔɹʒə	wiktionary
 formigueirinho-da-caatinga	foʁmiɡe(j)ˌɾĩɲudakaaˈt͡ʃĩɡɐ	wiktionary
-fortaleza	foɹtaˈleza	wiktionary
+fortaleza	foɹtaˈlezɐ	wiktionary
 fosse	ˈfosi	wiktionary
 fostes	ˈfosʧis	wiktionary
 frontal	fɾõˈtaw	wiktionary+michaelis
@@ -617,7 +618,7 @@ iluminadas	ilumiˈnadas	wiktionary
 imagináveis	imɐʒɪˈnavejs	wiktionary
 imbecil	ĩbeˈsiw	wiktionary+michaelis
 imbira	ĩˈbiɾɐ	wiktionary
-imensa	iˈmẽsa	wiktionary
+imensa	iˈmẽsɐ	wiktionary
 inadequado	inɐdeˈkwadʊ	wiktionary
 inadimplência	ɪnɐdĩplẽⁿsjɐ	wiktionary
 indenização	ĩjdenizasãw	wiktionary
@@ -726,7 +727,7 @@ moedor de carne	moeˈdoʁdiˈkaʁni	wiktionary
 moedor de pimenta	moeˈdoʁdipiˈmẽtɐ	wiktionary
 moléstia	moˈlɛst͡ʃiɐ	wiktionary
 morgue	ˈmɔχɡi	wiktionary
-morsa	ˈmɔɹsa	wiktionary
+morsa	ˈmɔɹsɐ	wiktionary
 mostravam	mosˈtɾavɐ̃	wiktionary
 mucumbabém	mukũbaˈbẽj	wiktionary
 mulher-objeto	muˌʎɛ(ɾ)obiˈʒɛtu	wiktionary
@@ -855,7 +856,7 @@ querer	kɪ'ɾeɾ	wiktionary
 quinze	ˈkĩzi	wiktionary+michaelis
 quisto	ˈkistu	wiktionary+michaelis
 qüinqüenal	kwĩjkweˈnaw	wiktionary
-racha	ˈχaʃa	wiktionary
+racha	ˈχaʃɐ	wiktionary
 racismo sistémico	ʁaˈsizmusisˈtẽmiku	wiktionary
 raiz	ˈʁajs	wiktionary
 ramela	χɐˈmɛlɐ	wiktionary
@@ -873,7 +874,7 @@ revelação	ʁevelaˈsɐ̃w̃	wiktionary
 revólver	xeˈvɔwveɾ	wiktionary
 rezar	ʁeˈzaʁ	wiktionary
 rigor	ʁiˈɡoɾ	wiktionary+michaelis
-rizicultura	χizikuwˈtuɾa	wiktionary
+rizicultura	χizikuwˈtuɾɐ	wiktionary
 roda	ˈʁɔdɐ	wiktionary+michaelis
 rola-bosta	ˈʁɔlɐˈbɔstɐ	wiktionary
 rosquinha	ʁosˈkĩɲɐ	wiktionary
@@ -962,7 +963,7 @@ tórax	ˈtɔɾa̝ks	wiktionary
 ubicação	ubikaˈsɐ̃w̃	wiktionary
 udmurte	udˈmuɾʧɪ	wiktionary
 ultimato	uwt͡ʃiˈmatu	wiktionary
-ultravioleta	ˌuwtɾavioˈleta	wiktionary
+ultravioleta	ˌuwtɾavioˈletɐ	wiktionary
 um	ũw	wiktionary
 univitelino	univiteˈlĩnu	wiktionary
 urdu	uɾˈdu	wiktionary
