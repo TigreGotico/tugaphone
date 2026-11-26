@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.1a4](https://github.com/TigreGotico/tugaphone/tree/3.4.1a4) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a3...3.4.1a4)
+
+**Merged pull requests:**
+
+- test: strict xfails fail only on their assertion [\#448](https://github.com/TigreGotico/tugaphone/pull/448) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.4.1a3](https://github.com/TigreGotico/tugaphone/tree/3.4.1a3) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a2...3.4.1a3)
@@ -375,10 +383,6 @@
 ## [1.11.8a1](https://github.com/TigreGotico/tugaphone/tree/1.11.8a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.7a3...1.11.8a1)
-
-**Merged pull requests:**
-
-- fix: require text2spoken 0.0.2a114 for dotted clock times and years [\#330](https://github.com/TigreGotico/tugaphone/pull/330) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.7a3](https://github.com/TigreGotico/tugaphone/tree/1.11.7a3) (2026-11-24)
 
