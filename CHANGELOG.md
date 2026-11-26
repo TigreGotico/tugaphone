@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.0a1](https://github.com/TigreGotico/tugaphone/tree/3.1.0a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a5...3.1.0a1)
+
+**Merged pull requests:**
+
+- feat\(bench\): harness 3.0, segment PER with cited folds only [\#424](https://github.com/TigreGotico/tugaphone/pull/424) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.0.1a5](https://github.com/TigreGotico/tugaphone/tree/3.0.1a5) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a4...3.0.1a5)
@@ -375,10 +383,6 @@
 ## [1.11.4a1](https://github.com/TigreGotico/tugaphone/tree/1.11.4a1) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.3a3...1.11.4a1)
-
-**Merged pull requests:**
-
-- fix\(pt-PT\): take up o2i-lexicons paraquedas readings; rescore the board [\#311](https://github.com/TigreGotico/tugaphone/pull/311) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.3a3](https://github.com/TigreGotico/tugaphone/tree/1.11.3a3) (2026-11-22)
 
