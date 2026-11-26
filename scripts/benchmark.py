@@ -118,9 +118,10 @@ _INFOPEDIA = (("ə", "ɨ"), ("r", "ɾ"))
 _OTHER: tuple = ()
 
 #: The pt-BR Wiktionary and Michaelis rows write the post-stress vowels with
-#: no contrast between [ɪ ʊ] and [i u]: in one position the Wiktionary rows give
-#: final unstressed ⟨-e⟩ as [i] 258 times and [ɪ] 44 times, and ⟨-o⟩ as [u] 606
-#: times and [ʊ] 139 times; Michaelis writes [ɪ ʊ] in 0 of 20,580 rows
+#: no contrast between [ɪ ʊ] and [i u]. In the pt-BR rows from Wiktionary only,
+#: single words with no written accent in the last three letters, final ⟨-e⟩
+#: (not after ⟨e i u⟩) is [i] 258 times and [ɪ] 44 times, and final ⟨-o⟩ is [u]
+#: 606 times and [ʊ] 139 times (⟨-o⟩ not after ⟨o i u⟩). Michaelis writes [ɪ ʊ] in 0 of 20,580 rows
 #: (portuguese-unified-pronunciation-lexicon@23898e1, ipa_narrow).
 _NO_LAX_HIGH = (("ɪ", "i"), ("ʊ", "u"))
 
@@ -418,7 +419,8 @@ def refresh_fixtures() -> None:
         if not region or not word or not ipa:
             continue
         variants = by_region.setdefault(region, {}).setdefault(word, {})
-        variants.setdefault(ipa, row_sources(row))
+        known = variants.get(ipa, "none").split("+")
+        variants[ipa] = merge_sources(known + row_sources(row).split("+"))
 
     os.makedirs(FIXTURE_DIR, exist_ok=True)
     for dialect, region in sorted(DIALECT_TO_REGION.items()):
@@ -443,10 +445,17 @@ def refresh_fixtures() -> None:
         print(f"wrote {path} ({len(sample)} words)", file=sys.stderr)
 
 
+_SOURCES = ("wiktionary", "infopedia", "michaelis")
+
+
+def merge_sources(names: List[str]) -> str:
+    """``names`` in a fixed order, joined by ``+``, or ``none``."""
+    return "+".join(name for name in _SOURCES if name in names) or "none"
+
+
 def row_sources(row: dict) -> str:
     """The sources of a gold row, joined by ``+``, or ``none``."""
-    found = [name for name in ("wiktionary", "infopedia", "michaelis") if row.get(f"{name}_url")]
-    return "+".join(found) or "none"
+    return merge_sources([name for name in _SOURCES if row.get(f"{name}_url")])
 
 
 def load_fixture_rows(dialect: str) -> Dict[str, List[Tuple[str, str]]]:

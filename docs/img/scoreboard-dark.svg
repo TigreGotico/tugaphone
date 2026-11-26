@@ -283,8 +283,8 @@ z
    </g>
    <g id="patch_5">
     <path d="M 82.83649 75.32771 
-L 153.453479 75.32771 
-L 153.453479 90.324906 
+L 152.155373 75.32771 
+L 152.155373 90.324906 
 L 82.83649 90.324906 
 z
 " clip-path="url(#pa067309604)" style="fill: #338ced"/>
@@ -346,7 +346,7 @@ L 366.654477 224.79976
     <text style="font-size: 8px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #efefef" x="145.729746" y="59.909107" transform="rotate(-0 145.729746 59.909107)">0.093</text>
    </g>
    <g id="text_20">
-    <text style="font-size: 8px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #efefef" x="156.049692" y="84.904433" transform="rotate(-0 156.049692 84.904433)">0.109</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #efefef" x="154.751585" y="84.904433" transform="rotate(-0 154.751585 84.904433)">0.107</text>
    </g>
    <g id="text_21">
     <text style="font-size: 8px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #efefef" x="174.807329" y="109.899759" transform="rotate(-0 174.807329 109.899759)">0.138</text>

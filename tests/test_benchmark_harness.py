@@ -306,9 +306,16 @@ class TestSourceNotation:
         assert benchmark.source_notation("wiktionary+infopedia", "pt-PT") == benchmark._INFOPEDIA
 
     def test_a_wiktionary_lax_vowel_scores_as_the_tense_vowel(self):
-        rows = [("ˈtoɡʊ", "wiktionary")]
-        assert benchmark._score_rows("ˈtoɡu", rows, "pt-BR")[:2] == (0, 4)
-        assert benchmark._score_rows("ˈtoɡu", [("ˈtoɡʊ", "none")], "pt-BR")[:2] == (1, 4)
+        assert benchmark._score_rows("ˈpatu", [("ˈpatʊ", "wiktionary")], "pt-BR")[:2] == (0, 4)
+        assert benchmark._score_rows("ˈpatu", [("ˈpatʊ", "none")], "pt-BR")[:2] == (1, 4)
+
+    def test_sources_merge_in_a_fixed_order(self):
+        assert benchmark.merge_sources(["michaelis", "none", "wiktionary"]) == "wiktionary+michaelis"
+        assert benchmark.merge_sources(["none"]) == "none"
+
+    def test_the_pt_br_fixture_rows_all_have_a_source(self):
+        rows = [r for v in benchmark.load_fixture_rows("pt-BR").values() for r in v]
+        assert {sources for _, sources in rows} == {"wiktionary", "wiktionary+michaelis"}
 
     @pytest.mark.parametrize("dialect", sorted(benchmark.DIALECT_TO_REGION))
     def test_every_fixture_row_names_its_sources(self, dialect):

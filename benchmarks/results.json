@@ -119,10 +119,10 @@
     "region": "pt-BR",
     "n": 1000,
     "failed": 0,
-    "per": 0.1088,
-    "per_phoneme": 0.1053,
+    "per": 0.1068,
+    "per_phoneme": 0.1032,
     "per_accepted": null,
-    "word_accuracy": 0.453,
+    "word_accuracy": 0.457,
     "stress_acc": 0.9731,
     "n_stress": 893,
     "top_confusions": [
@@ -134,7 +134,7 @@
       {
         "got": "a",
         "expected": "ɐ",
-        "count": 71
+        "count": 72
       },
       {
         "got": "ɾ",
@@ -222,8 +222,8 @@
         "count": 10
       },
       {
-        "got": "i",
-        "expected": "ɪ",
+        "got": "",
+        "expected": "χ",
         "count": 9
       }
     ],
