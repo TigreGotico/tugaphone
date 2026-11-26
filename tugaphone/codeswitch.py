@@ -279,9 +279,28 @@ def _contact_engine(contact: str) -> G2P:
     return G2P(with_default_region(contact))
 
 
-def transcribe_contact(word: str, contact: str) -> str:
-    """Transcribe a contact *word* and nativize it onto the Portuguese inventory."""
+#: Assis (2007), Adaptações fonológicas de estrangeirismos do inglês no PB,
+#: MA dissertation, UNESP: Brazilian speakers read an English word-initial /r/
+#: as the native strong r ("optam por [h]", p. 80, ranking and rock), and the
+#: final /θ/ of bluetooth as /f/ ("normalmente o substituem por /f/", p. 79).
+#: The source has Brazilian data only.
+_ENGLISH_ONSET_R = re.compile(r"^(ˈ?)ɹ")
+_ENGLISH_FINAL_THETA = re.compile(r"θ$")
+
+
+@functools.lru_cache(maxsize=None)
+def _strong_r(lect: str) -> str:
+    """The lect's strong r: the onset of its reading of «rato»."""
+    return G2P(lect).transcribe("rato").lstrip("ˈ")[0]
+
+
+def transcribe_contact(word: str, contact: str, lect: str = "pt-PT") -> str:
+    """Transcribe a contact *word* and nativize it onto the Portuguese inventory
+    of *lect*."""
     ipa = _contact_engine(contact).transcribe(word)
+    if contact == "en" and lect.startswith("pt-BR"):
+        ipa = _ENGLISH_ONSET_R.sub(r"\g<1>" + _strong_r(lect), ipa)
+        ipa = _ENGLISH_FINAL_THETA.sub("f", ipa)
     return _nativize(ipa, english=(contact == "en"))
 
 
