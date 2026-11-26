@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.18a5](https://github.com/TigreGotico/tugaphone/tree/1.11.18a5) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a4...1.11.18a5)
+
+**Merged pull requests:**
+
+- test: strict xfails for the dropped \[w\] of pronounced qu/gu \(\#382\) [\#383](https://github.com/TigreGotico/tugaphone/pull/383) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.11.18a4](https://github.com/TigreGotico/tugaphone/tree/1.11.18a4) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a3...1.11.18a4)
@@ -352,11 +360,6 @@
 ## [1.10.11a1](https://github.com/TigreGotico/tugaphone/tree/1.10.11a1) (2026-11-19)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.10.10a1...1.10.11a1)
-
-**Merged pull requests:**
-
-- test\(pt-PT\): pin the open vowel before a dropped c or p [\#284](https://github.com/TigreGotico/tugaphone/pull/284) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- docs: say that normalize\_spelling rewrites ideia, not that it reads it [\#283](https://github.com/TigreGotico/tugaphone/pull/283) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.10.10a1](https://github.com/TigreGotico/tugaphone/tree/1.10.10a1) (2026-11-19)
 
