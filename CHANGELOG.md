@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.2.0a1](https://github.com/TigreGotico/tugaphone/tree/3.2.0a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.1.0a1...3.2.0a1)
+
+**Merged pull requests:**
+
+- feat\(bench\): accept the casual glide before a vowel in per\_accepted [\#433](https://github.com/TigreGotico/tugaphone/pull/433) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.1.0a1](https://github.com/TigreGotico/tugaphone/tree/3.1.0a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.1a5...3.1.0a1)
@@ -375,10 +383,6 @@
 ## [1.11.5a1](https://github.com/TigreGotico/tugaphone/tree/1.11.5a1) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.4a1...1.11.5a1)
-
-**Merged pull requests:**
-
-- fix: raise orthography2ipa floor to 7.124.36a2 [\#313](https://github.com/TigreGotico/tugaphone/pull/313) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.4a1](https://github.com/TigreGotico/tugaphone/tree/1.11.4a1) (2026-11-22)
 
