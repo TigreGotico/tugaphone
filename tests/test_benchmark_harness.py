@@ -58,7 +58,7 @@ class TestScoring:
         # calls ⟨r⟩ the tap or pt-BR ⟨ə⟩ the vowel [ɐ].
         other = benchmark._OTHER
         assert benchmark.normalize("ˈsakʊ", other) != benchmark.normalize("ˈsaku", other)
-        assert benchmark.normalize("ˈpiɾɐ") != benchmark.normalize("ˈpirɐ")
+        assert benchmark.normalize("ˈpiɾɐ", other) != benchmark.normalize("ˈpirɐ", other)
         assert benchmark.normalize("akə̃ˈpa", other) != benchmark.normalize("akɐ̃ˈpa", other)
 
     def test_phoneme_per_merges_the_rhotic_phones(self):
@@ -281,3 +281,15 @@ class TestAcceptedGlide:
 
     def test_phone_per_keeps_the_glide_an_edit(self):
         assert benchmark.score_word("ɐdiɐˈmẽtu", ["ɐdjɐˈmẽtu"]) == (1, 8)
+
+
+class TestInfopediaTap:
+    # Infopédia contrasts caro ˈkaru with carro ˈkaʀu: its ⟨r⟩ is the tap.
+    def test_the_infopedia_r_is_the_tap(self):
+        assert benchmark.score_word("ˈkaɾu", ["ˈkaru"]) == (0, 4)
+
+    def test_the_strong_r_stays_apart_in_phone_per(self):
+        assert benchmark.score_word("ˈkaʁu", ["ˈkaʀu"]) == (1, 4)
+
+    def test_other_regions_keep_r_as_the_trill(self):
+        assert benchmark.score_word("ɐɾɛmɐˈtaɾ", ["ɐrɛmɐˈtaɾ"], benchmark._OTHER) == (1, 8)

@@ -168,6 +168,7 @@ calls the same phone. Phone PER uses only these folds:
 | written | scored as | source |
 |---|---|---|
 | ⟨ə⟩ | ⟨ɨ⟩ in pt-PT and pt-PT-x-lisbon | Cruz-Ferreira (1999), *Handbook of the IPA* p. 127: the vowel "is often represented as /ə/" |
+| ⟨r⟩ | ⟨ɾ⟩ in pt-PT and pt-PT-x-lisbon | Infopédia's own readings: caro ˈkaru against carro ˈkaʀu, and ⟨r⟩ in a tap position in 28,162 of 28,183 words (`portuguese-unified-pronunciation-lexicon@23898e1`, `ipa_narrow`) |
 | ⟨ã⟩ | ⟨ɐ̃⟩ | Cruz-Ferreira (1999: 127) and Barbosa & Albano (2004), JIPA 34(2) p. 229 write the low nasal vowel ⟨ɐ̃⟩ |
 | ⟨tʃ dʒ⟩ | ⟨t͡ʃ d͡ʒ⟩ | the same affricate without its tie bar |
 | ⟨ⁿ ( ) '⟩ | removed | markup for optional segments and ASCII stress |
@@ -179,7 +180,9 @@ Phoneme PER adds the merge of the phones of one rhotic phoneme:
 | ⟨χ ʀ⟩ | ⟨ʁ⟩ | Pereira (2020), *R-forte do português europeu*: the trill [ʀ] and the uvular and velar fricatives are variants of one /ʀ/ |
 | ⟨ɹ⟩ | ⟨ɾ⟩ | Barbosa & Albano (2004: 228): the pt-BR /R/ "is extremely variable" |
 
-No fold maps [ʊ ɪ] to [u i], ⟨r⟩ to the tap, pt-BR ⟨ə⟩ to [ɐ] or [w̃ j̃] to [w j].
+No fold maps [ʊ ɪ] to [u i], pt-BR ⟨ə⟩ to [ɐ] or [w̃ j̃] to [w j]. The pt-AO, pt-MZ
+and pt-TL gold writes the trill as ⟨r⟩ beside the tap ⟨ɾ⟩, so ⟨r⟩ folds only in the
+Infopédia regions.
 Barbosa & Albano (2004: 229) plot [ʊ ɪ] apart from [u i], and no source found
 calls the other pairs one phone. Each word scores against its **closest**
 attested variant, so a word with several valid pronunciations is not penalised

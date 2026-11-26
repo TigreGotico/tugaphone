@@ -1,8 +1,13 @@
 [
  {
   "dialect": "pt-PT-x-lisbon",
-  "per": 0.0683,
+  "per": 0.0682,
   "stress_acc": 0.998
+ },
+ {
+  "dialect": "pt-PT",
+  "per": 0.0929,
+  "stress_acc": 0.9867
  },
  {
   "dialect": "pt-BR",
@@ -18,11 +23,6 @@
   "dialect": "pt-BR-x-sao-paulo",
   "per": 0.1535,
   "stress_acc": 0.998
- },
- {
-  "dialect": "pt-PT",
-  "per": 0.1658,
-  "stress_acc": 0.9867
  },
  {
   "dialect": "pt-BR-x-rio-janeiro",
