@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.0a2](https://github.com/TigreGotico/tugaphone/tree/3.4.0a2) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.0a1...3.4.0a2)
+
+**Merged pull requests:**
+
+- docs\(bench\): name the exact accent letters of the usage count [\#440](https://github.com/TigreGotico/tugaphone/pull/440) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.4.0a1](https://github.com/TigreGotico/tugaphone/tree/3.4.0a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.3.0a1...3.4.0a1)
@@ -375,10 +383,6 @@
 ## [1.11.6a1](https://github.com/TigreGotico/tugaphone/tree/1.11.6a1) (2026-11-22)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.5a3...1.11.6a1)
-
-**Merged pull requests:**
-
-- fix\(numbers\): a whole hour already followed by hora or horas reads the noun once [\#319](https://github.com/TigreGotico/tugaphone/pull/319) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.5a3](https://github.com/TigreGotico/tugaphone/tree/1.11.5a3) (2026-11-22)
 
