@@ -226,3 +226,22 @@ class TestRegressionRule:
     ])
     def test_epsilon_rule(self, old, new, worse, expected):
         assert regression(old, new, worse, 0.005) is expected
+
+
+class TestInitialEs:
+    """Vázquez Diéguez (2015: 250) gives "est- [(i)ʃt]" for European Portuguese."""
+
+    @pytest.mark.parametrize("hyp", ["iʃˈtaɾ", "ɨʃˈtaɾ", "ʃˈtaɾ"])
+    def test_each_reading_of_estar_scores_zero(self, hyp):
+        assert benchmark.score_word(hyp, ["iʃˈtaɾ"], word="estar") == (0, 4)
+
+    def test_without_the_word_the_vowel_counts(self):
+        assert benchmark.score_word("ʃˈtaɾ", ["iʃˈtaɾ"]) == (1, 5)
+
+    @pytest.mark.parametrize("word,hyp,gold", [
+        ("este", "ˈiʃtɨ", "ˈeʃtɨ"),          # stressed ⟨e⟩
+        ("essência", "iˈsẽsjɐ", "eˈsẽsjɐ"),  # double ⟨ss⟩
+        ("chave", "iˈʃavɨ", "ˈʃavɨ"),        # no ⟨es⟩
+    ])
+    def test_other_words_keep_the_vowel(self, word, hyp, gold):
+        assert benchmark.score_word(hyp, [gold], word=word)[0] == 1

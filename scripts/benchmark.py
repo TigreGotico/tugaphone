@@ -37,6 +37,7 @@ import hashlib
 import json
 import os
 import random
+import re
 import sys
 import unicodedata
 import urllib.request
@@ -75,7 +76,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "1.1"
+HARNESS_VERSION = "1.2"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -103,6 +104,20 @@ _NOTATION = (("ʧ", "tʃ"), ("ʤ", "dʒ"), ("ɐ̃", "ã"), ("χ", "ʁ"),
 _INFOPEDIA = (("ə", "ɨ"), ("r", "ɾ"), ("ʀ", "ʁ"))
 _OTHER = (("ə", "ɐ"),)
 _REGION_NOTATION: Dict[str, tuple] = {"pt-PT": _INFOPEDIA, "pt-PT-x-lisbon": _INFOPEDIA}
+
+
+#: European Portuguese drops or reduces the unstressed vowel of a word-initial
+#: ⟨es⟩ + consonant, so [iʃ], [ɨʃ] and [ʃ] are one accepted reading. Vázquez
+#: Diéguez (2015, Anuario de Estudios Filológicos 38) gives "esc- [(i)ʃk]" and
+#: "est- [(i)ʃt]" on p. 250 and "Na sequência <es- + consoante> pode
+#: desaparecer" on p. 265; Teyssier (1989: 28) writes estar [(i)ʃ'tar].
+_INITIAL_ES = re.compile(r"^[iɨ]?([ʃʒ])")
+_ES_WORD = re.compile(r"^es[^aeiouáéíóúâêôãõàs]")
+
+
+def accept_initial_es(word: str, ipa: str) -> str:
+    """The normalized ``ipa`` with a word-initial ⟨es⟩ vowel removed."""
+    return _INITIAL_ES.sub(r"\1", ipa) if _ES_WORD.match(word.lower()) else ipa
 
 
 def normalize(ipa: str, region: tuple = _INFOPEDIA) -> str:
@@ -135,7 +150,8 @@ def _levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
-def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA) -> Tuple[int, int]:
+def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA,
+               word: Optional[str] = None) -> Tuple[int, int]:
     """(edit distance, reference length) against the CLOSEST gold variant.
 
     A word with several attested pronunciations is correct if it matches
@@ -144,9 +160,13 @@ def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA) -> Tuple[
     not choose.
     """
     h = normalize(hyp, region)
+    if word is not None:
+        h = accept_initial_es(word, h)
     best: Optional[Tuple[int, int]] = None
     for gold in golds:
         r = normalize(gold, region)
+        if word is not None:
+            r = accept_initial_es(word, r)
         d = _levenshtein(h, r)
         if best is None or d / max(len(r), 1) < best[0] / max(best[1], 1):
             best = (d, len(r))
@@ -396,7 +416,9 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
     words = sorted(golds)
     if limit is not None:
         words = words[:limit]
+    european = dialect.startswith("pt-PT")
     err = tot = exact = failed = n_stress = stress_hits = 0
+    err_acc = tot_acc = 0
     confusion: Dict[Tuple[str, str], int] = {}
     for word in words:
         try:
@@ -411,6 +433,10 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         d, n = score_word(hyp, golds[word], region)
         err += d
         tot += n
+        if european:
+            d_acc, n_acc = score_word(hyp, golds[word], region, word)
+            err_acc += d_acc
+            tot_acc += n_acc
         if d == 0:
             exact += 1
         else:
@@ -423,6 +449,7 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         "n": len(words),
         "failed": failed,
         "per": round(err / tot, 4) if tot else None,
+        "per_accepted": round(err_acc / tot_acc, 4) if tot_acc else None,
         "word_accuracy": round(exact / len(words), 4) if words else None,
         "stress_acc": stress_accuracy(stress_hits, n_stress),
         "n_stress": n_stress,
@@ -506,16 +533,22 @@ def write_reports(rows: List[dict]) -> None:
         "`img/plot_scoreboard.py` makes this figure from",
         "`benchmarks/results.json`.",
         "",
-        "| Dialect | Gold region | Words | PER | Word accuracy "
-        "| Stress words | Stress accuracy |",
-        "|---|---|---|---|---|---|---|",
+        "PER with initial es- accepted counts [iʃ], [ɨʃ] and [ʃ] as one reading",
+        "of a word-initial ⟨es⟩ + consonant in the European dialects",
+        "(Vázquez Diéguez 2015: 250, 265; Teyssier 1989: 28).",
+        "",
+        "| Dialect | Gold region | Words | PER | PER, initial es- accepted "
+        "| Word accuracy | Stress words | Stress accuracy |",
+        "|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
         stress = ("—" if r.get("stress_acc") is None
                   else f"{r['stress_acc']:.4f}")
+        accepted = ("—" if r.get("per_accepted") is None
+                    else f"{r['per_accepted']:.4f}")
         lines.append(
             f"| {r['dialect']} | {r['region']} | {r['n']} "
-            f"| {r['per']:.4f} | {r['word_accuracy']:.4f} "
+            f"| {r['per']:.4f} | {accepted} | {r['word_accuracy']:.4f} "
             f"| {r.get('n_stress', 0)} | {stress} |")
     lines += [
         "",
