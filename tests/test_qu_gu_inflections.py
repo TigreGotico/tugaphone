@@ -29,7 +29,7 @@ def onset(word):
 @pytest.mark.parametrize("word,glide", [
     ("linguiças", "ɡw"),
     pytest.param("pinguins", "ɡw", marks=pytest.mark.xfail(strict=True, reason=(
-        "the plural pinguins loses the [w] of pinguim: the u reads as silent"))),
+        "orthography2ipa #2665: the plural pinguins loses the [w] of pinguim"))),
     ("tranquila", "kw"),
     ("tranquilos", "kw"), ("linguistas", "ɡw"), ("aguentou", "ɡw"),
     ("aguentamos", "ɡw"), ("frequentes", "kw"), ("frequentou", "kw"),

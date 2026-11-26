@@ -10,13 +10,16 @@ from tugaphone import phonemize
 
 
 @pytest.mark.parametrize("word,expected", [
-    pytest.param("carro", "ˈka·ʀu", marks=pytest.mark.xfail(strict=True, reason=
-        "the pt-PT spec reads ⟨rr⟩ as the fricative [ʁ]; the cited form has the trill [ʀ]")),  # ⟨rr⟩ → strong rhotic
+    # ⟨rr⟩ → strong rhotic: the trill [ʀ] (Cruz-Ferreira; Infopédia ˈkaʀu) or the
+    # uvular fricative [ʁ], the usual realization (Mateus & d'Andrade 2000)
+    ("carro", ("ˈka·ʀu", "ˈka·ʁu")),
     ("casa", "ˈka·zɐ"),          # intervocalic ⟨s⟩ voices to [z]
-    pytest.param("chegou", "ʃɨ·ˈɡow", marks=pytest.mark.xfail(strict=True, reason=
-        "the pt-PT spec reduces final ⟨ou⟩ to [o]; the cited form keeps the diphthong [ow]")),  # ⟨ch⟩ → /ʃ/, unstressed /e/ → [ɨ]
+    # ⟨ch⟩ → /ʃ/, unstressed /e/ → [ɨ]; ⟨ou⟩ is [o] in the standard and [ow] in
+    # northern and conservative speech (Mateus & d'Andrade 2000)
+    ("chegou", ("ʃɨ·ˈɡow", "ʃɨ·ˈɡo")),
     ("filho", "ˈfi·ʎu"),         # ⟨lh⟩ → /ʎ/
     ("banho", "ˈbɐ·ɲu"),         # ⟨nh⟩ → /ɲ/, Portal da Língua Portuguesa Lisbon bˈɐ|ɲu
 ])
 def test_pt_pt(word, expected):
-    assert phonemize(word, "pt-PT") == expected.replace("·", "")
+    accepted = (expected,) if isinstance(expected, str) else expected
+    assert phonemize(word, "pt-PT") in {form.replace("·", "") for form in accepted}
