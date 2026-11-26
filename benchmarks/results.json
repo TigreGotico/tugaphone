@@ -5,6 +5,7 @@
     "n": 1000,
     "failed": 0,
     "per": 0.2472,
+    "per_accepted": null,
     "word_accuracy": 0.074,
     "stress_acc": 0.995,
     "n_stress": 993,
@@ -110,7 +111,7 @@
         "count": 12
       }
     ],
-    "harness_version": "1.1"
+    "harness_version": "1.2"
   },
   {
     "dialect": "pt-BR",
@@ -118,6 +119,7 @@
     "n": 1000,
     "failed": 0,
     "per": 0.1609,
+    "per_accepted": null,
     "word_accuracy": 0.259,
     "stress_acc": 0.9754,
     "n_stress": 893,
@@ -223,7 +225,7 @@
         "count": 9
       }
     ],
-    "harness_version": "1.1"
+    "harness_version": "1.2"
   },
   {
     "dialect": "pt-BR-x-rio-janeiro",
@@ -231,6 +233,7 @@
     "n": 1000,
     "failed": 0,
     "per": 0.1476,
+    "per_accepted": null,
     "word_accuracy": 0.215,
     "stress_acc": 1.0,
     "n_stress": 992,
@@ -336,7 +339,7 @@
         "count": 11
       }
     ],
-    "harness_version": "1.1"
+    "harness_version": "1.2"
   },
   {
     "dialect": "pt-BR-x-sao-paulo",
@@ -344,6 +347,7 @@
     "n": 1000,
     "failed": 0,
     "per": 0.1191,
+    "per_accepted": null,
     "word_accuracy": 0.294,
     "stress_acc": 0.997,
     "n_stress": 992,
@@ -449,7 +453,7 @@
         "count": 8
       }
     ],
-    "harness_version": "1.1"
+    "harness_version": "1.2"
   },
   {
     "dialect": "pt-MZ",
@@ -457,6 +461,7 @@
     "n": 1000,
     "failed": 0,
     "per": 0.1881,
+    "per_accepted": null,
     "word_accuracy": 0.195,
     "stress_acc": 1.0,
     "n_stress": 992,
@@ -562,7 +567,7 @@
         "count": 12
       }
     ],
-    "harness_version": "1.1"
+    "harness_version": "1.2"
   },
   {
     "dialect": "pt-PT",
@@ -570,6 +575,7 @@
     "n": 1000,
     "failed": 0,
     "per": 0.1154,
+    "per_accepted": 0.1142,
     "word_accuracy": 0.442,
     "stress_acc": 0.9867,
     "n_stress": 979,
@@ -675,7 +681,7 @@
         "count": 7
       }
     ],
-    "harness_version": "1.1"
+    "harness_version": "1.2"
   },
   {
     "dialect": "pt-PT-x-lisbon",
@@ -683,6 +689,7 @@
     "n": 1000,
     "failed": 0,
     "per": 0.08,
+    "per_accepted": 0.0782,
     "word_accuracy": 0.53,
     "stress_acc": 0.998,
     "n_stress": 994,
@@ -788,7 +795,7 @@
         "count": 7
       }
     ],
-    "harness_version": "1.1"
+    "harness_version": "1.2"
   },
   {
     "dialect": "pt-TL",
@@ -796,6 +803,7 @@
     "n": 1000,
     "failed": 0,
     "per": 0.2185,
+    "per_accepted": null,
     "word_accuracy": 0.137,
     "stress_acc": 1.0,
     "n_stress": 985,
@@ -901,6 +909,6 @@
         "count": 18
       }
     ],
-    "harness_version": "1.1"
+    "harness_version": "1.2"
   }
 ]

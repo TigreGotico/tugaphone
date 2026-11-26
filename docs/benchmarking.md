@@ -177,6 +177,14 @@ variant of the word (a word with several valid pronunciations is not
 penalised for the variants it did not choose). Reported per dialect:
 
 - **PER**: summed edit distance divided by summed reference length.
+- **PER, initial es- accepted** (`per_accepted`, European dialects only): the
+  same PER, with [iʃ], [ɨʃ] and [ʃ] scored as one reading of a word-initial
+  ⟨es⟩ + consonant on both sides. This is a variant of the sound, not of the
+  notation, so the plain PER keeps it as an error. Vázquez Diéguez (2015,
+  *Anuario de Estudios Filológicos* 38) gives "esc- [(i)ʃk]" and "est- [(i)ʃt]"
+  on p. 250 and "Na sequência <es- + consoante> pode desaparecer" on p. 265.
+  Teyssier (1989: 28), quoted in Vázquez Diéguez (2015: 244), writes estar [(i)ʃ'tar]. A stressed ⟨e⟩ (este), a
+  double ⟨ss⟩ (essência) and initial ⟨ex⟩ stay outside the step.
 - **word accuracy**: exact matches after normalization.
 - **stress accuracy** (`stress_acc`, with its word count `n_stress`): the share
   of stress-eligible gold words whose primary stress lands on the gold's
