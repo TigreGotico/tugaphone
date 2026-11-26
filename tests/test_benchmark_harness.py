@@ -274,13 +274,40 @@ class TestAcceptedGlide:
         assert benchmark.score_word("ɐdiɐˈmẽtu", ["ɐdjɐˈmẽtu"], word="adiamento") == (0, 8)
         assert benchmark.score_word("pɐsiˈaɾ", ["pɐsjˈaɾ"], word="passear") == (0, 6)
 
-    def test_a_reduced_vowel_before_a_vowel_stays_an_edit(self):
-        # The source names /i u/ only: [ɨ] against [j] is a vowel-quality error.
-        assert benchmark.score_word("ɐfɨˈavɛɫ", ["ɐˈfjavɛɫ"], word="afeável") == (1, 7)
+    def test_a_reduced_vowel_before_a_vowel_accepts_the_glide(self):
+        # Cruz-Ferreira (1999: 128): an unstressed /ɨ/ before a vowel "may lose
+        # its syllabicity", real /ʁɨ'al/.
+        assert benchmark.score_word("ɐfɨˈavɛɫ", ["ɐˈfjavɛɫ"], word="afeável") == (0, 7)
+        assert benchmark.score_word("ʁɨˈaɫ", ["ʁjˈaɫ"], word="real") == (0, 4)
         assert benchmark.score_word("ɐmɐjʒuˈaɾ", ["ɐmɐjʒˈwaɾ"], word="ameijoar") == (0, 8)
 
     def test_phone_per_keeps_the_glide_an_edit(self):
         assert benchmark.score_word("ɐdiɐˈmẽtu", ["ɐdjɐˈmẽtu"]) == (1, 8)
+
+
+class TestStrongR:
+    def test_european_strong_r_phones_are_one_segment(self):
+        # Pereira (2020: iii): [ʁ, ʀ, r, χ, ...] in the Lisbon sub-region.
+        assert benchmark.score_word("ɐbɐʁɨˈɡadu", ["ɐbɐʀəˈɡadu"], word="abarregado") == (0, 9)
+        assert benchmark.score_word("ˈʁatu", ["ˈχatu"], word="rato") == (0, 4)
+
+    def test_brazilian_strong_r_phones_are_one_segment(self):
+        # Barbosa & Albano (2004: 228): velar, or glottal in casual speech.
+        assert benchmark.score_word("ˈʁaʃɐ", ["ˈxaʃɐ"], word="racha", brazilian=True) == (0, 4)
+        assert benchmark.score_word("ˈbuʁu", ["ˈbuhu"], word="burro", brazilian=True) == (0, 4)
+
+    def test_the_tap_stays_apart_from_the_strong_r(self):
+        assert benchmark.score_word("ˈkaʁu", ["ˈkaɾu"], word="caro") == (1, 4)
+
+    def test_phone_per_keeps_the_strong_r_an_edit(self):
+        assert benchmark.score_word("ˈʁatu", ["ˈʀatu"]) == (1, 4)
+
+
+def test_comma_joined_infopedia_readings_are_variants(tmp_path, monkeypatch):
+    fixture = tmp_path / "pt-PT.tsv"
+    fixture.write_text("# header\nabadejo\tɐbɐˈdɐʒu,ɐbɐˈdeʒu\tinfopedia\n", encoding="utf-8")
+    monkeypatch.setattr(benchmark, "fixture_path", lambda dialect: str(fixture))
+    assert benchmark.load_fixture("pt-PT") == {"abadejo": ["ɐbɐˈdɐʒu", "ɐbɐˈdeʒu"]}
 
 
 class TestBrazilianAccepted:

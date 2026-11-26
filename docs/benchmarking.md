@@ -211,27 +211,36 @@ for the variants it did not choose. Reported per dialect:
   same PER, with cited optional processes scored as one reading on both sides.
   The pt frontend gate uses this number. A voice learns phones, and each
   process here is a variation of the phones that a speaker can make either way.
-  For the European dialects there are two. First, [iʃ], [ɨʃ] and [ʃ] scored as one reading of a word-initial
+  For the European dialects there are three. First, [iʃ], [ɨʃ] and [ʃ] scored as one reading of a word-initial
   ⟨es⟩ + consonant on both sides. This is a variant of the sound, not of the
   notation, so the plain PER keeps it as an error. Vázquez Diéguez (2015,
   *Anuario de Estudios Filológicos* 38) gives "esc- [(i)ʃk]" and "est- [(i)ʃt]"
   on p. 250 and "Na sequência <es- + consoante> pode desaparecer" on p. 265.
   Teyssier (1989: 28), quoted in Vázquez Diéguez (2015: 244), writes estar [(i)ʃ'tar]. A stressed ⟨e⟩ (este), a
   double ⟨ss⟩ (essência) and initial ⟨ex⟩ stay outside the step.
-  Second, an [i u] before a vowel scores as the glide [j w] on both sides.
-  Mateus & Andrade (1998, *D.E.L.T.A.* 14(1), §1.3) give the glide in casual
-  speech, "in casual speech glides may be followed by any vowel", and the vowel
-  in careful speech; §1.5 gives passear pas[i]ar / pas[j]ar. The step cannot see
-  stress, so a stressed hiatus such as [diɐ] also scores as [djɐ] on both sides.
-  The source names /i u/ only, so an [ɨ] before a vowel (afeável [ɐfɨˈavɛɫ]
-  against [ɐˈfjavɛɫ]) stays an edit.
+  Second, an unstressed [i ɨ u] before a vowel scores as the glide [j w] on
+  both sides: afeável [ɐfɨˈavɛɫ] for [ɐˈfjavɛɫ]. Mateus & Andrade (1998,
+  *D.E.L.T.A.* 14(1), §1.3) give the glide in casual speech, "in casual speech
+  glides may be followed by any vowel", and the vowel in careful speech; §1.5
+  gives passear pas[i]ar / pas[j]ar. Cruz-Ferreira (1999: 128) names /ɨ/:
+  "the first vowel is an unstressed /ɨ/ or /u/ [...] the first vowel may lose
+  its syllabicity", real /ʁɨ'al/. A stressed vowel (dia [ˈdiɐ]) stays a vowel.
+  Third, each phone of the strong R ([ʀ χ x]) scores as [ʁ]. Pereira (2020,
+  *O R-forte em Português Europeu*, p. iii) records "[ʁ, ʀ, r, χ, x, ɹ̝, ʁ̞, ʀ̝,
+  ɦ], por ordem decrescente de frequência" in the Lisbon sub-region. The
+  alveolar trill [r] is the tap in the Infopédia folds, so it stays outside the
+  step.
 
-  For the Brazilian dialects there are four:
+  A fixture row that holds several Infopédia readings joined by a comma
+  (abadejo [ɐbɐˈdɐʒu,ɐbɐˈdeʒu]) scores as one variant for each reading.
+
+  For the Brazilian dialects there are five:
 
   | Process | Accepted reading | Source |
   |---|---|---|
   | Coda /R/ | Each rhotic before a consonant or at the word end is [ɾ]. | Barbosa & Albano (2004: 228): /R/ "is extremely variable in BP". |
-  | Glide before a vowel | [i u] before a vowel is [j w], as for European Portuguese. | Barbosa & Albano (2004: 230): "In casual and fast speech, adjacent heterosyllabic vowels usually turn into diphthongs". |
+  | Strong R | Each of [ʀ χ x h] is [ʁ]. | Barbosa & Albano (2004: 228): /r/ "varies considerably across the Brazilian territory"; a velar fricative that "can nevertheless be realised as a glottal fricative". |
+  | Glide before a vowel | An unstressed [i ɨ u] before a vowel is [j w], as for European Portuguese. | Barbosa & Albano (2004: 230): "In casual and fast speech, adjacent heterosyllabic vowels usually turn into diphthongs". |
   | Epenthesis | No [i] between the two consonants of a written obstruent cluster: cacto [ˈkaktu] for [ˈkakitu], advogado [advoˈɡadu] for [ad͡ʒivoˈɡadu]. | Collischonn (2004, *SIGNUM* 7(1): 64): presence or absence of the vowel is the dependent variable; 69% before the stress and 24% after it (p. 67). |
   | Glide before /S/ | No [j] after a written ⟨a e o⟩ of a final stressed syllable before ⟨s z⟩: escocês [eskoˈses] for [eskoˈsejs], três, arroz. | Leiria (*Organon* 28: 133): the glide in 41% of 1,725 contexts; hypothesis 3 (p. 134): "a ditongação é uma regra variável". The source has no unstressed data, so lápis, Pérez and the clitics nos and dos stay outside the step. |
 

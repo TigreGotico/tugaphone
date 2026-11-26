@@ -97,7 +97,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "3.1"
+HARNESS_VERSION = "3.2"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -175,9 +175,10 @@ _ES_WORD = re.compile(r"^es[^aeiouáéíóúâêôãõàs]")
 #: An unstressed high vowel before a vowel is a glide in casual European
 #: speech and a vowel in careful speech. Mateus & Andrade (1998, D.E.L.T.A.
 #: 14(1), §1.3): "in casual speech glides may be followed by any vowel"; §1.5
-#: gives passear pas[i]ar / pas[j]ar. Both readings score as the glide. The
-#: source names /i u/ only, so a hypothesis [ɨ] there stays an edit.
-_FRONT_BEFORE_VOWEL = re.compile("i(?=[aɐeɛɨoɔu])")
+#: gives passear pas[i]ar / pas[j]ar. Cruz-Ferreira (1999: 128) names /ɨ/ too:
+#: "the first vowel is an unstressed /ɨ/ or /u/ [...] the first vowel may lose
+#: its syllabicity", real /ʁɨ'al/. Each reading scores as the glide.
+_FRONT_BEFORE_VOWEL = re.compile("[iɨ](?=[aɐeɛɨoɔu])")
 _BACK_BEFORE_VOWEL = re.compile("u(?=[aɐeɛɨioɔ])")
 _VOWEL = re.compile("[aɐeɛɨioɔuəʊɪʌ]")
 
@@ -218,6 +219,15 @@ def _glide(pattern: re.Pattern, glide: str, ipa: str, stressed: frozenset) -> st
 #:   (Organon 28: 133) finds it in 41% of 1,725 contexts, and gives "a
 #:   ditongação é uma regra variável" as hypothesis 3 (p. 134). So the [j] of
 #:   a final stressed vowel + /S/ is dropped. The source has no unstressed data.
+#: The strong R has several phones in one variety. European: "foram registadas
+#: as variantes [ʁ, ʀ, r, χ, x, ɹ̝, ʁ̞, ʀ̝, ɦ], por ordem decrescente de
+#: frequência" in the Lisbon sub-region (Pereira 2020, R-forte, p. iii).
+#: Brazilian: /r/ "varies considerably across the Brazilian territory", a velar
+#: fricative that "can nevertheless be realised as a glottal fricative"
+#: (Barbosa & Albano 2004: 228). Each phone of the strong R scores as [ʁ]; the
+#: alveolar trill [r] is the tap in the folds, so it stays outside the step.
+_STRONG_R = re.compile("[ʀχx]")
+_BR_STRONG_R = re.compile("[ʀχxh]")
 _BR_CODA_R = re.compile("[ɾɹɻɽrʁχxhʀ](?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
 _CLUSTER = re.compile("([pbtdcgfv])(?=[bcçdfgjkmnpqstvxz])|(m)(?=n)")
 _FIRST = {"p": "p", "b": "b", "t": "t", "d": "d", "c": "k", "g": "ɡ", "f": "f", "v": "v", "m": "m"}
@@ -271,9 +281,11 @@ def accept_variants(word: str, ipa: str, brazilian: bool = False,
                     stressed: frozenset = frozenset()) -> str:
     """The normalized ``ipa`` with each sourced optional process read one way:
     for European Portuguese a word-initial ⟨es⟩ vowel removed, and for both
-    an unstressed high vowel before a vowel read as a glide. ``stressed``
+    an unstressed high vowel before a vowel read as a glide and each phone of
+    the strong R read as [ʁ]. ``stressed``
     holds the indexes of the stressed vowels of ``ipa``."""
     ipa = _glide(_BACK_BEFORE_VOWEL, "w", _glide(_FRONT_BEFORE_VOWEL, "j", ipa, stressed), stressed)
+    ipa = (_BR_STRONG_R if brazilian else _STRONG_R).sub("ʁ", ipa)
     if brazilian:
         ipa = _BR_CODA_R.sub("ɾ", ipa)
         ipa = _drop_epenthesis(word, ipa)
@@ -581,7 +593,8 @@ def load_fixture_rows(dialect: str) -> Dict[str, List[Tuple[str, str]]]:
             if line.startswith("#") or not line.strip():
                 continue
             word, ipa, sources = line.rstrip("\n").split("\t")
-            golds.setdefault(word, []).append((ipa, sources))
+            # Infopédia joins the readings of one entry with a comma.
+            golds.setdefault(word, []).extend((v, sources) for v in ipa.split(","))
     return golds
 
 
@@ -755,9 +768,10 @@ def write_reports(rows: List[dict]) -> None:
         "",
         "PER, variants accepted counts each reading of a cited optional process as",
         "one: for European Portuguese a word-initial ⟨es⟩ vowel (Vázquez Diéguez",
-        "2015: 250, 265) and a glide before a vowel (Mateus & Andrade 1998); for",
-        "Brazilian Portuguese the coda /R/ and the glide before a vowel (Barbosa &",
-        "Albano 2004: 228, 230), epenthesis in a written obstruent cluster",
+        "2015: 250, 265), a glide before a vowel (Mateus & Andrade 1998;",
+        "Cruz-Ferreira 1999: 128) and the phones of the strong R (Pereira 2020: iii);",
+        "for Brazilian Portuguese the strong R, the coda /R/ and the glide before a",
+        "vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent cluster",
         "(Collischonn 2004: 64, 67) and the glide of a final stressed vowel before",
         "/S/ (Leiria, Organon 28: 133). See docs/benchmarking.md.",
         "",
