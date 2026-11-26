@@ -28,7 +28,6 @@ the orthographic fallback. `tests/test_examples.py` runs every script in
 | `tugaphone/text_normalization.py`, `tugaphone/number_utils.py` | The `expand` step of the engine's `Pipeline` |
 | `tugaphone/codeswitch.py`, `tugaphone/langdetect.py` | Contact-language detection and nativization |
 | `tugaphone/accent.py`, `tugaphone/__main__.py` | Accent forcing and the command line |
-| `tugaphone/tokenizer.py`, `tugaphone/dialects.py` | The token-tree feature API and the rules-only baseline |
 | `scripts/` | Benchmarks and code-switch model training |
 
 ## Generated files

@@ -23,29 +23,25 @@ syllable of that element it stands before, and ``None`` means no mark.
 """
 import pytest
 
-from tugaphone import TugaPhonemizer
-from tugaphone.registry import get_dialect_inventory
-from tugaphone.tokenizer import Sentence
+import re
+import unicodedata
+
+from tugaphone import TugaPhonemizer, phonemize
 
 P, S = "ˈ", "ˌ"
 
-
-def _rules_only(dialect_code):
-    inv = get_dialect_inventory(dialect_code)
-    object.__setattr__(inv, "IRREGULAR_WORDS", {})
-    return inv
-
-
-@pytest.fixture(scope="module")
-def inventories():
-    return {code: _rules_only(code) for code in ("pt-PT", "pt-BR")}
+# A syllable nucleus: a run of vowel symbols. The glides [j w] are not nuclei.
+NUCLEUS = re.compile("[aɐeɛəɨioɔuʊɪ][\u0303]?(?:[aɐeɛəɨioɔuʊɪ][\u0303]?)*")
 
 
 def element_marks(ipa):
-    """One entry per space-separated element: (mark, syllable) or None."""
+    """One entry per space-separated element: (mark, syllable) or None.
+
+    The syllable is the count of nuclei before the mark.
+    """
     out = []
-    for element in ipa.split():
-        marks = [(ch, element[:i].count("·"))
+    for element in unicodedata.normalize("NFD", ipa).split():
+        marks = [(ch, len(NUCLEUS.findall(element[:i])))
                  for i, ch in enumerate(element) if ch in (P, S)]
         assert len(marks) <= 1, f"{element!r} carries two marks"
         out.append(marks[0] if marks else None)
@@ -86,32 +82,32 @@ PT_BR = [
 
 
 @pytest.mark.parametrize("word,expected", PT_PT)
-def test_compound_marks_pt_pt(word, expected, inventories):
-    ipa = Sentence(word, dialect=inventories["pt-PT"]).ipa
+def test_compound_marks_pt_pt(word, expected):
+    ipa = phonemize(word, "pt-PT")
     assert element_marks(ipa) == expected, ipa
 
 
 @pytest.mark.parametrize("word,expected", PT_BR)
-def test_compound_marks_pt_br(word, expected, inventories):
-    ipa = Sentence(word, dialect=inventories["pt-BR"]).ipa
+def test_compound_marks_pt_br(word, expected):
+    ipa = phonemize(word, "pt-BR")
     assert element_marks(ipa) == expected, ipa
 
 
 @pytest.mark.parametrize("word,_", PT_PT)
-def test_compound_has_one_primary(word, _, inventories):
-    ipa = Sentence(word, dialect=inventories["pt-PT"]).ipa
+def test_compound_has_one_primary(word, _):
+    ipa = phonemize(word, "pt-PT")
     assert ipa.count(P) == 1, ipa
 
 
-def test_space_separated_words_keep_their_own_primary(inventories):
+def test_space_separated_words_keep_their_own_primary():
     """Only the hyphen joins a compound: two words keep two primaries."""
-    ipa = Sentence("guarda chuva", dialect=inventories["pt-PT"]).ipa
+    ipa = phonemize("guarda chuva", "pt-PT")
     assert element_marks(ipa) == [(P, 0), (P, 0)], ipa
 
 
-def test_compound_inside_a_sentence(inventories):
+def test_compound_inside_a_sentence():
     """The compound rule stops at the whitespace around the compound."""
-    ipa = Sentence("guarda-chuva amarelo", dialect=inventories["pt-PT"]).ipa
+    ipa = phonemize("guarda-chuva amarelo", "pt-PT")
     assert element_marks(ipa) == [(S, 0), (P, 0), (P, 2)], ipa
 
 

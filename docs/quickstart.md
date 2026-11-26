@@ -136,7 +136,6 @@ sub-regional codes and the legacy aliases.
 - [homographs.md](homographs.md), meaning-based disambiguation
 - [numbers.md](numbers.md), number normalization and gender agreement
 - [advanced.md](advanced.md), the pipeline internals and integration
-- [tokenizer.md](tokenizer.md), the `Sentence → Word → Grapheme → Character` feature model
 
 ---
 [Index](index.md) · [Comparison →](comparison.md)

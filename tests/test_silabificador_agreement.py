@@ -15,12 +15,25 @@ be given the same split before their answers can be compared at all.
 """
 import json
 import os
+import re
+import unicodedata
 
 import pytest
 from silabificador import Syllabifier
 
-from tugaphone.dialects import EuropeanPortuguese
-from tugaphone.tokenizer import detect_stress_position
+from tugaphone import phonemize
+
+# A syllable nucleus: a run of vowel symbols. The glides [j w] are not nuclei.
+NUCLEUS = re.compile("[aɐeɛəɨioɔuʊɪ]\u0303?(?:[aɐeɛəɨioɔuʊɪ]\u0303?)*")
+
+
+def stressed_index(word, syllables):
+    """The index in ``syllables`` of the syllable that carries ``ˈ``.
+
+    The syllables from the mark to the end of the word are its nuclei.
+    """
+    after = unicodedata.normalize("NFD", phonemize(word, "pt-PT")).partition("ˈ")[2]
+    return len(syllables) - len(NUCLEUS.findall(after))
 
 GOLD = os.path.join(
     os.path.dirname(__file__), "..", "..", "silabificador",
@@ -37,13 +50,12 @@ def _gold():
 
 def test_the_two_stress_engines_agree():
     syllabifier = Syllabifier()
-    dialect = EuropeanPortuguese()
     disagreements = []
 
     for entry in _gold():
         word = entry["word"]
         syllables = syllabifier.syllabify(word)  # one split, so the indices mean the same thing
-        ours = detect_stress_position(word, syllables, dialect)
+        ours = stressed_index(word, syllables)
         theirs = syllabifier.stressed_index(word)
         if ours != theirs:
             disagreements.append(
@@ -67,5 +79,5 @@ def test_the_stress_rules_themselves(word, expected):
     """A handful of cases spelled out, so the invariant above cannot pass vacuously."""
     syllabifier = Syllabifier()
     syllables = syllabifier.syllabify(word)
-    idx = detect_stress_position(word, syllables, EuropeanPortuguese())
+    idx = stressed_index(word, syllables)
     assert syllables[idx] == expected

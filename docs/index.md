@@ -49,7 +49,6 @@ The pages follow the reading order, from the first call to the internals and the
 | [Numbers](numbers.md) | Read numbers, dates, times and money as words for each lect |
 | [Text normalization](text_normalization.md) | The old spellings, abbreviations, Roman numerals, acronyms and codes that tugaphone rewrites |
 | [API](api.md) | Every public class and function with its signature and default |
-| [Tokenizer](tokenizer.md) | The deprecated token tree and its linguistic features |
 | [Advanced](advanced.md) | The lexicon boundary, number scales and the sibling libraries |
 | [Development](development.md) | Set up a checkout, run the tests and find the file that owns each stage |
 | [Benchmarking](benchmarking.md) | The scripts that measure accuracy and the regression gate |

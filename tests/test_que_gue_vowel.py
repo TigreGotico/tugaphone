@@ -9,28 +9,19 @@ Portal (pt-BR) transcription in the unified gold
 stressed ⟨e⟩ is open or closed is lexical and the spelling does not show
 it, so a stressed row accepts either mid vowel.
 """
+import unicodedata
+
 import pytest
 
-from tugaphone.registry import get_dialect_inventory
-from tugaphone.tokenizer import Sentence
+from tugaphone import phonemize
 
 FULL, REDUCED = {"e", "ɛ"}, {"ɨ"}
 
 
-@pytest.fixture(scope="module")
-def inventories():
-    out = {}
-    for code in ("pt-PT", "pt-BR"):
-        inv = get_dialect_inventory(code)
-        object.__setattr__(inv, "IRREGULAR_WORDS", {})
-        out[code] = inv
-    return out
-
-
-def vowel_after(word, onset, inv):
+def vowel_after(word, onset, lect):
     """The vowel written right after the ⟨qu gu⟩ onset and its glide."""
-    ipa = Sentence(word, dialect=inv).ipa.strip()
-    for ch in "ˈˌ·":
+    ipa = unicodedata.normalize("NFD", phonemize(word, lect).strip())
+    for ch in "ˈˌ":
         ipa = ipa.replace(ch, "")
     at = ipa.index(onset) + len(onset)
     return ipa[at], ipa
@@ -40,7 +31,7 @@ def vowel_after(word, onset, inv):
 ROWS = [
     ("pt-PT", "queda", "ˈkɛdɐ", "k", FULL),
     ("pt-PT", "sequer", "sɨˈkɛɾ", "k", FULL),
-    ("pt-PT", "qualquer", "kwaɫˈkɛr", "lk", FULL),
+    ("pt-PT", "qualquer", "kwaɫˈkɛr", "ɫk", FULL),
     ("pt-PT", "guerra", "ˈɡɛʀɐ", "ɡ", FULL),
     ("pt-PT", "aquele", "ɐˈkel", "k", FULL),
     ("pt-PT", "pequeno", "pɨˈkenu", "pɨk", FULL),
@@ -53,8 +44,8 @@ ROWS = [
 
 
 @pytest.mark.parametrize("dialect,word,gold,onset,allowed", ROWS)
-def test_que_gue_vowel(dialect, word, gold, onset, allowed, inventories):
-    vowel, ipa = vowel_after(word, onset, inventories[dialect])
+def test_que_gue_vowel(dialect, word, gold, onset, allowed):
+    vowel, ipa = vowel_after(word, onset, dialect)
     assert vowel in allowed, ipa
 
 
@@ -71,10 +62,10 @@ SENTENCE_ROWS = [
 
 
 @pytest.mark.parametrize("sentence,classes", SENTENCE_ROWS)
-def test_function_word_que_keeps_the_reduced_vowel(sentence, classes, inventories):
-    ipa = Sentence(sentence, dialect=inventories["pt-PT"]).ipa.strip()
+def test_function_word_que_keeps_the_reduced_vowel(sentence, classes):
+    ipa = phonemize(sentence, "pt-PT").strip()
     words = [w for w in sentence.split() if w.startswith("qu")]
-    spoken = [w.strip("ˈˌ").replace("·", "")
+    spoken = [w.strip("ˈˌ")
               for w, o in zip(ipa.split(), sentence.split()) if o.startswith("qu")]
     assert len(spoken) == len(words) == len(classes), ipa
     for word, allowed in zip(spoken, classes):
@@ -85,6 +76,6 @@ def test_function_word_que_keeps_the_reduced_vowel(sentence, classes, inventorie
 # Infopédia: se "sə", me "mə", te "tə", lhe "ʎə", de "də".
 @pytest.mark.parametrize("word,onset", [
     ("se", "s"), ("me", "m"), ("te", "t"), ("lhe", "ʎ"), ("de", "d")])
-def test_clitic_keeps_the_reduced_vowel(word, onset, inventories):
-    vowel, ipa = vowel_after(word, onset, inventories["pt-PT"])
+def test_clitic_keeps_the_reduced_vowel(word, onset):
+    vowel, ipa = vowel_after(word, onset, "pt-PT")
     assert vowel in REDUCED, ipa

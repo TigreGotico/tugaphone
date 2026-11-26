@@ -10,8 +10,7 @@ from orthography2ipa import available_codes, resolve
 
 from tugaphone.registry import (_OWN_ORTHOGRAPHY, resolve_lect,
                                 resolve_dialect, PACKAGED_LEXICON_LECTS, lexicon_region,
-                                list_dialects,
-                                get_dialect_inventory)
+                                list_dialects)
 
 
 class TestResolution:

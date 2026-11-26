@@ -78,8 +78,7 @@ no sub-lect takes one.
 ### 3. Syllabification
 
 tugaphone does not own this stage. The engine uses the bundled splitter of
-orthography2ipa, which reads the diphthongs and hiatus of the lect spec. The
-`tugaphone.tokenizer` token tree syllabifies with `silabificador`.
+orthography2ipa, which reads the diphthongs and hiatus of the lect spec.
 
 ## What comes from where
 
@@ -113,18 +112,7 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 
 Every IPA sample in these docs is the output of the orthography2ipa lect specs
 that tugaphone resolves at run time, so a spec change in orthography2ipa can
-change a sample. The samples in [tokenizer.md](tokenizer.md) come from
-the deprecated `tugaphone.dialects` inventory instead.
-
-## The token-feature API
-
-`tugaphone.tokenizer` and `tugaphone.dialects` are a token-tree linguistic
-**feature** API (manner, place, voicing, vowel height, syllable roles, CV
-skeletons) and the rules-only benchmark baseline. They are **not** the
-phonemization path, `phonemize_sentence` never routes through them. Both
-modules and `tugaphone.registry.get_dialect_inventory` are deprecated: they emit
-a `DeprecationWarning` and go in the next major release (`VERSION_MAJOR + 1`). See
-[tokenizer.md](tokenizer.md) for the feature model.
+change a sample.
 
 ## Where next
 

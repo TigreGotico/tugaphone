@@ -232,7 +232,6 @@ are re-exported from the package root.
 | `lexicon_region(lect)` | **Deprecated**, returns `None`: no lect takes a `tugalex` region map. Emits a `DeprecationWarning` that names the removal release. |
 | `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`, emits a `DeprecationWarning`. |
 | `normalize_dialect_code(lang)` | **Deprecated**, BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). Use `linguatag.standardize_lang`. Emits a `DeprecationWarning` that names the removal release. |
-| `get_dialect_inventory(lang="pt-PT")` | **Deprecated**, returns the `tugaphone.dialects` inventory of the nearest national standard. Emits a `DeprecationWarning` and goes in the next major release (`VERSION_MAJOR + 1`). |
 
 ```python
 from tugaphone import resolve_lect, list_dialects
@@ -360,38 +359,12 @@ and leaves the digits for `normalize_numbers`. Each rewrite is public:
 `expand_letter_digit_codes(text, lang)`. See
 [text_normalization.md](text_normalization.md) for each one.
 
-## `tugaphone.tokenizer` and `tugaphone.dialects`
-
-**Deprecated.** Both modules and `tugaphone.registry.get_dialect_inventory`
-emit a `DeprecationWarning` and go in the next major release (`VERSION_MAJOR + 1`). The phonemization path
-does not use them.
-
-These modules are the token-tree **feature** API and the rules-only benchmark
-baseline. They are not the phonemization path, `phonemize_sentence` runs on the
-orthography2ipa lattice and never routes through them. Use them to inspect
-manner, place, voicing, vowel height, syllable roles and CV skeletons. See
-[tokenizer.md](tokenizer.md) for the full model, the public surface is:
-
-| Symbol | Role |
-|--------|------|
-| `Sentence(surface, words=[], dialect=EuropeanPortuguese())` | Top-level container, `.ipa`, `.words`, `.n_words`, `.features`. |
-| `WordToken` | `.surface`, `.syllables`, `.n_syllables`, `.graphemes`, `.stressed_syllable_idx`, `.ipa`, `.features`, phonological summaries `.stress_pattern`, `.syllable_structure_pattern`, `.phoneme_count`, `.vowel_sequence`, `.consonant_sequence`, `.has_diphthongs`, `.has_nasal_sounds`, `.has_palatal_sounds`, `.has_consonant_clusters`, `.is_homograph`, `.is_irregular`. |
-| `GraphemeToken` | `.surface`, `.ipa`, `.is_diphthong`, `.is_nasal`, `.is_digraph`, `.features`, syllable features `.syllable_position`, `.phonological_weight`, `.has_complex_onset`, `.is_palatal`, `.triggers_palatalization`, `.is_vowel_grapheme`/`.is_consonant_grapheme`. |
-| `CharToken` | character-level predicates (`.is_vowel`, `.is_consonant`, `.ipa`, ...), articulatory features `.manner_of_articulation`, `.place_of_articulation`, `.voicing`, `.vowel_height`/`.vowel_backness`/`.vowel_roundedness`, syllable role `.is_nucleus`/`.is_onset`/`.is_coda`. |
-
-`tugaphone.dialects` supplies the `DialectInventory` subclasses those tokens
-read (`EuropeanPortuguese`, `BrazilianPortuguese`, `AngolanPortuguese`,
-`MozambicanPortuguese`, `TimoresePortuguese`, and city inventories). An
-inventory takes no lexicon: its `IRREGULAR_WORDS` table is empty unless the
-caller passes one.
-
 ## Where next
 
 - [architecture.md](architecture.md), the lattice core and caller-owned layers
 - [dialects.md](dialects.md), the lect codes and aliases
 - [homographs.md](homographs.md), meaning-based disambiguation
 - [numbers.md](numbers.md), number normalization and gender agreement
-- [tokenizer.md](tokenizer.md), the token tree and feature extraction
 
 ---
-[← Text normalization](text_normalization.md) · [Index](index.md) · [Tokenizer →](tokenizer.md)
+[← Text normalization](text_normalization.md) · [Index](index.md) · [Advanced →](advanced.md)

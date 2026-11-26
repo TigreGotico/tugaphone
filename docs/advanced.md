@@ -101,23 +101,12 @@ usable on its own:
   old spellings to AO1990, the spelling step of `expand`.
 - [`tugalex`](https://github.com/TigreGotico/tugalex), the noun and given-name
   genders, and the gender of a given name for `D.` (Dom or Dona).
-- [`silabificador`](https://github.com/TigreGotico/silabificador), the
-  syllabifier of the `tugaphone.tokenizer` token tree. The phonemization path
-  does not use it.
 - [`bifonia`](https://github.com/TigreGotico/bifonia), meaning-based
   heterophone disambiguation, called via `add_extra_diacritics` in the
   pipeline's `mark` step.
 
 A TTS front-end typically wires `tugaphone` as the G2P stage: pass text and a
 target lect code, hand the returned IPA string to the acoustic model.
-
-## The token-feature API
-
-`tugaphone.tokenizer` and `tugaphone.dialects` expose a token tree (manner,
-place, voicing, vowel height, syllable roles, CV skeletons) and back the
-rules-only benchmark baseline. This is a feature-inspection surface, **not** the
-phonemization path, `phonemize_sentence` runs on the lattice and never routes
-through it. See [tokenizer.md](tokenizer.md).
 
 ## Where next
 
@@ -127,7 +116,6 @@ through it. See [tokenizer.md](tokenizer.md).
 - [homographs.md](homographs.md), meaning-based disambiguation
 - [numbers.md](numbers.md), number normalization and gender agreement
 - [text_normalization.md](text_normalization.md), the orthographic rewrites that run ahead of number normalization
-- [tokenizer.md](tokenizer.md), inspect syllables, stress and graphemes directly
 
 ---
-[← Tokenizer](tokenizer.md) · [Index](index.md) · [Development →](development.md)
+[← API](api.md) · [Index](index.md) · [Development →](development.md)

@@ -15,7 +15,6 @@ The documentation starts at [docs/index.md](docs/index.md).
 | `tugaphone/number_utils.py`, `tugaphone/text_normalization.py` | The text2spoken step and the orthographic rewrites |
 | `tugaphone/codeswitch.py`, `tugaphone/langdetect.py`, `tugaphone/data/` | Contact-language routing, detector models and the loanword list |
 | `tugaphone/accent.py`, `tugaphone/__main__.py` | Accent forcing and the `tugaphone` command |
-| `tugaphone/tokenizer.py`, `tugaphone/dialects.py` | The deprecated token tree and the rules-only baseline |
 | `docs/`, `examples/`, `tests/` | Documentation, runnable scripts and tests |
 | `scripts/`, `benchmarks/` | Benchmarks, the regression gate, `check_docs_examples.py` and the board files |
 
@@ -34,12 +33,11 @@ Use uv, never pip. The `test` extra installs `markovonnx`, and the `langdetect` 
 
 1. A dialect is an orthography2ipa lect spec. Dialect phonology comes from the spec, and no string-edit pass runs after transcription ([architecture.md](docs/architecture.md#the-lattice-core)).
 2. Only `pt-PT` and `pt-BR` take a packaged lexicon. A sub-regional lect never takes one ([architecture.md](docs/architecture.md#2-lexicon)).
-3. `tugaphone.tokenizer`, `tugaphone.dialects` and `registry.get_dialect_inventory` are deprecated. They leave the phonemization path alone and go in the next major release (`VERSION_MAJOR + 1`) ([tokenizer.md](docs/tokenizer.md)).
-4. Never edit `docs/scoreboard.md` or `benchmarks/results.json` by hand. Run `scripts/benchmark.py`, and commit the regenerated files with a change that improves the score ([benchmarking.md](docs/benchmarking.md#regression-gate)).
-5. CI never uses the network. Only a maintainer refreshes the gold fixtures with `scripts/benchmark.py --refresh-fixtures` ([benchmarking.md](docs/benchmarking.md#regression-gate)).
-6. The wheel carries no sentence sets and no tests. `.github/workflows/sentence_gate.yml` checks it.
-7. Every IPA sample in the docs is output of the installed orthography2ipa specs, except the samples in `docs/tokenizer.md`, which come from the deprecated `tugaphone.dialects` inventory. A page example carries its output in the comment under it, and `scripts/check_docs_examples.py` compares the two.
-8. The release workflow writes `tugaphone/version.py` and `CHANGELOG.md`. Do not edit either.
+3. Never edit `docs/scoreboard.md` or `benchmarks/results.json` by hand. Run `scripts/benchmark.py`, and commit the regenerated files with a change that improves the score ([benchmarking.md](docs/benchmarking.md#regression-gate)).
+4. CI never uses the network. Only a maintainer refreshes the gold fixtures with `scripts/benchmark.py --refresh-fixtures` ([benchmarking.md](docs/benchmarking.md#regression-gate)).
+5. The wheel carries no sentence sets and no tests. `.github/workflows/sentence_gate.yml` checks it.
+6. Every IPA sample in the docs is output of the installed orthography2ipa specs. A page example carries its output in the comment under it, and `scripts/check_docs_examples.py` compares the two.
+7. The release workflow writes `tugaphone/version.py` and `CHANGELOG.md`. Do not edit either.
 
 ## Before you push
 
