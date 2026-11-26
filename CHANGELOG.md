@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.0a1](https://github.com/TigreGotico/tugaphone/tree/2.0.0a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.12.1a2...2.0.0a1)
+
+**Breaking changes:**
+
+- feat!: remove the deprecated tokenizer and dialects modules [\#407](https://github.com/TigreGotico/tugaphone/pull/407) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.12.1a2](https://github.com/TigreGotico/tugaphone/tree/1.12.1a2) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.12.1a1...1.12.1a2)
