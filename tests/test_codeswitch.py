@@ -10,6 +10,8 @@ The tests split into three groups:
 """
 import pytest
 
+from tugaphone import phonemize
+
 from tugaphone import TugaPhonemizer
 from tugaphone.codeswitch import (
     _nativize,
@@ -230,21 +232,33 @@ def test_detector_empty_token_is_portuguese(detector):
 
 # Assis (2007), Adaptações fonológicas de estrangeirismos do inglês no PB,
 # MA dissertation, UNESP. pt-BR data only; page numbers are PDF pages.
-ASSIS_RHOTIC = ("tugaphone#403: an English onset ɹ reads as the tap [ɾ]; Assis (2007: 80): "
-                "for initial /r/ the subjects \"optam por [h]\", the native strong r")
-ASSIS_THETA = ("tugaphone#403: a final English θ reads as [t]; Assis (2007: 79): in bluetooth "
-               "\"os falantes brasileiros normalmente o substituem por /f/\"")
 
 
 @pytest.mark.parametrize("word", [
-    pytest.param("rock", marks=pytest.mark.xfail(strict=True, reason=ASSIS_RHOTIC)),
-    pytest.param("ranking", marks=pytest.mark.xfail(strict=True, reason=ASSIS_RHOTIC)),
+    "rock", "ranking",
 ])
 def test_an_english_onset_r_takes_the_native_strong_r(word):
     strong_r = phonemize("rato", "pt-BR").lstrip("ˈ")[0]
     assert phonemize(word, "pt-BR", contact="en").lstrip("ˈ")[0] == strong_r
 
 
-@pytest.mark.xfail(strict=True, reason=ASSIS_THETA)
 def test_a_final_english_theta_reads_as_f():
     assert phonemize("bluetooth", "pt-BR", contact="en").endswith(("f", "fi"))
+
+
+@pytest.mark.parametrize("lect", ["pt-BR-x-rj", "pt-BR-x-sp", "pt-BR-x-caipira"])
+def test_the_onset_r_follows_each_lect(lect):
+    strong_r = phonemize("rato", lect).lstrip("ˈ")[0]
+    assert phonemize("rock", lect, contact="en").lstrip("ˈ")[0] == strong_r
+
+
+def test_a_medial_theta_and_a_cluster_r_keep_their_mapping():
+    # Assis (2007: 79): thriller takes /t/; trekking keeps the tap in its cluster.
+    assert phonemize("thriller", "pt-BR", contact="en").lstrip("ˈ").startswith("tɾ")
+    assert "tɾ" in phonemize("trekking", "pt-BR", contact="en")
+
+
+def test_pt_pt_keeps_the_tap_and_the_stop():
+    # The source has no European data.
+    assert phonemize("rock", "pt-PT", contact="en").lstrip("ˈ")[0] == "ɾ"
+    assert phonemize("bluetooth", "pt-PT", contact="en").endswith("t")

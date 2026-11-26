@@ -228,7 +228,7 @@ def phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str:
     for contact_lang, token in runs:
         if contact_lang is not None:
             flush()
-            out.append(transcribe_contact(token, contact_lang))
+            out.append(transcribe_contact(token, contact_lang, lect))
         else:
             pt_buffer.append(token)
     flush()
