@@ -118,4 +118,4 @@ target lect code, hand the returned IPA string to the acoustic model.
 - [text_normalization.md](text_normalization.md), the orthographic rewrites that run ahead of number normalization
 
 ---
-[← API](api.md) · [Index](index.md) · [Development →](development.md)
+[← API](api.md) · [Home](index.md) · [Development →](development.md)

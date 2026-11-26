@@ -121,4 +121,4 @@ change a sample.
 - [benchmarking.md](benchmarking.md), how accuracy is measured
 
 ---
-[← Comparison](comparison.md) · [Index](index.md) · [Dialects →](dialects.md)
+[← Comparison](comparison.md) · [Home](index.md) · [Dialects →](dialects.md)

@@ -67,4 +67,4 @@ print(ph.phonemize_sentence("Tenho bom gosto."))
 - [advanced.md](advanced.md), the pipeline internals
 
 ---
-[← Accent forcing](accent_forcing.md) · [Index](index.md) · [Code-switch →](codeswitch.md)
+[← Accent forcing](accent_forcing.md) · [Home](index.md) · [Code-switch →](codeswitch.md)

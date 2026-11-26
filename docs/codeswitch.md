@@ -239,7 +239,7 @@ the English projection table above, not by a stored pronunciation.
 
 ```python
 ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="auto")
-# 'kõˈpɾej ˈũ ɛɐɾbɐɡ ˈnovu'
+# 'kõˈpɾej ˈũ ɛɐbɐɡ ˈnovu'
 ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="none")
 # 'kõˈpɾej ˈũ ɐˈiɾbɐɡ ˈnovu'
 ```
@@ -262,4 +262,4 @@ names/personal names the upstream curation missed (`aberdeen`, `batman`,
 entries ship in the file.
 
 ---
-[← Homographs](homographs.md) · [Index](index.md) · [Numbers →](numbers.md)
+[← Homographs](homographs.md) · [Home](index.md) · [Numbers →](numbers.md)

@@ -181,4 +181,4 @@ cross-word sandhi is not modelled during respelling, which can leave a
 negligible sentence-level residue on a few lects.
 
 ---
-[← Dialects](dialects.md) · [Index](index.md) · [Homographs →](homographs.md)
+[← Dialects](dialects.md) · [Home](index.md) · [Homographs →](homographs.md)

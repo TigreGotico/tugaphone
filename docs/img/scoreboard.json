@@ -1,0 +1,42 @@
+[
+ {
+  "dialect": "pt-PT-x-lisbon",
+  "per": 0.0555,
+  "stress_acc": 0.998
+ },
+ {
+  "dialect": "pt-BR-x-sao-paulo",
+  "per": 0.0748,
+  "stress_acc": 0.998
+ },
+ {
+  "dialect": "pt-PT",
+  "per": 0.0826,
+  "stress_acc": 0.9867
+ },
+ {
+  "dialect": "pt-BR",
+  "per": 0.1025,
+  "stress_acc": 0.9731
+ },
+ {
+  "dialect": "pt-BR-x-rio-janeiro",
+  "per": 0.1153,
+  "stress_acc": 1.0
+ },
+ {
+  "dialect": "pt-MZ",
+  "per": 0.1376,
+  "stress_acc": 1.0
+ },
+ {
+  "dialect": "pt-AO",
+  "per": 0.2395,
+  "stress_acc": 0.997
+ },
+ {
+  "dialect": "pt-TL",
+  "per": 0.3512,
+  "stress_acc": 0.997
+ }
+]

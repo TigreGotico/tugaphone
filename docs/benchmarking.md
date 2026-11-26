@@ -246,4 +246,4 @@ python scripts/check_benchmark_regression.py   # gate
 ```
 
 ---
-[← Development](development.md) · [Index](index.md) · [Scoreboard →](scoreboard.md)
+[← Development](development.md) · [Home](index.md) · [Scoreboard →](scoreboard.md)

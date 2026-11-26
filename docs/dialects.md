@@ -176,4 +176,4 @@ would overwrite the sub-lect spec's phonology with the parent's forms. See
 - [api.md](api.md), full class reference
 
 ---
-[← Architecture](architecture.md) · [Index](index.md) · [Accent forcing →](accent_forcing.md)
+[← Architecture](architecture.md) · [Home](index.md) · [Accent forcing →](accent_forcing.md)

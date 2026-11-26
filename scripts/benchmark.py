@@ -474,7 +474,7 @@ def scoreboard_alt(rows: List[dict]) -> str:
     """Alt text of the scoreboard figure, read from the same rows as the table."""
     by_per = sorted(rows, key=lambda r: r["per"])
     low, high = by_per[0], by_per[-1]
-    return (f"Rules-only PER by dialect: {low['dialect']} {low['per']:.3f}, the lowest; "
+    return (f"Rules-only PER by dialect: {low['dialect']} {low['per']:.3f}, the lowest, and "
             f"{high['dialect']} {high['per']:.3f}, the highest.")
 
 
@@ -508,9 +508,9 @@ def write_reports(rows: List[dict]) -> None:
         "[TigreGotico/portuguese-unified-pronunciation-lexicon]"
         "(https://huggingface.co/datasets/TigreGotico/"
         "portuguese-unified-pronunciation-lexicon).",
-        "Rules-only: the lexicon exception path is emptied, so the number",
-        "measures grapheme-rule quality, not lexicon lookup coverage. See",
-        "[benchmarking.md](benchmarking.md).",
+        "",
+        "Rules-only: the packaged lexicon is emptied, so the number measures",
+        "the rules, not the lexicon. See [benchmarking.md](benchmarking.md).",
         "",
         "Stress accuracy is the share of the stress-eligible gold words",
         "(one word, one primary mark, two syllables or more) whose primary",
@@ -533,9 +533,9 @@ def write_reports(rows: List[dict]) -> None:
         "|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
-        stress = ("—" if r.get("stress_acc") is None
+        stress = ("n/a" if r.get("stress_acc") is None
                   else f"{r['stress_acc']:.4f}")
-        accepted = ("—" if r.get("per_accepted") is None
+        accepted = ("n/a" if r.get("per_accepted") is None
                     else f"{r['per_accepted']:.4f}")
         lines.append(
             f"| {r['dialect']} | {r['region']} | {r['n']} "
@@ -545,7 +545,7 @@ def write_reports(rows: List[dict]) -> None:
         "",
         "",
         "---",
-        "[← Benchmarking](benchmarking.md) · [Index](index.md)",
+        "[← Benchmarking](benchmarking.md) · [Home](index.md)",
         "",
     ]
     with open(SCOREBOARD_MD, "w", encoding="utf-8") as fh:

@@ -40,4 +40,4 @@ network: only a maintainer refreshes the gold fixtures, with
 `scripts/benchmark.py --refresh-fixtures`. See [benchmarking.md](benchmarking.md).
 
 ---
-[← Advanced](advanced.md) · [Index](index.md) · [Benchmarking →](benchmarking.md)
+[← Advanced](advanced.md) · [Home](index.md) · [Benchmarking →](benchmarking.md)
