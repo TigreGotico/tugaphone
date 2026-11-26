@@ -11,8 +11,10 @@ tugaphone is measured against two golds, one per path. The
 **phonemization pipeline**, a dialect selected by its lect code, driving the
 orthography2ipa lattice, is scored sentence-level against orthography2ipa's TTS
 gold. The same pipeline with its packaged lexicon emptied, **rules-only**, is
-scored word-level against the unified pronunciation gold. Those numbers are in
-[scoreboard.md](scoreboard.md).
+scored word-level against the unified pronunciation lexicon. Only pt-PT and
+pt-BR have human gold there. The other six dialects score against Portal LUPo
+machine output, so their number is agreement with a machine reference, not an
+error rate. Those numbers are in [scoreboard.md](scoreboard.md).
 
 ## Pipeline: the TTS-gold harness
 
@@ -101,7 +103,7 @@ against `pt-BR`.
 ## Rules-only baseline
 
 The sections below measure the phonemization pipeline with its packaged lexicon
-emptied against the unified pronunciation lexicon gold. A benchmark code that
+emptied against the unified pronunciation lexicon. A benchmark code that
 is not a tugaphone lect goes through `resolve_lect` (`pt-BR-x-sao-paulo` is
 `pt-BR-x-sp`, `pt-BR-x-rio-janeiro` is `pt-BR-x-rj`).
 
@@ -117,18 +119,26 @@ and a narrow phonetic (`ipa_narrow`) transcription.
 The harness scores **`ipa_narrow`**, it matches tugaphone's
 transcription depth (explicit [ɐ ɨ ɾ ʀ ɫ]).
 
-One gold region is scored per registered dialect code:
+One reference region is scored per registered dialect code. The reference
+kind (`reference_kind` in `benchmarks/results.json`) tells the source of its
+rows:
 
-| Dialect code | Gold region |
-|---|---|
-| pt-PT | pt-PT |
-| pt-PT-x-lisbon | pt-PT-x-lisboa |
-| pt-BR | pt-BR |
-| pt-BR-x-sao-paulo | pt-BR-x-saopaulo |
-| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro |
-| pt-AO | pt-AO |
-| pt-MZ | pt-MZ-x-maputo |
-| pt-TL | pt-TL-x-dili |
+- `human`: Infopédia, Wiktionary or Michaelis rows. The score is PER against
+  human gold.
+- `portal_lupo`: Portal da Língua Portuguesa rows. The Portal makes these rows
+  with its rule-based LUPo generator. The score is the disagreement rate with a
+  machine reference. A disagreement is not always a tugaphone error.
+
+| Dialect code | Reference region | Reference kind |
+|---|---|---|
+| pt-PT | pt-PT | human |
+| pt-PT-x-lisbon | pt-PT-x-lisboa | portal_lupo |
+| pt-BR | pt-BR | human |
+| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | portal_lupo |
+| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | portal_lupo |
+| pt-AO | pt-AO | portal_lupo |
+| pt-MZ | pt-MZ-x-maputo | portal_lupo |
+| pt-TL | pt-TL-x-dili | portal_lupo |
 
 ## Rules-only mode, and why it is non-circular
 
@@ -187,7 +197,7 @@ fixture names. A row that several sources attest takes the folds of all of
 them. A fold needs evidence that its source writes the two symbols for one
 sound. Barbosa & Albano (2004: 229) plot [ʊ ɪ] apart from [u i], so no source
 without such evidence folds them. No fold maps pt-BR ⟨ə⟩ to [ɐ] or [w̃ j̃] to
-[w j]. The pt-AO, pt-MZ and pt-TL gold writes the trill as ⟨r⟩ beside the tap
+[w j]. The pt-AO, pt-MZ and pt-TL Portal rows write the trill as ⟨r⟩ beside the tap
 ⟨ɾ⟩, so its ⟨r⟩ does not fold.
 Barbosa & Albano (2004: 229) plot [ʊ ɪ] apart from [u i], and no source found
 calls the other pairs one phone. Each word scores against its **closest**
