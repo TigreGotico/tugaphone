@@ -1,8 +1,20 @@
 # Changelog
 
+## [3.5.4a1](https://github.com/TigreGotico/tugaphone/tree/3.5.4a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.3a2...3.5.4a1)
+
+**Merged pull requests:**
+
+- fix\(benchmark\): harness 3.2, comma-joined Infopédia readings, \[ɨ\] glide, strong-R phones [\#472](https://github.com/TigreGotico/tugaphone/pull/472) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.5.3a2](https://github.com/TigreGotico/tugaphone/tree/3.5.3a2) (2026-11-26)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.2a1...3.5.3a2)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.3a1...3.5.3a2)
+
+## [3.5.3a1](https://github.com/TigreGotico/tugaphone/tree/3.5.3a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.2a1...3.5.3a1)
 
 **Merged pull requests:**
 
@@ -369,17 +381,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a2...1.11.12a3)
 
-**Merged pull requests:**
-
-- docs: cite the open text2spoken issues for bare dot numbers [\#350](https://github.com/TigreGotico/tugaphone/pull/350) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.11.12a2](https://github.com/TigreGotico/tugaphone/tree/1.11.12a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a1...1.11.12a2)
-
-**Merged pull requests:**
-
-- chore: freeze the Portuguese text stack on text2spoken 0.0.2a129 [\#348](https://github.com/TigreGotico/tugaphone/pull/348) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.12a1](https://github.com/TigreGotico/tugaphone/tree/1.11.12a1) (2026-11-25)
 
