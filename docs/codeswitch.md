@@ -239,7 +239,7 @@ the English projection table above, not by a stored pronunciation.
 
 ```python
 ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="auto")
-# 'kõˈpɾej ˈũ ɛɐɾbɐɡ ˈnovu'
+# 'kõˈpɾej ˈũ ɛɐbɐɡ ˈnovu'
 ph.phonemize_sentence("Comprei um airbag novo.", "pt-PT", contact="none")
 # 'kõˈpɾej ˈũ ɐˈiɾbɐɡ ˈnovu'
 ```

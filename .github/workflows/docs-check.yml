@@ -16,7 +16,7 @@ jobs:
       - name: Install
         run: |
           pip install uv
-          UV_PRERELEASE=allow uv pip install --system -e .
+          UV_PRERELEASE=allow uv pip install --system -e ".[langdetect]"
       - name: Figure data matches the committed result files
         run: |
           for script in docs/img/plot_*.py; do DOCS_FIGURES_DATA_ONLY=1 python "$script"; done

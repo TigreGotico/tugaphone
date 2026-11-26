@@ -213,8 +213,8 @@ call does not import `phonemize` or run a subprocess.
 ```python
 import tugaphone
 
-print(tugaphone.revision("pt-PT"))
-# tugaphone==1.11.15a1;bifonia==0.5.5a5;desacordo_ortografico==0.3.39a3;linguatag==0.4.4a3;o2i-lexicons==0.7.22a2;orthography2ipa==7.127.1a2;packaging==26.4;silabificador==2.1.15a4;text2spoken==0.0.2a134;tugalex==3.0.0a1
+revision = tugaphone.revision("pt-PT")
+print(revision.split(";")[0].split("==")[0])   # tugaphone
 ```
 
 ## `tugaphone.registry`
