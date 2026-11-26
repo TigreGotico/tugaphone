@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.0a3](https://github.com/TigreGotico/tugaphone/tree/3.0.0a3) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.0a2...3.0.0a3)
+
+**Merged pull requests:**
+
+- chore: pin orthography2ipa\>=7.131.1a2 for the «equitativo» lexicon fix [\#412](https://github.com/TigreGotico/tugaphone/pull/412) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.0.0a2](https://github.com/TigreGotico/tugaphone/tree/3.0.0a2) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.0a1...3.0.0a2)
@@ -371,10 +379,6 @@
 ## [1.11.2a1](https://github.com/TigreGotico/tugaphone/tree/1.11.2a1) (2026-11-19)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.1a1...1.11.2a1)
-
-**Merged pull requests:**
-
-- fix: track text2spoken 0.0.2a91, which reads pt-PT space-grouped numbers [\#298](https://github.com/TigreGotico/tugaphone/pull/298) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.1a1](https://github.com/TigreGotico/tugaphone/tree/1.11.1a1) (2026-11-19)
 
