@@ -82,7 +82,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "3.0"
+HARNESS_VERSION = "3.1"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -166,10 +166,60 @@ _FRONT_BEFORE_VOWEL = re.compile("i(?=[aɐeɛɨoɔu])")
 _BACK_BEFORE_VOWEL = re.compile("u(?=[aɐeɛɨioɔ])")
 
 
-def accept_variants(word: str, ipa: str) -> str:
-    """The normalized ``ipa`` with a word-initial ⟨es⟩ vowel removed and an
-    unstressed high vowel before a vowel read as a glide."""
-    if _ES_WORD.match(word.lower()):
+#: Brazilian optional processes. Each reading of a process scores as one.
+#: - Coda /R/ "is extremely variable in BP" (Barbosa & Albano 2004: 228), so a
+#:   rhotic before a consonant or at the word end is one segment.
+#: - "In casual and fast speech, adjacent heterosyllabic vowels usually turn
+#:   into diphthongs" (Barbosa & Albano 2004: 230): the glide rule above.
+#: - Vowel epenthesis in an obstruent cluster is variable (Collischonn 2004,
+#:   SIGNUM 7(1): 64, presence or absence as the dependent variable; 69%
+#:   pretonic, 24% postonic, p. 67), so an [i] between the two consonants of
+#:   a written obstruent cluster (cacto, obtuso, ignaro) is dropped. /n/ does
+#:   not trigger it (p. 66, n. 5).
+#: - The glide of a final stressed syllable closed by /S/ is variable: Leiria
+#:   (Organon 28: 133) finds it in 41% of 1,725 contexts, and gives "a
+#:   ditongação é uma regra variável" as hypothesis 3 (p. 134). So the [j] of
+#:   a final stressed vowel + /S/ is dropped. The source has no unstressed data.
+_BR_CODA_R = re.compile("[ɾɹɻrʁχxhʀ](?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
+_CLUSTER = re.compile("([pbtdcgfv])(?=[bcçdfgjkmnpqstvxz])")
+_FIRST = {"p": "p", "b": "b", "t": "t", "d": "d", "c": "k", "g": "ɡ", "f": "f", "v": "v"}
+_SECOND = {"b": "b", "c": "[ks]", "ç": "s", "d": "d", "f": "f", "g": "[ɡʒ]", "j": "ʒ", "k": "k",
+           "m": "m", "n": "n", "p": "p", "q": "k", "s": "[szʃʒ]", "t": "t", "v": "v", "x": "[ʃks]",
+           "z": "z"}
+
+
+def _drop_epenthesis(word: str, ipa: str) -> str:
+    """``ipa`` with no [i] between the consonants of each written obstruent cluster."""
+    for m in _CLUSTER.finditer(word.lower()):
+        first, second = _FIRST[m.group(1)], _SECOND[word.lower()[m.end()]]
+        ipa = re.sub(f"({first})(?:\u0361[ʃʒ])?i(?={second})", r"\1", ipa, count=1)
+    return ipa
+
+
+_BR_FINAL_GLIDE_S = re.compile("([aɐeɛoɔu]\u0303?)j([sʃz])$")
+#: A written ⟨a e o⟩ in a final stressed syllable before ⟨s z⟩: accented,
+#: before ⟨z⟩ in a word with no written accent elsewhere, or the one vowel of a
+#: monosyllable. A written ⟨i⟩ or a written diphthong there (raiz, pais), a
+#: paroxytone (Pérez) and an unstressed clitic (nos, dos) are outside the step.
+_BR_OXYTONE_S = re.compile(
+    "(?<![aeiouáéíóúâêô])(?:[áéóâêô]s|[aeo]z|(?<=^[^aeiouáéíóúâêô])[aeo]s|(?<=^[^aeiouáéíóúâêô]{2})[aeo]s)$")
+
+_BR_CLITICS = frozenset({"as", "os", "das", "dos", "nas", "nos", "pelas", "pelos", "vos", "lhes", "mas"})
+_WRITTEN_ACCENT = re.compile("[áéíóúâêô]")
+
+
+def accept_variants(word: str, ipa: str, brazilian: bool = False) -> str:
+    """The normalized ``ipa`` with each sourced optional process read one way:
+    for European Portuguese a word-initial ⟨es⟩ vowel removed, and for both
+    an unstressed high vowel before a vowel read as a glide."""
+    if brazilian:
+        ipa = _BR_CODA_R.sub("ɾ", ipa)
+        ipa = _drop_epenthesis(word, ipa)
+        lower = word.lower()
+        if (_BR_OXYTONE_S.search(lower) and lower not in _BR_CLITICS
+                and not (lower.endswith("z") and _WRITTEN_ACCENT.search(lower[:-2]))):
+            ipa = _BR_FINAL_GLIDE_S.sub(r"\1\2", ipa)
+    elif _ES_WORD.match(word.lower()):
         ipa = _INITIAL_ES.sub(r"\1", ipa)
     return _BACK_BEFORE_VOWEL.sub("w", _FRONT_BEFORE_VOWEL.sub("j", ipa))
 
@@ -181,12 +231,13 @@ def _folded(ipa: str, region: tuple) -> str:
     return "".join(ch for ch in s if ch not in _SEG_DROP and not ch.isspace())
 
 
-def segments(ipa: str, region: tuple = _INFOPEDIA, word: Optional[str] = None) -> List[str]:
+def segments(ipa: str, region: tuple = _INFOPEDIA, word: Optional[str] = None,
+             brazilian: bool = False) -> List[str]:
     """The segments of ``ipa`` under the board's segment rule, after the
-    notation folds. With ``word``, a word-initial ⟨es⟩ vowel is removed."""
+    notation folds. With ``word``, the accepted variants are one reading."""
     s = _folded(ipa, region)
     if word is not None:
-        s = accept_variants(word, s)
+        s = accept_variants(word, s, brazilian)
     out: List[str] = []
     join = False
     for ch in s:
@@ -226,7 +277,7 @@ def _levenshtein(a, b) -> int:
 
 
 def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA,
-               word: Optional[str] = None) -> Tuple[int, int]:
+               word: Optional[str] = None, brazilian: bool = False) -> Tuple[int, int]:
     """(edit distance, reference length) against the CLOSEST gold variant.
 
     A word with several attested pronunciations is correct if it matches
@@ -234,8 +285,9 @@ def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA,
     so multi-variant words are not penalised for the variants they did
     not choose.
     """
-    h = segments(hyp, region, word)
-    return min((_levenshtein(h, r), len(r)) for r in (segments(g, region, word) for g in golds))
+    h = segments(hyp, region, word, brazilian)
+    return min((_levenshtein(h, r), len(r))
+               for r in (segments(g, region, word, brazilian) for g in golds))
 
 
 # ─── stress accuracy ────────────────────────────────────────────────────────
@@ -476,13 +528,13 @@ def load_fixture(dialect: str) -> Dict[str, List[str]]:
 
 
 def _score_rows(hyp: str, rows: List[Tuple[str, str]], region: str, extra: tuple = (),
-                word: Optional[str] = None) -> Tuple[int, int, tuple]:
+                word: Optional[str] = None, brazilian: bool = False) -> Tuple[int, int, tuple]:
     """(edits, gold segments, folds) against the closest variant, each variant
     under the folds of its own sources."""
     by_folds: Dict[tuple, List[str]] = {}
     for ipa, sources in rows:
         by_folds.setdefault(source_notation(sources, region), []).append(ipa)
-    return min(score_word(hyp, golds, folds + extra, word) + (folds,)
+    return min(score_word(hyp, golds, folds + extra, word, brazilian) + (folds,)
                for folds, golds in by_folds.items())
 
 
@@ -495,6 +547,7 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
     if limit is not None:
         words = words[:limit]
     european = dialect.startswith("pt-PT")
+    brazilian = dialect.startswith("pt-BR")
     err = tot = exact = failed = n_stress = stress_hits = 0
     err_acc = tot_acc = err_ph = tot_ph = 0
     confusion: Dict[Tuple[str, str], int] = {}
@@ -516,8 +569,8 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         d_ph, n_ph, _ = _score_rows(hyp, rows, region, _PHONEME_MERGES)
         err_ph += d_ph
         tot_ph += n_ph
-        if european:
-            d_acc, n_acc, _ = _score_rows(hyp, rows, region, word=word)
+        if european or brazilian:
+            d_acc, n_acc, _ = _score_rows(hyp, rows, region, word=word, brazilian=brazilian)
             err_acc += d_acc
             tot_acc += n_acc
         if d == 0:
@@ -617,11 +670,15 @@ def write_reports(rows: List[dict]) -> None:
         "`img/plot_scoreboard.py` makes this figure from",
         "`benchmarks/results.json`.",
         "",
-        "PER with initial es- accepted counts [iʃ], [ɨʃ] and [ʃ] as one reading",
-        "of a word-initial ⟨es⟩ + consonant in the European dialects",
-        "(Vázquez Diéguez 2015: 250, 265; Teyssier 1989: 28, quoted in Vázquez Diéguez 2015: 244).",
+        "PER, variants accepted counts each reading of a cited optional process as",
+        "one: for European Portuguese a word-initial ⟨es⟩ vowel (Vázquez Diéguez",
+        "2015: 250, 265) and a glide before a vowel (Mateus & Andrade 1998); for",
+        "Brazilian Portuguese the coda /R/ and the glide before a vowel (Barbosa &",
+        "Albano 2004: 228, 230), epenthesis in a written obstruent cluster",
+        "(Collischonn 2004: 64, 67) and the glide of a final stressed vowel before",
+        "/S/ (Leiria, Organon 28: 133). See docs/benchmarking.md.",
         "",
-        "| Dialect | Gold region | Words | PER | PER, initial es- accepted "
+        "| Dialect | Gold region | Words | PER | PER, variants accepted "
         "| Word accuracy | Stress words | Stress accuracy |",
         "|---|---|---|---|---|---|---|---|",
     ]
