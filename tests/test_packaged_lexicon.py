@@ -71,8 +71,9 @@ def test_every_entry_reaches_the_output(lect):
     assert {word: phonemize(word, lect) for word in entries} == entries
 
 
-@pytest.mark.xfail(strict=True, reason="the bifonia trema hides the lexicon key "
-                   "(orthography2ipa Pipeline runs marks before the lexicon)")
+# Not strict: orthography2ipa #2644 fixes it, and its consumer check runs this file.
+@pytest.mark.xfail(strict=False, reason="the bifonia trema hides the lexicon key "
+                   "(orthography2ipa #2643)")
 def test_a_marked_word_reaches_its_lexicon_entry():
     assert phonemize("equitativo", "pt-PT") == packaged("pt-PT")["equitativo"]
 
