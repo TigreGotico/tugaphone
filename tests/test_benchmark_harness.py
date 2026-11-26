@@ -310,6 +310,26 @@ def test_comma_joined_infopedia_readings_are_variants(tmp_path, monkeypatch):
     assert benchmark.load_fixture("pt-PT") == {"abadejo": ["ɐbɐˈdɐʒu", "ɐbɐˈdeʒu"]}
 
 
+class TestBrazilianNasal:
+    # Barbosa & Albano (2004: 229, 230).
+    def test_the_glide_after_a_nasal_vowel_is_one_segment(self):
+        assert benchmark._score_rows("katɐˈlɐ̃w̃", [("katɐˈlɐ̃w", "wiktionary")], "pt-BR")[:2] == (0, 7)
+        assert benchmark._score_rows("tɐ̃ˈbẽj̃", [("tɐ̃ˈbẽj", "wiktionary")], "pt-BR")[:2] == (0, 5)
+
+    def test_an_oral_glide_after_an_oral_vowel_stays(self):
+        assert benchmark._score_rows("ˈpaw̃", [("ˈpaw", "wiktionary")], "pt-BR")[:2] == (1, 3)
+
+    def test_a_stressed_vowel_before_a_nasal_onset_is_one_reading(self):
+        assert benchmark.score_word("ˈsĩmu", ["ˈsimu"], word="cimo", brazilian=True) == (0, 4)
+        assert benchmark.score_word("kamĩˈɲɐ̃du", ["kamiˈɲɐ̃du"], word="caminhando", brazilian=True) == (0, 8)
+
+    def test_an_unstressed_vowel_before_m_or_n_stays_nasal(self):
+        assert benchmark.score_word("bɐ̃ˈnɐnɐ", ["baˈnɐnɐ"], word="banana", brazilian=True) == (1, 6)
+
+    def test_european_rows_keep_the_nasal_vowel(self):
+        assert benchmark.score_word("ˈsĩmu", ["ˈsimu"], word="cimo") == (1, 4)
+
+
 class TestBrazilianAccepted:
     def score(self, hyp, gold, word):
         return benchmark.score_word(hyp, [gold], word=word, brazilian=True)
@@ -371,7 +391,8 @@ class TestSourceNotation:
     def test_folds_follow_the_source_of_the_row(self):
         assert benchmark.source_notation("infopedia", "pt-PT") == benchmark._INFOPEDIA
         assert benchmark.source_notation("wiktionary", "pt-PT") == ()
-        assert benchmark.source_notation("wiktionary", "pt-BR") == (("ɪ", "i"), ("ʊ", "u"))
+        assert benchmark.source_notation("wiktionary", "pt-BR") == (
+            ("ɪ", "i"), ("ʊ", "u"), ("\u0303w\u0303", "\u0303w"), ("\u0303j\u0303", "\u0303j"))
         assert benchmark.source_notation("none", "pt-PT-x-lisboa") == ()
 
     def test_a_row_of_several_sources_takes_all_their_folds(self):

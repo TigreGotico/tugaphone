@@ -97,7 +97,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "3.2"
+HARNESS_VERSION = "3.3"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -140,12 +140,20 @@ _OTHER: tuple = ()
 #: (portuguese-unified-pronunciation-lexicon@23898e1, ipa_narrow).
 _NO_LAX_HIGH = (("ɪ", "i"), ("ʊ", "u"))
 
+#: The pt-BR Wiktionary rows write the glide after a nasal vowel with and
+#: without the tilde: [ɐ̃w̃] 23 times and [ɐ̃w] 10 times, [ẽj̃ õj̃] 9 times and
+#: [ẽj õj] 8 times (tests/data/gold/pt-BR.tsv). BP has no oral glide there:
+#: "Nasalised diphthongs are formed by combining [ẽ ɐ̃ õ ũ] with the offglide
+#: [j̃]. With [w̃], on the other hand, the only possibility is [ɐ̃w̃]"
+#: (Barbosa & Albano 2004: 230).
+_NASAL_GLIDE = (("\u0303w\u0303", "\u0303w"), ("\u0303j\u0303", "\u0303j"))
+
 #: The folds of a gold row, by the source and the region of the row. A row
 #: that several sources attest is the same string in each source's notation,
 #: so it takes the folds of all its sources.
 _SOURCE_NOTATION: Dict[Tuple[str, str], tuple] = {
     ("infopedia", "pt-PT"): _INFOPEDIA,
-    ("wiktionary", "pt-BR"): _NO_LAX_HIGH,
+    ("wiktionary", "pt-BR"): _NO_LAX_HIGH + _NASAL_GLIDE,
     ("michaelis", "pt-BR"): _NO_LAX_HIGH,
 }
 
@@ -228,6 +236,15 @@ def _glide(pattern: re.Pattern, glide: str, ipa: str, stressed: frozenset) -> st
 #: alveolar trill [r] is the tap in the folds, so it stays outside the step.
 _STRONG_R = re.compile("[ʀχx]")
 _BR_STRONG_R = re.compile("[ʀχxh]")
+
+#: A BP vowel is nasalised "in stressed position before the archiphoneme /N/
+#: [...] as well as before heterosyllabic nasal consonants": (em) cima
+#: [ˈsĩmɐ], soma [ˈsõmɐ]; before the stress it is nasalised before /N/ or
+#: /ɲ/, ganhar [ɡɐ̃ˈɲaɾ] (Barbosa & Albano 2004: 229). The pt-BR Wiktionary
+#: rows write a stressed vowel before [m n ɲ] + vowel nasal 55 times and oral
+#: 35 times. So a stressed vowel before a nasal onset, and any vowel before
+#: [ɲ], scores as oral.
+_BR_NASAL_ONSET = re.compile("([aɐeɛioɔu])\u0303(?=([mnɲ])[aɐeɛioɔuɨəɪʊ])")
 _BR_CODA_R = re.compile("[ɾɹɻɽrʁχxhʀ](?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
 _CLUSTER = re.compile("([pbtdcgfv])(?=[bcçdfgjkmnpqstvxz])|(m)(?=n)")
 _FIRST = {"p": "p", "b": "b", "t": "t", "d": "d", "c": "k", "g": "ɡ", "f": "f", "v": "v", "m": "m"}
@@ -287,6 +304,8 @@ def accept_variants(word: str, ipa: str, brazilian: bool = False,
     ipa = _glide(_BACK_BEFORE_VOWEL, "w", _glide(_FRONT_BEFORE_VOWEL, "j", ipa, stressed), stressed)
     ipa = (_BR_STRONG_R if brazilian else _STRONG_R).sub("ʁ", ipa)
     if brazilian:
+        ipa = _BR_NASAL_ONSET.sub(
+            lambda m: m.group(1) if m.start() in stressed or m.group(2) == "ɲ" else m.group(), ipa)
         ipa = _BR_CODA_R.sub("ɾ", ipa)
         ipa = _drop_epenthesis(word, ipa)
         lower = word.lower()
@@ -770,7 +789,7 @@ def write_reports(rows: List[dict]) -> None:
         "one: for European Portuguese a word-initial ⟨es⟩ vowel (Vázquez Diéguez",
         "2015: 250, 265), a glide before a vowel (Mateus & Andrade 1998;",
         "Cruz-Ferreira 1999: 128) and the phones of the strong R (Pereira 2020: iii);",
-        "for Brazilian Portuguese the strong R, the coda /R/ and the glide before a",
+        "for Brazilian Portuguese the strong R, a nasal vowel before a nasal onset, the coda /R/ and the glide before a",
         "vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent cluster",
         "(Collischonn 2004: 64, 67) and the glide of a final stressed vowel before",
         "/S/ (Leiria, Organon 28: 133). See docs/benchmarking.md.",

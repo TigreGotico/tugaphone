@@ -113,7 +113,7 @@
         "count": 21
       }
     ],
-    "harness_version": "3.2"
+    "harness_version": "3.3"
   },
   {
     "dialect": "pt-BR",
@@ -121,18 +121,13 @@
     "reference_kind": "human",
     "n": 993,
     "failed": 0,
-    "per": 0.1007,
-    "per_phoneme": 0.0973,
-    "per_accepted": 0.078,
-    "word_accuracy": 0.4683,
+    "per": 0.0973,
+    "per_phoneme": 0.0938,
+    "per_accepted": 0.0687,
+    "word_accuracy": 0.4804,
     "stress_acc": 0.9765,
     "n_stress": 895,
     "top_confusions": [
-      {
-        "got": "̃",
-        "expected": "",
-        "count": 74
-      },
       {
         "got": "a",
         "expected": "ɐ",
@@ -147,6 +142,11 @@
         "got": "e",
         "expected": "ɛ",
         "count": 49
+      },
+      {
+        "got": "̃",
+        "expected": "",
+        "count": 46
       },
       {
         "got": "i",
@@ -204,6 +204,11 @@
         "count": 12
       },
       {
+        "got": "",
+        "expected": "w",
+        "count": 11
+      },
+      {
         "got": "ɾ",
         "expected": "ɹ",
         "count": 11
@@ -211,11 +216,6 @@
       {
         "got": "ɾ",
         "expected": "r",
-        "count": 10
-      },
-      {
-        "got": "",
-        "expected": "w",
         "count": 10
       },
       {
@@ -229,7 +229,7 @@
         "count": 9
       }
     ],
-    "harness_version": "3.2"
+    "harness_version": "3.3"
   },
   {
     "dialect": "pt-BR-x-rio-janeiro",
@@ -345,7 +345,7 @@
         "count": 5
       }
     ],
-    "harness_version": "3.2"
+    "harness_version": "3.3"
   },
   {
     "dialect": "pt-BR-x-sao-paulo",
@@ -355,7 +355,7 @@
     "failed": 0,
     "per": 0.1535,
     "per_phoneme": 0.1535,
-    "per_accepted": 0.1379,
+    "per_accepted": 0.1338,
     "word_accuracy": 0.193,
     "stress_acc": 0.998,
     "n_stress": 992,
@@ -461,7 +461,7 @@
         "count": 10
       }
     ],
-    "harness_version": "3.2"
+    "harness_version": "3.3"
   },
   {
     "dialect": "pt-MZ",
@@ -577,7 +577,7 @@
         "count": 7
       }
     ],
-    "harness_version": "3.2"
+    "harness_version": "3.3"
   },
   {
     "dialect": "pt-PT",
@@ -693,7 +693,7 @@
         "count": 3
       }
     ],
-    "harness_version": "3.2"
+    "harness_version": "3.3"
   },
   {
     "dialect": "pt-PT-x-lisbon",
@@ -809,7 +809,7 @@
         "count": 3
       }
     ],
-    "harness_version": "3.2"
+    "harness_version": "3.3"
   },
   {
     "dialect": "pt-TL",
@@ -925,6 +925,6 @@
         "count": 25
       }
     ],
-    "harness_version": "3.2"
+    "harness_version": "3.3"
   }
 ]
