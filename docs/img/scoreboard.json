@@ -1,42 +1,42 @@
 [
  {
   "dialect": "pt-PT-x-lisbon",
-  "per": 0.0475,
+  "per": 0.0683,
   "stress_acc": 0.998
  },
  {
+  "dialect": "pt-BR",
+  "per": 0.125,
+  "stress_acc": 0.9731
+ },
+ {
+  "dialect": "pt-MZ",
+  "per": 0.1377,
+  "stress_acc": 1.0
+ },
+ {
   "dialect": "pt-BR-x-sao-paulo",
-  "per": 0.0655,
+  "per": 0.1535,
   "stress_acc": 0.998
  },
  {
   "dialect": "pt-PT",
-  "per": 0.0831,
+  "per": 0.1658,
   "stress_acc": 0.9867
  },
  {
-  "dialect": "pt-BR",
-  "per": 0.0982,
-  "stress_acc": 0.9731
- },
- {
   "dialect": "pt-BR-x-rio-janeiro",
-  "per": 0.106,
-  "stress_acc": 1.0
- },
- {
-  "dialect": "pt-MZ",
-  "per": 0.1293,
+  "per": 0.1721,
   "stress_acc": 1.0
  },
  {
   "dialect": "pt-AO",
-  "per": 0.232,
+  "per": 0.2395,
   "stress_acc": 0.997
  },
  {
   "dialect": "pt-TL",
-  "per": 0.3418,
+  "per": 0.3644,
   "stress_acc": 0.997
  }
 ]
