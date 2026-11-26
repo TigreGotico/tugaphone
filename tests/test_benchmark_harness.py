@@ -293,3 +293,24 @@ class TestInfopediaTap:
 
     def test_other_regions_keep_r_as_the_trill(self):
         assert benchmark.score_word("ɐɾɛmɐˈtaɾ", ["ɐrɛmɐˈtaɾ"], benchmark._OTHER) == (1, 8)
+
+
+class TestSourceNotation:
+    def test_folds_follow_the_source_of_the_row(self):
+        assert benchmark.source_notation("infopedia", "pt-PT") == benchmark._INFOPEDIA
+        assert benchmark.source_notation("wiktionary", "pt-PT") == ()
+        assert benchmark.source_notation("wiktionary", "pt-BR") == (("ɪ", "i"), ("ʊ", "u"))
+        assert benchmark.source_notation("none", "pt-PT-x-lisboa") == ()
+
+    def test_a_row_of_several_sources_takes_all_their_folds(self):
+        assert benchmark.source_notation("wiktionary+infopedia", "pt-PT") == benchmark._INFOPEDIA
+
+    def test_a_wiktionary_lax_vowel_scores_as_the_tense_vowel(self):
+        rows = [("ˈtoɡʊ", "wiktionary")]
+        assert benchmark._score_rows("ˈtoɡu", rows, "pt-BR")[:2] == (0, 4)
+        assert benchmark._score_rows("ˈtoɡu", [("ˈtoɡʊ", "none")], "pt-BR")[:2] == (1, 4)
+
+    @pytest.mark.parametrize("dialect", sorted(benchmark.DIALECT_TO_REGION))
+    def test_every_fixture_row_names_its_sources(self, dialect):
+        rows = [r for v in benchmark.load_fixture_rows(dialect).values() for r in v]
+        assert rows and all(sources for _, sources in rows)

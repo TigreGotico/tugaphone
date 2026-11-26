@@ -1,1004 +1,1005 @@
 # gold fixture: TigreGotico/portuguese-unified-pronunciation-lexicon region=pt-BR
 # source sha256=0b4d5e86a94762fc9037f6b415f9100647acd5de2fefa3b47f57086233cc2027
 # sample: seed=20260713 words=1000 (cap 1000)
-# columns: word<TAB>ipa_narrow (one row per variant)
--abilidade	abiliˈdad͡ʒi
--arquia	aʁˈkiɐ
-ABC	aˌbeˈse
-AVC	ɐveˈse
-Abrão	aˈbɾɐ̃w̃
-Acelinas	aseˈlĩnɐs
-Acelino	aseˈlĩnu
-Acelinos	aseˈlĩnus
-Adalberto	adawˈbɛʁtu
-Albânia	ɐwˈbãnjɐ
-Amélio	aˈmɛliu
-Anastásio	anasˈtaziu
-Anastásios	anasˈtazius
-Andes	ˈɐ̃d͡ʒis
-Antiguidade	ɐ̃ⁿʧɪɡwɪˈdaʤɪ
-Apolônia	apoˈlõnjɐ
-Bahia	baˈia
-Barreiras	baˈʁe(j)ɾɐs
-Bauru	bauˈɾu
-Bonópolis	boˈnɔpolis
-Burquina Fasso	buʁˈkĩnɐˈfasu
-Cabo Verde	ˈkabuˈveχʤi
-Caíque	kaˈiki
-Ceres	ˈsɛɾis
-Cira	'siɾa
-Curaçá	kuɾaˈsa
-Damasco	daˈmasku
-Darci	daʁˈsi
-E.U.A.	ˌeˌuˈa
-Einstein	ˌaĩsˈtaĩ
-Elena	eˈlẽnɐ
-Fiama	fiˈɐ̃mɐ
-Formosa	foɾˈmɔzɐ
-Galícia	ɡaˈlisiɐ
-Goiás Velho	ˌɡojˈa(j)zˈvɛʎu
-Gomes	ˈɡõmis
-Greice	ˈɡɾejsi
-Guiné	ɡi'nɛ
-Hebe	ˈɛbi
-Iama	iˈɐmɐ
-Jenifer	ˈd͡ʒẽnifeʁ
-Joice	ˈʒɔjsi
-Judeia	ʒuˈdɛjɐ
-Jugoslávia	ʒʊɡosˈlavjɐ
-Kátia	ˈkat͡ʃjɐ
-Lusitânia	luziˈtãnja
-Lácio	ˈlasiu
-Martino	maɾˈtʃiɲu
-Melilha	meˈliʎɐ
-Melo	ˈmɛlu
-Mistérios de Elêusis	misˈtɛɾiuzd͡ʒieˈlewzis
-Natal	naˈtaw
-Norberto	nor'bɛrto
-Nuque	ˈnuki
-Parati	paɾaˈtʃi
-Pietro	piˈetɾu
-Piracicaba	piɾasiˈkabɐ
-Polidoros	poliˈdɔɾus
-Quatro Barras	ˈkwatɾuˈbaʁɐs
-Quebec	keˈbɛkɪ
-República Democrática do Congo	ʁeˈpublikɐdemoˈkɾat͡ʃikɐduˈkõɡu
-Rogério	ʁoˈʒɛɾju
-Romilda	ʁoˈmiwdɐ
-Sales	ˈsalis
-Serafim	seɾaˈfĩ
-Serafina	seɾaˈfĩnɐ
-Sicília	siˈsiliɐ
-Sudene	suˈdẽni
-Tchecoslováquia	ˌt͡ʃɛkozloˈvakiɐ
-Teodora	teoˈdɔɾɐ
-Teodoro	teoˈdɔɾu
-Terra	ˈtɛha
-Tio Hugo	t͡ʃiu̯'uɡu̯
-Togo	ˈtoɡʊ
-Uchoa	uˈʃoɐ
-Valdemar	vawde'maʁ
-Vanessa	vaˈnesɐ
-Vidal	viˈdaw
-Vinício	viˈnisju
-Yukon	ˈjukõ
-Zanela	zaˈnɛlɐ
-a-	a
-aardvark	aʁd͡ʒiˈvaʁki
-ab ovo	ˈabˈovu
-ababelado	ababeˈladu
-abacaxizais	abakaʃiˈzajs
-abacteriano	abakteɾiˈɐnu
-abadias	aba'dʒiaʃ
-abaixado	abajˈʃadu
-abalroa	abawxoˈa
-abesourar	abezouˈɾaɾ
-abolicionismo	abolisioˈnizmu
-abotoar o paletó de	abotoˈa(ɾ)upaleˈtɔde
-absentismo	absẽˈʧiʒmu
-acagaçado	a'kaɡasadu
-acamurçar	akamurˈsar
-acautelável	akawteˈlavew
-acidente vascular cerebral	ɐsɪˈdẽⁿʧɪvɐskʊˈlaɾseɾeˈbɾaw
-acontece	ɐkõⁿˈtɛsɪ
-acre	ˈakɾɪ
-ad hoc	ˈadˈɔk
-adenopatia	adenopaˈt͡ʃiɐ
-adossado	adoˈsadu
-adotar	ɐdɔˈtaɾ
-aduana	aduˈɐ̃nɐ
-adutora	aduˈtoɾɐ
-advogado	aʤvo'ɡadu
-aerogel	aeɾoˈʒew
-afegânicas	afeˈɡɐ̃nikɐs
-aflitivamente	afliˌt͡ʃivaˈmẽt͡ʃi
-agricultura	aɡɾikuwˈtuɾə
-ajudar	aˈʒudɐ
-alamossauro	alamoˈsawɾu
-alecrim	aleˈkɾĩj
-alegria de pobre dura pouco	aˈlɛɡɾiɐd͡ʒiˈpɔbɾiˈduɾɐˈpo(w)ku
-aleijado	alejˈʒadu
-alelopata	aleloˈpatɐ
-alfabeto cirílico	ɐwfɐˈbɛtʊsɪˈɾilɪkʊ
-algarismo arábico	ɐwɡɐˈɾizmʊɐˈɾabɪkʊ
-alidade	aliˈdaʤi
-alongamento	alõɡaˈmẽtu
-alternância	awteɾˈnɐ̃sjɐ
-alto-falante	ˈawtufaˈlɐ̃ʧi
-altruísta	awtɾuˈiʃtɐ
-alucinação	ɐlusinɐˈsɐ̃u̯
-alvião	awviˈɐ̃w
-alígero	aˈliʒeɾu
-alínea	aˈlinjɐ
-amanajé	amãnaˈʒɛ
-amarelar	ɐmɐɾeˈlaχ
-ambulatório	ɐ̃bulaˈtɔɾju
-ameixa	aˈmejʃɐ
-americano	ameɾiˈkãnu
-amigos, amigos, negócios à parte	aˈmiɡusaˈmiɡusneˈɡɔsjuzaˈpaʁt͡ʃi
-aminoácido	ãmĩnoˈasidʊ
-ampere	ãˈpɛɾi
-amplexo	ɐ̃ˈplɛksu
-amuado	amuˈadu
-anagrama	anaˈɡɾɐ̃mɐ
-anambé	anɐ̃ˈbɛ
-anamnese	anɐˈmnɛzi
-androide	ãⁿˈdɾɔjʤɪ
-androsemo	ɐ̃droˈzemʊ
-anfitrião	ɐ̃fitɾiˈɐ̃w̃
-anfractuosidade	ɐ̃fɾaktuoziˈdad͡ʒi
-angu	ɐ̃ˈɡu
-animal	ˌɐniˈmaw
-ano	ˈãⁿnu
-anorquia	ɐnoχˈkiɐ
-antagônimo	ɐ̃taˈɡonimo̝
-antimônio	ɐ̃t͡ʃiˈmõnju
-antipetista	ɐ̃ʧipeˈʧiʃtɐ
-antissocial	ˌɐ̃ʧisosiˈaw
-antárticas	ɐ̃ˈtaɾt͡ʃikɐs
-análise sintática	aˈnalizisĩˈtat͡ʃikɐ
-anúncio	ɐˈnũsjʊ
-apa	ˈapɐ
-apache	aˈpaʃi
-apesar	ɐpeˈzaɾ
-apiacá	apiaˈka
-apreciar	apɾesiˈaɾ
-apócope	aˈpɔkopi
-aquemunéris	ɐkemʊˈnɛɾɪs
-aquário	aˈkwaɾju
-argutíssimo	aʁɡuˈt͡ʃisimu
-argônio	aɦˈɡõnɪu
-armado	aʁˈmadu
-armazenagem	aχmazeˈnaʒẽj
-armeniano	aʁmeniˈɐ̃nu
-arqueólogo	aɾkeˈɔloɡu
-arquivista	aχkiˈviʃtɐ
-arromeno	aɾoˈmenu
-arupemba	aɾuˈpẽbɐ
-arável	aˈɾavew
-ascite	ɐˈsiːti
-asnada	azˈnadə
-asnáticas	aʒˈnat͡ʃikaʃ
-assamês	asaˈmejs
-assinatura de tempo	asinaˈtuɾa̝dᴣe̝ˈtẽpo̝
-assincronia	ɐsɪŋkɾoˈniɐ
-astrólogo	ɐsˈtɾɔloɡʊ
-audiovisual	awd͡ʒjoviˈzwaw
-aueté	awweˈtɛ
-augúrio	awˈɡuɾju
-autopropelido	ˌawtupɾopeˈlidu
-avariar	avaɾiˈaɾ
-avoaras	avoˈaɾɐs
-avoardes	avoˈaʁd͡ʒis
-avoares	avoˈaɾis
-avoarias	avoaˈɾiɐs
-avoaríamos	avoaˈɾiamus
-avoasses	avoˈasis
-avoavas	avoˈavɐs
-avoeis	avoˈejs
-avoemos	avoˈẽmus
-avoes	aˈvois
-avoássemos	avoˈasemus
-avárico	aˈvaɾiku
-axiológico	aksioˈlɔʒiku
-azar	ɐzaɾ
-azinhavre	azĩˈɲavɾi
-aônio	aˈõniu
-babado	baˈbadu
-bacteriemia	{{AFIbakteɾieˈmiɐ}}
-baguete	baˈɡɛt͡ʃi
-balalão	balaˈlɐ̃w̃
-balangandã	balɐ̃ɡɐ̃ˈdɐ̃
-balear	baleˈaɾ
-balia	baˈliɐ
-balimos	baˈlĩmus
-balir	baˈli(ʁ)
-ballerina	bɐleˈɾinɐ
-balzaquiana	bawzakiˈɐnɐ
-bambu	bɐ̃ˈbu
-bamburraste	bɐ̃buˈxastʃi
-basquir	bɐsˈkiɾ
-basílico	bɐˈziliku
-batimetria	bat͡ʃimeˈtɾiɐ
-batiscafos	bat͡ʃisˈkafus
-batracofobia	batɾakofoˈbiɐ
-bazófia	baˈzɔfjɐ
-baías	ba'ias
-beijo	ˈbejʒu
-beldade	bewˈdad͡ʒi
-bem	ˈbẽĩ̯
-bem-feito	ˌbẽj̃ˈfejtu
-bibliofilia	ˌbibliofiˈliɐ
-bibliografia	biblioɡraˈfiɐ
-bibliomania	bibliomɐˈniɐ
-biblioteconomia	bibliotekonoˈmiɐ
-bicampeão	bɪkãpeˈãw
-bicentenário	bɪsẽteˈnaɾjʊ
-bichim	biˈʃĩ
-bidê	biˈde
-bilabial	bilabiˈaw
-bilro	ˈbiwχu
-bimestre	biˈmɛstɾi
-biosfera	biˌɔsˈfɛɾɐ
-biotério	bioˈtɛɾju
-biquíni	biˈkĩni
-bitcoin	bitˈkɔĩ
-biófilo	biˈɔfilu
-blog	ˈblɔɡɪ
-boboca	boˈbɔkɐ
-bom apetite	bõŋɑpetʒite
-bom velhinho	ˈbõveˈʎĩɲu
-bombas	ˈbõbɐs
-bombas de fragmentação	ˈbõŋbasdeˌfraɡmẽŋtaˈsɐ̃w
-bombonier	bõboniˈɛχ
-bomboniere	bõboniˈɛɾi
-bonde	ˈbõⁿʤɪ
-boneco de palito	boˈnɛko̝dᴣe̝paˈlito̝
-bonopolino	bonopoˈlĩnu
-boquete	bo'kɛʧɪ
-borboletário	boʁboleˈtaɾiu
-borguinhão	boɹɡoˈɲejs
-bornal	boχˈnaw
-borralheiro	boʁaˈʎe(j)ɾu
-botar os pingos nos is	ˌbɔˈta(ɾ)usˈpĩɡuznuzˈis
-bote	ˈbɔti
-braguês	bɾaˈɡejʃ
-brandemburgueses	bɾɐ̃dẽˈbuɻɡezes
-brandemburguês	bɾɐ̃dẽˈbuɻ'ɡes
-braquicéfalo	bɾakiˈsɛfalu
-brasileira	bɾɐziˈlejɾɐ
-braço	ˈbɾäsʊ
-brecha jurídica	ˈbɾɛʃɐʒuˈɾid͡ʒikɐ
-bruços	ˈbɾusus
-bunda	bũw̃dɐ
-burgo	ˈbuʁɡu
-burro	ˈbuχu
-bus	ˈbus
-báratro	baˈɾatɾu
-bêbedo	ˈbebedu
-caatinga	kaˈt͡ʃĩɡɐ
-cabalmente	kɐbɐwˈmẽⁿʧɪ
-cabide	kaˈbidi
-cabograma	kaboˈɡɾɐmɐ
-cabritar	kabɾiˈtaχ
-cachúbio	kaˈʃubiu
-cacto	ˈkaktu
-cadeia de caracteres	kɐˈdejɐdʒɪkɐɾɐkɪˈtɛɾɪs
-cadenciosamente	kadẽsiˌɔzaˈmẽt͡ʃi
-cafundó	kafũˈdɔ
-caganita	kaɡaˈnitɐ
-caixa	'kaʃɐ
-cajuruense	kaʒuɾuˈẽsi
-calçada	kawˈsadɐ
-calçado	kɐwˈsadu
-camaiurá	kamajjuˈɾa
-caminhando	kɐmɪˈɲãⁿdʊ
-camomila	kamoˈmila̝
-canal	kaˈnaw
-canastrice	kanasˈtɾisi
-candidatura	kɐ̃d͡ʒidaˈtuɾɐ
-candombá	kɐ̃dõˈba
-caneca	ˈkɐnɛkɐ
-caos	ˈkaws
-capatazia	kapataˈziɐ
-capista	kaˈpistɐ
-capixaba	kapiˈʃabə
-capuchinho	kapuˈʃĩɲu
-caraca	kaˈɾakɐ
-caracalpaque	kɐɾɐwkɐˈpakɪ
-cardápio	kaχˈdapju
-carma	ˈkɐɾmɐ
-casa	ˈkazɐ
-caspa	ˈkaspɐ
-castidade	kast͡ʃiˈdad͡ʒi
-castíssima	kaʃ't͡ʃisimɐ
-catalão	kataˈlãw
-catecúmeno	kateˈkumenu
-catorzes	kɐˈtoɾzis
-catupiry	katupiˈɾi
-cecília	seˈsiliɐ
-cefalão	sefaˈlɐ̃w̃
-cego	ˈsɛɡu
-cela	ˈsɛla
-cem	'sẽj̃
-cesta	ˈseʃtɐ
-ceutense	ˈsewˈtẽsi
-charque	ˈʃaɹki
-chibata	ʃiˈbatɐ
-chicotada	ʃikoˈtadɐ
-chilenos	ʃi'lenos
-chupada	ʃuˈpadɐ
-cicatriz	sikaˈtɾis
-cimo	ˈsimu
-cingalês	sĩjɡaˈlejs
-cinza vulcânica	ˈsĩzɐvuwˈkɐ̃nikɐ
-cinzeiro	sĩˈzejɾu
-circulante	siʁkuˈlɐ̃t͡ʃi
-circulação	siχkulaˈsɐ̃w
-circum-navegação	siʁˌkũnaveɡaˈsɐ̃w̃
-ciriguela	siɾiˈɡwɛla
-citólise	siˈtɔlizi
-ciência	siˈẽsjɐ
-clandestinidade	klɐ̃dest͡ʃiniˈdad͡ʒi
-classificação	klasifikaˈsɐ̃w
-co-hipônimo	koiˈpõnimu
-coalhada	koaˈʎadɐ
-coautor	ˌkɔawˈtoχ
-cobogós	koboˈɡɔ(j)s
-cobrar	koˈbɾaχ
-cobre	ˈkɔbɾi
-coesposa	{{AFIkoesˈpozɑ}}
-coice	ˈkojsi
-colaboração	kolaboɾaˈsɐ̃w̃
-colarinho	kolaˈɾiɲu
-coligir	koliˈʒiɾ
-comadre	koˈmadɾi
-comensal	komẽˈsaw
-comerciário	komɛɾsiˈaɾjʊ
-comichão	komiˈʃɐ̃w
-comida	koˈmidɐ
-comigo	koˈmiɡo̝
-comitre	koˈmitɾi
-compadre	kõˈpadɾi
-competição	kõpeʧisɐ̃w
-comprar	kõˈpɾaχ
-computador	kõwputaˈdoɾ
-confidencialmente	kõfidẽsiˌawˈmẽt͡ʃi
-confirmação	kõfɪɾmɐˈsãw
-conjuntiva	kõʒũˈt͡ʃivɐ
-conquanto	kõwˈkwãtu
-conspirata	kõʃpiˈɾatɐ
-constituído	kõst͡ʃituˈidu
-contactologia	kõtaktoloˈʒiɐ
-contratação	kõtɾataˈsɐ̃w̃
-cooptar	koopˈtaχ
-copioso	kopiˈozu
-coprolalia	kopɾolaˈliɐ
-corintiano	koɾĩjtʃiˈãnu
-corredio	koʀeˈdʒiu
-corrida armamentista	koˈʁidɐaʁmamẽˈt͡ʃistɐ
-costumes	kosˈtumɪs
-coxa	ˈkoʃɐ
-credor	kɾeˈdoʁ
-crepe	ˈkɾɛpi
-criminólogo	kɾimiˈnɔloɡu
-criptozoologia	kɾiptozooloˈʒiɐ
-criptónimo	kɾɪpˈtonɪmʊ
-criptônimo	kɾɪpˈtonɪmʊ
-crise	ˈkɾizi
-crisopolense	kɾizopoˈlẽsi
-crisálida	kɾiˈzalidɐ
-cru	ˈkɾu
-cultura do cancelamento	kuwˈtuɾɐdukɐ̃selaˈmẽtu
-cute	ˈkuʧi
-cárter	ˈkaɹteɹ
-cãs	ˈkãs
-célula	ˈsɛlulə
-dactiloscopia	daʧiloʃkoˈpiɐ
-dalguma	dawˈɡuma
-dalgumas	dawˈɡũmɐs
-dalhures	daˈʎuɾis
-dança das cadeiras	ˈdɐ̃sɐdaskaˈde(j)ɾɐs
-dar pérolas a porcos	ˈda(ʁ)ˈpɛɾolɐzaˈpɔʁkus
-darma	ˈdɐɾmɐ
-datilógrafo	dɐʧɪˈlɔɡɾɐfʊ
-davas	'davas
-de fora a fora	d͡ʒiˈfɔɾɐaˈfɔɾɐ
-debreado	debɾeˈadu
-decasségui	dekaˈsɛɡi
-decidi	desɪˈʤi
-delegacia	deleˈɡadu
-deleitosa	delejˈtɔzɐ
-democracia	demokɾaˈsiɐ
-densidade populacional	dẽsiˈdaʤipopulasioˈnaw
-dente incisivo	ˈdẽt͡ʃiĩsiˈzivu
-dependente	depẽˈdẽʧi
-der	dɛɾ
-desambiguar	dezɐ̃biˈɡwaχ
-desambiguação	ˌdezɐ̃ˌbiɡwaˈsɐ̃w
-desarmamento	dezaʁmaˈmẽtu
-desassombrada	dezasõˈbɾadɐ
-desassombradas	dezasõˈbɾadɐs
-desburocratização	dezbuɾokɾatʃizaˈsãw
-descaração	deskaɾaˈsɐ̃w̃
-descartar	deʃkaχˈtaχ
-descreve	ʤɪsˈkɾɛvɪ
-desejados	dezeˈʒadʊs
-desenredar	dezẽʁeˈdaʁ
-desenvolvimento	dezẽjvowviˈmẽjtu
-desfranzido	desfɾɐ̃ˈzidu
-desilusão	dezɪlʊˈzãw
-desinquieto	dezĩjkiˈɛtu
-dessalinização	desalinizaˈsãw
-detivesse	deʧɪˈvɛsɪ
-devagar	devaˈɡaɹ
-devorismo	devoˈɾizmu
-dezembro	deˈzẽbru
-diabetes	ʤiaˈbɛʧis
-dinossauro	d͡ʒinoˈsawɾu
-disquetes	d͡ʒisˈkɛt͡ʃis
-disritmia	dʒisχitʃˈmia
-dissolução	disoluˈsɐ̃w
-dizendo	diˈzẽⁿdʊ
-domo	ˈdomʊ
-dondoco	dõˈdoku
-donos	ˈdonʊs
-dormitório	doɾmitɔɾiu
-dublê	duˈble
-econômico	ekoˈnõmiku
-ecossistema	ɛkosisˈtɛma
-egiptólogo	eˌʒipˈtɔloɡu
-egípcio	eˈʒipsju
-elativo	elɐˈʧivʊ
-eleitorado	elejtoˈɾadʊ
-eletroencefalograma	elɛtrẽcɛfɐloˈɡrʌmɐ
-eludir	eluˈʤiχ
-elétron	eˈlɛtɾõ
-em casa de ferreiro, espeto de pau	ẽj̃ˈkazɐd͡ʒifeˈʁe(j)ɾuisˈpetud͡ʒiˈpaw
-em diferido	ẽj̃d͡ʒifeˈɾidu
-em todo lado	ĩˈtoduˈladu
-embira	ẽˈbiɾɐ
-eminente	emɪˈnẽⁿʧɪ
-empireumático	ẽpiɾewˈmaʧiku
-empregatício	ẽȷ͂pɾeɡaˈtᶴisi̯o̝
-empresabilidade	ẽpɾezabiliˈdadʒi
-encosto	eŋˈkoʃtu
-endemoninhado	e~demonI"JadU
-enfaixando	ẽfajˈʃɐ̃du
-enferrujadíssimas	ẽfeʁuʒaˈd͡ʒisimɐs
-enferrujadíssimos	ẽfeʁuʒaˈd͡ʒisimus
-enganador	ẽɡanaˈdoʁ
-engrandeceu	ẽɡɾãⁿdeˈsew
-epicentro	epɪˈsẽⁿtɾʊ
-epêntese	eˈpẽtezi
-epígeo	eˈpiʒju
-epítome	eˈpitomi
-equacionar	ekwɐsɪoˈnaɾ
-eremitério	eɾemiˈtɛɾiu
-escaravelho	iskaɾaˈveʎu
-escassear	iskaseˈa(ʁ)
-esclarecer	isklaɾeˈse(ʁ)
-escoamento	eskoɐˈmẽⁿtʊ
-escoar	iskoˈa(ʁ)
-escocês	eskoˈsejs
-esconderijo	eskõdeˈɾiʒu
-escorar	iskoˈɾa(ʁ)
-escrófula	isˈkɾɔfulɐ
-escuríssima	iskuˈɾisimɐ
-eslavo eclesiástico	esˈlavuekleziˈasʧiku
-esmeril	eʃmeˈɾiw
-esmola	eʒˈmɔlɐ
-esparadrapo	eʃpaɾa'dɾapu
-espermatozoide	ispeʁmatoˈzɔjd͡ʒi
-esperto	isˈpɛʁtu
-esporte	iʃˈpɔχʧi
-espreguiçadeira	ispɾeɡisaˈde(j)ɾɐ
-espreguiçadeiras	ispɾeɡisaˈde(j)ɾɐs
-espécimen	isˈpɛsimẽj̃
-esqueleto	eskeˈletu
-esquilo	ɪsˈkilʊ
-esteio	isˈteju
-estrada	ɪsˈtɾadɐ
-estrondo	esˈtrõdu
-estrutiocultura	istɾut͡ʃiokuwˈtuɾɐ
-estultícia	estuwˈʧisjɐ
-estória	esˈtɔɾja
-ethos	ˈɛtus
-etimologia	etʃimoloˈʒia
-excomungar	eskomũwˈɡaɹ
-exegese	ekseˈʒɛzi
-exigência	ˌeziʒˈe͡ɪŋsjæ
-expressão verbal	ispɾeˈsɐ̃w̃veʁˈbaw
-extinção K-T	ist͡ʃĩˈsɐ̃w̃ˈkaˈte
-factoide	fɐkˈtɔjʤɪ
-facílima	faˈsilimɐ
-facílimos	faˈsilimus
-faialense	fɐjɐˈlẽsɪ
-fanqueiro	fɐ̃ˈkejɾu
-fantasma	fãˈtazma
-farinha de mandioca	faˈɾĩɲɐd͡ʒimɐ̃d͡ʒiˈɔkɐ
-farmacológica	faɾmakoˈlɔʒikɐ
-farpa	ˈfaʁpɐ
-fascismo	faˈsizmu
-fazer	faˈze(ɻ)
-fazerdes	faˈzeɻdes
-febre	ˈfɛbɾi
-federações	fedeɾɐˈsõjs
-fermentação	feʁmẽtaˈsɐ̃w̃
-feroico	feɾɔjˈkʊ
-filósofo	fiˈlɔzofu
-finlandês	fĩjlãˈdejs
-fiorde	fiˈɔɹdʒi
-fluminense	flumiˈnẽjsi
-fogo-fátuo	ˌfoɡuˈfatuu
-fonética	foˈnɛt͡ʃikɐ
-fonética frásica	foˈnɛt͡ʃikɐˈfɾazikɐ
-fonética sincrônica	foˈnɛt͡ʃikɐsĩˈkɾõnikɐ
-fonômetro	foˈnometɾu
-forja	ˈfɔɹʒə
-formigueirinho-da-caatinga	foʁmiɡe(j)ˌɾĩɲudakaaˈt͡ʃĩɡɐ
-fortaleza	foɹtaˈleza
-fosse	ˈfosi
-fostes	ˈfosʧis
-frontal	fɾõˈtaw
-fulgurito	fuwɡuˈɾitu
-funcionário	fũsioˈnaɾiu
-gado	ˈɡado
-galiziano	ɡaliziˈɐ̃nu
-gamela	ɡaˈmɛla
-gandula	ɡɐ̃ˈdulɐ
-gaudério	ɡawˈdɛɾju
-gazebo	ɡaˈzebu
-gemologia	ʒemoloˈʒiɐ
-genuflexão	ʒenuflekˈsɐ̃w
-gerontologia	ʒeɾõwtoloˈʒia
-gigantismo	ʒiɡɐ̃ˈt͡ʃizmu
-gigantismo insular	ʒiɡɐ̃ˈt͡ʃizmuĩsuˈla(ʁ)
-gilbertês	ʒiwbeɾˈtejs
-ginarquia	ʒinaʁˈkiɐ
-ginecocracia	ʒinekokɾaˈsiɐ
-girassol	ʒiɾɐˈsɔw
-golfo	ˈɡowfu
-grandíssimas	ɡɾɐ̃ˈd͡ʒisimɐs
-granulócito	ɡɾanuˈlɔsitu
-gratuito	ɡɾaˈtujtu
-gravador	ɡɾavaˈdoʁ
-gravíssimas	ɡɾaˈvisimɐs
-gravíssimos	ɡɾaˈvisimus
-grosa	ˈɡɾɔza
-grupo consonantal	ˈɡɾupukõsonɐ̃ˈtaw
-grêmios	ˈɡɾẽmius
-guaribada	ɡwɐriˈbadɐ
-guatemalense	ɡwatemaˈlẽsi
-guatemalteco	ɡwatemawˈtɛku
-guzerate	ɡuzeˈɾatʃi
-gêiser	ˈʒejzeɾ
-hagiologista	ɐʒɪoloˈʒistɐ
-hagiógrafo	ɐʒɪˈɔɡɾɐfʊ
-haicai	ajˈkaj
-halterofilistas	awˌtɛɾofiˈlistɐs
-hauçá	ɐwˈsa
-haússa	ɐˈusɐ
-haúça	ɐˈusɐ
-hegemônicas	eʒeˈmõnikɐs
-hemócito	eˈmɔsitu
-heroica	eˈɾɔjkɐ
-herói	e'ɾɔj
-hexaedro	eksaˈɛdɾu
-hidrofólio	idɾoˈfɔliu
-hidrossolúvel	idɾosoˈluvew
-hidrângea	ɪˈdɾãʒɪɐ
-hieroscopia	jeɾoskoˈpiɐ
-higroscopia	iɡɾoskoˈpiɐ
-hiperbibasmo	ipeʁbiˈbazmu
-hipotireoidismo	ˌipot͡ʃiɾeojˈd͡ʒizmu
-hombu dojô	χõˈbudoˈʒo
-homem de palito	ˈomẽdᴣe̝paˈlito̝
-homografia	omoɡɾaˈfiɐ
-homônimo	oˈmonimu
-hospício	osˈpisju
-hotel	oˈtɛw
-hão	ˈɐ̃w̃
-hífen	ˈifẽj̃
-hóquei	ˈɔkej
-iaiás	ja'jas
-iarense	ia'ɾẽsi
-ibaramenses	ibaɾɐ'mẽsiʃ
-iboga	iˈbɔɡɐ
-idiomatismo	id͡ʒiomaˈt͡ʃizmu
-idiossincrasia	idʒiosĩcɾaˈzia
-igarapés	iɡaɾaˈpɛs
-ignaros	iɡˈnaɾos
-ik	ˈikɪ
-ilativo	ɪlɐˈʧivʊ
-ilopolitanos	ilopoliˈtɐ̃nus
-iluminadas	ilumiˈnadas
-imagináveis	imɐʒɪˈnavejs
-imbecil	ĩbeˈsiw
-imbira	ĩˈbiɾɐ
-imensa	iˈmẽsa
-inadequado	inɐdeˈkwadʊ
-inadimplência	ɪnɐdĩplẽⁿsjɐ
-indenização	ĩjdenizasãw
-indonésios	ĩdoˈnɛzjus
-indução	ĩjduˈsãw
-ineludível	ineluˈʤivew
-infestar	ĩfesˈta(ʁ)
-infográfico	ˌĩjfoˈɡɾafiku
-informação privilegiada	ĩfoʁmaˈsɐ̃w̃pɾivileʒiˈadɐ
-inglês antigo	iŋˈɡlesãⁿˈʧiɡu
-iniala	iniˈalə
-inimicícias	ɪnɪmɪˈsisɪɐs
-inimigo	ɪnɪˈmiɡʊ
-inteligentíssimo	ĩteliʒẽˈt͡ʃisimu
-interatividade	ĩteɾat͡ʃiviˈdad͡ʒi
-intervalos	ĩⁿteɾˈvalʊ
-intestinos	ĩⁿtesˈʧinʊs
-intérfase	ĩjˈtɛɹfazi
-inédito	iˈnɛdʒitu
-ir para a cidade dos pés juntos	ˈi(ʁ)paɾɐasiˈdad͡ʒidusˈpɛ(j)zˈʒũtus
-içá	i'sa
-jacaré	ʒakaˈɾɛ
-janta	ˈʒɐ̃tɐ
-joelho	ʒoˈeʎu
-jogar pérolas aos porcos	ʒoˈɡa(ʁ)ˈpɛɾolɐzawsˈpɔʁkus
-joão-fernandes	ʒuˈɐ̃wfeχˈnɐ̃ʤiʃ
-joão-tolo	ʒʊˈãwˈtolʊ
-kukluxismo	kukluˈksizmu
-lacraia	laˈkɾajɐ
-lagar	laˈɡa(ʁ)
-lanígera	lɐˈniʒeɾɐ
-lanígeros	lɐˈniʒeɾʊs
-larva	'larva
-lasquinha	las'kĩɲɐ
-layout	lajˈowʧi
-lhama	ˈʎɐ̃mɐ
-liberalismo	libeɾaˈlizmu
-liberdade	libeɾˈdadʒi
-licitude	lisiˈtud͡ʒi
-limpíssima	lĩˈpisimɐ
-linguado-branco	lĩˌɡwaduˈbɾɐ̃ku
-linguística	lĩˈɡwiʃʧikɐ
-liteireiro	litejˈɾejɾu
-livraria	livɾaˈɾiɐ
-lombardo	lõmˈbaɾdu
-louva-a-deus	ˌlo(w)v‿ɐˈdews
-lucro	ˈlukɾʊ
-luganda	luˈɡãdə
-luminescentes	lumineˈsẽt͡ʃis
-luminária	lumiˈnaɾiɐ
-lápis	ˈlapis
-lésbica	ˈlɛʃbikə
-macaco do Novo Mundo	maˈkakuduˈnovuˈmũdu
-macaco-de-cheiro	maˌkakud͡ʒiˈʃe(j)ɾu
-maconheiro	makoˈɲejɾu
-magnetosfera	maɡiˌnɛtoˈsfɛɾɐ
-maguindanao	maɡĩdaˈnaw
-maio	ˈmajju
-maiô	mɐjˈo
-mal	ˈmaw
-malcomido	mawkoˈmidu
-malgaxe	mawˈɡaʃi
-mancha	ˈmɐ̃ʃɐ
-manezinho	maˌnɛˈzĩɲu
-mangrove	mɐ̃'ɡɾovɪ
-manômetro	maˈnometɾu
-margem	ˈmaɹʒẽj
-marmeluta	mɐɾmeˈlutɐ
-marsupial	maʁsupiˈaw
-mastodonte	mastoˈdõt͡ʃi
-matarei	maˈtaɾeɪ
-matareis	mataˈɾeɪs
-matarem	maˈtaɾẽɲ
-mataria	mataˈɾiɐ
-matarias	mataˈɾiɐs
-matarmos	maˈtaɾmʊs
-matarão	mataˈɾɐ̃ʊ
-matassem	maˈtasẽm
-matastes	maˈtast͡ʃɪs
-matavas	maˈtavɐs
-material	mateɾiˈaw
-mates	ˈmat͡ʃɪs
-mato	ˈmatʊ
-matou	maˈtoʊ
-matáreis	maˈtaɾeɪs
-matásseis	maˈtaseɪs
-megatério	meɡaˈtɛɾiu
-melhor	meˈʎɒɹ
-melindrado	melĩⁿˈdɾadʊ
-membrudo	mẽⁿˈbɾudu
-mercado	meɹˈkadu
-mesmerizes	mesmeˈɾizɪs
-metano	meˈtãnu
-metáfora	meˈtafoɾɐ
-meu	ˈmew
-microfone	mikɾoˈfoni
-mine	ˈmini
-mioleira	mioˈlejɾə
-mirmecofilia	miʁmekofiˈliɐ
-miscelânea	miseˈlɐ̃neɐ
-miserento	mizeˈɾẽtu
-misoneísmo	mɪzoneˈizmʊ
-mistureba	mistuˈɾɛbɐ
-moedor de café	moeˈdoʁdikaˈfɛ
-moedor de carne	moeˈdoʁdiˈkaʁni
-moedor de pimenta	moeˈdoʁdipiˈmẽtɐ
-moléstia	moˈlɛst͡ʃiɐ
-morgue	ˈmɔχɡi
-morsa	ˈmɔɹsa
-mostravam	mosˈtɾavɐ̃
-mucumbabém	mukũbaˈbẽj
-mulher-objeto	muˌʎɛ(ɾ)obiˈʒɛtu
-musicológico	muzikoˈlɔʒiku
-mutcho	ˈmut͡ʃu
-mãozinha	ˌmɐ̃w̃ˈzĩɲɐ
-nada	ˈnadə
-nalguns	nawˈɡũs
-nalguém	nawˈɡẽj̃
-nanica	naˈnikɐ
-nanico	naˈniku
-naquelas	naˈkɛlɐs
-nasalização	nazalizaˈsɐ̃w̃
-nazareu	nazaˈɾew
-neandertal	neɐ̃deʁˈtaw
-neandertalense	neɐ̃deʁtaˈlẽsi
-nebulosa planetária	nebuˈlɔzɐplaneˈtaɾiɐ
-neologismo	nɛʊloˈʒizmʊ
-nepalês	nepaˈlejs
-neperiano	nepeɾiˈãnu
-nhanduti	ɲɐ̃dʊˈʧi
-nhanica	ɲaˈnikɐ
-nivelado	nɪveˈladʊ
-nomadismo	nomaˈd͡ʒizmu
-nomarquia	nomaʁˈkiɐ
-nome de código	ˈnomidʒiˈkɔdʒiɡu
-norte	ˈnɔχʧi
-nota verbal	ˈnɔtɐˌvɛʁˈbaw
-notável	noˈtavew
-noutra	ˈnowtɾɐ
-noutrem	ˈnowtɾẽj̃
-novo	'novu
-nuvem	ˈnuvẽĩ̯
-obcecação	obsekaˈsãw
-objetos	obˈʒɛtʊs
-obsolescência programada	obsoleˈsẽsiɐplaneˈʒadɐ
-obtusângulas	obtuˈzɐ̃ɡulɐs
-obtusângulos	obtuˈzɐ̃ɡulus
-octógono	okˈtɔɡonu
-olhos	ˈoʎʊs
-onicalgia	onikawˈʒiɐ
-ornitisquiano	oʁnit͡ʃiskiˈɐ̃nu
-ornitorrinco	oɹnitoˈχĩjku
-orogenético	oɾoʒeˈnɛtɪkʊ
-orográfico	oɾoˈɡɾafiku
-ossético	oˈsɛtɪkʊ
-ostra	ˈostɾɐ
-ota	ˈotɐ
-oásis	oˈazis
-palatável	palaˈtavew
-palavra	paˈlavɾɐ
-palavreado	palavɾeˈadu
-paleocanal	paleokaˈnaw
-paleogeografia	paleoʒeoɡɾaˈfiɐ
-paleografia	ˌpaleoɡɾaˈfiɐ
-papa	ˈpapɐ
-par	paχ
-paracanã	paɾakãˈnã
-paramilitar	paɾamiliˈtaχ
-parati	paɾaˈtʃi
-parietal	paɾieˈtaw
-passivo	paˈsivu
-pastor	pasˈtoɹ
-patada	paˈtadɐ
-patriotada	patɾioˈtadɐ
-patriotário	patɾioˈtaɾiu
-patriótico	patɾiˈɔt͡ʃiku
-pau-marfim	ˌpawmaʁˈfĩ
-paulatino	pawlaˈtʃinu
-paz e amor	ˈpa(j)ziaˈmoʁ
-pechincha	peˈʃĩʃɐ
-pecuária	pekuˈaɾiɐ
-pedra, papel e tesoura	ˈpɛdɾɐpaˈpɛwiteˈzo(w)ɾɐ
-pedreiros	peˈdɾei̯ɾo̝s
-peixe	ˈpejʃi
-penicar	penɪˈkaɾ
-pensativo	pẽsaˈt͡ʃivu
-pentadactilia	pẽtadakt͡ʃiˈliɐ
-perder o seu latim	ˌpɛʁˈde(ɾ)usewlaˈt͡ʃĩ
-peregrinação	peɾeɡɾinaˈsɐ̃w̃
-perereca	peɾeˈɾɛkɐ
-perjurar	ˌpeɾʒuˈɾaɾ
-perlífero	peɹˈlifeɾu
-pichel	piˈʃɛw
-piscado	pisˈkadu
-piscina	piˈsinɐ
-pitangas	piˈtɐ̃ɡɐs
-planar	plaˈna(ʁ)
-pletóricas	pleˈtɔɾikɐs
-plural	plʊˈɾaw
-poeta	po'ɛta
-polissílabo	poliˈsilabu
-polissíndeto	poliˈsindetu
-poltergeist	powteʁˈɡajst͡ʃi
-polémico	poˈlemɪkʊ
-polêmico	poˈlemɪkʊ
-pomerano	pomeˈɾãnu
-ponte	ˈpõwtʃi
-ponte-pretense	ˌpõtʃipɾeˈtẽsi
-ponto-de-venda	ˈpõwtudʒiˈvẽjda
-porco-da-terra	ˈpoɾkʊdɐˈtɛχɐ
-portfólio	poχʧˈfɔlju
-portuguesas	poɾtuˈɡezɐs
-pousa	ˈpozɐ
-pratinho	pɾaˈt͡ʃĩɲu
-precariíssima	pɾeka'ɾjisɪmɐ
-precariíssimas	pɾeka'ɾjisɪmɐs
-precito	pɾeˈsitu
-preá	pɾeˈa
-prodigalidade	pɾod͡ʒiɡaliˈdad͡ʒi
-profetizado	pɾofeʧiˈzadʊ
-pronúncia	pɾoˈnũwsja
-propriedades	pɾopɾɪeˈdaʤɪs
-provençal	pɾovẽˈsaw
-purpúrico	puʁˈpuɾiku
-puído	puˈidu
-página	ˈpaʒinɐ
-púrpuro	ˈpuʁpuɾu
-quadribol	kwadɾiˈbɔw
-quadrilongo	kwadɾiˈlõɡu
-qualquer	kwawˈkɛɾ
-quaresma	kwaˈɾɛʒmɐ
-queixo	ˈkejʃu
-quejandos	keˈʒãⁿdʊs
-querer	kɪ'ɾeɾ
-quinze	ˈkĩzi
-quisto	ˈkistu
-qüinqüenal	kwĩjkweˈnaw
-racha	ˈχaʃa
-racismo sistémico	ʁaˈsizmusisˈtẽmiku
-raiz	ˈʁajs
-ramela	χɐˈmɛlɐ
-rasa	ˈχazɐ
-ratazana	xataˈzãnə
-ravina	xa'vinə
-referendar	ʁefeɾẽˈda(ʁ)
-refratar	ʁefɾaˈta(ʁ)
-regrar	χeˈɡɾar
-relatado	xelaˈtadu
-resvalamento	ʁezvalaˈmẽtu
-resvalamentos	ʁezvalaˈmẽtus
-retirante	χetʃiˈɾãtʃi
-revelação	ʁevelaˈsɐ̃w̃
-revólver	xeˈvɔwveɾ
-rezar	ʁeˈzaʁ
-rigor	ʁiˈɡoɾ
-rizicultura	χizikuwˈtuɾa
-roda	ˈʁɔdɐ
-rola-bosta	ˈʁɔlɐˈbɔstɐ
-rosquinha	ʁosˈkĩɲɐ
-roxo-rei	ˈχoʃʊˌχej
-rutilância	ʁut͡ʃiˈlɐ̃siɐ
-ruído	ʁuˈidu
-saite	ˈsajʧi
-sal	saw
-salomônico	saloˈmõniku
-salto	'saltu
-sana	ˈsãnɐ
-santeiro	sɐ̃ˈte(j)ɾu
-saqueio	sɐˈkeju
-satélite	saˈtɛlit͡ʃi
-saudade	sawˈdadʒi
-saudação	sawdaˈsɐ̃w̃
-saudi-árabe	sawˌd͡ʒiˈaɾabi
-secretaria	sekɾetaˈɾia
-seda	ˈsedɐ
-sefarditas	sefaʁˈd͡ʒitɐs
-seis	ˈsei̯s
-selenologia	selenoloˈʒiɐ
-semantema	semɐ̃ⁿˈtemɐ
-semântica	seˈmɐ̃tikɐ
-sena	ˈsenɐ
-sepulto	sepˈuwtʊ
-sequoia	seˈkwɔjɐ
-sessoto	seˈsotʊ
-siameses	siaˈmezis
-siamês	siaˈme(j)s
-siglema	siˈɡlẽmɐ
-sinalética	sinaˈlɛt͡ʃikɐ
-sindético	sĩjˈdɛtʃiku
-sinóptica	sɪˈnɔptɪkɐ
-sistema operacional	sɪsˈtemɐopeɾɐsjoˈnaw
-sobrecasacas	sobɾekaˈzakɐs
-sobrenome	sobɾeˈnomi
-somatório	somaˈtɔɾiu
-sons	ˈsõs
-spaghetti	ispaˈɡɛtʃi
-sueto	suˈetu
-superstição	supeɾⁱst͡ʃiˈsɐ̃ũ̯
-supino	sʊˈpinʊ
-suplemento	sʊpleˈmẽⁿtʊ
-surtaras	sʊɾˈtaɾɐs
-são-paulino	ˈsãwpawˈlinu
-sístole	ˈsistoli
-só a capa do batman	ˈsɔaˈkapɐduˈbat͡ʃimɐ̃
-tai	ˈtaj
-taitiano	taˌitʃiˈãnu
-também	tãˈbẽj
-tapoer	tapoˈɛɾ
-tarde	'taxdʒɪ
-tareco	taˈɾɛku
-taxado	taˈʃadu
-telefone	teleˈfoni
-temendo	teˈmẽⁿdʊ
-tentação	tẽtaˈsɐ̃w̃
-tenuicorne	tenwiˈkɔɾni
-testa	ˈtɛstɐ
-teu	ˈtew
-tia	ˈʧiɐ
-tico	'ʧikʊ
-tira	ˈt͡ʃiɾɐ
-todo-poderoso	ˌtodupodeˈɾozu
-tonelada	toneˈladɐ
-transístor	tɾɐ̃ˈzistoʁ
-trapinho	tɾaˈpĩɲu
-travesseiro	traveˡsejru
-travessão	tɾaveˈsɐ̃w̃
-treme	ˈtɾemi
-treminhão	tɾemiˈɲãw
-tresandante	tɾezɐ̃ˈdɐ̃t͡ʃi
-tribunal do crime	tɾibuˈnawduˈkɾĩmi
-trocadilhista	tɾokad͡ʒiˈʎistɐ
-troglóbio	ˌtɾɔˈɡlɔbiu
-troica	ˈtɾɔjkɐ
-três-marias	ˈtɾe(j)zmaˈɾiɐs
-tubi	tuˈbi
-tudo	ˈtudu
-turcomano	tuχkoˈmɐnu
-tártaro	ˈtaɾtaɾu
-tétum	ˈtɛtũ
-tíbia	ˈt͡ʃibiɐ
-tórax	ˈtɔɾa̝ks
-ubicação	ubikaˈsɐ̃w̃
-udmurte	udˈmuɾʧɪ
-ultimato	uwt͡ʃiˈmatu
-ultravioleta	ˌuwtɾavioˈleta
-um	ũw
-univitelino	univiteˈlĩnu
-urdu	uɾˈdu
-uretra	ʊˈɾɛtɾɐ
-ursinho	uʁˈsĩɲu
-usavam	ʊˈzavɐ̃
-usucapião	ʊzʊkɐpɪˈãw
-utilitarista	ut͡ʃilitaˈɾistɐ
-vagina	vɐ'ʒinɐ
-vai	ˈvaj
-valo	ˈvalʊ
-varredor	vaʁeˈdoʁ
-vedor	veˈdoʁ
-velório	veˈlɔɾiu
-verbo transitivo indireto	ˈvɛʁbutɾɐ̃ziˈt͡ʃivuĩd͡ʒiˈɾɛtu
-vereadores	veɾɪɐˈdoɾɪs
-verossímil	veɾoˈsĩmiw
-vexilologia	veksiloloʒiɐ
-vez	ˈveɪs
-vida	ˈvita
-violoncelo	violõ'sɛlʊ
-vitalismo	vitaˈlizmu
-vogal de ligação	voˈɡawd͡ʒiliɡaˈsɐ̃w̃
-vulnerabilidade	vuwneɾabiliˈdad͡ʒi
-xadrez	ʃaˈdɾes
-ximango	ʃiˈmɐ̃ɡu
-zagrebino	zaɡɾeˈbinu
-zebroide	zeˈbɾɔjd͡ʒi
-África	ˈafɾɪkɐ
-Ícaro	'ikaɾu
-Óliver	ˈɔliveʁ
-àquelas	aˈkɛlas
-àqueles	aˈkelis
-águas passadas não movem moinho	aɡwɐspaˈsadɐzˈnɐ̃w̃ˈmɔvẽj̃ˈmɔĩɲu
-árvore evolutiva	ˈaʁvoɾievoluˈt͡ʃivɐ
-éon	ˈɛõ
-étimo	ˈɛtʃimu
-étude	e'tudi
-êxodo	ˈezɘdʊ
-ósseo	ˈɔsju
+# columns: word<TAB>ipa_narrow<TAB>sources (one row per variant)
+# sources: portuguese-unified-pronunciation-lexicon@23898e1437dc77e84681bb7ce5580a9b3e2d04ba
+-abilidade	abiliˈdad͡ʒi	wiktionary
+-arquia	aʁˈkiɐ	wiktionary
+ABC	aˌbeˈse	wiktionary
+AVC	ɐveˈse	wiktionary
+Abrão	aˈbɾɐ̃w̃	wiktionary
+Acelinas	aseˈlĩnɐs	wiktionary
+Acelino	aseˈlĩnu	wiktionary
+Acelinos	aseˈlĩnus	wiktionary
+Adalberto	adawˈbɛʁtu	wiktionary
+Albânia	ɐwˈbãnjɐ	wiktionary
+Amélio	aˈmɛliu	wiktionary
+Anastásio	anasˈtaziu	wiktionary
+Anastásios	anasˈtazius	wiktionary
+Andes	ˈɐ̃d͡ʒis	wiktionary
+Antiguidade	ɐ̃ⁿʧɪɡwɪˈdaʤɪ	none
+Apolônia	apoˈlõnjɐ	wiktionary
+Bahia	baˈia	wiktionary
+Barreiras	baˈʁe(j)ɾɐs	wiktionary
+Bauru	bauˈɾu	wiktionary
+Bonópolis	boˈnɔpolis	wiktionary
+Burquina Fasso	buʁˈkĩnɐˈfasu	wiktionary
+Cabo Verde	ˈkabuˈveχʤi	wiktionary
+Caíque	kaˈiki	wiktionary
+Ceres	ˈsɛɾis	wiktionary
+Cira	'siɾa	wiktionary
+Curaçá	kuɾaˈsa	wiktionary
+Damasco	daˈmasku	wiktionary
+Darci	daʁˈsi	wiktionary
+E.U.A.	ˌeˌuˈa	wiktionary
+Einstein	ˌaĩsˈtaĩ	wiktionary
+Elena	eˈlẽnɐ	wiktionary
+Fiama	fiˈɐ̃mɐ	wiktionary
+Formosa	foɾˈmɔzɐ	wiktionary
+Galícia	ɡaˈlisiɐ	wiktionary
+Goiás Velho	ˌɡojˈa(j)zˈvɛʎu	wiktionary
+Gomes	ˈɡõmis	wiktionary
+Greice	ˈɡɾejsi	wiktionary
+Guiné	ɡi'nɛ	none
+Hebe	ˈɛbi	wiktionary
+Iama	iˈɐmɐ	wiktionary
+Jenifer	ˈd͡ʒẽnifeʁ	wiktionary
+Joice	ˈʒɔjsi	wiktionary
+Judeia	ʒuˈdɛjɐ	wiktionary
+Jugoslávia	ʒʊɡosˈlavjɐ	none
+Kátia	ˈkat͡ʃjɐ	wiktionary
+Lusitânia	luziˈtãnja	wiktionary
+Lácio	ˈlasiu	wiktionary
+Martino	maɾˈtʃiɲu	wiktionary
+Melilha	meˈliʎɐ	wiktionary
+Melo	ˈmɛlu	wiktionary
+Mistérios de Elêusis	misˈtɛɾiuzd͡ʒieˈlewzis	wiktionary
+Natal	naˈtaw	wiktionary
+Norberto	nor'bɛrto	wiktionary
+Nuque	ˈnuki	wiktionary
+Parati	paɾaˈtʃi	wiktionary
+Pietro	piˈetɾu	wiktionary
+Piracicaba	piɾasiˈkabɐ	wiktionary
+Polidoros	poliˈdɔɾus	wiktionary
+Quatro Barras	ˈkwatɾuˈbaʁɐs	wiktionary
+Quebec	keˈbɛkɪ	wiktionary
+República Democrática do Congo	ʁeˈpublikɐdemoˈkɾat͡ʃikɐduˈkõɡu	wiktionary
+Rogério	ʁoˈʒɛɾju	wiktionary
+Romilda	ʁoˈmiwdɐ	wiktionary
+Sales	ˈsalis	wiktionary
+Serafim	seɾaˈfĩ	wiktionary
+Serafina	seɾaˈfĩnɐ	wiktionary
+Sicília	siˈsiliɐ	wiktionary
+Sudene	suˈdẽni	wiktionary
+Tchecoslováquia	ˌt͡ʃɛkozloˈvakiɐ	wiktionary
+Teodora	teoˈdɔɾɐ	wiktionary
+Teodoro	teoˈdɔɾu	wiktionary
+Terra	ˈtɛha	wiktionary
+Tio Hugo	t͡ʃiu̯'uɡu̯	none
+Togo	ˈtoɡʊ	none
+Uchoa	uˈʃoɐ	wiktionary
+Valdemar	vawde'maʁ	wiktionary
+Vanessa	vaˈnesɐ	wiktionary
+Vidal	viˈdaw	wiktionary
+Vinício	viˈnisju	wiktionary
+Yukon	ˈjukõ	wiktionary
+Zanela	zaˈnɛlɐ	wiktionary
+a-	a	wiktionary
+aardvark	aʁd͡ʒiˈvaʁki	wiktionary
+ab ovo	ˈabˈovu	wiktionary
+ababelado	ababeˈladu	wiktionary
+abacaxizais	abakaʃiˈzajs	wiktionary
+abacteriano	abakteɾiˈɐnu	wiktionary
+abadias	aba'dʒiaʃ	wiktionary
+abaixado	abajˈʃadu	wiktionary+michaelis
+abalroa	abawxoˈa	wiktionary
+abesourar	abezouˈɾaɾ	wiktionary
+abolicionismo	abolisioˈnizmu	wiktionary
+abotoar o paletó de	abotoˈa(ɾ)upaleˈtɔde	wiktionary
+absentismo	absẽˈʧiʒmu	wiktionary
+acagaçado	a'kaɡasadu	none
+acamurçar	akamurˈsar	wiktionary
+acautelável	akawteˈlavew	wiktionary
+acidente vascular cerebral	ɐsɪˈdẽⁿʧɪvɐskʊˈlaɾseɾeˈbɾaw	wiktionary
+acontece	ɐkõⁿˈtɛsɪ	wiktionary
+acre	ˈakɾɪ	wiktionary
+ad hoc	ˈadˈɔk	wiktionary
+adenopatia	adenopaˈt͡ʃiɐ	wiktionary
+adossado	adoˈsadu	wiktionary
+adotar	ɐdɔˈtaɾ	wiktionary
+aduana	aduˈɐ̃nɐ	wiktionary
+adutora	aduˈtoɾɐ	wiktionary
+advogado	aʤvo'ɡadu	none
+aerogel	aeɾoˈʒew	wiktionary
+afegânicas	afeˈɡɐ̃nikɐs	wiktionary
+aflitivamente	afliˌt͡ʃivaˈmẽt͡ʃi	wiktionary
+agricultura	aɡɾikuwˈtuɾə	none
+ajudar	aˈʒudɐ	wiktionary
+alamossauro	alamoˈsawɾu	wiktionary
+alecrim	aleˈkɾĩj	wiktionary
+alegria de pobre dura pouco	aˈlɛɡɾiɐd͡ʒiˈpɔbɾiˈduɾɐˈpo(w)ku	wiktionary
+aleijado	alejˈʒadu	wiktionary
+alelopata	aleloˈpatɐ	wiktionary
+alfabeto cirílico	ɐwfɐˈbɛtʊsɪˈɾilɪkʊ	wiktionary
+algarismo arábico	ɐwɡɐˈɾizmʊɐˈɾabɪkʊ	none
+alidade	aliˈdaʤi	wiktionary
+alongamento	alõɡaˈmẽtu	michaelis
+alternância	awteɾˈnɐ̃sjɐ	wiktionary
+alto-falante	ˈawtufaˈlɐ̃ʧi	wiktionary
+altruísta	awtɾuˈiʃtɐ	wiktionary
+alucinação	ɐlusinɐˈsɐ̃u̯	wiktionary
+alvião	awviˈɐ̃w	wiktionary
+alígero	aˈliʒeɾu	wiktionary
+alínea	aˈlinjɐ	wiktionary+michaelis
+amanajé	amãnaˈʒɛ	wiktionary
+amarelar	ɐmɐɾeˈlaχ	wiktionary
+ambulatório	ɐ̃bulaˈtɔɾju	wiktionary
+ameixa	aˈmejʃɐ	wiktionary+michaelis
+americano	ameɾiˈkãnu	wiktionary
+amigos, amigos, negócios à parte	aˈmiɡusaˈmiɡusneˈɡɔsjuzaˈpaʁt͡ʃi	wiktionary
+aminoácido	ãmĩnoˈasidʊ	wiktionary
+ampere	ãˈpɛɾi	wiktionary
+amplexo	ɐ̃ˈplɛksu	wiktionary
+amuado	amuˈadu	wiktionary
+anagrama	anaˈɡɾɐ̃mɐ	wiktionary
+anambé	anɐ̃ˈbɛ	wiktionary
+anamnese	anɐˈmnɛzi	wiktionary
+androide	ãⁿˈdɾɔjʤɪ	wiktionary
+androsemo	ɐ̃droˈzemʊ	wiktionary
+anfitrião	ɐ̃fitɾiˈɐ̃w̃	wiktionary
+anfractuosidade	ɐ̃fɾaktuoziˈdad͡ʒi	wiktionary
+angu	ɐ̃ˈɡu	wiktionary
+animal	ˌɐniˈmaw	wiktionary
+ano	ˈãⁿnu	wiktionary
+anorquia	ɐnoχˈkiɐ	wiktionary
+antagônimo	ɐ̃taˈɡonimo̝	wiktionary
+antimônio	ɐ̃t͡ʃiˈmõnju	wiktionary
+antipetista	ɐ̃ʧipeˈʧiʃtɐ	wiktionary
+antissocial	ˌɐ̃ʧisosiˈaw	wiktionary
+antárticas	ɐ̃ˈtaɾt͡ʃikɐs	wiktionary
+análise sintática	aˈnalizisĩˈtat͡ʃikɐ	wiktionary
+anúncio	ɐˈnũsjʊ	wiktionary
+apa	ˈapɐ	wiktionary
+apache	aˈpaʃi	wiktionary
+apesar	ɐpeˈzaɾ	wiktionary
+apiacá	apiaˈka	wiktionary
+apreciar	apɾesiˈaɾ	wiktionary+michaelis
+apócope	aˈpɔkopi	wiktionary
+aquemunéris	ɐkemʊˈnɛɾɪs	wiktionary
+aquário	aˈkwaɾju	wiktionary+michaelis
+argutíssimo	aʁɡuˈt͡ʃisimu	wiktionary
+argônio	aɦˈɡõnɪu	wiktionary
+armado	aʁˈmadu	wiktionary
+armazenagem	aχmazeˈnaʒẽj	wiktionary
+armeniano	aʁmeniˈɐ̃nu	wiktionary
+arqueólogo	aɾkeˈɔloɡu	michaelis
+arquivista	aχkiˈviʃtɐ	wiktionary
+arromeno	aɾoˈmenu	wiktionary
+arupemba	aɾuˈpẽbɐ	wiktionary
+arável	aˈɾavew	wiktionary
+ascite	ɐˈsiːti	wiktionary
+asnada	azˈnadə	wiktionary
+asnáticas	aʒˈnat͡ʃikaʃ	wiktionary
+assamês	asaˈmejs	wiktionary
+assinatura de tempo	asinaˈtuɾa̝dᴣe̝ˈtẽpo̝	wiktionary
+assincronia	ɐsɪŋkɾoˈniɐ	wiktionary
+astrólogo	ɐsˈtɾɔloɡʊ	none
+audiovisual	awd͡ʒjoviˈzwaw	wiktionary
+aueté	awweˈtɛ	wiktionary
+augúrio	awˈɡuɾju	michaelis
+autopropelido	ˌawtupɾopeˈlidu	wiktionary
+avariar	avaɾiˈaɾ	wiktionary+michaelis
+avoaras	avoˈaɾɐs	wiktionary
+avoardes	avoˈaʁd͡ʒis	wiktionary
+avoares	avoˈaɾis	wiktionary
+avoarias	avoaˈɾiɐs	wiktionary
+avoaríamos	avoaˈɾiamus	wiktionary
+avoasses	avoˈasis	wiktionary
+avoavas	avoˈavɐs	wiktionary
+avoeis	avoˈejs	wiktionary
+avoemos	avoˈẽmus	wiktionary
+avoes	aˈvois	wiktionary
+avoássemos	avoˈasemus	wiktionary
+avárico	aˈvaɾiku	wiktionary
+axiológico	aksioˈlɔʒiku	wiktionary
+azar	ɐzaɾ	wiktionary
+azinhavre	azĩˈɲavɾi	wiktionary
+aônio	aˈõniu	wiktionary
+babado	baˈbadu	wiktionary+michaelis
+bacteriemia	{{AFIbakteɾieˈmiɐ}}	wiktionary
+baguete	baˈɡɛt͡ʃi	wiktionary
+balalão	balaˈlɐ̃w̃	wiktionary
+balangandã	balɐ̃ɡɐ̃ˈdɐ̃	none
+balear	baleˈaɾ	wiktionary
+balia	baˈliɐ	wiktionary
+balimos	baˈlĩmus	wiktionary
+balir	baˈli(ʁ)	wiktionary
+ballerina	bɐleˈɾinɐ	wiktionary
+balzaquiana	bawzakiˈɐnɐ	wiktionary
+bambu	bɐ̃ˈbu	wiktionary
+bamburraste	bɐ̃buˈxastʃi	wiktionary
+basquir	bɐsˈkiɾ	wiktionary
+basílico	bɐˈziliku	wiktionary
+batimetria	bat͡ʃimeˈtɾiɐ	wiktionary
+batiscafos	bat͡ʃisˈkafus	wiktionary
+batracofobia	batɾakofoˈbiɐ	wiktionary
+bazófia	baˈzɔfjɐ	wiktionary+michaelis
+baías	ba'ias	wiktionary
+beijo	ˈbejʒu	wiktionary
+beldade	bewˈdad͡ʒi	wiktionary
+bem	ˈbẽĩ̯	wiktionary
+bem-feito	ˌbẽj̃ˈfejtu	wiktionary
+bibliofilia	ˌbibliofiˈliɐ	wiktionary
+bibliografia	biblioɡraˈfiɐ	none
+bibliomania	bibliomɐˈniɐ	wiktionary
+biblioteconomia	bibliotekonoˈmiɐ	wiktionary
+bicampeão	bɪkãpeˈãw	wiktionary
+bicentenário	bɪsẽteˈnaɾjʊ	wiktionary
+bichim	biˈʃĩ	wiktionary
+bidê	biˈde	wiktionary+michaelis
+bilabial	bilabiˈaw	wiktionary
+bilro	ˈbiwχu	wiktionary
+bimestre	biˈmɛstɾi	wiktionary+michaelis
+biosfera	biˌɔsˈfɛɾɐ	wiktionary
+biotério	bioˈtɛɾju	wiktionary
+biquíni	biˈkĩni	wiktionary
+bitcoin	bitˈkɔĩ	wiktionary
+biófilo	biˈɔfilu	wiktionary
+blog	ˈblɔɡɪ	none
+boboca	boˈbɔkɐ	wiktionary
+bom apetite	bõŋɑpetʒite	wiktionary
+bom velhinho	ˈbõveˈʎĩɲu	wiktionary
+bombas	ˈbõbɐs	wiktionary
+bombas de fragmentação	ˈbõŋbasdeˌfraɡmẽŋtaˈsɐ̃w	none
+bombonier	bõboniˈɛχ	wiktionary
+bomboniere	bõboniˈɛɾi	wiktionary
+bonde	ˈbõⁿʤɪ	wiktionary
+boneco de palito	boˈnɛko̝dᴣe̝paˈlito̝	wiktionary
+bonopolino	bonopoˈlĩnu	wiktionary
+boquete	bo'kɛʧɪ	wiktionary
+borboletário	boʁboleˈtaɾiu	wiktionary
+borguinhão	boɹɡoˈɲejs	none
+bornal	boχˈnaw	wiktionary
+borralheiro	boʁaˈʎe(j)ɾu	wiktionary
+botar os pingos nos is	ˌbɔˈta(ɾ)usˈpĩɡuznuzˈis	wiktionary
+bote	ˈbɔti	wiktionary
+braguês	bɾaˈɡejʃ	none
+brandemburgueses	bɾɐ̃dẽˈbuɻɡezes	wiktionary
+brandemburguês	bɾɐ̃dẽˈbuɻ'ɡes	wiktionary
+braquicéfalo	bɾakiˈsɛfalu	wiktionary
+brasileira	bɾɐziˈlejɾɐ	wiktionary
+braço	ˈbɾäsʊ	wiktionary
+brecha jurídica	ˈbɾɛʃɐʒuˈɾid͡ʒikɐ	wiktionary
+bruços	ˈbɾusus	wiktionary
+bunda	bũw̃dɐ	wiktionary
+burgo	ˈbuʁɡu	wiktionary
+burro	ˈbuχu	wiktionary
+bus	ˈbus	wiktionary
+báratro	baˈɾatɾu	wiktionary
+bêbedo	ˈbebedu	wiktionary
+caatinga	kaˈt͡ʃĩɡɐ	wiktionary
+cabalmente	kɐbɐwˈmẽⁿʧɪ	wiktionary
+cabide	kaˈbidi	wiktionary+michaelis
+cabograma	kaboˈɡɾɐmɐ	none
+cabritar	kabɾiˈtaχ	wiktionary
+cachúbio	kaˈʃubiu	wiktionary
+cacto	ˈkaktu	wiktionary+michaelis
+cadeia de caracteres	kɐˈdejɐdʒɪkɐɾɐkɪˈtɛɾɪs	wiktionary
+cadenciosamente	kadẽsiˌɔzaˈmẽt͡ʃi	wiktionary
+cafundó	kafũˈdɔ	wiktionary
+caganita	kaɡaˈnitɐ	wiktionary
+caixa	'kaʃɐ	wiktionary
+cajuruense	kaʒuɾuˈẽsi	wiktionary
+calçada	kawˈsadɐ	wiktionary+michaelis
+calçado	kɐwˈsadu	wiktionary
+camaiurá	kamajjuˈɾa	wiktionary
+caminhando	kɐmɪˈɲãⁿdʊ	wiktionary
+camomila	kamoˈmila̝	wiktionary
+canal	kaˈnaw	wiktionary
+canastrice	kanasˈtɾisi	wiktionary
+candidatura	kɐ̃d͡ʒidaˈtuɾɐ	wiktionary
+candombá	kɐ̃dõˈba	wiktionary
+caneca	ˈkɐnɛkɐ	wiktionary
+caos	ˈkaws	wiktionary
+capatazia	kapataˈziɐ	wiktionary
+capista	kaˈpistɐ	wiktionary
+capixaba	kapiˈʃabə	wiktionary
+capuchinho	kapuˈʃĩɲu	wiktionary
+caraca	kaˈɾakɐ	wiktionary
+caracalpaque	kɐɾɐwkɐˈpakɪ	wiktionary
+cardápio	kaχˈdapju	wiktionary
+carma	ˈkɐɾmɐ	wiktionary
+casa	ˈkazɐ	wiktionary
+caspa	ˈkaspɐ	wiktionary+michaelis
+castidade	kast͡ʃiˈdad͡ʒi	wiktionary
+castíssima	kaʃ't͡ʃisimɐ	wiktionary
+catalão	kataˈlãw	wiktionary+michaelis
+catecúmeno	kateˈkumenu	wiktionary
+catorzes	kɐˈtoɾzis	wiktionary
+catupiry	katupiˈɾi	wiktionary
+cecília	seˈsiliɐ	wiktionary
+cefalão	sefaˈlɐ̃w̃	wiktionary
+cego	ˈsɛɡu	michaelis
+cela	ˈsɛla	wiktionary
+cem	'sẽj̃	wiktionary
+cesta	ˈseʃtɐ	wiktionary
+ceutense	ˈsewˈtẽsi	wiktionary
+charque	ˈʃaɹki	wiktionary
+chibata	ʃiˈbatɐ	wiktionary+michaelis
+chicotada	ʃikoˈtadɐ	wiktionary+michaelis
+chilenos	ʃi'lenos	wiktionary
+chupada	ʃuˈpadɐ	wiktionary
+cicatriz	sikaˈtɾis	wiktionary+michaelis
+cimo	ˈsimu	wiktionary+michaelis
+cingalês	sĩjɡaˈlejs	none
+cinza vulcânica	ˈsĩzɐvuwˈkɐ̃nikɐ	wiktionary
+cinzeiro	sĩˈzejɾu	wiktionary+michaelis
+circulante	siʁkuˈlɐ̃t͡ʃi	wiktionary
+circulação	siχkulaˈsɐ̃w	wiktionary
+circum-navegação	siʁˌkũnaveɡaˈsɐ̃w̃	wiktionary
+ciriguela	siɾiˈɡwɛla	none
+citólise	siˈtɔlizi	wiktionary
+ciência	siˈẽsjɐ	wiktionary+michaelis
+clandestinidade	klɐ̃dest͡ʃiniˈdad͡ʒi	wiktionary
+classificação	klasifikaˈsɐ̃w	wiktionary
+co-hipônimo	koiˈpõnimu	wiktionary
+coalhada	koaˈʎadɐ	wiktionary
+coautor	ˌkɔawˈtoχ	wiktionary
+cobogós	koboˈɡɔ(j)s	wiktionary
+cobrar	koˈbɾaχ	wiktionary
+cobre	ˈkɔbɾi	wiktionary
+coesposa	{{AFIkoesˈpozɑ}}	wiktionary
+coice	ˈkojsi	wiktionary+michaelis
+colaboração	kolaboɾaˈsɐ̃w̃	wiktionary
+colarinho	kolaˈɾiɲu	wiktionary+michaelis
+coligir	koliˈʒiɾ	wiktionary
+comadre	koˈmadɾi	wiktionary+michaelis
+comensal	komẽˈsaw	wiktionary
+comerciário	komɛɾsiˈaɾjʊ	wiktionary
+comichão	komiˈʃɐ̃w	wiktionary
+comida	koˈmidɐ	wiktionary+michaelis
+comigo	koˈmiɡo̝	wiktionary
+comitre	koˈmitɾi	wiktionary
+compadre	kõˈpadɾi	wiktionary
+competição	kõpeʧisɐ̃w	wiktionary
+comprar	kõˈpɾaχ	wiktionary
+computador	kõwputaˈdoɾ	wiktionary
+confidencialmente	kõfidẽsiˌawˈmẽt͡ʃi	wiktionary
+confirmação	kõfɪɾmɐˈsãw	wiktionary
+conjuntiva	kõʒũˈt͡ʃivɐ	wiktionary
+conquanto	kõwˈkwãtu	wiktionary
+conspirata	kõʃpiˈɾatɐ	wiktionary
+constituído	kõst͡ʃituˈidu	wiktionary
+contactologia	kõtaktoloˈʒiɐ	wiktionary
+contratação	kõtɾataˈsɐ̃w̃	wiktionary
+cooptar	koopˈtaχ	wiktionary
+copioso	kopiˈozu	wiktionary+michaelis
+coprolalia	kopɾolaˈliɐ	wiktionary
+corintiano	koɾĩjtʃiˈãnu	wiktionary
+corredio	koʀeˈdʒiu	wiktionary
+corrida armamentista	koˈʁidɐaʁmamẽˈt͡ʃistɐ	wiktionary
+costumes	kosˈtumɪs	wiktionary
+coxa	ˈkoʃɐ	wiktionary
+credor	kɾeˈdoʁ	wiktionary
+crepe	ˈkɾɛpi	wiktionary
+criminólogo	kɾimiˈnɔloɡu	none
+criptozoologia	kɾiptozooloˈʒiɐ	wiktionary
+criptónimo	kɾɪpˈtonɪmʊ	wiktionary
+criptônimo	kɾɪpˈtonɪmʊ	wiktionary
+crise	ˈkɾizi	wiktionary+michaelis
+crisopolense	kɾizopoˈlẽsi	wiktionary
+crisálida	kɾiˈzalidɐ	wiktionary
+cru	ˈkɾu	wiktionary+michaelis
+cultura do cancelamento	kuwˈtuɾɐdukɐ̃selaˈmẽtu	wiktionary
+cute	ˈkuʧi	wiktionary
+cárter	ˈkaɹteɹ	wiktionary
+cãs	ˈkãs	wiktionary
+célula	ˈsɛlulə	wiktionary
+dactiloscopia	daʧiloʃkoˈpiɐ	wiktionary
+dalguma	dawˈɡuma	wiktionary
+dalgumas	dawˈɡũmɐs	wiktionary
+dalhures	daˈʎuɾis	wiktionary
+dança das cadeiras	ˈdɐ̃sɐdaskaˈde(j)ɾɐs	wiktionary
+dar pérolas a porcos	ˈda(ʁ)ˈpɛɾolɐzaˈpɔʁkus	wiktionary
+darma	ˈdɐɾmɐ	wiktionary
+datilógrafo	dɐʧɪˈlɔɡɾɐfʊ	none
+davas	'davas	wiktionary
+de fora a fora	d͡ʒiˈfɔɾɐaˈfɔɾɐ	wiktionary
+debreado	debɾeˈadu	wiktionary
+decasségui	dekaˈsɛɡi	none
+decidi	desɪˈʤi	wiktionary
+delegacia	deleˈɡadu	none
+deleitosa	delejˈtɔzɐ	wiktionary
+democracia	demokɾaˈsiɐ	wiktionary+michaelis
+densidade populacional	dẽsiˈdaʤipopulasioˈnaw	wiktionary
+dente incisivo	ˈdẽt͡ʃiĩsiˈzivu	wiktionary
+dependente	depẽˈdẽʧi	wiktionary
+der	dɛɾ	wiktionary
+desambiguar	dezɐ̃biˈɡwaχ	none
+desambiguação	ˌdezɐ̃ˌbiɡwaˈsɐ̃w	none
+desarmamento	dezaʁmaˈmẽtu	wiktionary
+desassombrada	dezasõˈbɾadɐ	wiktionary
+desassombradas	dezasõˈbɾadɐs	wiktionary
+desburocratização	dezbuɾokɾatʃizaˈsãw	wiktionary
+descaração	deskaɾaˈsɐ̃w̃	wiktionary
+descartar	deʃkaχˈtaχ	wiktionary
+descreve	ʤɪsˈkɾɛvɪ	wiktionary
+desejados	dezeˈʒadʊs	wiktionary
+desenredar	dezẽʁeˈdaʁ	wiktionary
+desenvolvimento	dezẽjvowviˈmẽjtu	wiktionary
+desfranzido	desfɾɐ̃ˈzidu	wiktionary
+desilusão	dezɪlʊˈzãw	wiktionary
+desinquieto	dezĩjkiˈɛtu	wiktionary
+dessalinização	desalinizaˈsãw	wiktionary
+detivesse	deʧɪˈvɛsɪ	wiktionary
+devagar	devaˈɡaɹ	none
+devorismo	devoˈɾizmu	wiktionary
+dezembro	deˈzẽbru	wiktionary
+diabetes	ʤiaˈbɛʧis	wiktionary
+dinossauro	d͡ʒinoˈsawɾu	wiktionary
+disquetes	d͡ʒisˈkɛt͡ʃis	wiktionary
+disritmia	dʒisχitʃˈmia	wiktionary
+dissolução	disoluˈsɐ̃w	wiktionary
+dizendo	diˈzẽⁿdʊ	wiktionary
+domo	ˈdomʊ	wiktionary
+dondoco	dõˈdoku	wiktionary
+donos	ˈdonʊs	wiktionary
+dormitório	doɾmitɔɾiu	wiktionary
+dublê	duˈble	wiktionary+michaelis
+econômico	ekoˈnõmiku	wiktionary
+ecossistema	ɛkosisˈtɛma	wiktionary
+egiptólogo	eˌʒipˈtɔloɡu	none
+egípcio	eˈʒipsju	wiktionary+michaelis
+elativo	elɐˈʧivʊ	wiktionary
+eleitorado	elejtoˈɾadʊ	wiktionary
+eletroencefalograma	elɛtrẽcɛfɐloˈɡrʌmɐ	none
+eludir	eluˈʤiχ	wiktionary
+elétron	eˈlɛtɾõ	wiktionary
+em casa de ferreiro, espeto de pau	ẽj̃ˈkazɐd͡ʒifeˈʁe(j)ɾuisˈpetud͡ʒiˈpaw	wiktionary
+em diferido	ẽj̃d͡ʒifeˈɾidu	wiktionary
+em todo lado	ĩˈtoduˈladu	wiktionary
+embira	ẽˈbiɾɐ	wiktionary
+eminente	emɪˈnẽⁿʧɪ	wiktionary
+empireumático	ẽpiɾewˈmaʧiku	wiktionary
+empregatício	ẽȷ͂pɾeɡaˈtᶴisi̯o̝	wiktionary
+empresabilidade	ẽpɾezabiliˈdadʒi	wiktionary
+encosto	eŋˈkoʃtu	wiktionary
+endemoninhado	e~demonI"JadU	wiktionary
+enfaixando	ẽfajˈʃɐ̃du	wiktionary
+enferrujadíssimas	ẽfeʁuʒaˈd͡ʒisimɐs	wiktionary
+enferrujadíssimos	ẽfeʁuʒaˈd͡ʒisimus	wiktionary
+enganador	ẽɡanaˈdoʁ	wiktionary
+engrandeceu	ẽɡɾãⁿdeˈsew	none
+epicentro	epɪˈsẽⁿtɾʊ	wiktionary
+epêntese	eˈpẽtezi	wiktionary
+epígeo	eˈpiʒju	wiktionary
+epítome	eˈpitomi	wiktionary
+equacionar	ekwɐsɪoˈnaɾ	wiktionary
+eremitério	eɾemiˈtɛɾiu	wiktionary
+escaravelho	iskaɾaˈveʎu	wiktionary
+escassear	iskaseˈa(ʁ)	wiktionary
+esclarecer	isklaɾeˈse(ʁ)	wiktionary
+escoamento	eskoɐˈmẽⁿtʊ	wiktionary
+escoar	iskoˈa(ʁ)	wiktionary
+escocês	eskoˈsejs	wiktionary
+esconderijo	eskõdeˈɾiʒu	wiktionary+michaelis
+escorar	iskoˈɾa(ʁ)	wiktionary
+escrófula	isˈkɾɔfulɐ	wiktionary
+escuríssima	iskuˈɾisimɐ	wiktionary
+eslavo eclesiástico	esˈlavuekleziˈasʧiku	wiktionary
+esmeril	eʃmeˈɾiw	wiktionary
+esmola	eʒˈmɔlɐ	wiktionary
+esparadrapo	eʃpaɾa'dɾapu	wiktionary
+espermatozoide	ispeʁmatoˈzɔjd͡ʒi	wiktionary
+esperto	isˈpɛʁtu	wiktionary
+esporte	iʃˈpɔχʧi	wiktionary
+espreguiçadeira	ispɾeɡisaˈde(j)ɾɐ	wiktionary
+espreguiçadeiras	ispɾeɡisaˈde(j)ɾɐs	wiktionary
+espécimen	isˈpɛsimẽj̃	wiktionary
+esqueleto	eskeˈletu	wiktionary+michaelis
+esquilo	ɪsˈkilʊ	wiktionary
+esteio	isˈteju	wiktionary
+estrada	ɪsˈtɾadɐ	wiktionary
+estrondo	esˈtrõdu	wiktionary
+estrutiocultura	istɾut͡ʃiokuwˈtuɾɐ	wiktionary
+estultícia	estuwˈʧisjɐ	wiktionary
+estória	esˈtɔɾja	wiktionary
+ethos	ˈɛtus	wiktionary
+etimologia	etʃimoloˈʒia	wiktionary
+excomungar	eskomũwˈɡaɹ	none
+exegese	ekseˈʒɛzi	wiktionary
+exigência	ˌeziʒˈe͡ɪŋsjæ	wiktionary
+expressão verbal	ispɾeˈsɐ̃w̃veʁˈbaw	wiktionary
+extinção K-T	ist͡ʃĩˈsɐ̃w̃ˈkaˈte	wiktionary
+factoide	fɐkˈtɔjʤɪ	wiktionary
+facílima	faˈsilimɐ	wiktionary
+facílimos	faˈsilimus	wiktionary
+faialense	fɐjɐˈlẽsɪ	wiktionary
+fanqueiro	fɐ̃ˈkejɾu	wiktionary
+fantasma	fãˈtazma	wiktionary
+farinha de mandioca	faˈɾĩɲɐd͡ʒimɐ̃d͡ʒiˈɔkɐ	wiktionary
+farmacológica	faɾmakoˈlɔʒikɐ	wiktionary
+farpa	ˈfaʁpɐ	wiktionary
+fascismo	faˈsizmu	wiktionary+michaelis
+fazer	faˈze(ɻ)	wiktionary
+fazerdes	faˈzeɻdes	wiktionary
+febre	ˈfɛbɾi	wiktionary+michaelis
+federações	fedeɾɐˈsõjs	wiktionary
+fermentação	feʁmẽtaˈsɐ̃w̃	wiktionary
+feroico	feɾɔjˈkʊ	wiktionary
+filósofo	fiˈlɔzofu	wiktionary+michaelis
+finlandês	fĩjlãˈdejs	wiktionary
+fiorde	fiˈɔɹdʒi	wiktionary
+fluminense	flumiˈnẽjsi	wiktionary
+fogo-fátuo	ˌfoɡuˈfatuu	wiktionary
+fonética	foˈnɛt͡ʃikɐ	wiktionary
+fonética frásica	foˈnɛt͡ʃikɐˈfɾazikɐ	wiktionary
+fonética sincrônica	foˈnɛt͡ʃikɐsĩˈkɾõnikɐ	wiktionary
+fonômetro	foˈnometɾu	wiktionary
+forja	ˈfɔɹʒə	wiktionary
+formigueirinho-da-caatinga	foʁmiɡe(j)ˌɾĩɲudakaaˈt͡ʃĩɡɐ	wiktionary
+fortaleza	foɹtaˈleza	wiktionary
+fosse	ˈfosi	wiktionary
+fostes	ˈfosʧis	wiktionary
+frontal	fɾõˈtaw	wiktionary
+fulgurito	fuwɡuˈɾitu	wiktionary
+funcionário	fũsioˈnaɾiu	wiktionary
+gado	ˈɡado	none
+galiziano	ɡaliziˈɐ̃nu	wiktionary
+gamela	ɡaˈmɛla	none
+gandula	ɡɐ̃ˈdulɐ	wiktionary
+gaudério	ɡawˈdɛɾju	none
+gazebo	ɡaˈzebu	wiktionary
+gemologia	ʒemoloˈʒiɐ	wiktionary
+genuflexão	ʒenuflekˈsɐ̃w	wiktionary
+gerontologia	ʒeɾõwtoloˈʒia	wiktionary
+gigantismo	ʒiɡɐ̃ˈt͡ʃizmu	wiktionary
+gigantismo insular	ʒiɡɐ̃ˈt͡ʃizmuĩsuˈla(ʁ)	wiktionary
+gilbertês	ʒiwbeɾˈtejs	wiktionary
+ginarquia	ʒinaʁˈkiɐ	wiktionary
+ginecocracia	ʒinekokɾaˈsiɐ	wiktionary
+girassol	ʒiɾɐˈsɔw	wiktionary
+golfo	ˈɡowfu	michaelis
+grandíssimas	ɡɾɐ̃ˈd͡ʒisimɐs	wiktionary
+granulócito	ɡɾanuˈlɔsitu	wiktionary
+gratuito	ɡɾaˈtujtu	michaelis
+gravador	ɡɾavaˈdoʁ	wiktionary
+gravíssimas	ɡɾaˈvisimɐs	wiktionary
+gravíssimos	ɡɾaˈvisimus	wiktionary
+grosa	ˈɡɾɔza	none
+grupo consonantal	ˈɡɾupukõsonɐ̃ˈtaw	wiktionary
+grêmios	ˈɡɾẽmius	wiktionary
+guaribada	ɡwɐriˈbadɐ	wiktionary
+guatemalense	ɡwatemaˈlẽsi	wiktionary
+guatemalteco	ɡwatemawˈtɛku	wiktionary
+guzerate	ɡuzeˈɾatʃi	none
+gêiser	ˈʒejzeɾ	wiktionary+michaelis
+hagiologista	ɐʒɪoloˈʒistɐ	wiktionary
+hagiógrafo	ɐʒɪˈɔɡɾɐfʊ	none
+haicai	ajˈkaj	wiktionary
+halterofilistas	awˌtɛɾofiˈlistɐs	wiktionary
+hauçá	ɐwˈsa	wiktionary
+haússa	ɐˈusɐ	wiktionary
+haúça	ɐˈusɐ	wiktionary
+hegemônicas	eʒeˈmõnikɐs	wiktionary
+hemócito	eˈmɔsitu	wiktionary
+heroica	eˈɾɔjkɐ	wiktionary
+herói	e'ɾɔj	wiktionary
+hexaedro	eksaˈɛdɾu	wiktionary
+hidrofólio	idɾoˈfɔliu	wiktionary
+hidrossolúvel	idɾosoˈluvew	wiktionary+michaelis
+hidrângea	ɪˈdɾãʒɪɐ	wiktionary
+hieroscopia	jeɾoskoˈpiɐ	wiktionary
+higroscopia	iɡɾoskoˈpiɐ	wiktionary
+hiperbibasmo	ipeʁbiˈbazmu	wiktionary
+hipotireoidismo	ˌipot͡ʃiɾeojˈd͡ʒizmu	wiktionary
+hombu dojô	χõˈbudoˈʒo	wiktionary
+homem de palito	ˈomẽdᴣe̝paˈlito̝	wiktionary
+homografia	omoɡɾaˈfiɐ	none
+homônimo	oˈmonimu	wiktionary
+hospício	osˈpisju	wiktionary+michaelis
+hotel	oˈtɛw	wiktionary+michaelis
+hão	ˈɐ̃w̃	wiktionary
+hífen	ˈifẽj̃	wiktionary
+hóquei	ˈɔkej	wiktionary+michaelis
+iaiás	ja'jas	wiktionary
+iarense	ia'ɾẽsi	wiktionary
+ibaramenses	ibaɾɐ'mẽsiʃ	wiktionary
+iboga	iˈbɔɡɐ	wiktionary
+idiomatismo	id͡ʒiomaˈt͡ʃizmu	wiktionary
+idiossincrasia	idʒiosĩcɾaˈzia	wiktionary
+igarapés	iɡaɾaˈpɛs	wiktionary
+ignaros	iɡˈnaɾos	wiktionary
+ik	ˈikɪ	wiktionary
+ilativo	ɪlɐˈʧivʊ	wiktionary
+ilopolitanos	ilopoliˈtɐ̃nus	wiktionary
+iluminadas	ilumiˈnadas	wiktionary
+imagináveis	imɐʒɪˈnavejs	wiktionary
+imbecil	ĩbeˈsiw	wiktionary+michaelis
+imbira	ĩˈbiɾɐ	wiktionary
+imensa	iˈmẽsa	wiktionary
+inadequado	inɐdeˈkwadʊ	wiktionary
+inadimplência	ɪnɐdĩplẽⁿsjɐ	wiktionary
+indenização	ĩjdenizasãw	wiktionary
+indonésios	ĩdoˈnɛzjus	wiktionary
+indução	ĩjduˈsãw	wiktionary
+ineludível	ineluˈʤivew	wiktionary
+infestar	ĩfesˈta(ʁ)	wiktionary
+infográfico	ˌĩjfoˈɡɾafiku	none
+informação privilegiada	ĩfoʁmaˈsɐ̃w̃pɾivileʒiˈadɐ	wiktionary
+inglês antigo	iŋˈɡlesãⁿˈʧiɡu	none
+iniala	iniˈalə	wiktionary
+inimicícias	ɪnɪmɪˈsisɪɐs	wiktionary
+inimigo	ɪnɪˈmiɡʊ	none
+inteligentíssimo	ĩteliʒẽˈt͡ʃisimu	wiktionary
+interatividade	ĩteɾat͡ʃiviˈdad͡ʒi	wiktionary
+intervalos	ĩⁿteɾˈvalʊ	wiktionary
+intestinos	ĩⁿtesˈʧinʊs	wiktionary
+intérfase	ĩjˈtɛɹfazi	wiktionary
+inédito	iˈnɛdʒitu	wiktionary
+ir para a cidade dos pés juntos	ˈi(ʁ)paɾɐasiˈdad͡ʒidusˈpɛ(j)zˈʒũtus	wiktionary
+içá	i'sa	wiktionary
+jacaré	ʒakaˈɾɛ	wiktionary
+janta	ˈʒɐ̃tɐ	wiktionary
+joelho	ʒoˈeʎu	wiktionary
+jogar pérolas aos porcos	ʒoˈɡa(ʁ)ˈpɛɾolɐzawsˈpɔʁkus	wiktionary
+joão-fernandes	ʒuˈɐ̃wfeχˈnɐ̃ʤiʃ	wiktionary
+joão-tolo	ʒʊˈãwˈtolʊ	wiktionary
+kukluxismo	kukluˈksizmu	wiktionary
+lacraia	laˈkɾajɐ	wiktionary
+lagar	laˈɡa(ʁ)	wiktionary
+lanígera	lɐˈniʒeɾɐ	wiktionary
+lanígeros	lɐˈniʒeɾʊs	wiktionary
+larva	'larva	wiktionary
+lasquinha	las'kĩɲɐ	wiktionary
+layout	lajˈowʧi	wiktionary
+lhama	ˈʎɐ̃mɐ	wiktionary
+liberalismo	libeɾaˈlizmu	wiktionary
+liberdade	libeɾˈdadʒi	wiktionary
+licitude	lisiˈtud͡ʒi	wiktionary
+limpíssima	lĩˈpisimɐ	wiktionary
+linguado-branco	lĩˌɡwaduˈbɾɐ̃ku	wiktionary
+linguística	lĩˈɡwiʃʧikɐ	none
+liteireiro	litejˈɾejɾu	wiktionary
+livraria	livɾaˈɾiɐ	wiktionary+michaelis
+lombardo	lõmˈbaɾdu	wiktionary
+louva-a-deus	ˌlo(w)v‿ɐˈdews	wiktionary
+lucro	ˈlukɾʊ	wiktionary
+luganda	luˈɡãdə	none
+luminescentes	lumineˈsẽt͡ʃis	wiktionary
+luminária	lumiˈnaɾiɐ	wiktionary
+lápis	ˈlapis	wiktionary
+lésbica	ˈlɛʃbikə	wiktionary
+macaco do Novo Mundo	maˈkakuduˈnovuˈmũdu	wiktionary
+macaco-de-cheiro	maˌkakud͡ʒiˈʃe(j)ɾu	wiktionary
+maconheiro	makoˈɲejɾu	wiktionary
+magnetosfera	maɡiˌnɛtoˈsfɛɾɐ	wiktionary
+maguindanao	maɡĩdaˈnaw	wiktionary
+maio	ˈmajju	wiktionary
+maiô	mɐjˈo	wiktionary
+mal	ˈmaw	wiktionary+michaelis
+malcomido	mawkoˈmidu	wiktionary
+malgaxe	mawˈɡaʃi	none
+mancha	ˈmɐ̃ʃɐ	wiktionary
+manezinho	maˌnɛˈzĩɲu	wiktionary
+mangrove	mɐ̃'ɡɾovɪ	none
+manômetro	maˈnometɾu	wiktionary
+margem	ˈmaɹʒẽj	wiktionary
+marmeluta	mɐɾmeˈlutɐ	wiktionary
+marsupial	maʁsupiˈaw	wiktionary
+mastodonte	mastoˈdõt͡ʃi	wiktionary
+matarei	maˈtaɾeɪ	wiktionary
+matareis	mataˈɾeɪs	wiktionary
+matarem	maˈtaɾẽɲ	wiktionary
+mataria	mataˈɾiɐ	wiktionary
+matarias	mataˈɾiɐs	wiktionary
+matarmos	maˈtaɾmʊs	wiktionary
+matarão	mataˈɾɐ̃ʊ	wiktionary
+matassem	maˈtasẽm	wiktionary
+matastes	maˈtast͡ʃɪs	wiktionary
+matavas	maˈtavɐs	wiktionary
+material	mateɾiˈaw	wiktionary+michaelis
+mates	ˈmat͡ʃɪs	wiktionary
+mato	ˈmatʊ	wiktionary
+matou	maˈtoʊ	wiktionary
+matáreis	maˈtaɾeɪs	wiktionary
+matásseis	maˈtaseɪs	wiktionary
+megatério	meɡaˈtɛɾiu	wiktionary
+melhor	meˈʎɒɹ	wiktionary
+melindrado	melĩⁿˈdɾadʊ	wiktionary
+membrudo	mẽⁿˈbɾudu	wiktionary
+mercado	meɹˈkadu	wiktionary
+mesmerizes	mesmeˈɾizɪs	wiktionary
+metano	meˈtãnu	wiktionary
+metáfora	meˈtafoɾɐ	wiktionary+michaelis
+meu	ˈmew	wiktionary
+microfone	mikɾoˈfoni	wiktionary+michaelis
+mine	ˈmini	wiktionary
+mioleira	mioˈlejɾə	wiktionary
+mirmecofilia	miʁmekofiˈliɐ	wiktionary
+miscelânea	miseˈlɐ̃neɐ	wiktionary
+miserento	mizeˈɾẽtu	wiktionary
+misoneísmo	mɪzoneˈizmʊ	wiktionary
+mistureba	mistuˈɾɛbɐ	wiktionary
+moedor de café	moeˈdoʁdikaˈfɛ	wiktionary
+moedor de carne	moeˈdoʁdiˈkaʁni	wiktionary
+moedor de pimenta	moeˈdoʁdipiˈmẽtɐ	wiktionary
+moléstia	moˈlɛst͡ʃiɐ	wiktionary
+morgue	ˈmɔχɡi	none
+morsa	ˈmɔɹsa	wiktionary
+mostravam	mosˈtɾavɐ̃	wiktionary
+mucumbabém	mukũbaˈbẽj	wiktionary
+mulher-objeto	muˌʎɛ(ɾ)obiˈʒɛtu	wiktionary
+musicológico	muzikoˈlɔʒiku	wiktionary
+mutcho	ˈmut͡ʃu	wiktionary
+mãozinha	ˌmɐ̃w̃ˈzĩɲɐ	wiktionary
+nada	ˈnadə	wiktionary
+nalguns	nawˈɡũs	wiktionary
+nalguém	nawˈɡẽj̃	wiktionary
+nanica	naˈnikɐ	wiktionary
+nanico	naˈniku	wiktionary
+naquelas	naˈkɛlɐs	wiktionary
+nasalização	nazalizaˈsɐ̃w̃	wiktionary
+nazareu	nazaˈɾew	wiktionary
+neandertal	neɐ̃deʁˈtaw	wiktionary
+neandertalense	neɐ̃deʁtaˈlẽsi	wiktionary
+nebulosa planetária	nebuˈlɔzɐplaneˈtaɾiɐ	wiktionary
+neologismo	nɛʊloˈʒizmʊ	wiktionary
+nepalês	nepaˈlejs	wiktionary
+neperiano	nepeɾiˈãnu	wiktionary
+nhanduti	ɲɐ̃dʊˈʧi	wiktionary
+nhanica	ɲaˈnikɐ	wiktionary
+nivelado	nɪveˈladʊ	wiktionary
+nomadismo	nomaˈd͡ʒizmu	wiktionary
+nomarquia	nomaʁˈkiɐ	wiktionary
+nome de código	ˈnomidʒiˈkɔdʒiɡu	none
+norte	ˈnɔχʧi	wiktionary
+nota verbal	ˈnɔtɐˌvɛʁˈbaw	wiktionary
+notável	noˈtavew	wiktionary
+noutra	ˈnowtɾɐ	wiktionary
+noutrem	ˈnowtɾẽj̃	wiktionary
+novo	'novu	wiktionary
+nuvem	ˈnuvẽĩ̯	wiktionary
+obcecação	obsekaˈsãw	wiktionary
+objetos	obˈʒɛtʊs	wiktionary
+obsolescência programada	obsoleˈsẽsiɐplaneˈʒadɐ	wiktionary
+obtusângulas	obtuˈzɐ̃ɡulɐs	wiktionary
+obtusângulos	obtuˈzɐ̃ɡulus	wiktionary
+octógono	okˈtɔɡonu	none
+olhos	ˈoʎʊs	wiktionary
+onicalgia	onikawˈʒiɐ	wiktionary
+ornitisquiano	oʁnit͡ʃiskiˈɐ̃nu	wiktionary
+ornitorrinco	oɹnitoˈχĩjku	wiktionary
+orogenético	oɾoʒeˈnɛtɪkʊ	wiktionary
+orográfico	oɾoˈɡɾafiku	wiktionary
+ossético	oˈsɛtɪkʊ	wiktionary
+ostra	ˈostɾɐ	wiktionary
+ota	ˈotɐ	wiktionary
+oásis	oˈazis	wiktionary+michaelis
+palatável	palaˈtavew	wiktionary
+palavra	paˈlavɾɐ	wiktionary
+palavreado	palavɾeˈadu	wiktionary
+paleocanal	paleokaˈnaw	wiktionary
+paleogeografia	paleoʒeoɡɾaˈfiɐ	wiktionary
+paleografia	ˌpaleoɡɾaˈfiɐ	wiktionary
+papa	ˈpapɐ	wiktionary
+par	paχ	wiktionary
+paracanã	paɾakãˈnã	wiktionary
+paramilitar	paɾamiliˈtaχ	wiktionary
+parati	paɾaˈtʃi	wiktionary
+parietal	paɾieˈtaw	wiktionary
+passivo	paˈsivu	wiktionary
+pastor	pasˈtoɹ	wiktionary
+patada	paˈtadɐ	wiktionary+michaelis
+patriotada	patɾioˈtadɐ	wiktionary
+patriotário	patɾioˈtaɾiu	wiktionary
+patriótico	patɾiˈɔt͡ʃiku	wiktionary
+pau-marfim	ˌpawmaʁˈfĩ	wiktionary
+paulatino	pawlaˈtʃinu	wiktionary
+paz e amor	ˈpa(j)ziaˈmoʁ	wiktionary
+pechincha	peˈʃĩʃɐ	wiktionary
+pecuária	pekuˈaɾiɐ	wiktionary
+pedra, papel e tesoura	ˈpɛdɾɐpaˈpɛwiteˈzo(w)ɾɐ	wiktionary
+pedreiros	peˈdɾei̯ɾo̝s	wiktionary
+peixe	ˈpejʃi	wiktionary
+penicar	penɪˈkaɾ	wiktionary
+pensativo	pẽsaˈt͡ʃivu	wiktionary
+pentadactilia	pẽtadakt͡ʃiˈliɐ	wiktionary
+perder o seu latim	ˌpɛʁˈde(ɾ)usewlaˈt͡ʃĩ	wiktionary
+peregrinação	peɾeɡɾinaˈsɐ̃w̃	wiktionary
+perereca	peɾeˈɾɛkɐ	wiktionary+michaelis
+perjurar	ˌpeɾʒuˈɾaɾ	wiktionary
+perlífero	peɹˈlifeɾu	wiktionary
+pichel	piˈʃɛw	wiktionary
+piscado	pisˈkadu	wiktionary
+piscina	piˈsinɐ	wiktionary
+pitangas	piˈtɐ̃ɡɐs	none
+planar	plaˈna(ʁ)	wiktionary
+pletóricas	pleˈtɔɾikɐs	wiktionary
+plural	plʊˈɾaw	wiktionary
+poeta	po'ɛta	wiktionary
+polissílabo	poliˈsilabu	wiktionary+michaelis
+polissíndeto	poliˈsindetu	wiktionary
+poltergeist	powteʁˈɡajst͡ʃi	wiktionary
+polémico	poˈlemɪkʊ	wiktionary
+polêmico	poˈlemɪkʊ	wiktionary
+pomerano	pomeˈɾãnu	wiktionary
+ponte	ˈpõwtʃi	wiktionary
+ponte-pretense	ˌpõtʃipɾeˈtẽsi	wiktionary
+ponto-de-venda	ˈpõwtudʒiˈvẽjda	wiktionary
+porco-da-terra	ˈpoɾkʊdɐˈtɛχɐ	wiktionary
+portfólio	poχʧˈfɔlju	wiktionary
+portuguesas	poɾtuˈɡezɐs	none
+pousa	ˈpozɐ	wiktionary
+pratinho	pɾaˈt͡ʃĩɲu	wiktionary
+precariíssima	pɾeka'ɾjisɪmɐ	wiktionary
+precariíssimas	pɾeka'ɾjisɪmɐs	wiktionary
+precito	pɾeˈsitu	wiktionary
+preá	pɾeˈa	wiktionary
+prodigalidade	pɾod͡ʒiɡaliˈdad͡ʒi	wiktionary
+profetizado	pɾofeʧiˈzadʊ	wiktionary
+pronúncia	pɾoˈnũwsja	wiktionary
+propriedades	pɾopɾɪeˈdaʤɪs	wiktionary
+provençal	pɾovẽˈsaw	wiktionary
+purpúrico	puʁˈpuɾiku	wiktionary
+puído	puˈidu	wiktionary
+página	ˈpaʒinɐ	wiktionary+michaelis
+púrpuro	ˈpuʁpuɾu	wiktionary
+quadribol	kwadɾiˈbɔw	wiktionary
+quadrilongo	kwadɾiˈlõɡu	wiktionary
+qualquer	kwawˈkɛɾ	wiktionary+michaelis
+quaresma	kwaˈɾɛʒmɐ	wiktionary
+queixo	ˈkejʃu	wiktionary+michaelis
+quejandos	keˈʒãⁿdʊs	wiktionary
+querer	kɪ'ɾeɾ	wiktionary
+quinze	ˈkĩzi	wiktionary+michaelis
+quisto	ˈkistu	wiktionary
+qüinqüenal	kwĩjkweˈnaw	wiktionary
+racha	ˈχaʃa	wiktionary
+racismo sistémico	ʁaˈsizmusisˈtẽmiku	wiktionary
+raiz	ˈʁajs	wiktionary
+ramela	χɐˈmɛlɐ	wiktionary
+rasa	ˈχazɐ	wiktionary
+ratazana	xataˈzãnə	wiktionary
+ravina	xa'vinə	wiktionary
+referendar	ʁefeɾẽˈda(ʁ)	wiktionary
+refratar	ʁefɾaˈta(ʁ)	wiktionary
+regrar	χeˈɡɾar	none
+relatado	xelaˈtadu	wiktionary
+resvalamento	ʁezvalaˈmẽtu	wiktionary
+resvalamentos	ʁezvalaˈmẽtus	wiktionary
+retirante	χetʃiˈɾãtʃi	wiktionary
+revelação	ʁevelaˈsɐ̃w̃	wiktionary
+revólver	xeˈvɔwveɾ	wiktionary
+rezar	ʁeˈzaʁ	wiktionary
+rigor	ʁiˈɡoɾ	wiktionary+michaelis
+rizicultura	χizikuwˈtuɾa	wiktionary
+roda	ˈʁɔdɐ	wiktionary
+rola-bosta	ˈʁɔlɐˈbɔstɐ	wiktionary
+rosquinha	ʁosˈkĩɲɐ	wiktionary
+roxo-rei	ˈχoʃʊˌχej	wiktionary
+rutilância	ʁut͡ʃiˈlɐ̃siɐ	wiktionary
+ruído	ʁuˈidu	wiktionary
+saite	ˈsajʧi	wiktionary
+sal	saw	wiktionary
+salomônico	saloˈmõniku	wiktionary
+salto	'saltu	wiktionary
+sana	ˈsãnɐ	wiktionary
+santeiro	sɐ̃ˈte(j)ɾu	wiktionary
+saqueio	sɐˈkeju	wiktionary
+satélite	saˈtɛlit͡ʃi	wiktionary
+saudade	sawˈdadʒi	wiktionary
+saudação	sawdaˈsɐ̃w̃	wiktionary
+saudi-árabe	sawˌd͡ʒiˈaɾabi	wiktionary
+secretaria	sekɾetaˈɾia	wiktionary
+seda	ˈsedɐ	wiktionary
+sefarditas	sefaʁˈd͡ʒitɐs	wiktionary
+seis	ˈsei̯s	wiktionary
+selenologia	selenoloˈʒiɐ	wiktionary
+semantema	semɐ̃ⁿˈtemɐ	wiktionary
+semântica	seˈmɐ̃tikɐ	wiktionary
+sena	ˈsenɐ	wiktionary
+sepulto	sepˈuwtʊ	wiktionary
+sequoia	seˈkwɔjɐ	wiktionary
+sessoto	seˈsotʊ	wiktionary
+siameses	siaˈmezis	wiktionary
+siamês	siaˈme(j)s	wiktionary
+siglema	siˈɡlẽmɐ	wiktionary
+sinalética	sinaˈlɛt͡ʃikɐ	wiktionary
+sindético	sĩjˈdɛtʃiku	wiktionary
+sinóptica	sɪˈnɔptɪkɐ	wiktionary
+sistema operacional	sɪsˈtemɐopeɾɐsjoˈnaw	wiktionary
+sobrecasacas	sobɾekaˈzakɐs	wiktionary
+sobrenome	sobɾeˈnomi	wiktionary+michaelis
+somatório	somaˈtɔɾiu	wiktionary
+sons	ˈsõs	wiktionary
+spaghetti	ispaˈɡɛtʃi	none
+sueto	suˈetu	wiktionary
+superstição	supeɾⁱst͡ʃiˈsɐ̃ũ̯	wiktionary
+supino	sʊˈpinʊ	wiktionary
+suplemento	sʊpleˈmẽⁿtʊ	wiktionary
+surtaras	sʊɾˈtaɾɐs	wiktionary
+são-paulino	ˈsãwpawˈlinu	wiktionary
+sístole	ˈsistoli	wiktionary+michaelis
+só a capa do batman	ˈsɔaˈkapɐduˈbat͡ʃimɐ̃	wiktionary
+tai	ˈtaj	wiktionary
+taitiano	taˌitʃiˈãnu	wiktionary
+também	tãˈbẽj	wiktionary+michaelis
+tapoer	tapoˈɛɾ	wiktionary
+tarde	'taxdʒɪ	wiktionary
+tareco	taˈɾɛku	wiktionary
+taxado	taˈʃadu	wiktionary
+telefone	teleˈfoni	wiktionary
+temendo	teˈmẽⁿdʊ	wiktionary
+tentação	tẽtaˈsɐ̃w̃	wiktionary
+tenuicorne	tenwiˈkɔɾni	wiktionary
+testa	ˈtɛstɐ	wiktionary
+teu	ˈtew	wiktionary+michaelis
+tia	ˈʧiɐ	wiktionary
+tico	'ʧikʊ	wiktionary
+tira	ˈt͡ʃiɾɐ	wiktionary
+todo-poderoso	ˌtodupodeˈɾozu	wiktionary
+tonelada	toneˈladɐ	wiktionary+michaelis
+transístor	tɾɐ̃ˈzistoʁ	wiktionary
+trapinho	tɾaˈpĩɲu	wiktionary
+travesseiro	traveˡsejru	wiktionary
+travessão	tɾaveˈsɐ̃w̃	wiktionary
+treme	ˈtɾemi	wiktionary
+treminhão	tɾemiˈɲãw	wiktionary
+tresandante	tɾezɐ̃ˈdɐ̃t͡ʃi	wiktionary
+tribunal do crime	tɾibuˈnawduˈkɾĩmi	wiktionary
+trocadilhista	tɾokad͡ʒiˈʎistɐ	wiktionary
+troglóbio	ˌtɾɔˈɡlɔbiu	wiktionary
+troica	ˈtɾɔjkɐ	wiktionary
+três-marias	ˈtɾe(j)zmaˈɾiɐs	wiktionary
+tubi	tuˈbi	wiktionary
+tudo	ˈtudu	wiktionary+michaelis
+turcomano	tuχkoˈmɐnu	wiktionary
+tártaro	ˈtaɾtaɾu	wiktionary
+tétum	ˈtɛtũ	wiktionary
+tíbia	ˈt͡ʃibiɐ	wiktionary
+tórax	ˈtɔɾa̝ks	wiktionary
+ubicação	ubikaˈsɐ̃w̃	wiktionary
+udmurte	udˈmuɾʧɪ	wiktionary
+ultimato	uwt͡ʃiˈmatu	wiktionary
+ultravioleta	ˌuwtɾavioˈleta	wiktionary
+um	ũw	wiktionary
+univitelino	univiteˈlĩnu	wiktionary
+urdu	uɾˈdu	wiktionary
+uretra	ʊˈɾɛtɾɐ	wiktionary
+ursinho	uʁˈsĩɲu	wiktionary
+usavam	ʊˈzavɐ̃	wiktionary
+usucapião	ʊzʊkɐpɪˈãw	wiktionary
+utilitarista	ut͡ʃilitaˈɾistɐ	wiktionary
+vagina	vɐ'ʒinɐ	wiktionary
+vai	ˈvaj	wiktionary
+valo	ˈvalʊ	wiktionary
+varredor	vaʁeˈdoʁ	wiktionary
+vedor	veˈdoʁ	wiktionary
+velório	veˈlɔɾiu	wiktionary
+verbo transitivo indireto	ˈvɛʁbutɾɐ̃ziˈt͡ʃivuĩd͡ʒiˈɾɛtu	wiktionary
+vereadores	veɾɪɐˈdoɾɪs	wiktionary
+verossímil	veɾoˈsĩmiw	wiktionary
+vexilologia	veksiloloʒiɐ	wiktionary
+vez	ˈveɪs	wiktionary
+vida	ˈvita	wiktionary
+violoncelo	violõ'sɛlʊ	wiktionary
+vitalismo	vitaˈlizmu	wiktionary
+vogal de ligação	voˈɡawd͡ʒiliɡaˈsɐ̃w̃	wiktionary
+vulnerabilidade	vuwneɾabiliˈdad͡ʒi	wiktionary
+xadrez	ʃaˈdɾes	wiktionary+michaelis
+ximango	ʃiˈmɐ̃ɡu	wiktionary
+zagrebino	zaɡɾeˈbinu	none
+zebroide	zeˈbɾɔjd͡ʒi	wiktionary
+África	ˈafɾɪkɐ	wiktionary
+Ícaro	'ikaɾu	wiktionary
+Óliver	ˈɔliveʁ	wiktionary
+àquelas	aˈkɛlas	wiktionary
+àqueles	aˈkelis	wiktionary
+águas passadas não movem moinho	aɡwɐspaˈsadɐzˈnɐ̃w̃ˈmɔvẽj̃ˈmɔĩɲu	wiktionary
+árvore evolutiva	ˈaʁvoɾievoluˈt͡ʃivɐ	wiktionary
+éon	ˈɛõ	wiktionary
+étimo	ˈɛtʃimu	wiktionary
+étude	e'tudi	wiktionary
+êxodo	ˈezɘdʊ	wiktionary
+ósseo	ˈɔsju	wiktionary+michaelis
