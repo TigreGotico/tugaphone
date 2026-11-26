@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.0.1a1](https://github.com/TigreGotico/tugaphone/tree/3.0.1a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.0a4...3.0.1a1)
+
+**Merged pull requests:**
+
+- chore: pin orthography2ipa\>=7.131.2a5 for the equi- glide [\#419](https://github.com/TigreGotico/tugaphone/pull/419) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- fix\(benchmark\): score a nasal glide as the bare glide \(harness 2.1\) [\#417](https://github.com/TigreGotico/tugaphone/pull/417) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.0.0a4](https://github.com/TigreGotico/tugaphone/tree/3.0.0a4) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.0.0a3...3.0.0a4)
@@ -362,7 +371,6 @@
 **Merged pull requests:**
 
 - fix: pt-PT and Lisbon ⟨ex⟩ + consonant take the ⟨ei⟩ diphthong [\#306](https://github.com/TigreGotico/tugaphone/pull/306) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- Update astral-sh/setup-uv action to v10.4.0 [\#301](https://github.com/TigreGotico/tugaphone/pull/301) ([renovate[bot]](https://github.com/apps/renovate))
 
 ## [1.11.2a4](https://github.com/TigreGotico/tugaphone/tree/1.11.2a4) (2026-11-21)
 
@@ -375,10 +383,6 @@
 ## [1.11.2a3](https://github.com/TigreGotico/tugaphone/tree/1.11.2a3) (2026-11-20)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.2a2...1.11.2a3)
-
-**Merged pull requests:**
-
-- docs: sync README and docs with dev [\#302](https://github.com/TigreGotico/tugaphone/pull/302) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.2a2](https://github.com/TigreGotico/tugaphone/tree/1.11.2a2) (2026-11-19)
 
