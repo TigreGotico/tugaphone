@@ -111,7 +111,10 @@ _NOTATION = (("ã", "ɐ̃"), ("tʃ", "t͡ʃ"), ("dʒ", "d͡ʒ"),
              ("ⁿ", ""), ("(", ""), (")", ""), ("'", ""))
 
 #: Cruz-Ferreira (1999: 127): the European [ɨ] "is often represented as /ə/".
-_INFOPEDIA = (("ə", "ɨ"),)
+#: Infopédia writes the tap as ⟨r⟩: its readings contrast caro ˈkaru with carro
+#: ˈkaʀu, and ⟨r⟩ stands in a tap position in 28,162 of 28,183 words
+#: (TigreGotico/portuguese-unified-pronunciation-lexicon@23898e1, ipa_narrow).
+_INFOPEDIA = (("ə", "ɨ"), ("r", "ɾ"))
 _OTHER: tuple = ()
 _REGION_NOTATION: Dict[str, tuple] = {"pt-PT": _INFOPEDIA, "pt-PT-x-lisbon": _INFOPEDIA}
 
