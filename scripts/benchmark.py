@@ -82,7 +82,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "2.0"
+HARNESS_VERSION = "2.1"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -99,8 +99,9 @@ _JOINERS = "·.|‿͜͡"
 #: edit; an affricate becomes two letters, as a syllable break splits it. Infopédia
 #: writes the tap as ⟨r⟩ and the trill as ⟨ʀ⟩; the pt-BR sources write
 #: ⟨ʊ ɪ⟩ for unstressed [u i] and ⟨χ ɹ⟩ for coda rhotics. ⟨ɾ⟩ and ⟨ʁ⟩
-#: stay apart.
-_NOTATION = (("ʧ", "tʃ"), ("ʤ", "dʒ"), ("ɐ̃", "ã"), ("χ", "ʁ"),
+#: stay apart. A glide after a nasal vowel takes its nasality from the vowel,
+#: and the gold writes it both ways (pt-BR ⟨ɐ̃w⟩ and ⟨ɐ̃w̃⟩), so ⟨w̃ j̃⟩ fold to ⟨w j⟩.
+_NOTATION = (("ʧ", "tʃ"), ("ʤ", "dʒ"), ("ɐ̃", "ã"), ("w̃", "w"), ("j̃", "j"), ("χ", "ʁ"),
              ("ɹ", "ɾ"), ("ʊ", "u"), ("ɪ", "i"),
              ("ⁿ", ""), ("(", ""), (")", ""), ("'", ""))
 
