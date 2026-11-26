@@ -33,6 +33,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import os
@@ -43,8 +44,13 @@ import unicodedata
 import urllib.request
 from typing import Dict, List, Optional, Tuple
 
+from orthography2ipa import G2P
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, REPO_ROOT)
+
+from tugaphone.lattice_core import pipeline  # noqa: E402
+from tugaphone.registry import resolve_lect  # noqa: E402
 
 FIXTURE_DIR = os.path.join(REPO_ROOT, "tests", "data", "gold")
 RESULTS_JSON = os.path.join(REPO_ROOT, "benchmarks", "results.json")
@@ -76,7 +82,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "1.2"
+HARNESS_VERSION = "2.0"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -316,31 +322,16 @@ def stress_accuracy(hits: int, n_stress: int) -> Optional[float]:
 # ─── rules-only phonemization ───────────────────────────────────────────────
 
 def rules_only_ipa(word: str, dialect_code: str) -> str:
-    """Phonemize *word* with the dialect's grapheme rules ONLY.
-
-    The dialect inventory is built normally, then its lexicon exception
-    table is emptied, so every word takes the rule path. The inventory is
-    cached per dialect (module-level).
-    """
-    inv = _rules_only_inventory(dialect_code)
-    from tugaphone.tokenizer import Sentence
-    return Sentence(word, dialect=inv).ipa.strip()
+    """``phonemize(word, dialect_code)`` with the packaged lexicon emptied."""
+    return _rules_only_engine(dialect_code).transcribe(word).strip()
 
 
-_INV_CACHE: Dict[str, object] = {}
-
-
-def _rules_only_inventory(dialect_code: str):
-    inv = _INV_CACHE.get(dialect_code)
-    if inv is None:
-        from tugaphone.registry import get_dialect_inventory
-        inv = get_dialect_inventory(dialect_code)
-        try:
-            inv.IRREGULAR_WORDS = {}
-        except Exception:  # frozen dataclass
-            object.__setattr__(inv, "IRREGULAR_WORDS", {})
-        _INV_CACHE[dialect_code] = inv
-    return inv
+@functools.lru_cache(maxsize=None)
+def _rules_only_engine(dialect_code: str) -> G2P:
+    lect = resolve_lect(dialect_code)
+    rules = pipeline(lect)
+    rules.lexicon.clear()
+    return G2P(lect, pipeline=rules)
 
 
 # ─── fixtures ───────────────────────────────────────────────────────────────

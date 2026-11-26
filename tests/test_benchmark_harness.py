@@ -15,6 +15,8 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
 import benchmark  # noqa: E402
+from tugaphone import phonemize  # noqa: E402
+from tugaphone.lattice_core import pipeline  # noqa: E402
 from check_benchmark_regression import regression  # noqa: E402
 
 
@@ -91,23 +93,19 @@ class TestScoring:
 
 
 class TestRulesOnly:
+    """Rules-only is the shipped phonemize path with the packaged lexicon emptied."""
 
     def test_lexicon_is_bypassed(self):
-        inv = benchmark._rules_only_inventory("pt-PT")
-        assert inv.IRREGULAR_WORDS == {}
+        # The pt-PT lexicon row is ɐbɐfɐˈɾetɨ; the rules give the open [ɛ].
+        assert benchmark.rules_only_ipa("abafarete", "pt-PT") == "ɐbɐfɐˈɾɛtɨ"
+        assert phonemize("abafarete", "pt-PT") == "ɐbɐfɐˈɾetɨ"
 
-    def test_rules_only_still_transcribes(self):
-        assert benchmark.rules_only_ipa("casa", "pt-PT")
+    def test_off_the_lexicon_it_is_phonemize(self):
+        assert benchmark.rules_only_ipa("aguenta", "pt-PT") == phonemize("aguenta", "pt-PT")
 
-    def test_normal_inventory_untouched(self):
-        # the harness must not share its emptied table with normal use
-        from tugaphone.registry import get_dialect_inventory
-        harness = benchmark._rules_only_inventory("pt-BR")
-        harness.IRREGULAR_WORDS["casa"] = "ˈkazɐ"
-        try:
-            assert "casa" not in get_dialect_inventory("pt-BR").IRREGULAR_WORDS
-        finally:
-            del harness.IRREGULAR_WORDS["casa"]
+    def test_shipped_lexicon_untouched(self):
+        benchmark.rules_only_ipa("abafarete", "pt-PT")
+        assert pipeline("pt-PT").lexicon["abafarete"] == "ɐbɐfɐˈɾetɨ"
 
 
 class TestStress:

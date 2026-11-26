@@ -10,9 +10,9 @@ see: scoreboard.md, architecture.md
 tugaphone is measured against two golds, one per path. The
 **phonemization pipeline**, a dialect selected by its lect code, driving the
 orthography2ipa lattice, is scored sentence-level against orthography2ipa's TTS
-gold. The **rules-only grapheme cascade** (the benchmark baseline, not the
-pipeline) is scored word-level against the unified pronunciation gold, those
-numbers live in [scoreboard.md](scoreboard.md).
+gold. The same pipeline with its packaged lexicon emptied, **rules-only**, is
+scored word-level against the unified pronunciation gold. Those numbers are in
+[scoreboard.md](scoreboard.md).
 
 ## Pipeline: the TTS-gold harness
 
@@ -100,8 +100,10 @@ against `pt-BR`.
 
 ## Rules-only baseline
 
-The sections below measure the grapheme cascade in `tugaphone.tokenizer` /
-`tugaphone.dialects`, the rules-only baseline, not the lattice pipeline, against the unified pronunciation lexicon gold.
+The sections below measure the phonemization pipeline with its packaged lexicon
+emptied against the unified pronunciation lexicon gold. A benchmark code that
+is not a tugaphone lect goes through `resolve_lect` (`pt-BR-x-sao-paulo` is
+`pt-BR-x-sp`, `pt-BR-x-rio-janeiro` is `pt-BR-x-rj`).
 
 ## Gold source
 
@@ -135,9 +137,9 @@ lookup-first score measure *lexicon coverage*: a word found in the
 lexicon scores perfectly by construction, and the score says nothing
 about the grapheme rules that handle every out-of-vocabulary word.
 
-The legacy inventories take no lexicon, and the harness also empties
-the exception table (`DialectInventory.IRREGULAR_WORDS = {}`) before
-scoring, so **every** gold word takes the rule path. The number is then a per-word honest
+The harness empties the lexicon of a copy of the lect's
+`tugaphone.lattice_core.pipeline`, so **every** gold word takes the
+orthography2ipa rule path. The shipped pipeline keeps its lexicon. The number is then a per-word honest
 measurement: the rules never saw the answer.
 
 ## Offline fixtures
