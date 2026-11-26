@@ -76,9 +76,3 @@ def test_a_tag_that_truncation_leaves_unnamed_takes_the_nearest_lect(tag):
     nearest = closest_lang(with_default_region(tag), list_dialects(), lects="standard")
     with pytest.warns(UserWarning, match="is not a tugaphone lect"):
         assert resolve_lect(tag) == nearest
-
-
-def test_normalize_dialect_code_is_deprecated_and_keeps_its_value():
-    from tugaphone.registry import normalize_dialect_code
-    with pytest.warns(DeprecationWarning, match="removed in tugaphone"):
-        assert normalize_dialect_code("PT-pt-X-PORTO") == "pt-PT-x-porto"

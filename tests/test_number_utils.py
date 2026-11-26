@@ -5,7 +5,7 @@ import warnings
 import pytest
 from text2spoken import normalize
 
-from tugaphone.number_utils import NUMBER_PARSER_REMOVAL_VERSION, UnreadFormWarning, normalize_numbers, read_number_pairs
+from tugaphone.number_utils import UnreadFormWarning, normalize_numbers, read_number_pairs
 
 from tests.text2spoken_gaps import SCALE_PAIR
 
@@ -229,127 +229,35 @@ class TestCountedNounGender:
         assert normalize_numbers(text) == expected
 
 
-@pytest.fixture
-def NumberParser():
-    with pytest.warns(DeprecationWarning, match=f"removed in tugaphone {NUMBER_PARSER_REMOVAL_VERSION}"):
-        from tugaphone.number_utils import NumberParser
-    return NumberParser
+class TestAgreement:
+    """normalize_numbers gives a number the gender of the noun or article next to it.
 
-
-def test_number_parser_removal_version_is_the_next_major():
-    from tugaphone.version import VERSION_MAJOR
-    assert NUMBER_PARSER_REMOVAL_VERSION == f"{VERSION_MAJOR + 1}.0.0"
-
-
-class TestNumberParserPronounce:
-    """The deprecated NumberParser reads through text2spoken."""
-
-    def test_cardinal_masculine_default(self, NumberParser):
-        result = NumberParser.pronounce_number_word("1", gender="masculine")
-        assert result == "um"
-
-    def test_cardinal_feminine(self, NumberParser):
-        result = NumberParser.pronounce_number_word("1", gender="feminine")
-        assert result == "uma"
-
-    def test_ordinal_masculine(self, NumberParser):
-        result = NumberParser.pronounce_number_word("1", as_ordinal=True, gender="masculine")
-        assert result == "primeiro"
-
-    def test_ordinal_feminine(self, NumberParser):
-        result = NumberParser.pronounce_number_word("1", as_ordinal=True, gender="feminine")
-        assert result == "primeira"
-
-    def test_nineteen_pt(self, NumberParser):
-        assert NumberParser.pronounce_number_word("19") == "dezanove"
-
-    def test_nineteen_br(self, NumberParser):
-        assert NumberParser.pronounce_number_word("19", is_brazilian=True) == "dezenove"
+    tugalex gives "ainda" and "mas" no gender, so no noun follows the number.
+    tugalex gives "personagem" both genders, so either reading is right.
+    """
 
     @pytest.mark.parametrize("text,expected", [
-        # tugalex gives "ainda" and "mas" no gender: no noun follows the number
         ("Paguei 300 ainda ontem.", "Paguei trezentos ainda ontem."),
         ("Tenho 2 mas não chegam.", "Tenho dois mas não chegam."),
-        # an article before the number still decides
         ("as 2 ainda", "as duas ainda"),
         ("As 2 ainda chegam.", "As duas ainda chegam."),
-        # "banana" is feminine in tugalex; "caixa" and "personagem" have both
-        # genders, and their endings decide
         ("Comprei 2 bananas.", "Comprei duas bananas."),
         ("Comprei 2 caixas.", "Comprei duas caixas."),
-        ("Há 1 personagem.", "Há uma personagem."),
+        ("1 casa", "uma casa"),
+        ("1ª vez", "primeira vez"),
     ])
-    def test_number_agrees_with_next_word(self, NumberParser, text, expected):
-        words = text.split()
-        i = next(k for k, w in enumerate(words) if w.isdecimal())
-        words[i] = NumberParser.pronounce_number_word(
-            words[i], prev_word=words[i - 1] if i else None, next_word=words[i + 1])
-        assert " ".join(words) == expected
+    def test_number_agrees_with_next_word(self, text, expected):
+        assert normalize_numbers(text) == expected
 
+    def test_two_gender_noun(self):
+        assert normalize_numbers("Há 1 personagem.") in {"Há um personagem.", "Há uma personagem."}
 
-class TestNumberParserPredicates:
-    def test_is_int(self, NumberParser):
-        assert NumberParser.is_int("42")
-        assert not NumberParser.is_int("abc")
-        assert not NumberParser.is_int("3.14")
+    @pytest.mark.parametrize("lang,expected", [("pt-PT", "dezanove"), ("pt-BR", "dezenove")])
+    def test_nineteen(self, lang, expected):
+        assert normalize_numbers("19", lang) == expected
 
-    def test_is_float(self, NumberParser):
-        assert NumberParser.is_float("3.14")
-        assert NumberParser.is_float("42")
-        assert not NumberParser.is_float("abc")
-
-    def test_is_ordinal_attached(self, NumberParser):
-        assert NumberParser.is_ordinal("1º")
-        assert NumberParser.is_ordinal("1ª")
-
-    def test_is_ordinal_separated(self, NumberParser):
-        assert NumberParser.is_ordinal("1", "º")
-
-    def test_not_ordinal(self, NumberParser):
-        assert not NumberParser.is_ordinal("1")
-
-    def test_get_number_gender_feminine(self, NumberParser):
-        assert NumberParser.get_number_gender("1", next_word="casa") == "feminine"
-
-    def test_get_number_gender_masculine_default(self, NumberParser):
-        assert NumberParser.get_number_gender("2", next_word="cães") == "masculine"
-
-    def test_get_number_gender_preposition_a_not_article(self, NumberParser):
-        # "3 a 2." (a score/range reading): the "a" before "2" is the
-        # preposition "to", not the feminine article "a" -- there is no
-        # following noun for it to introduce, so the number stays masculine.
-        assert NumberParser.get_number_gender("2", prev_word="a", next_word=".") == "masculine"
-        assert NumberParser.get_number_gender("2", prev_word="a", next_word=None) == "masculine"
-
-    def test_get_number_gender_article_a_before_noun(self, NumberParser):
-        # "a 1 casa": here "a" really is the feminine article.
-        assert NumberParser.get_number_gender("1", prev_word="a", next_word="casa") == "feminine"
-
-    def test_to_int(self, NumberParser):
-        assert NumberParser.to_int("42") == 42
-        assert NumberParser.to_int("1º") == 1
-
-    def test_to_float(self, NumberParser):
-        assert NumberParser.to_float("3.14") == pytest.approx(3.14)
-
-    def test_to_float_comma_decimal(self, NumberParser):
-        assert NumberParser.to_float("10,4") == pytest.approx(10.4)
-
-    def test_to_int_rejects_comma_decimal(self, NumberParser):
-        assert NumberParser.to_int("10,4") is None
-
-    def test_is_decimal(self, NumberParser):
-        assert NumberParser.is_decimal("10,4")
-        assert NumberParser.is_decimal("10.4")
-        assert not NumberParser.is_decimal("42")
-        assert not NumberParser.is_decimal("1e6")
-
-    def test_is_scientific_notation_comma_mantissa(self, NumberParser):
-        assert NumberParser.is_scientific_notation("2,5e3")
-
-
-    def test_pronounce_number_word_scale_kwarg(self, NumberParser):
-        assert NumberParser.pronounce_number_word("1000000000000", scale="short") == "um trilião"
+    def test_short_scale(self):
+        assert normalize_numbers("1000000000000", "pt-BR") == "um trilhão"
 
 
 class TestLargeNumbers:

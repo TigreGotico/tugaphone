@@ -24,7 +24,6 @@ from typing import Dict, List, Optional, Tuple
 from linguatag import closest_lang, parse_tag, with_default_region
 from orthography2ipa import ancestry_chain, available_codes, resolve, resolves_exactly
 
-from tugaphone.version import VERSION_MAJOR
 
 #: Lects written in another orthography, so the modern Portuguese text stages do
 #: not apply. orthography2ipa keeps their specs. Barranquenho and
@@ -84,8 +83,6 @@ _ALIASES: Dict[str, str] = {
 #: parent's forms. Every other lect runs on the rules alone.
 PACKAGED_LEXICON_LECTS = frozenset({"pt-PT", "pt-BR"})
 
-#: The release that removes :func:`lexicon_region`.
-LEXICON_REGION_REMOVAL_VERSION = f"{VERSION_MAJOR + 1}.0.0"
 
 
 def resolve_lect(lang: str = "pt-PT") -> str:
@@ -138,20 +135,6 @@ def _resolve(lang: str) -> Tuple[str, bool]:
     return closest_lang(tag, _CANONICAL, lects="standard") or "pt-PT", False
 
 
-def lexicon_region(lect: str) -> Optional[str]:
-    """Deprecated: the ``tugalex`` region whose lexicon overlays ``lect``.
-
-    No lect takes a ``tugalex`` region map, so the answer is ``None`` for every
-    lect. :data:`PACKAGED_LEXICON_LECTS` names the lects that take a lexicon.
-    """
-    warnings.warn(
-        "lexicon_region() is deprecated and returns None: no lect takes a "
-        "tugalex region map. Use PACKAGED_LEXICON_LECTS. It will be removed in "
-        f"tugaphone {LEXICON_REGION_REMOVAL_VERSION}.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return None
 
 
 def list_dialects() -> List[str]:
@@ -192,53 +175,3 @@ def default_contact(lect: str) -> str:
     *portunhol*) embeds Spanish instead.
     """
     return "es" if lect in _SPANISH_CONTACT_LECTS else "en"
-
-
-# --------------------------------------------------------------------------
-# Backwards-compatible shims (deprecated).
-# --------------------------------------------------------------------------
-
-def normalize_dialect_code(lang: str) -> str:
-    """Deprecated: normalize the casing of a BCP-47 tag (``PT-pt-X-PORTO`` → ``pt-PT-x-porto``).
-
-    .. deprecated::
-        :func:`resolve_lect` reads a tag in any spelling. Use
-        :func:`linguatag.standardize_lang` for the canonical form of a tag.
-    """
-    warnings.warn(
-        "normalize_dialect_code() is deprecated; use linguatag.standardize_lang(). "
-        f"It will be removed in tugaphone {LEXICON_REGION_REMOVAL_VERSION}.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    segments = (lang or "").strip().split("-")
-    normalized = []
-    in_private_use = False
-    for i, seg in enumerate(segments):
-        low = seg.lower()
-        if low == "x":
-            in_private_use = True
-            normalized.append(low)
-        elif i > 0 and len(seg) == 2 and not in_private_use:
-            normalized.append(seg.upper())
-        else:
-            normalized.append(low)
-    return "-".join(normalized)
-
-
-def resolve_dialect(lang: str = "pt-PT") -> str:
-    """Deprecated alias for :func:`resolve_lect`.
-
-    .. deprecated::
-        A dialect is now an orthography2ipa lect code, not a
-        ``DialectEntry``. Use :func:`resolve_lect`.
-    """
-    import warnings
-
-    warnings.warn(
-        "resolve_dialect() is deprecated; a dialect is an orthography2ipa lect "
-        "code — use resolve_lect().",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return resolve_lect(lang)

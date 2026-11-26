@@ -8,7 +8,6 @@ the caller (number/ordinal verbalization, sense-based homograph marking, the
 ``pt-PT`` residual lexicon, syllabification), wired through orthography2ipa's
 own extension points. See :mod:`tugaphone.lattice_core`.
 """
-import warnings
 from typing import Optional
 
 from tugaphone.version import __version__
@@ -37,24 +36,14 @@ class TugaPhonemizer:
     """
 
     def phonemize_sentence(self, sentence: str, lang: str = "pt-PT",
-                           contact: str = "none",
-                           regional_dialect: Optional[object] = None) -> str:
+                           contact: str = "none") -> str:
         """Phonemize raw ``sentence`` for the ``lang`` lect: see :func:`tugaphone.phonemize`.
 
         ``contact`` is the embedded-language policy, ``"none"`` (the default),
         ``"auto"``, ``"es"``, ``"fr"`` or ``"en"``; see :mod:`tugaphone.codeswitch`.
-        ``regional_dialect`` is deprecated and ignored: ``lang`` alone selects
-        the accent. Returns space-separated IPA per word, with ``ˈ`` before
+        Returns space-separated IPA per word, with ``ˈ`` before
         each stressed syllable. An unknown ``contact`` raises ``ValueError``.
         """
-        if regional_dialect is not None:
-            warnings.warn(
-                "regional_dialect= is deprecated and ignored; select the "
-                "accent through lang= (e.g. lang='pt-PT-x-porto'). The accent "
-                "is encoded in the orthography2ipa lect spec.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
         return phonemize(sentence, lang, contact)
 
     @staticmethod

@@ -9,7 +9,7 @@ from linguatag import lang_matches
 from orthography2ipa import available_codes, resolve
 
 from tugaphone.registry import (_OWN_ORTHOGRAPHY, resolve_lect,
-                                resolve_dialect, PACKAGED_LEXICON_LECTS, lexicon_region,
+                                PACKAGED_LEXICON_LECTS,
                                 list_dialects)
 
 
@@ -85,12 +85,6 @@ class TestPackagedLexiconLects:
         # A sub-lect would take its parent's forms over its own spec's phonology.
         assert PACKAGED_LEXICON_LECTS == {"pt-PT", "pt-BR"}
 
-    @pytest.mark.parametrize("lect", ["pt-PT", "pt-PT-x-lisbon", "pt-BR", "pt-TL"])
-    def test_lexicon_region_is_deprecated_and_names_no_region(self, lect):
-        from tugaphone.version import VERSION_MAJOR
-
-        with pytest.warns(DeprecationWarning, match=f"removed in tugaphone {VERSION_MAJOR + 1}.0.0"):
-            assert lexicon_region(lect) is None
 
 
 class TestListDialects:
@@ -112,9 +106,6 @@ class TestListDialects:
         )
         assert list_dialects() == without_clades
 
-    def test_resolve_dialect_deprecated(self):
-        with pytest.deprecated_call():
-            assert resolve_dialect("pt-BR") == "pt-BR"
 
 
 @pytest.fixture(scope="module")
@@ -143,11 +134,6 @@ class TestPhonemizerIntegration:
         import unicodedata
         got = unicodedata.normalize("NFC", pho.phonemize_sentence(self.SENTENCE, code))
         assert got == unicodedata.normalize("NFC", expected)
-
-    def test_regional_dialect_kwarg_deprecated_and_ignored(self, pho):
-        with pytest.deprecated_call():
-            out = pho.phonemize_sentence("gato", "pt-PT", regional_dialect=object())
-        assert out == pho.phonemize_sentence("gato", "pt-PT")
 
     def test_unrecognised_tag_matches_default(self, pho):
         assert (pho.phonemize_sentence(self.SENTENCE, "pt-PT-x-nowhere")
