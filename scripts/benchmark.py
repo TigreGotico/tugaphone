@@ -110,7 +110,7 @@ _REGION_NOTATION: Dict[str, tuple] = {"pt-PT": _INFOPEDIA, "pt-PT-x-lisbon": _IN
 #: ⟨es⟩ + consonant, so [iʃ], [ɨʃ] and [ʃ] are one accepted reading. Vázquez
 #: Diéguez (2015, Anuario de Estudios Filológicos 38) gives "esc- [(i)ʃk]" and
 #: "est- [(i)ʃt]" on p. 250 and "Na sequência <es- + consoante> pode
-#: desaparecer" on p. 265; Teyssier (1989: 28) writes estar [(i)ʃ'tar].
+#: desaparecer" on p. 265; Teyssier (1989: 28), quoted in Vázquez Diéguez (2015: 244), writes estar [(i)ʃ'tar].
 _INITIAL_ES = re.compile(r"^[iɨ]?([ʃʒ])")
 _ES_WORD = re.compile(r"^es[^aeiouáéíóúâêôãõàs]")
 
@@ -535,7 +535,7 @@ def write_reports(rows: List[dict]) -> None:
         "",
         "PER with initial es- accepted counts [iʃ], [ɨʃ] and [ʃ] as one reading",
         "of a word-initial ⟨es⟩ + consonant in the European dialects",
-        "(Vázquez Diéguez 2015: 250, 265; Teyssier 1989: 28).",
+        "(Vázquez Diéguez 2015: 250, 265; Teyssier 1989: 28, quoted in Vázquez Diéguez 2015: 244).",
         "",
         "| Dialect | Gold region | Words | PER | PER, initial es- accepted "
         "| Word accuracy | Stress words | Stress accuracy |",

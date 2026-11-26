@@ -28,7 +28,7 @@ stress lands on the gold's syllable. PER cannot see that choice.
 
 PER with initial es- accepted counts [iʃ], [ɨʃ] and [ʃ] as one reading
 of a word-initial ⟨es⟩ + consonant in the European dialects
-(Vázquez Diéguez 2015: 250, 265; Teyssier 1989: 28).
+(Vázquez Diéguez 2015: 250, 265; Teyssier 1989: 28, quoted in Vázquez Diéguez 2015: 244).
 
 | Dialect | Gold region | Words | PER | PER, initial es- accepted | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|---|
