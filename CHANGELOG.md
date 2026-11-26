@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.0a3](https://github.com/TigreGotico/tugaphone/tree/3.4.0a3) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.0a2...3.4.0a3)
+
+**Merged pull requests:**
+
+- test: strict xfails for the English onset r and final θ against Assis 2007 [\#442](https://github.com/TigreGotico/tugaphone/pull/442) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.4.0a2](https://github.com/TigreGotico/tugaphone/tree/3.4.0a2) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.0a1...3.4.0a2)
@@ -375,10 +383,6 @@
 ## [1.11.6a2](https://github.com/TigreGotico/tugaphone/tree/1.11.6a2) (2026-11-23)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.6a1...1.11.6a2)
-
-**Merged pull requests:**
-
-- docs: sync README and docs with dev [\#321](https://github.com/TigreGotico/tugaphone/pull/321) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.6a1](https://github.com/TigreGotico/tugaphone/tree/1.11.6a1) (2026-11-22)
 
