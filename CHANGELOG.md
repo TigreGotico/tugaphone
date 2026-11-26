@@ -1,8 +1,8 @@
 # Changelog
 
-## [3.5.3a1](https://github.com/TigreGotico/tugaphone/tree/3.5.3a1) (2026-11-26)
+## [3.5.3a2](https://github.com/TigreGotico/tugaphone/tree/3.5.3a2) (2026-11-26)
 
-[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.2a1...3.5.3a1)
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.2a1...3.5.3a2)
 
 **Merged pull requests:**
 
