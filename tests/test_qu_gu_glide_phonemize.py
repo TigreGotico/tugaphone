@@ -15,14 +15,9 @@ GLIDE_WORDS = [
     ("aguentamos", "ɡw"), ("frequenta", "kw"), ("frequento", "kw"),
     ("sagui", "ɡw"),
 ]
-PASSING = {("pt-PT", "aguentar")}
 
 
 @pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
 @pytest.mark.parametrize("word,glide", GLIDE_WORDS)
-def test_pronounced_u_is_a_glide(lect, word, glide, request):
-    if (lect, word) not in PASSING:
-        request.applymarker(pytest.mark.xfail(
-            strict=True, reason="o2i has no rule for the pronounced u of "
-            "qu/gu; only a lexicon row gives [w] (tugaphone #382)"))
+def test_pronounced_u_is_a_glide(lect, word, glide):
     assert glide in phonemize(word, lect)
