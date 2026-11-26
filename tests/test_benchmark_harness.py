@@ -283,6 +283,41 @@ class TestAcceptedGlide:
         assert benchmark.score_word("ɐdiɐˈmẽtu", ["ɐdjɐˈmẽtu"]) == (1, 8)
 
 
+class TestBrazilianAccepted:
+    def score(self, hyp, gold, word):
+        return benchmark.score_word(hyp, [gold], word=word, brazilian=True)
+
+    def test_the_coda_rhotic_is_one_segment(self):
+        # Barbosa & Albano (2004: 228): /R/ is extremely variable in BP.
+        assert self.score("adawˈbeɾtu", "adawˈbeʁtu", "Adalberto") == (0, 9)
+        assert self.score("vawdeˈmaɾ", "vawdeˈmaʁ", "Valdemar") == (0, 8)
+
+    def test_an_onset_rhotic_stays_an_edit(self):
+        assert self.score("ˈɾatu", "ˈʁatu", "rato") == (1, 4)
+
+    def test_epenthesis_in_a_written_cluster_is_one_reading(self):
+        # Collischonn (2004: 64, 67): presence or absence of the vowel varies.
+        assert self.score("ˈkakitu", "ˈkaktu", "cacto") == (0, 5)
+        assert self.score("ad͡ʒivoˈɡadu", "advoˈɡadu", "advogado") == (0, 8)
+
+    def test_a_written_vowel_stays_an_edit(self):
+        assert self.score("ɡnɛ", "ɡiˈnɛ", "Guiné") == (1, 4)
+        assert self.score("ˈbde", "biˈde", "bidê") == (1, 4)
+
+    def test_the_glide_of_a_final_stressed_vowel_before_s_is_one_reading(self):
+        # Leiria (Organon 28: 133): the diphthongization is variable.
+        assert self.score("eskoˈses", "eskoˈsejs", "escocês") == (0, 7)
+        assert self.score("ˈtɾes", "ˈtɾejs", "três") == (0, 4)
+
+    def test_a_written_i_before_the_final_s_stays_an_edit(self):
+        assert self.score("ˈʁas", "ʁaˈjs", "raiz") == (1, 4)
+        assert self.score("ˈlapis", "ˈlapijs", "lápis") == (1, 6)
+
+    def test_strict_phone_per_keeps_each_process_an_edit(self):
+        assert benchmark.score_word("ˈkakitu", ["ˈkaktu"], word="cacto") == (1, 5)
+        assert benchmark.score_word("eskoˈses", ["eskoˈsejs"]) == (1, 8)
+
+
 class TestInfopediaTap:
     # Infopédia contrasts caro ˈkaru with carro ˈkaʀu: its ⟨r⟩ is the tap.
     def test_the_infopedia_r_is_the_tap(self):

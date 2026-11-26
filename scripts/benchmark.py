@@ -82,7 +82,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "3.0"
+HARNESS_VERSION = "3.1"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -663,11 +663,15 @@ def write_reports(rows: List[dict]) -> None:
         "`img/plot_scoreboard.py` makes this figure from",
         "`benchmarks/results.json`.",
         "",
-        "PER with initial es- accepted counts [iʃ], [ɨʃ] and [ʃ] as one reading",
-        "of a word-initial ⟨es⟩ + consonant in the European dialects",
-        "(Vázquez Diéguez 2015: 250, 265; Teyssier 1989: 28, quoted in Vázquez Diéguez 2015: 244).",
+        "PER, variants accepted counts each reading of a cited optional process as",
+        "one: for European Portuguese a word-initial ⟨es⟩ vowel (Vázquez Diéguez",
+        "2015: 250, 265) and a glide before a vowel (Mateus & Andrade 1998); for",
+        "Brazilian Portuguese the coda /R/ and the glide before a vowel (Barbosa &",
+        "Albano 2004: 228, 230), epenthesis in a written obstruent cluster",
+        "(Collischonn 2004: 64, 67) and the glide of a final stressed vowel before",
+        "/S/ (Leiria, Organon 28: 133). See docs/benchmarking.md.",
         "",
-        "| Dialect | Gold region | Words | PER | PER, initial es- accepted "
+        "| Dialect | Gold region | Words | PER | PER, variants accepted "
         "| Word accuracy | Stress words | Stress accuracy |",
         "|---|---|---|---|---|---|---|---|",
     ]

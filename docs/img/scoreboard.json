@@ -7,12 +7,12 @@
  {
   "dialect": "pt-PT",
   "per": 0.0929,
-  "stress_acc": 0.9867
+  "stress_acc": 0.9877
  },
  {
   "dialect": "pt-BR",
-  "per": 0.1068,
-  "stress_acc": 0.9731
+  "per": 0.1041,
+  "stress_acc": 0.9767
  },
  {
   "dialect": "pt-MZ",

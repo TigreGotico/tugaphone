@@ -195,11 +195,13 @@ attested variant, so a word with several valid pronunciations is not penalised
 for the variants it did not choose. Reported per dialect:
 
 - **PER** (`per`): phone PER, the summed segment edits divided by the summed
-  gold segments. The pt frontend gate uses this number, because a voice learns
-  phones, not phonemes.
+  gold segments. Each report gives it beside the accepted PER.
 - **phoneme PER** (`per_phoneme`): the same sum with the rhotic merge.
-- **PER, variants accepted** (`per_accepted`, European dialects only): the
-  same PER, with two cited variants of the sound scored as one reading. First, [iʃ], [ɨʃ] and [ʃ] scored as one reading of a word-initial
+- **PER, variants accepted** (`per_accepted`, pt-PT and pt-BR dialects): the
+  same PER, with cited optional processes scored as one reading on both sides.
+  The pt frontend gate uses this number. A voice learns phones, and each
+  process here is a variation of the phones that a speaker can make either way.
+  For the European dialects there are two. First, [iʃ], [ɨʃ] and [ʃ] scored as one reading of a word-initial
   ⟨es⟩ + consonant on both sides. This is a variant of the sound, not of the
   notation, so the plain PER keeps it as an error. Vázquez Diéguez (2015,
   *Anuario de Estudios Filológicos* 38) gives "esc- [(i)ʃk]" and "est- [(i)ʃt]"
@@ -213,6 +215,21 @@ for the variants it did not choose. Reported per dialect:
   stress, so a stressed hiatus such as [diɐ] also scores as [djɐ] on both sides.
   The source names /i u/ only, so an [ɨ] before a vowel (afeável [ɐfɨˈavɛɫ]
   against [ɐˈfjavɛɫ]) stays an edit.
+
+  For the Brazilian dialects there are four:
+
+  | Process | Accepted reading | Source |
+  |---|---|---|
+  | Coda /R/ | Each rhotic before a consonant or at the word end is [ɾ]. | Barbosa & Albano (2004: 228): /R/ "is extremely variable in BP". |
+  | Glide before a vowel | [i u] before a vowel is [j w], as for European Portuguese. | Barbosa & Albano (2004: 230): "In casual and fast speech, adjacent heterosyllabic vowels usually turn into diphthongs". |
+  | Epenthesis | No [i] between the two consonants of a written obstruent cluster: cacto [ˈkaktu] for [ˈkakitu], advogado [advoˈɡadu] for [ad͡ʒivoˈɡadu]. | Collischonn (2004, *SIGNUM* 7(1): 64): presence or absence of the vowel is the dependent variable; 69% before the stress and 24% after it (p. 67). |
+  | Glide before /S/ | No [j] after a written ⟨a e o⟩ of a final stressed syllable before ⟨s z⟩: escocês [eskoˈses] for [eskoˈsejs], três, arroz. | Leiria (*Organon* 28: 133): "a ditongação é uma regra variável", 41% of 1,725 contexts. The source has no unstressed data, so lápis stays outside the step. |
+
+  The epenthesis step reads the spelling, so a written vowel (Guiné, bidê)
+  stays. A written ⟨i⟩ or diphthong before the final ⟨s z⟩ (raiz, pais) is not
+  the inserted glide, so it stays too. The step applies to every pt-BR
+  dialect. The sources of the last two processes give rates for southern
+  varieties only (VARSUL: Porto Alegre, Florianópolis, Curitiba).
 - **word accuracy**: exact matches after normalization.
 - **stress accuracy** (`stress_acc`, with its word count `n_stress`): the share
   of stress-eligible gold words whose primary stress lands on the gold's
