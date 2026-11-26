@@ -226,3 +226,25 @@ def test_detector_threshold_monotonicity(detector):
 def test_detector_empty_token_is_portuguese(detector):
     assert detector.detect("...")[0] == "pt"
     assert detector.detect("")[0] == "pt"
+
+
+# Assis (2007), Adaptações fonológicas de estrangeirismos do inglês no PB,
+# MA dissertation, UNESP. pt-BR data only; page numbers are PDF pages.
+ASSIS_RHOTIC = ("tugaphone#403: an English onset ɹ reads as the tap [ɾ]; Assis (2007: 80): "
+                "for initial /r/ the subjects \"optam por [h]\", the native strong r")
+ASSIS_THETA = ("tugaphone#403: a final English θ reads as [t]; Assis (2007: 79): in bluetooth "
+               "\"os falantes brasileiros normalmente o substituem por /f/\"")
+
+
+@pytest.mark.parametrize("word", [
+    pytest.param("rock", marks=pytest.mark.xfail(strict=True, reason=ASSIS_RHOTIC)),
+    pytest.param("ranking", marks=pytest.mark.xfail(strict=True, reason=ASSIS_RHOTIC)),
+])
+def test_an_english_onset_r_takes_the_native_strong_r(word):
+    strong_r = phonemize("rato", "pt-BR").lstrip("ˈ")[0]
+    assert phonemize(word, "pt-BR", contact="en").lstrip("ˈ")[0] == strong_r
+
+
+@pytest.mark.xfail(strict=True, reason=ASSIS_THETA)
+def test_a_final_english_theta_reads_as_f():
+    assert phonemize("bluetooth", "pt-BR", contact="en").endswith(("f", "fi"))
