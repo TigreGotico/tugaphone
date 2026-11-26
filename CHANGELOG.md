@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.5.1a1](https://github.com/TigreGotico/tugaphone/tree/3.5.1a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.0a1...3.5.1a1)
+
+**Merged pull requests:**
+
+- fix\(benchmark\): pt-BR accepted steps match their sources [\#461](https://github.com/TigreGotico/tugaphone/pull/461) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.5.0a1](https://github.com/TigreGotico/tugaphone/tree/3.5.0a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a6...3.5.0a1)
@@ -375,10 +383,6 @@
 ## [1.11.11a1](https://github.com/TigreGotico/tugaphone/tree/1.11.11a1) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.10a2...1.11.11a1)
-
-**Merged pull requests:**
-
-- fix: read the pt-BR space-grouped number through text2spoken 0.0.2a123 [\#339](https://github.com/TigreGotico/tugaphone/pull/339) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.10a2](https://github.com/TigreGotico/tugaphone/tree/1.11.10a2) (2026-11-24)
 
