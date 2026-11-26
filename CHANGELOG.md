@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.5.0a1](https://github.com/TigreGotico/tugaphone/tree/3.5.0a1) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a6...3.5.0a1)
+
+**Merged pull requests:**
+
+- feat\(benchmark\): accepted PER for pt-BR with four cited optional processes \(harness 3.1\) [\#457](https://github.com/TigreGotico/tugaphone/pull/457) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.4.1a6](https://github.com/TigreGotico/tugaphone/tree/3.4.1a6) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.4.1a5...3.4.1a6)
@@ -375,10 +383,6 @@
 ## [1.11.10a2](https://github.com/TigreGotico/tugaphone/tree/1.11.10a2) (2026-11-24)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.10a1...1.11.10a2)
-
-**Merged pull requests:**
-
-- test: cite text2spoken\#560 for the pt-BR space-grouped number [\#337](https://github.com/TigreGotico/tugaphone/pull/337) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.10a1](https://github.com/TigreGotico/tugaphone/tree/1.11.10a1) (2026-11-24)
 
