@@ -3,7 +3,7 @@
 # sample: seed=20260713 words=1000 (cap 1000)
 # columns: word<TAB>ipa_narrow<TAB>sources (one row per variant)
 # sources: portuguese-unified-pronunciation-lexicon@23898e1437dc77e84681bb7ce5580a9b3e2d04ba
-# corrections: orthography2ipa data/gold/corrections/portuguese_unified_pt.jsonl, kind a_quality (Barbosa & Albano 2004, JIPA 34(2): 229), 15 rows
+# corrections: orthography2ipa data/gold/corrections/portuguese_unified_pt.jsonl, every pt-BR row that matches (a_quality: Barbosa & Albano 2004, JIPA 34(2): 229–230; stress marks; one wrong headword dropped)
 -abilidade	abiliˈdad͡ʒi	wiktionary
 -arquia	aʁˈkiɐ	wiktionary
 ABC	aˌbeˈse	wiktionary
@@ -93,7 +93,7 @@ abacaxizais	abakaʃiˈzajs	wiktionary
 abacteriano	abakteɾiˈɐnu	wiktionary
 abadias	aba'dʒiaʃ	wiktionary
 abaixado	abajˈʃadu	wiktionary+michaelis
-abalroa	abawxoˈa	wiktionary
+abalroa	abawˈxoa	wiktionary
 abesourar	abezouˈɾaɾ	wiktionary
 abolicionismo	abolisioˈnizmu	wiktionary
 abotoar o paletó de	abotoˈa(ɾ)upaleˈtɔde	wiktionary
@@ -184,7 +184,7 @@ asnáticas	aʒˈnat͡ʃikaʃ	wiktionary
 assamês	asaˈmejs	wiktionary
 assinatura de tempo	asinaˈtuɾa̝dᴣe̝ˈtẽpo̝	wiktionary
 assincronia	asɪŋkɾoˈniɐ	wiktionary
-astrólogo	ɐsˈtɾɔloɡʊ	wiktionary
+astrólogo	asˈtɾɔloɡʊ	wiktionary
 audiovisual	awd͡ʒjoviˈzwaw	wiktionary
 aueté	awweˈtɛ	wiktionary
 augúrio	awˈɡuɾju	wiktionary+michaelis
@@ -203,7 +203,7 @@ avoes	aˈvois	wiktionary
 avoássemos	avoˈasemus	wiktionary
 avárico	aˈvaɾiku	wiktionary
 axiológico	aksioˈlɔʒiku	wiktionary
-azar	ɐzaɾ	wiktionary
+azar	ɐˈzaɾ	wiktionary
 azinhavre	azĩˈɲavɾi	wiktionary
 aônio	aˈõniu	wiktionary
 babado	baˈbadu	wiktionary+michaelis
@@ -272,11 +272,11 @@ brasileira	bɾɐziˈlejɾɐ	wiktionary
 braço	ˈbɾäsʊ	wiktionary
 brecha jurídica	ˈbɾɛʃɐʒuˈɾid͡ʒikɐ	wiktionary
 bruços	ˈbɾusus	wiktionary
-bunda	bũw̃dɐ	wiktionary
+bunda	ˈbũw̃dɐ	wiktionary
 burgo	ˈbuʁɡu	wiktionary
 burro	ˈbuχu	wiktionary
 bus	ˈbus	wiktionary
-báratro	baˈɾatɾu	wiktionary
+báratro	ˈbaɾatɾu	wiktionary
 bêbedo	ˈbebedu	wiktionary
 caatinga	kaˈt͡ʃĩɡɐ	wiktionary
 cabalmente	kɐbɐwˈmẽⁿʧɪ	wiktionary
@@ -338,7 +338,7 @@ cinzeiro	sĩˈzejɾu	wiktionary+michaelis
 circulante	siʁkuˈlɐ̃t͡ʃi	wiktionary
 circulação	siχkulaˈsɐ̃w	wiktionary
 circum-navegação	siʁˌkũnaveɡaˈsɐ̃w̃	wiktionary
-ciriguela	siɾiˈɡwɛla	wiktionary
+ciriguela	siɾiˈɡwɛlɐ	wiktionary
 citólise	siˈtɔlizi	wiktionary
 ciência	siˈẽsjɐ	wiktionary+michaelis
 clandestinidade	klɐ̃dest͡ʃiniˈdad͡ʒi	wiktionary
@@ -362,7 +362,7 @@ comida	koˈmidɐ	wiktionary+michaelis
 comigo	koˈmiɡo̝	wiktionary
 comitre	koˈmitɾi	wiktionary
 compadre	kõˈpadɾi	wiktionary
-competição	kõpeʧisɐ̃w	wiktionary
+competição	kõpeʧiˈsɐ̃w	wiktionary
 comprar	kõˈpɾaχ	wiktionary
 computador	kõwputaˈdoɾ	wiktionary
 confidencialmente	kõfidẽsiˌawˈmẽt͡ʃi	wiktionary
@@ -409,7 +409,6 @@ de fora a fora	d͡ʒiˈfɔɾɐaˈfɔɾɐ	wiktionary
 debreado	debɾeˈadu	wiktionary
 decasségui	dekaˈsɛɡi	wiktionary
 decidi	desɪˈʤi	wiktionary
-delegacia	deleˈɡadu	wiktionary
 deleitosa	delejˈtɔzɐ	wiktionary
 democracia	demokɾaˈsiɐ	wiktionary+michaelis
 densidade populacional	dẽsiˈdaʤipopulasioˈnaw	wiktionary
@@ -445,7 +444,7 @@ dizendo	diˈzẽⁿdʊ	wiktionary
 domo	ˈdomʊ	wiktionary
 dondoco	dõˈdoku	wiktionary
 donos	ˈdonʊs	wiktionary
-dormitório	doɾmitɔɾiu	wiktionary
+dormitório	doɾmiˈtɔɾiu	wiktionary
 dublê	duˈble	wiktionary+michaelis
 econômico	ekoˈnõmiku	wiktionary
 ecossistema	ɛkosisˈtɛma	wiktionary
@@ -547,7 +546,7 @@ fulgurito	fuwɡuˈɾitu	wiktionary
 funcionário	fũsioˈnaɾiu	wiktionary
 gado	ˈɡado	wiktionary
 galiziano	ɡaliziˈɐ̃nu	wiktionary
-gamela	ɡaˈmɛla	wiktionary
+gamela	ɡaˈmɛlɐ	wiktionary
 gandula	ɡɐ̃ˈdulɐ	wiktionary
 gaudério	ɡawˈdɛɾju	wiktionary
 gazebo	ɡaˈzebu	wiktionary
@@ -567,7 +566,7 @@ gratuito	ɡɾaˈtujtu	wiktionary+michaelis
 gravador	ɡɾavaˈdoʁ	wiktionary
 gravíssimas	ɡɾaˈvisimɐs	wiktionary
 gravíssimos	ɡɾaˈvisimus	wiktionary
-grosa	ˈɡɾɔza	wiktionary
+grosa	ˈɡɾɔzɐ	wiktionary
 grupo consonantal	ˈɡɾupukõsonɐ̃ˈtaw	wiktionary
 grêmios	ˈɡɾẽmius	wiktionary
 guaribada	ɡwɐriˈbadɐ	wiktionary
@@ -620,8 +619,8 @@ imbecil	ĩbeˈsiw	wiktionary+michaelis
 imbira	ĩˈbiɾɐ	wiktionary
 imensa	iˈmẽsɐ	wiktionary
 inadequado	inɐdeˈkwadʊ	wiktionary
-inadimplência	ɪnɐdĩplẽⁿsjɐ	wiktionary
-indenização	ĩjdenizasãw	wiktionary
+inadimplência	ɪnɐdĩˈplẽⁿsjɐ	wiktionary
+indenização	ĩjdenizaˈsãw	wiktionary
 indonésios	ĩdoˈnɛzjus	wiktionary
 indução	ĩjduˈsãw	wiktionary
 ineludível	ineluˈʤivew	wiktionary
@@ -943,7 +942,7 @@ todo-poderoso	ˌtodupodeˈɾozu	wiktionary
 tonelada	toneˈladɐ	wiktionary+michaelis
 transístor	tɾɐ̃ˈzistoʁ	wiktionary
 trapinho	tɾaˈpĩɲu	wiktionary
-travesseiro	traveˡsejru	wiktionary
+travesseiro	traveˈsejru	wiktionary
 travessão	tɾaveˈsɐ̃w̃	wiktionary
 treme	ˈtɾemi	wiktionary
 treminhão	tɾemiˈɲãw	wiktionary
@@ -981,7 +980,7 @@ velório	veˈlɔɾiu	wiktionary
 verbo transitivo indireto	ˈvɛʁbutɾɐ̃ziˈt͡ʃivuĩd͡ʒiˈɾɛtu	wiktionary
 vereadores	veɾɪɐˈdoɾɪs	wiktionary
 verossímil	veɾoˈsĩmiw	wiktionary
-vexilologia	veksiloloʒiɐ	wiktionary
+vexilologia	veksiloloˈʒiɐ	wiktionary
 vez	ˈveɪs	wiktionary
 vida	ˈvita	wiktionary
 violoncelo	violõ'sɛlʊ	wiktionary
