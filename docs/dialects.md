@@ -12,6 +12,10 @@ Portuguese-family lects orthography2ipa ships, each reachable by its BCP-47
 code. Select one through the `lang` argument to `phonemize_sentence`, `lang`
 changes the phonology, not just the spelling.
 
+tugaphone covers Portuguese lects only. No other leader language (es-CO, fr-FR,
+it-IT, de-DE, nl-NL, da-DK, kab, hi-IN, bn-IN, mwr) is in scope;
+[orthography2ipa](https://github.com/TigreGotico/orthography2ipa) covers them.
+
 ```python
 from tugaphone import TugaPhonemizer
 

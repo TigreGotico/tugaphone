@@ -757,7 +757,12 @@ def write_reports(rows: List[dict]) -> None:
     with open(RESULTS_JSON, "w", encoding="utf-8") as fh:
         json.dump(rows, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
+    with open(SCOREBOARD_MD, "w", encoding="utf-8") as fh:
+        fh.write(render_scoreboard(rows))
 
+
+def render_scoreboard(rows: List[dict]) -> str:
+    """The text of docs/scoreboard.md for the result ``rows``."""
     lines = [
         "# Scoreboard: rules-only PER and stress accuracy per dialect",
         "<!-- agent-hint",
@@ -831,8 +836,7 @@ def write_reports(rows: List[dict]) -> None:
         "[← Benchmarking](benchmarking.md) · [Home](index.md)",
         "",
     ]
-    with open(SCOREBOARD_MD, "w", encoding="utf-8") as fh:
-        fh.write("\n".join(lines))
+    return "\n".join(lines)
 
 
 def main() -> None:

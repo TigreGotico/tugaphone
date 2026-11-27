@@ -478,3 +478,10 @@ def test_a_written_vowel_left_of_the_cluster_stays():
     assert score("pitaptu", "pitaptu") == (0, 7)
     assert score("pitaptu", "pitapitu") == (0, 7)
     assert score("ptaptu", "pitaptu") == (1, 7)
+
+
+def test_the_scoreboard_page_matches_the_committed_results():
+    with open(benchmark.RESULTS_JSON, encoding="utf-8") as fh:
+        rows = json.load(fh)
+    with open(benchmark.SCOREBOARD_MD, encoding="utf-8") as fh:
+        assert benchmark.render_scoreboard(rows) == fh.read()
