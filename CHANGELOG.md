@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.0a4](https://github.com/TigreGotico/tugaphone/tree/3.6.0a4) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a3...3.6.0a4)
+
+**Merged pull requests:**
+
+- docs: link the demo Space from the README [\#493](https://github.com/TigreGotico/tugaphone/pull/493) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.6.0a3](https://github.com/TigreGotico/tugaphone/tree/3.6.0a3) (2026-11-27)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a2...3.6.0a3)
@@ -355,10 +363,6 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a4...1.11.17a1)
 
-**Merged pull requests:**
-
-- fix: content\_revision is the version strings of tugaphone and its dependencies \(\#372\) [\#374](https://github.com/TigreGotico/tugaphone/pull/374) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.11.16a4](https://github.com/TigreGotico/tugaphone/tree/1.11.16a4) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a3...1.11.16a4)
@@ -370,7 +374,6 @@
 **Merged pull requests:**
 
 - test: strict xfail for \#376 \(Flores, Corvo, Santa Maria tags unsupported\) [\#377](https://github.com/TigreGotico/tugaphone/pull/377) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- test: strict xfail for rio- place names and is\_supported [\#373](https://github.com/TigreGotico/tugaphone/pull/373) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.16a2](https://github.com/TigreGotico/tugaphone/tree/1.11.16a2) (2026-11-25)
 
