@@ -1,12 +1,19 @@
 # Changelog
 
+## [3.5.7a1](https://github.com/TigreGotico/tugaphone/tree/3.5.7a1) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.6a1...3.5.7a1)
+
+**Merged pull requests:**
+
+- fix\(benchmark\): harness 3.5, pt-BR coda /S/ and a written final ⟨r⟩ [\#483](https://github.com/TigreGotico/tugaphone/pull/483) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.5.6a1](https://github.com/TigreGotico/tugaphone/tree/3.5.6a1) (2026-11-27)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.5a2...3.5.6a1)
 
 **Merged pull requests:**
 
-- fix\(benchmark\): harness 3.5, pt-BR coda /S/ and a written final ⟨r⟩ [\#483](https://github.com/TigreGotico/tugaphone/pull/483) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 - fix\(benchmark\): harness 3.4, pt-BR word-final /R/ is optional [\#482](https://github.com/TigreGotico/tugaphone/pull/482) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [3.5.5a2](https://github.com/TigreGotico/tugaphone/tree/3.5.5a2) (2026-11-27)
