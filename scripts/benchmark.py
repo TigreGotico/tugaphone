@@ -97,7 +97,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "3.4"
+HARNESS_VERSION = "3.5"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -260,6 +260,13 @@ _BR_NASAL_ONSET = re.compile("([aɐeɛioɔu])\u0303(?=([mnɲ])[aɐeɛioɔuɨəɪ
 #: DELTA 14: 67, Tabela 1), so the drop is variable in both classes. A
 #: word-final rhotic and no rhotic score as one reading.
 _BR_FINAL_R = re.compile("ɾ$")
+
+#: Coda /S/ is alveolar in São Paulo: "The archiphoneme /S/ surfaces either as
+#: a voiced or as a voiceless alveolar fricative" (Barbosa & Albano 2004:
+#: 229). In Rio it "is usually pronounced as the post-alveolar sounds [ʃ] and
+#: [ʒ]" (Brito 2016, Cadernos de Estudos Linguísticos 58(1): 141). So a coda
+#: [ʃ ʒ] scores as [s z]. The second half of an affricate stays.
+_BR_CODA_S = re.compile("(?<!\u0361)([ʃʒ])(?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
 _BR_CODA_R = re.compile("[ɾɹɻɽrʁχxhʀ](?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
 _CLUSTER = re.compile("([pbtdcgfv])(?=[bcçdfgjkmnpqstvxz])|(m)(?=n)")
 _FIRST = {"p": "p", "b": "b", "t": "t", "d": "d", "c": "k", "g": "ɡ", "f": "f", "v": "v", "m": "m"}
@@ -326,6 +333,7 @@ def accept_variants(word: str, ipa: str, brazilian: bool = False,
         ipa = _BR_NASAL_ONSET.sub(
             lambda m: m.group(1) if m.start() in stressed or m.group(2) == "ɲ" else m.group(), ipa)
         ipa = _BR_FINAL_R.sub("", _BR_CODA_R.sub("ɾ", ipa))
+        ipa = _BR_CODA_S.sub(lambda m: "s" if m.group(1) == "ʃ" else "z", ipa)
         ipa = _drop_epenthesis(word, ipa)
         lower = word.lower()
         if (_BR_OXYTONE_S.search(lower) and lower not in _BR_CLITICS
@@ -813,7 +821,7 @@ def render_scoreboard(rows: List[dict]) -> str:
         "one: for European Portuguese a word-initial ⟨es⟩ vowel (Vázquez Diéguez",
         "2015: 250, 265), a glide before a vowel (Mateus & Andrade 1998;",
         "Cruz-Ferreira 1999: 128) and the phones of the strong R (Pereira 2020: iii);",
-        "for Brazilian Portuguese the strong R, an unstressed ⟨a⟩, a nasal vowel before a nasal onset, the coda /R/, the word-final /R/ and the glide before a",
+        "for Brazilian Portuguese the strong R, an unstressed ⟨a⟩, a nasal vowel before a nasal onset, the coda /R/ and /S/, the word-final /R/ and the glide before a",
         "vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent cluster",
         "(Collischonn 2004: 64, 67) and the glide of a final stressed vowel before",
         "/S/ (Leiria, Organon 28: 133). See docs/benchmarking.md.",

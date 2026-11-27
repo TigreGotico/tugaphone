@@ -354,6 +354,21 @@ class TestBrazilianFinalR:
         assert benchmark.score_word("kõˈpɾa", ["kõˈpɾaɾ"], word="comprar") == (1, 6)
 
 
+class TestBrazilianCodaS:
+    # Barbosa & Albano (2004: 229); Brito (2016: 141).
+    def test_a_palatal_coda_s_is_the_alveolar(self):
+        assert benchmark.score_word("ˈsestɐ", ["ˈseʃtɐ"], word="cesta", brazilian=True) == (0, 5)
+        assert benchmark.score_word("ˈmezmu", ["ˈmeʒmu"], word="mesmo", brazilian=True) == (0, 5)
+        assert benchmark.score_word("ˈdɔjs", ["ˈdɔjʃ"], word="dois", brazilian=True) == (0, 4)
+
+    def test_an_onset_palatal_and_an_affricate_stay(self):
+        assert benchmark.score_word("ˈsa", ["ˈʃa"], word="chá", brazilian=True) == (1, 2)
+        assert benchmark.score_word("ˈtʃi", ["ˈt͡ʃi"], word="ti", brazilian=True) == (0, 2)
+
+    def test_european_rows_keep_the_palatal_coda(self):
+        assert benchmark.score_word("ˈsestɐ", ["ˈseʃtɐ"], word="cesta") == (1, 5)
+
+
 class TestBrazilianAccepted:
     def score(self, hyp, gold, word):
         return benchmark.score_word(hyp, [gold], word=word, brazilian=True)

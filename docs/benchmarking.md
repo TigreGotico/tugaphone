@@ -236,12 +236,13 @@ for the variants it did not choose. Reported per dialect:
   A fixture row that holds several Infopédia readings joined by a comma
   (abadejo [ɐbɐˈdɐʒu,ɐbɐˈdeʒu]) scores as one variant for each reading.
 
-  For the Brazilian dialects there are eight:
+  For the Brazilian dialects there are nine:
 
   | Process | Accepted reading | Source |
   |---|---|---|
   | Unstressed ⟨a⟩ | A pretonic oral [ɐ] not before [m n ɲ] is [a], and a final unstressed [a ə] is [ɐ]: acontece [akõˈtesi] for [ɐkõˈtesi], célula [ˈsɛlulɐ] for [ˈsɛlulə]. | Barbosa & Albano (2004: 229): before the stress, "[i e a o u ĩ ẽ ɐ̃ õ ũ]". The Wiktionary rows write the pretonic ⟨a⟩ [a] 431 times and [ɐ] 62 times, and the final ⟨a⟩ [ɐ] 227 times, [a] 19 times and [ə] 10 times. |
   | Nasal onset | A stressed vowel before [m n ɲ] + vowel, and any vowel before [ɲ], is oral: cimo [ˈsimu] for [ˈsĩmu]. | Barbosa & Albano (2004: 229): nasalised allophones "in stressed position before the archiphoneme /N/ [...] as well as before heterosyllabic nasal consonants"; before the stress, before /N/ or /ɲ/. The Wiktionary rows write the stressed case nasal 55 times and oral 35 times. |
+  | Coda /S/ | A coda [ʃ ʒ] is [s z]: cesta [ˈsestɐ] for [ˈseʃtɐ]. | Barbosa & Albano (2004: 229), São Paulo: /S/ "surfaces either as a voiced or as a voiceless alveolar fricative". Brito (2016, *Cadernos de Estudos Linguísticos* 58(1): 141), Rio: "usually pronounced as the post-alveolar sounds [ʃ] and [ʒ]". |
   | Word-final /R/ | A word-final rhotic and no rhotic are one reading: comprar [kõˈpɾa] for [kõˈpɾaɾ], lagar. | Barbosa & Albano (2004: 228): "In infinitives, however, this sound usually drops word-finally". Callou, Moraes & Leite (1998, *DELTA* 14: 67, Tabela 1): in Rio the drop is 73% to 82% in verbs and 32% to 39% in non-verbs. |
   | Coda /R/ | Each rhotic before a consonant or at the word end is [ɾ]. | Barbosa & Albano (2004: 228): /R/ "is extremely variable in BP". |
   | Strong R | Each of [ʀ χ x h] is [ʁ]. | Barbosa & Albano (2004: 228): /r/ "varies considerably across the Brazilian territory"; a velar fricative that "can nevertheless be realised as a glottal fricative". |
