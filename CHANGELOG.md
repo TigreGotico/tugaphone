@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.5.6a1](https://github.com/TigreGotico/tugaphone/tree/3.5.6a1) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.5a2...3.5.6a1)
+
+**Merged pull requests:**
+
+- fix\(benchmark\): harness 3.5, pt-BR coda /S/ and a written final ⟨r⟩ [\#483](https://github.com/TigreGotico/tugaphone/pull/483) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- fix\(benchmark\): harness 3.4, pt-BR word-final /R/ is optional [\#482](https://github.com/TigreGotico/tugaphone/pull/482) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.5.5a2](https://github.com/TigreGotico/tugaphone/tree/3.5.5a2) (2026-11-27)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.5a1...3.5.5a2)
@@ -368,11 +377,6 @@
 ## [1.11.13a3](https://github.com/TigreGotico/tugaphone/tree/1.11.13a3) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a2...1.11.13a3)
-
-**Merged pull requests:**
-
-- test: pin tugaphone\#358 with a strict xfail [\#362](https://github.com/TigreGotico/tugaphone/pull/362) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- test: pin tugaphone\#357 with a strict xfail [\#361](https://github.com/TigreGotico/tugaphone/pull/361) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.13a2](https://github.com/TigreGotico/tugaphone/tree/1.11.13a2) (2026-11-25)
 
