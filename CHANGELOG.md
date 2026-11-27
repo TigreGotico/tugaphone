@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.0a1](https://github.com/TigreGotico/tugaphone/tree/3.6.0a1) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.7a1...3.6.0a1)
+
+**Merged pull requests:**
+
+- feat\(benchmark\): harness 3.6, ledger of the edits each accepted process absorbs [\#485](https://github.com/TigreGotico/tugaphone/pull/485) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.5.7a1](https://github.com/TigreGotico/tugaphone/tree/3.5.7a1) (2026-11-27)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.6a1...3.5.7a1)
@@ -375,7 +383,6 @@
 **Merged pull requests:**
 
 - fix: keep a longer place name from taking the alias it starts with [\#366](https://github.com/TigreGotico/tugaphone/pull/366) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-- fix: point the Tras-os-Montes aliases at the current orthography2ipa key [\#365](https://github.com/TigreGotico/tugaphone/pull/365) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.13a4](https://github.com/TigreGotico/tugaphone/tree/1.11.13a4) (2026-11-25)
 
