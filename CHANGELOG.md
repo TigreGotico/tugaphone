@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.0a2](https://github.com/TigreGotico/tugaphone/tree/3.6.0a2) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a1...3.6.0a2)
+
+**Merged pull requests:**
+
+- docs\(benchmark\): sources for the pt-BR coda /R/ process [\#488](https://github.com/TigreGotico/tugaphone/pull/488) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.6.0a1](https://github.com/TigreGotico/tugaphone/tree/3.6.0a1) (2026-11-27)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.7a1...3.6.0a1)
@@ -379,10 +387,6 @@
 ## [1.11.14a1](https://github.com/TigreGotico/tugaphone/tree/1.11.14a1) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a4...1.11.14a1)
-
-**Merged pull requests:**
-
-- fix: keep a longer place name from taking the alias it starts with [\#366](https://github.com/TigreGotico/tugaphone/pull/366) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.13a4](https://github.com/TigreGotico/tugaphone/tree/1.11.13a4) (2026-11-25)
 
