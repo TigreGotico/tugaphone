@@ -14,6 +14,8 @@ stress marks. It drives the
 lattice and adds old-spelling conversion, text normalization, number expansion
 and homograph marking.
 
+Try it in your browser: [TigreGotico/tugaphone on Hugging Face](https://huggingface.co/spaces/TigreGotico/tugaphone).
+
 ## Install
 
 ```bash
