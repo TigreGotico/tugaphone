@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.0a5](https://github.com/TigreGotico/tugaphone/tree/3.6.0a5) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a4...3.6.0a5)
+
+**Merged pull requests:**
+
+- test: the lect survives an unnamed subtag after linguatag\#69 [\#495](https://github.com/TigreGotico/tugaphone/pull/495) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.6.0a4](https://github.com/TigreGotico/tugaphone/tree/3.6.0a4) (2026-11-27)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a3...3.6.0a4)
@@ -371,17 +379,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a2...1.11.16a3)
 
-**Merged pull requests:**
-
-- test: strict xfail for \#376 \(Flores, Corvo, Santa Maria tags unsupported\) [\#377](https://github.com/TigreGotico/tugaphone/pull/377) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.11.16a2](https://github.com/TigreGotico/tugaphone/tree/1.11.16a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.16a1...1.11.16a2)
-
-**Merged pull requests:**
-
-- docs: keep the README short and move the details into docs/ [\#375](https://github.com/TigreGotico/tugaphone/pull/375) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.16a1](https://github.com/TigreGotico/tugaphone/tree/1.11.16a1) (2026-11-25)
 
