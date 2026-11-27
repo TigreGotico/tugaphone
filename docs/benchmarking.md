@@ -255,6 +255,14 @@ for the variants it did not choose. Reported per dialect:
   the inserted glide, so it stays too. The step applies to every pt-BR
   dialect. The sources of the last two processes give rates for southern
   varieties only (VARSUL: Porto Alegre, Florianópolis, Curitiba).
+
+  `ACCEPTED_PROCESSES` in `scripts/benchmark.py` names each process, its
+  lects and its sources. For each dialect, `accepted_edits` in
+  `benchmarks/results.json` gives the edits that each process absorbs: the
+  accepted edits with that one process off, minus the accepted edits with all
+  processes on. The scoreboard prints this ledger. A process that absorbs
+  many edits moves the metric toward the system output, so a reviewer checks
+  its source first.
 - **word accuracy**: exact matches after normalization.
 - **stress accuracy** (`stress_acc`, with its word count `n_stress`): the share
   of stress-eligible gold words whose primary stress lands on the gold's

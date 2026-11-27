@@ -97,7 +97,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "3.5"
+HARNESS_VERSION = "3.6"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -316,33 +316,61 @@ _BR_CLITICS = frozenset({"as", "os", "das", "dos", "nas", "nos", "pelas", "pelos
 _WRITTEN_ACCENT = re.compile("[áéíóúâêô]")
 
 
+#: The accepted processes: name, the lects it applies to, and its sources. The
+#: sources and quotes are in docs/benchmarking.md. ``accept_variants`` runs
+#: each step by its name here.
+ACCEPTED_PROCESSES = (
+    ("glide", "pt-PT pt-BR", "Mateus & Andrade 1998; Cruz-Ferreira 1999: 128; Barbosa & Albano 2004: 230"),
+    ("strong_r", "pt-PT pt-BR", "Pereira 2020: iii; Barbosa & Albano 2004: 228"),
+    ("initial_es", "pt-PT", "Vázquez Diéguez 2015: 250, 265"),
+    ("pretonic_a", "pt-BR", "Barbosa & Albano 2004: 229-230"),
+    ("final_a", "pt-BR", "Barbosa & Albano 2004: 229-230"),
+    ("nasal_onset", "pt-BR", "Barbosa & Albano 2004: 230"),
+    ("coda_r", "pt-BR", "Barbosa & Albano 2004: 228"),
+    ("final_r", "pt-BR", "Barbosa & Albano 2004: 228; Callou, Moraes & Leite 1998: 67"),
+    ("coda_s", "pt-BR", "Barbosa & Albano 2004: 229; Brito 2016: 141"),
+    ("epenthesis", "pt-BR", "Collischonn 2004: 64, 67"),
+    ("final_glide_s", "pt-BR", "Leiria, Organon 28: 133"),
+)
+
+
 def accept_variants(word: str, ipa: str, brazilian: bool = False,
-                    stressed: frozenset = frozenset()) -> str:
+                    stressed: frozenset = frozenset(), skip: frozenset = frozenset()) -> str:
     """The normalized ``ipa`` with each sourced optional process read one way:
     for European Portuguese a word-initial ⟨es⟩ vowel removed, and for both
     an unstressed high vowel before a vowel read as a glide and each phone of
     the strong R read as [ʁ]. ``stressed``
-    holds the indexes of the stressed vowels of ``ipa``."""
-    ipa = _glide(_BACK_BEFORE_VOWEL, "w", _glide(_FRONT_BEFORE_VOWEL, "j", ipa, stressed), stressed)
-    ipa = (_BR_STRONG_R if brazilian else _STRONG_R).sub("ʁ", ipa)
-    if brazilian and stressed:
+    holds the indexes of the stressed vowels of ``ipa``. The steps named in
+    ``skip`` do not run."""
+    lower = word.lower()
+    if "glide" not in skip:
+        ipa = _glide(_BACK_BEFORE_VOWEL, "w", _glide(_FRONT_BEFORE_VOWEL, "j", ipa, stressed), stressed)
+    if "strong_r" not in skip:
+        ipa = (_BR_STRONG_R if brazilian else _STRONG_R).sub("ʁ", ipa)
+    if not brazilian:
+        if "initial_es" not in skip and _ES_WORD.match(lower):
+            ipa = _INITIAL_ES.sub(r"\1", ipa)
+        return ipa
+    if stressed:
         first, last = min(stressed), max(stressed)
-        ipa = _BR_PRETONIC_A.sub(lambda m: "a" if m.start() < first else m.group(), ipa)
-        ipa = _BR_FINAL_A.sub(lambda m: "ɐ" if m.start() > last else m.group(), ipa)
-    if brazilian:
+        if "pretonic_a" not in skip:
+            ipa = _BR_PRETONIC_A.sub(lambda m: "a" if m.start() < first else m.group(), ipa)
+        if "final_a" not in skip:
+            ipa = _BR_FINAL_A.sub(lambda m: "ɐ" if m.start() > last else m.group(), ipa)
+    if "nasal_onset" not in skip:
         ipa = _BR_NASAL_ONSET.sub(
             lambda m: m.group(1) if m.start() in stressed or m.group(2) == "ɲ" else m.group(), ipa)
+    if "coda_r" not in skip:
         ipa = _BR_CODA_R.sub("ɾ", ipa)
-        if word.lower().endswith("r"):
-            ipa = _BR_FINAL_R.sub("", ipa)
+    if "final_r" not in skip and lower.endswith("r"):
+        ipa = _BR_FINAL_R.sub("", ipa)
+    if "coda_s" not in skip:
         ipa = _BR_CODA_S.sub(lambda m: "s" if m.group(1) == "ʃ" else "z", ipa)
+    if "epenthesis" not in skip:
         ipa = _drop_epenthesis(word, ipa)
-        lower = word.lower()
-        if (_BR_OXYTONE_S.search(lower) and lower not in _BR_CLITICS
-                and not (lower.endswith("z") and _WRITTEN_ACCENT.search(lower[:-2]))):
-            ipa = _BR_FINAL_GLIDE_S.sub(r"\1\2", ipa)
-    elif _ES_WORD.match(word.lower()):
-        ipa = _INITIAL_ES.sub(r"\1", ipa)
+    if ("final_glide_s" not in skip and _BR_OXYTONE_S.search(lower) and lower not in _BR_CLITICS
+            and not (lower.endswith("z") and _WRITTEN_ACCENT.search(lower[:-2]))):
+        ipa = _BR_FINAL_GLIDE_S.sub(r"\1\2", ipa)
     return ipa
 
 
@@ -354,13 +382,13 @@ def _folded(ipa: str, region: tuple) -> str:
 
 
 def segments(ipa: str, region: tuple = _INFOPEDIA, word: Optional[str] = None,
-             brazilian: bool = False) -> List[str]:
+             brazilian: bool = False, skip: frozenset = frozenset()) -> List[str]:
     """The segments of ``ipa`` under the board's segment rule, after the
     notation folds. With ``word``, the accepted variants are one reading."""
     marked = _folded(ipa, region)
     s = "".join(ch for ch in marked if ch not in _SEG_DROP)
     if word is not None:
-        s = accept_variants(word, s, brazilian, _stressed_vowels(marked))
+        s = accept_variants(word, s, brazilian, _stressed_vowels(marked), skip)
     out: List[str] = []
     join = False
     for ch in s:
@@ -400,7 +428,8 @@ def _levenshtein(a, b) -> int:
 
 
 def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA,
-               word: Optional[str] = None, brazilian: bool = False) -> Tuple[int, int]:
+               word: Optional[str] = None, brazilian: bool = False,
+               skip: frozenset = frozenset()) -> Tuple[int, int]:
     """(edit distance, reference length) against the CLOSEST gold variant.
 
     A word with several attested pronunciations is correct if it matches
@@ -408,9 +437,9 @@ def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA,
     so multi-variant words are not penalised for the variants they did
     not choose.
     """
-    h = segments(hyp, region, word, brazilian)
+    h = segments(hyp, region, word, brazilian, skip)
     return min((_levenshtein(h, r), len(r))
-               for r in (segments(g, region, word, brazilian) for g in golds))
+               for r in (segments(g, region, word, brazilian, skip) for g in golds))
 
 
 # ─── stress accuracy ────────────────────────────────────────────────────────
@@ -652,13 +681,14 @@ def load_fixture(dialect: str) -> Dict[str, List[str]]:
 
 
 def _score_rows(hyp: str, rows: List[Tuple[str, str]], region: str, extra: tuple = (),
-                word: Optional[str] = None, brazilian: bool = False) -> Tuple[int, int, tuple]:
+                word: Optional[str] = None, brazilian: bool = False,
+                skip: frozenset = frozenset()) -> Tuple[int, int, tuple]:
     """(edits, gold segments, folds) against the closest variant, each variant
     under the folds of its own sources."""
     by_folds: Dict[tuple, List[str]] = {}
     for ipa, sources in rows:
         by_folds.setdefault(source_notation(sources, region), []).append(ipa)
-    return min(score_word(hyp, golds, folds + extra, word, brazilian) + (folds,)
+    return min(score_word(hyp, golds, folds + extra, word, brazilian, skip) + (folds,)
                for folds, golds in by_folds.items())
 
 
@@ -675,6 +705,9 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
     err = tot = exact = failed = n_stress = stress_hits = 0
     err_acc = tot_acc = err_ph = tot_ph = 0
     confusion: Dict[Tuple[str, str], int] = {}
+    lect = "pt-PT" if european else "pt-BR"
+    processes = [name for name, lects, _ in ACCEPTED_PROCESSES if lect in lects.split()]
+    without: Dict[str, int] = dict.fromkeys(processes, 0) if european or brazilian else {}
     for word in words:
         try:
             hyp = rules_only_ipa(word, dialect)
@@ -697,6 +730,9 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
             d_acc, n_acc, _ = _score_rows(hyp, rows, region, word=word, brazilian=brazilian)
             err_acc += d_acc
             tot_acc += n_acc
+            for name in without:
+                without[name] += _score_rows(hyp, rows, region, word=word, brazilian=brazilian,
+                                             skip=frozenset((name,)))[0]
         if d == 0:
             exact += 1
         else:
@@ -715,6 +751,7 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
         "word_accuracy": round(exact / len(words), 4) if words else None,
         "stress_acc": stress_accuracy(stress_hits, n_stress),
         "n_stress": n_stress,
+        "accepted_edits": {name: e - err_acc for name, e in without.items()},
         "top_confusions": [
             {"got": a, "expected": b, "count": c}
             for (a, b), c in top_confusions
@@ -777,6 +814,26 @@ def write_reports(rows: List[dict]) -> None:
         fh.write(render_scoreboard(rows))
 
 
+def _ledger(rows: List[dict]) -> List[str]:
+    """The table of edits that each accepted process absorbs per dialect."""
+    rows = [r for r in rows if r.get("accepted_edits")]
+    lines = [
+        "",
+        "## Edits that each accepted process absorbs",
+        "",
+        "Each cell is the number of edits that come back when the process is the",
+        "one process that does not run. Two processes can absorb the same edit,",
+        "so a column does not add up to the gap between strict and accepted PER.",
+        "",
+        "| Process | Lects | Source | " + " | ".join(r["dialect"] for r in rows) + " |",
+        "|---|---|---|" + "---:|" * len(rows),
+    ]
+    for name, lects, source in ACCEPTED_PROCESSES:
+        cells = [str(r["accepted_edits"].get(name, "")) for r in rows]
+        lines.append(f"| {name} | {lects} | {source} | " + " | ".join(cells) + " |")
+    return lines
+
+
 def render_scoreboard(rows: List[dict]) -> str:
     """The text of docs/scoreboard.md for the result ``rows``."""
     lines = [
@@ -833,6 +890,7 @@ def render_scoreboard(rows: List[dict]) -> str:
     lupo = [r for r in rows if r["reference_kind"] == "portal_lupo"]
     lines += ["## PER against human gold", ""]
     lines += _table(human, "Gold region", "PER", "Word accuracy")
+    lines += _ledger(human)
     lines += [
         "",
         "## Agreement with a machine reference (Portal LUPo)",

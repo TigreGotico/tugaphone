@@ -372,6 +372,23 @@ class TestBrazilianCodaS:
         assert benchmark.score_word("ˈsestɐ", ["ˈseʃtɐ"], word="cesta") == (1, 5)
 
 
+class TestAcceptedLedger:
+    def test_a_skipped_process_counts_its_edit_again(self):
+        assert benchmark.score_word("kõˈpɾa", ["kõˈpɾaɾ"], word="comprar", brazilian=True) == (0, 5)
+        assert benchmark.score_word("kõˈpɾa", ["kõˈpɾaɾ"], word="comprar", brazilian=True,
+                                    skip=frozenset({"final_r"})) == (1, 6)
+
+    def test_every_named_process_is_a_step(self):
+        source = open(benchmark.__file__, encoding="utf-8").read()
+        for name, _, _ in benchmark.ACCEPTED_PROCESSES:
+            assert f'"{name}" not in skip' in source
+
+    def test_the_ledger_has_each_process_of_the_lect(self):
+        rows = {r["dialect"]: r for r in json.load(open(os.path.join(os.path.dirname(__file__), "..", "benchmarks", "results.json"), encoding="utf-8"))}
+        assert set(rows["pt-PT"]["accepted_edits"]) == {"glide", "strong_r", "initial_es"}
+        assert rows["pt-BR"]["accepted_edits"]["final_r"] == 38
+
+
 class TestBrazilianAccepted:
     def score(self, hyp, gold, word):
         return benchmark.score_word(hyp, [gold], word=word, brazilian=True)

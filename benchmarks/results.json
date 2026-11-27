@@ -11,6 +11,7 @@
     "word_accuracy": 0.101,
     "stress_acc": 0.997,
     "n_stress": 993,
+    "accepted_edits": {},
     "top_confusions": [
       {
         "got": "a",
@@ -113,7 +114,7 @@
         "count": 21
       }
     ],
-    "harness_version": "3.5"
+    "harness_version": "3.6"
   },
   {
     "dialect": "pt-BR",
@@ -127,6 +128,18 @@
     "word_accuracy": 0.4804,
     "stress_acc": 0.9765,
     "n_stress": 895,
+    "accepted_edits": {
+      "glide": 36,
+      "strong_r": 19,
+      "pretonic_a": 48,
+      "final_a": 26,
+      "nasal_onset": 48,
+      "coda_r": 124,
+      "final_r": 38,
+      "coda_s": 22,
+      "epenthesis": 29,
+      "final_glide_s": 8
+    },
     "top_confusions": [
       {
         "got": "a",
@@ -229,7 +242,7 @@
         "count": 9
       }
     ],
-    "harness_version": "3.5"
+    "harness_version": "3.6"
   },
   {
     "dialect": "pt-BR-x-rio-janeiro",
@@ -243,6 +256,18 @@
     "word_accuracy": 0.138,
     "stress_acc": 1.0,
     "n_stress": 992,
+    "accepted_edits": {
+      "glide": 68,
+      "strong_r": 0,
+      "pretonic_a": 0,
+      "final_a": 1,
+      "nasal_onset": 0,
+      "coda_r": 197,
+      "final_r": 4,
+      "coda_s": 14,
+      "epenthesis": 23,
+      "final_glide_s": 0
+    },
     "top_confusions": [
       {
         "got": "u",
@@ -345,7 +370,7 @@
         "count": 5
       }
     ],
-    "harness_version": "3.5"
+    "harness_version": "3.6"
   },
   {
     "dialect": "pt-BR-x-sao-paulo",
@@ -359,6 +384,18 @@
     "word_accuracy": 0.193,
     "stress_acc": 0.998,
     "n_stress": 992,
+    "accepted_edits": {
+      "glide": 91,
+      "strong_r": 1,
+      "pretonic_a": 0,
+      "final_a": 209,
+      "nasal_onset": 36,
+      "coda_r": 13,
+      "final_r": 13,
+      "coda_s": 0,
+      "epenthesis": 19,
+      "final_glide_s": 5
+    },
     "top_confusions": [
       {
         "got": "ɐ",
@@ -461,7 +498,7 @@
         "count": 10
       }
     ],
-    "harness_version": "3.5"
+    "harness_version": "3.6"
   },
   {
     "dialect": "pt-MZ",
@@ -475,6 +512,7 @@
     "word_accuracy": 0.294,
     "stress_acc": 1.0,
     "n_stress": 992,
+    "accepted_edits": {},
     "top_confusions": [
       {
         "got": "e",
@@ -577,7 +615,7 @@
         "count": 7
       }
     ],
-    "harness_version": "3.5"
+    "harness_version": "3.6"
   },
   {
     "dialect": "pt-PT",
@@ -591,6 +629,11 @@
     "word_accuracy": 0.513,
     "stress_acc": 0.9879,
     "n_stress": 995,
+    "accepted_edits": {
+      "glide": 192,
+      "strong_r": 89,
+      "initial_es": 0
+    },
     "top_confusions": [
       {
         "got": "i",
@@ -693,7 +736,7 @@
         "count": 3
       }
     ],
-    "harness_version": "3.5"
+    "harness_version": "3.6"
   },
   {
     "dialect": "pt-PT-x-lisbon",
@@ -707,6 +750,11 @@
     "word_accuracy": 0.575,
     "stress_acc": 0.998,
     "n_stress": 994,
+    "accepted_edits": {
+      "glide": 151,
+      "strong_r": 111,
+      "initial_es": 0
+    },
     "top_confusions": [
       {
         "got": "ʁ",
@@ -809,7 +857,7 @@
         "count": 3
       }
     ],
-    "harness_version": "3.5"
+    "harness_version": "3.6"
   },
   {
     "dialect": "pt-TL",
@@ -823,6 +871,7 @@
     "word_accuracy": 0.014,
     "stress_acc": 0.997,
     "n_stress": 985,
+    "accepted_edits": {},
     "top_confusions": [
       {
         "got": "a",
@@ -925,6 +974,6 @@
         "count": 25
       }
     ],
-    "harness_version": "3.5"
+    "harness_version": "3.6"
   }
 ]
