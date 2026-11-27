@@ -782,13 +782,13 @@
         "count": 23
       },
       {
-        "got": "ɨ",
-        "expected": "ɛ",
-        "count": 22
-      },
-      {
         "got": "ɐ",
         "expected": "a",
+        "count": 23
+      },
+      {
+        "got": "ɨ",
+        "expected": "ɛ",
         "count": 22
       },
       {
@@ -852,8 +852,8 @@
         "count": 3
       },
       {
-        "got": "j",
-        "expected": "i",
+        "got": "ʒ",
+        "expected": "z",
         "count": 3
       }
     ],
