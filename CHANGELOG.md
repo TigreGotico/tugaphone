@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.5.5a2](https://github.com/TigreGotico/tugaphone/tree/3.5.5a2) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.5a1...3.5.5a2)
+
+**Merged pull requests:**
+
+- docs: test the generated scoreboard page, Portuguese-only scope line [\#478](https://github.com/TigreGotico/tugaphone/pull/478) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [3.5.5a1](https://github.com/TigreGotico/tugaphone/tree/3.5.5a1) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.4a2...3.5.5a1)
+
 ## [3.5.4a2](https://github.com/TigreGotico/tugaphone/tree/3.5.4a2) (2026-11-27)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.4a1...3.5.4a2)
@@ -365,10 +377,6 @@
 ## [1.11.13a2](https://github.com/TigreGotico/tugaphone/tree/1.11.13a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.13a1...1.11.13a2)
-
-**Merged pull requests:**
-
-- test: check the contact gold rows with contact="auto" [\#355](https://github.com/TigreGotico/tugaphone/pull/355) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.13a1](https://github.com/TigreGotico/tugaphone/tree/1.11.13a1) (2026-11-25)
 
