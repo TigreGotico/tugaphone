@@ -42,6 +42,26 @@ vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent clust
 | pt-BR | pt-BR | 993 | 0.0973 | 0.0526 | 0.4804 | 895 | 0.9765 |
 | pt-PT | pt-PT | 1000 | 0.0768 | 0.0457 | 0.5130 | 995 | 0.9879 |
 
+## Edits that each accepted process absorbs
+
+Each cell is the number of edits that come back when the process is the
+one process that does not run. Two processes can absorb the same edit,
+so a column does not add up to the gap between strict and accepted PER.
+
+| Process | Lects | Source | pt-BR | pt-PT |
+|---|---|---|---:|---:|
+| glide | pt-PT pt-BR | Mateus & Andrade 1998; Cruz-Ferreira 1999: 128; Barbosa & Albano 2004: 230 | 36 | 192 |
+| strong_r | pt-PT pt-BR | Pereira 2020: iii; Barbosa & Albano 2004: 228 | 19 | 89 |
+| initial_es | pt-PT | Vázquez Diéguez 2015: 250, 265 |  | 0 |
+| pretonic_a | pt-BR | Barbosa & Albano 2004: 229-230 | 48 |  |
+| final_a | pt-BR | Barbosa & Albano 2004: 229-230 | 26 |  |
+| nasal_onset | pt-BR | Barbosa & Albano 2004: 230 | 48 |  |
+| coda_r | pt-BR | Barbosa & Albano 2004: 228 | 124 |  |
+| final_r | pt-BR | Barbosa & Albano 2004: 228; Callou, Moraes & Leite 1998: 67 | 38 |  |
+| coda_s | pt-BR | Barbosa & Albano 2004: 229; Brito 2016: 141 | 22 |  |
+| epenthesis | pt-BR | Collischonn 2004: 64, 67 | 29 |  |
+| final_glide_s | pt-BR | Leiria, Organon 28: 133 | 8 |  |
+
 ## Agreement with a machine reference (Portal LUPo)
 
 The reference rows of these dialects come from the Portal da Língua
