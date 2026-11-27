@@ -258,7 +258,7 @@ _BR_NASAL_ONSET = re.compile("([aɐeɛioɔu])\u0303(?=([mnɲ])[aɐeɛioɔuɨəɪ
 #: drops word-finally" (Barbosa & Albano 2004: 228). In Rio it drops in 73% to
 #: 82% of verbs and in 32% to 39% of non-verbs (Callou, Moraes & Leite 1998,
 #: DELTA 14: 67, Tabela 1), so the drop is variable in both classes. A
-#: word-final rhotic and no rhotic score as one reading.
+#: word-final rhotic and no rhotic score as one reading when the word ends in ⟨r⟩.
 _BR_FINAL_R = re.compile("ɾ$")
 
 #: Coda /S/ is alveolar in São Paulo: "The archiphoneme /S/ surfaces either as
@@ -332,7 +332,9 @@ def accept_variants(word: str, ipa: str, brazilian: bool = False,
     if brazilian:
         ipa = _BR_NASAL_ONSET.sub(
             lambda m: m.group(1) if m.start() in stressed or m.group(2) == "ɲ" else m.group(), ipa)
-        ipa = _BR_FINAL_R.sub("", _BR_CODA_R.sub("ɾ", ipa))
+        ipa = _BR_CODA_R.sub("ɾ", ipa)
+        if word.lower().endswith("r"):
+            ipa = _BR_FINAL_R.sub("", ipa)
         ipa = _BR_CODA_S.sub(lambda m: "s" if m.group(1) == "ʃ" else "z", ipa)
         ipa = _drop_epenthesis(word, ipa)
         lower = word.lower()

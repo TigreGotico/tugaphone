@@ -347,6 +347,9 @@ class TestBrazilianFinalR:
         assert benchmark.score_word("kõˈpɾa", ["kõˈpɾaɾ"], word="comprar", brazilian=True) == (0, 5)
         assert benchmark.score_word("laˈɡa", ["laˈɡaʁ"], word="lagar", brazilian=True) == (0, 4)
 
+    def test_an_added_rhotic_stays_an_edit(self):
+        assert benchmark.score_word("ˈpaɾ", ["ˈpa"], word="pá", brazilian=True) == (1, 2)
+
     def test_a_medial_rhotic_stays(self):
         assert benchmark.score_word("ˈkata", ["ˈkaɾta"], word="carta", brazilian=True) == (1, 5)
 
