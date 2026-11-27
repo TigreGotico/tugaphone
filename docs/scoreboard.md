@@ -56,7 +56,7 @@ so a column does not add up to the gap between strict and accepted PER.
 | pretonic_a | pt-BR | Barbosa & Albano 2004: 229-230 | 48 |  |
 | final_a | pt-BR | Barbosa & Albano 2004: 229-230 | 26 |  |
 | nasal_onset | pt-BR | Barbosa & Albano 2004: 230 | 48 |  |
-| coda_r | pt-BR | Barbosa & Albano 2004: 228; Cristófaro Silva 2025: 245; Gregio 2012: 81 | 124 |  |
+| coda_r | pt-BR | Barbosa & Albano 2004: 228; Cristófaro Silva 2025: 246; Gregio 2012: 81 | 124 |  |
 | final_r | pt-BR | Barbosa & Albano 2004: 228; Callou, Moraes & Leite 1998: 67 | 38 |  |
 | coda_s | pt-BR | Barbosa & Albano 2004: 229; Brito 2016: 141 | 22 |  |
 | epenthesis | pt-BR | Collischonn 2004: 64, 67 | 29 |  |

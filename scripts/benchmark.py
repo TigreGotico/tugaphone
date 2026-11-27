@@ -326,7 +326,7 @@ ACCEPTED_PROCESSES = (
     ("pretonic_a", "pt-BR", "Barbosa & Albano 2004: 229-230"),
     ("final_a", "pt-BR", "Barbosa & Albano 2004: 229-230"),
     ("nasal_onset", "pt-BR", "Barbosa & Albano 2004: 230"),
-    ("coda_r", "pt-BR", "Barbosa & Albano 2004: 228; Cristófaro Silva 2025: 245; Gregio 2012: 81"),
+    ("coda_r", "pt-BR", "Barbosa & Albano 2004: 228; Cristófaro Silva 2025: 246; Gregio 2012: 81"),
     ("final_r", "pt-BR", "Barbosa & Albano 2004: 228; Callou, Moraes & Leite 1998: 67"),
     ("coda_s", "pt-BR", "Barbosa & Albano 2004: 229; Brito 2016: 141"),
     ("epenthesis", "pt-BR", "Collischonn 2004: 64, 67"),
