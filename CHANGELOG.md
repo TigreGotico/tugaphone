@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.5.4a2](https://github.com/TigreGotico/tugaphone/tree/3.5.4a2) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.4a1...3.5.4a2)
+
+**Merged pull requests:**
+
+- fix\(benchmark\): harness 3.3, pt-BR nasal glide, nasal onset and unstressed ⟨a⟩ [\#475](https://github.com/TigreGotico/tugaphone/pull/475) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- test: pt-PT exception case alvíxaras [\#474](https://github.com/TigreGotico/tugaphone/pull/474) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.5.4a1](https://github.com/TigreGotico/tugaphone/tree/3.5.4a1) (2026-11-26)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.5.3a2...3.5.4a1)
@@ -365,17 +374,9 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a4...1.11.13a1)
 
-**Merged pull requests:**
-
-- fix: reach an alias's lect through trailing subtags [\#354](https://github.com/TigreGotico/tugaphone/pull/354) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.11.12a4](https://github.com/TigreGotico/tugaphone/tree/1.11.12a4) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.12a3...1.11.12a4)
-
-**Merged pull requests:**
-
-- test: strict xfail for D. before a capitalised article \(\#349\) [\#353](https://github.com/TigreGotico/tugaphone/pull/353) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.12a3](https://github.com/TigreGotico/tugaphone/tree/1.11.12a3) (2026-11-25)
 
