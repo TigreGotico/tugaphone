@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.0a3](https://github.com/TigreGotico/tugaphone/tree/3.6.0a3) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a2...3.6.0a3)
+
+**Merged pull requests:**
+
+- chore: floor orthography2ipa at 7.133.1a3 and drop the fixed pt xfails [\#491](https://github.com/TigreGotico/tugaphone/pull/491) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.6.0a2](https://github.com/TigreGotico/tugaphone/tree/3.6.0a2) (2026-11-27)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a1...3.6.0a2)
@@ -375,10 +383,6 @@
 ## [1.11.16a1](https://github.com/TigreGotico/tugaphone/tree/1.11.16a1) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.15a1...1.11.16a1)
-
-**Merged pull requests:**
-
-- fix: Azores island sub-tags reach the island lect [\#371](https://github.com/TigreGotico/tugaphone/pull/371) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.15a1](https://github.com/TigreGotico/tugaphone/tree/1.11.15a1) (2026-11-25)
 
