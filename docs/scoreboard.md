@@ -30,7 +30,7 @@ PER, variants accepted counts each reading of a cited optional process as
 one: for European Portuguese a word-initial ⟨es⟩ vowel (Vázquez Diéguez
 2015: 250, 265), a glide before a vowel (Mateus & Andrade 1998;
 Cruz-Ferreira 1999: 128) and the phones of the strong R (Pereira 2020: iii);
-for Brazilian Portuguese the strong R, an unstressed ⟨a⟩, a nasal vowel before a nasal onset, the coda /R/ and the glide before a
+for Brazilian Portuguese the strong R, an unstressed ⟨a⟩, a nasal vowel before a nasal onset, the coda /R/, the word-final /R/ and the glide before a
 vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent cluster
 (Collischonn 2004: 64, 67) and the glide of a final stressed vowel before
 /S/ (Leiria, Organon 28: 133). See docs/benchmarking.md.
@@ -39,7 +39,7 @@ vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent clust
 
 | Dialect | Gold region | Words | PER | PER, variants accepted | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|---|
-| pt-BR | pt-BR | 993 | 0.0973 | 0.0596 | 0.4804 | 895 | 0.9765 |
+| pt-BR | pt-BR | 993 | 0.0973 | 0.0553 | 0.4804 | 895 | 0.9765 |
 | pt-PT | pt-PT | 1000 | 0.0768 | 0.0457 | 0.5130 | 995 | 0.9879 |
 
 ## Agreement with a machine reference (Portal LUPo)
@@ -53,8 +53,8 @@ always a tugaphone error.
 | Dialect | Reference region | Words | Disagreement | Disagreement, variants accepted | Word agreement | Stress words | Stress agreement |
 |---|---|---|---|---|---|---|---|
 | pt-AO | pt-AO | 1000 | 0.2395 | n/a | 0.1010 | 993 | 0.9970 |
-| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1721 | 0.1310 | 0.1380 | 992 | 1.0000 |
-| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1535 | 0.1096 | 0.1930 | 992 | 0.9980 |
+| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1721 | 0.1335 | 0.1380 | 992 | 1.0000 |
+| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1535 | 0.1086 | 0.1930 | 992 | 0.9980 |
 | pt-MZ | pt-MZ-x-maputo | 1000 | 0.1377 | n/a | 0.2940 | 992 | 1.0000 |
 | pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0683 | 0.0383 | 0.5750 | 994 | 0.9980 |
 | pt-TL | pt-TL-x-dili | 1000 | 0.3644 | n/a | 0.0140 | 985 | 0.9970 |

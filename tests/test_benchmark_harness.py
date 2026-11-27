@@ -341,6 +341,19 @@ class TestBrazilianNasal:
         assert benchmark.score_word("ˈsĩmu", ["ˈsimu"], word="cimo") == (1, 4)
 
 
+class TestBrazilianFinalR:
+    # Barbosa & Albano (2004: 228); Callou, Moraes & Leite (1998: 67).
+    def test_a_word_final_rhotic_is_optional(self):
+        assert benchmark.score_word("kõˈpɾa", ["kõˈpɾaɾ"], word="comprar", brazilian=True) == (0, 5)
+        assert benchmark.score_word("laˈɡa", ["laˈɡaʁ"], word="lagar", brazilian=True) == (0, 4)
+
+    def test_a_medial_rhotic_stays(self):
+        assert benchmark.score_word("ˈkata", ["ˈkaɾta"], word="carta", brazilian=True) == (1, 5)
+
+    def test_european_rows_keep_the_final_rhotic(self):
+        assert benchmark.score_word("kõˈpɾa", ["kõˈpɾaɾ"], word="comprar") == (1, 6)
+
+
 class TestBrazilianAccepted:
     def score(self, hyp, gold, word):
         return benchmark.score_word(hyp, [gold], word=word, brazilian=True)
@@ -348,7 +361,7 @@ class TestBrazilianAccepted:
     def test_the_coda_rhotic_is_one_segment(self):
         # Barbosa & Albano (2004: 228): /R/ is extremely variable in BP.
         assert self.score("adawˈbeɾtu", "adawˈbeʁtu", "Adalberto") == (0, 9)
-        assert self.score("vawdeˈmaɾ", "vawdeˈmaʁ", "Valdemar") == (0, 8)
+        assert self.score("vawdeˈmaɾ", "vawdeˈmaʁ", "Valdemar") == (0, 7)
 
     def test_an_onset_rhotic_stays_an_edit(self):
         assert self.score("ˈɾatu", "ˈʁatu", "rato") == (1, 4)

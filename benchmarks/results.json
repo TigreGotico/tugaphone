@@ -113,7 +113,7 @@
         "count": 21
       }
     ],
-    "harness_version": "3.3"
+    "harness_version": "3.4"
   },
   {
     "dialect": "pt-BR",
@@ -123,7 +123,7 @@
     "failed": 0,
     "per": 0.0973,
     "per_phoneme": 0.0938,
-    "per_accepted": 0.0596,
+    "per_accepted": 0.0553,
     "word_accuracy": 0.4804,
     "stress_acc": 0.9765,
     "n_stress": 895,
@@ -229,7 +229,7 @@
         "count": 9
       }
     ],
-    "harness_version": "3.3"
+    "harness_version": "3.4"
   },
   {
     "dialect": "pt-BR-x-rio-janeiro",
@@ -239,7 +239,7 @@
     "failed": 0,
     "per": 0.1721,
     "per_phoneme": 0.1721,
-    "per_accepted": 0.131,
+    "per_accepted": 0.1335,
     "word_accuracy": 0.138,
     "stress_acc": 1.0,
     "n_stress": 992,
@@ -345,7 +345,7 @@
         "count": 5
       }
     ],
-    "harness_version": "3.3"
+    "harness_version": "3.4"
   },
   {
     "dialect": "pt-BR-x-sao-paulo",
@@ -355,7 +355,7 @@
     "failed": 0,
     "per": 0.1535,
     "per_phoneme": 0.1535,
-    "per_accepted": 0.1096,
+    "per_accepted": 0.1086,
     "word_accuracy": 0.193,
     "stress_acc": 0.998,
     "n_stress": 992,
@@ -461,7 +461,7 @@
         "count": 10
       }
     ],
-    "harness_version": "3.3"
+    "harness_version": "3.4"
   },
   {
     "dialect": "pt-MZ",
@@ -577,7 +577,7 @@
         "count": 7
       }
     ],
-    "harness_version": "3.3"
+    "harness_version": "3.4"
   },
   {
     "dialect": "pt-PT",
@@ -693,7 +693,7 @@
         "count": 3
       }
     ],
-    "harness_version": "3.3"
+    "harness_version": "3.4"
   },
   {
     "dialect": "pt-PT-x-lisbon",
@@ -809,7 +809,7 @@
         "count": 3
       }
     ],
-    "harness_version": "3.3"
+    "harness_version": "3.4"
   },
   {
     "dialect": "pt-TL",
@@ -925,6 +925,6 @@
         "count": 25
       }
     ],
-    "harness_version": "3.3"
+    "harness_version": "3.4"
   }
 ]
