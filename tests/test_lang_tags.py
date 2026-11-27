@@ -44,8 +44,8 @@ def test_a_contact_language_reads_its_default_region(contact, tag):
     assert _contact_engine(contact).lang == tag
 
 
-@pytest.mark.xfail(raises=AssertionError, strict=True, reason="TigreGotico/linguatag#69: every private-use subtag drops at once; "
-                   "RFC 4647 §3.4 removes one subtag at a time")
+# linguatag 0.13.0a1 removes one subtag at a time (RFC 4647 §3.4,
+# TigreGotico/linguatag#69), so the lect stays; a strict xfail until then
 def test_an_unnamed_subtag_after_a_lect_keeps_the_lect():
     with pytest.warns(UserWarning, match="is not a tugaphone lect"):
         assert resolve_lect("pt-BR-x-sp-foo") == "pt-BR-x-sp"
