@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.0a6](https://github.com/TigreGotico/tugaphone/tree/3.6.0a6) (2026-11-28)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a5...3.6.0a6)
+
+**Merged pull requests:**
+
+- ci: check the docs standard on each pull request [\#498](https://github.com/TigreGotico/tugaphone/pull/498) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.6.0a5](https://github.com/TigreGotico/tugaphone/tree/3.6.0a5) (2026-11-27)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a4...3.6.0a5)
