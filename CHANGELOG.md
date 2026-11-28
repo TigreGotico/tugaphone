@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.1a1](https://github.com/TigreGotico/tugaphone/tree/3.6.1a1) (2026-11-28)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a6...3.6.1a1)
+
+**Merged pull requests:**
+
+- fix\(benchmark\): an unstressed \[ɨ\] glides only before a stressed vowel [\#501](https://github.com/TigreGotico/tugaphone/pull/501) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.6.0a6](https://github.com/TigreGotico/tugaphone/tree/3.6.0a6) (2026-11-28)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a5...3.6.0a6)
@@ -331,10 +339,6 @@
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a4...1.11.18a5)
 
-**Merged pull requests:**
-
-- test: strict xfails for the dropped \[w\] of pronounced qu/gu \(\#382\) [\#383](https://github.com/TigreGotico/tugaphone/pull/383) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
-
 ## [1.11.18a4](https://github.com/TigreGotico/tugaphone/tree/1.11.18a4) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.18a3...1.11.18a4)
@@ -370,10 +374,6 @@
 ## [1.11.17a2](https://github.com/TigreGotico/tugaphone/tree/1.11.17a2) (2026-11-25)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/1.11.17a1...1.11.17a2)
-
-**Merged pull requests:**
-
-- chore: pin linguatag\>=0.4.5a1 [\#384](https://github.com/TigreGotico/tugaphone/pull/384) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
 
 ## [1.11.17a1](https://github.com/TigreGotico/tugaphone/tree/1.11.17a1) (2026-11-25)
 
