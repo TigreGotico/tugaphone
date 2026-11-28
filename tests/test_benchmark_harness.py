@@ -283,8 +283,15 @@ class TestAcceptedGlide:
 
     def test_a_reduced_vowel_before_an_unstressed_vowel_stays(self):
         # #473: Cruz-Ferreira (1999: 128) covers /ɨ/ only before a stressed vowel.
-        assert benchmark.score_word("mɨɐ", ["mjɐ"], word="x") == (1, 3)
         assert benchmark.score_word("ˈsitɾɨu", ["ˈsitɾju"], word="citreo") == (1, 6)
+        assert benchmark.score_word("ˈmatɾɨu ˈɔtɾu", ["ˈmatɾju ˈɔtɾu"], word="x") == (1, 10)
+
+    def test_a_pretonic_reduced_vowel_before_a_vowel_accepts_the_glide(self):
+        # #503: Mateus & Andrade (1998, §1.3, ex. 8): realeza, adiantar.
+        assert benchmark.score_word("ʒɨuˈmɛtɾiku", ["ʒjuˈmɛtɾiku"], word="geométrico") == (0, 10)
+        assert benchmark.score_word("nɨuluˈʒiɐ", ["njuluˈʒiɐ"], word="neologia") == (0, 8)
+        # A vowel after a secondary stress is post-tonic (doce-amarga).
+        assert benchmark.score_word("dˌosɨɐmˈaɾɡɐ", ["dˌosjɐmˈaɾɡɐ"], word="x") == (1, 10)
 
     def test_phone_per_keeps_the_glide_an_edit(self):
         assert benchmark.score_word("ɐdiɐˈmẽtu", ["ɐdjɐˈmẽtu"]) == (1, 8)
