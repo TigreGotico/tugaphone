@@ -97,7 +97,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "3.7"
+HARNESS_VERSION = "3.8"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -207,12 +207,33 @@ def _stressed_vowels(marked: str) -> frozenset:
     return frozenset(out)
 
 
-def _glide(pattern: re.Pattern, glide: str, ipa: str, stressed: frozenset) -> str:
+def _before_primary(spaced: str) -> frozenset:
+    """Indexes, as in ``_stressed_vowels``, of the segments before the first
+    primary mark of their word. ``spaced`` keeps the spaces between words,
+    which take no index. A word with no primary mark has none."""
+    out, i = set(), 0
+    for word in spaced.split(" "):
+        pre = "ˈ" in word
+        for ch in word:
+            if ch == "ˈ":
+                pre = False
+            if ch in _SEG_DROP:
+                continue
+            if pre:
+                out.add(i)
+            i += 1
+    return frozenset(out)
+
+
+def _glide(pattern: re.Pattern, glide: str, ipa: str, stressed: frozenset,
+           pretonic: frozenset = frozenset()) -> str:
     """``ipa`` with each unstressed match of ``pattern`` read as ``glide``. An
-    [ɨ] glides only before a stressed vowel: Cruz-Ferreira (1999: 128) names
-    /ɨ/ for that case, and no source covers [ɨ] before an unstressed vowel."""
+    [ɨ] glides before a stressed vowel (Cruz-Ferreira 1999: 128, real
+    /ʁɨ'al/) or before the stress of its word (Mateus & Andrade 1998, §1.3,
+    ex. 8: realeza, adiantar). No source covers a post-tonic [ɨ] (cítreo)."""
     def read(m):
-        if m.start() in stressed or (m.group() == "ɨ" and m.end() not in stressed):
+        if m.start() in stressed or (m.group() == "ɨ" and m.end() not in stressed
+                                     and m.start() not in pretonic):
             return m.group()
         return glide
     return pattern.sub(read, ipa)
@@ -341,16 +362,18 @@ ACCEPTED_PROCESSES = (
 
 
 def accept_variants(word: str, ipa: str, brazilian: bool = False,
-                    stressed: frozenset = frozenset(), skip: frozenset = frozenset()) -> str:
+                    stressed: frozenset = frozenset(), skip: frozenset = frozenset(),
+                    pretonic: frozenset = frozenset()) -> str:
     """The normalized ``ipa`` with each sourced optional process read one way:
     for European Portuguese a word-initial ⟨es⟩ vowel removed, and for both
     an unstressed high vowel before a vowel read as a glide and each phone of
     the strong R read as [ʁ]. ``stressed``
-    holds the indexes of the stressed vowels of ``ipa``. The steps named in
+    holds the indexes of the stressed vowels of ``ipa``, and ``pretonic`` the
+    indexes before the stress of their word. The steps named in
     ``skip`` do not run."""
     lower = word.lower()
     if "glide" not in skip:
-        ipa = _glide(_BACK_BEFORE_VOWEL, "w", _glide(_FRONT_BEFORE_VOWEL, "j", ipa, stressed), stressed)
+        ipa = _glide(_BACK_BEFORE_VOWEL, "w", _glide(_FRONT_BEFORE_VOWEL, "j", ipa, stressed, pretonic), stressed)
     if "strong_r" not in skip:
         ipa = (_BR_STRONG_R if brazilian else _STRONG_R).sub("ʁ", ipa)
     if not brazilian:
@@ -380,10 +403,12 @@ def accept_variants(word: str, ipa: str, brazilian: bool = False,
     return ipa
 
 
-def _folded(ipa: str, region: tuple) -> str:
+def _folded(ipa: str, region: tuple, keep_spaces: bool = False) -> str:
     s = unicodedata.normalize("NFD", ipa)
     for written, sound in region + _NOTATION + _LIGATURES:
         s = s.replace(unicodedata.normalize("NFD", written), unicodedata.normalize("NFD", sound))
+    if keep_spaces:
+        return " ".join(s.split())
     return "".join(ch for ch in s if not ch.isspace())
 
 
@@ -394,7 +419,8 @@ def segments(ipa: str, region: tuple = _INFOPEDIA, word: Optional[str] = None,
     marked = _folded(ipa, region)
     s = "".join(ch for ch in marked if ch not in _SEG_DROP)
     if word is not None:
-        s = accept_variants(word, s, brazilian, _stressed_vowels(marked), skip)
+        s = accept_variants(word, s, brazilian, _stressed_vowels(marked), skip,
+                            _before_primary(_folded(ipa, region, keep_spaces=True)))
     out: List[str] = []
     join = False
     for ch in s:
