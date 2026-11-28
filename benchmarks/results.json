@@ -746,12 +746,12 @@
     "failed": 0,
     "per": 0.0683,
     "per_phoneme": 0.0556,
-    "per_accepted": 0.0388,
+    "per_accepted": 0.0386,
     "word_accuracy": 0.575,
     "stress_acc": 0.998,
     "n_stress": 994,
     "accepted_edits": {
-      "glide": 147,
+      "glide": 148,
       "strong_r": 111,
       "initial_es": 0
     },

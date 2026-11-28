@@ -209,13 +209,13 @@ def _stressed_vowels(marked: str) -> frozenset:
 
 def _before_primary(spaced: str) -> frozenset:
     """Indexes, as in ``_stressed_vowels``, of the segments before the first
-    primary mark of their word. ``spaced`` keeps the spaces between words,
+    stress mark of a word that has a primary mark. ``spaced`` keeps the spaces between words,
     which take no index. A word with no primary mark has none."""
     out, i = set(), 0
     for word in spaced.split(" "):
         pre = "ˈ" in word
         for ch in word:
-            if ch == "ˈ":
+            if ch in "ˈˌ":
                 pre = False
             if ch in _SEG_DROP:
                 continue

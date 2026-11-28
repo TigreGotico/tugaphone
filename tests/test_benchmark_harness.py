@@ -290,6 +290,8 @@ class TestAcceptedGlide:
         # #503: Mateus & Andrade (1998, §1.3, ex. 8): realeza, adiantar.
         assert benchmark.score_word("ʒɨuˈmɛtɾiku", ["ʒjuˈmɛtɾiku"], word="geométrico") == (0, 10)
         assert benchmark.score_word("nɨuluˈʒiɐ", ["njuluˈʒiɐ"], word="neologia") == (0, 8)
+        # A vowel after a secondary stress is post-tonic (doce-amarga).
+        assert benchmark.score_word("dˌosɨɐmˈaɾɡɐ", ["dˌosjɐmˈaɾɡɐ"], word="x") == (1, 10)
 
     def test_phone_per_keeps_the_glide_an_edit(self):
         assert benchmark.score_word("ɐdiɐˈmẽtu", ["ɐdjɐˈmẽtu"]) == (1, 8)
