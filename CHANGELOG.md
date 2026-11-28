@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.2a1](https://github.com/TigreGotico/tugaphone/tree/3.6.2a1) (2026-11-28)
+
+[Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.1a1...3.6.2a1)
+
+**Merged pull requests:**
+
+- fix\(benchmark\): a pretonic \[ɨ\] before a vowel accepts the glide [\#504](https://github.com/TigreGotico/tugaphone/pull/504) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [3.6.1a1](https://github.com/TigreGotico/tugaphone/tree/3.6.1a1) (2026-11-28)
 
 [Full Changelog](https://github.com/TigreGotico/tugaphone/compare/3.6.0a6...3.6.1a1)
