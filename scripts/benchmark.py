@@ -4,9 +4,8 @@
 Scores tugaphone's RULES-ONLY mode (the lexicon exception path emptied)
 against the unified Portuguese pronunciation gold, one region per
 registered dialect code. Rules-only keeps the score non-circular per
-word: the lexicon tugaphone ships (tugalex) is built from the same
-sources as the gold, so scoring the lexicon path would measure lookup
-coverage, not grapheme-rule quality.
+word: a lexicon built from the same sources as the gold would measure
+lookup coverage, not grapheme-rule quality.
 
 Gold source
 ───────────
@@ -34,17 +33,24 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import os
 import random
+import re
 import sys
 import unicodedata
 import urllib.request
 from typing import Dict, List, Optional, Tuple
 
+from orthography2ipa import G2P
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, REPO_ROOT)
+
+from tugaphone.lattice_core import pipeline  # noqa: E402
+from tugaphone.registry import resolve_lect  # noqa: E402
 
 FIXTURE_DIR = os.path.join(REPO_ROOT, "tests", "data", "gold")
 RESULTS_JSON = os.path.join(REPO_ROOT, "benchmarks", "results.json")
@@ -70,13 +76,28 @@ DIALECT_TO_REGION: Dict[str, str] = {
     "pt-TL": "pt-TL-x-dili",
 }
 
+#: The kind of reference each dialect scores against. "human": dictionary
+#: and wiktionary rows. "portal_lupo": Portal da Língua Portuguesa rows, the
+#: output of its rule-based LUPo generator, so the score is agreement with a
+#: machine reference, not an error rate against gold.
+REFERENCE_KIND: Dict[str, str] = {
+    "pt-PT": "human",
+    "pt-BR": "human",
+    "pt-PT-x-lisbon": "portal_lupo",
+    "pt-BR-x-sao-paulo": "portal_lupo",
+    "pt-BR-x-rio-janeiro": "portal_lupo",
+    "pt-AO": "portal_lupo",
+    "pt-MZ": "portal_lupo",
+    "pt-TL": "portal_lupo",
+}
+
 #: Words per dialect fixture. Fixed-seed sample of the region's gold.
 FIXTURE_WORDS = 1000
 SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "1.0"
+HARNESS_VERSION = "3.8"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -87,17 +108,340 @@ HARNESS_VERSION = "1.0"
 _STRESS_MARKS = "ˈˌ"
 _JOINERS = "·.|‿͜͡"
 
+#: The segment rule of the shared phonemizer PER board: NFD; the ligatures
+#: become their tied forms; stress marks, syllable dots, joiners and spaces go;
+#: a segment is one base symbol with its combining marks and modifier letters,
+#: and a tie bar joins the next base into the same segment (t͡ʃ is one segment).
+_LIGATURES = (("ʧ", "t͡ʃ"), ("ʤ", "d͡ʒ"), ("ʦ", "t͡s"), ("ʣ", "d͡z"))
+_SEG_TIES = "\u0361\u035c"
+_SEG_MODIFIERS = "ʰʲʷˠˤːˑ"
+_SEG_DROP = "ˈˌ.·|‿'"
 
-def normalize(ipa: str) -> str:
-    """One comparable form: NFC, no stress marks, no syllable/tie joiners,
-    no whitespace. Both sides of every comparison go through this."""
-    s = unicodedata.normalize("NFC", ipa)
-    for ch in _STRESS_MARKS + _JOINERS:
-        s = s.replace(ch, "")
-    return "".join(s.split())
+
+#: Phone PER folds only what a source calls one phone written two ways. The
+#: low nasal vowel is ⟨ɐ̃⟩ (Cruz-Ferreira 1999, Handbook of the IPA p.127;
+#: Barbosa & Albano 2004, JIPA 34(2) p.229). An affricate without a tie bar is
+#: the tied affricate. ⟨ⁿ ( ) '⟩ are markup, not phones.
+_NOTATION = (("ã", "ɐ̃"), ("tʃ", "t͡ʃ"), ("dʒ", "d͡ʒ"),
+             ("ⁿ", ""), ("(", ""), (")", ""), ("'", ""))
+
+#: Cruz-Ferreira (1999: 127): the European [ɨ] "is often represented as /ə/".
+#: Infopédia writes the tap as ⟨r⟩: its readings contrast caro ˈkaru with carro
+#: ˈkaʀu, and ⟨r⟩ stands in a tap position in 28,162 of 28,183 words
+#: (TigreGotico/portuguese-unified-pronunciation-lexicon@23898e1, ipa_narrow).
+_INFOPEDIA = (("ə", "ɨ"), ("r", "ɾ"))
+_OTHER: tuple = ()
+
+#: The pt-BR Wiktionary and Michaelis rows write the post-stress vowels with
+#: no contrast between [ɪ ʊ] and [i u]. In the pt-BR rows from Wiktionary only,
+#: single words with no ⟨á é í ó ú â ê ô⟩ in the last three letters, final ⟨-e⟩
+#: (not after ⟨e i u⟩) is [i] 258 times and [ɪ] 44 times, and final ⟨-o⟩ is [u]
+#: 606 times and [ʊ] 139 times (⟨-o⟩ not after ⟨o i u⟩). Michaelis writes [ɪ ʊ] in 0 of 20,580 rows
+#: (portuguese-unified-pronunciation-lexicon@23898e1, ipa_narrow).
+_NO_LAX_HIGH = (("ɪ", "i"), ("ʊ", "u"))
+
+#: The pt-BR Wiktionary rows write the glide after a nasal vowel with and
+#: without the tilde: [ɐ̃w̃] 23 times and [ɐ̃w] 10 times, [ẽj̃ õj̃] 9 times and
+#: [ẽj õj] 8 times (tests/data/gold/pt-BR.tsv). BP has no oral glide there:
+#: "Nasalised diphthongs are formed by combining [ẽ ɐ̃ õ ũ] with the offglide
+#: [j̃]. With [w̃], on the other hand, the only possibility is [ɐ̃w̃]"
+#: (Barbosa & Albano 2004: 230).
+_NASAL_GLIDE = (("\u0303w\u0303", "\u0303w"), ("\u0303j\u0303", "\u0303j"))
+
+#: The folds of a gold row, by the source and the region of the row. A row
+#: that several sources attest is the same string in each source's notation,
+#: so it takes the folds of all its sources.
+_SOURCE_NOTATION: Dict[Tuple[str, str], tuple] = {
+    ("infopedia", "pt-PT"): _INFOPEDIA,
+    ("wiktionary", "pt-BR"): _NO_LAX_HIGH + _NASAL_GLIDE,
+    ("michaelis", "pt-BR"): _NO_LAX_HIGH,
+}
 
 
-def _levenshtein(a: str, b: str) -> int:
+def source_notation(sources: str, region: str) -> tuple:
+    """The folds of the sources in ``sources``, joined by ``+``."""
+    folds: list = []
+    for src in sources.split("+"):
+        folds += [pair for pair in _SOURCE_NOTATION.get((src, region), ()) if pair not in folds]
+    return tuple(folds)
+
+#: Phoneme PER also merges the phones of one rhotic phoneme: [χ ʀ] with [ʁ]
+#: (Pereira 2020, R-forte do português europeu) and the pt-BR coda [ɹ] with
+#: [ɾ] (Barbosa & Albano 2004: 228, /R/ "is extremely variable in BP").
+_PHONEME_MERGES = (("χ", "ʁ"), ("ʀ", "ʁ"), ("ɹ", "ɾ"))
+
+
+#: European Portuguese drops or reduces the unstressed vowel of a word-initial
+#: ⟨es⟩ + consonant, so [iʃ], [ɨʃ] and [ʃ] are one accepted reading. Vázquez
+#: Diéguez (2015, Anuario de Estudios Filológicos 38) gives "esc- [(i)ʃk]" and
+#: "est- [(i)ʃt]" on p. 250 and "Na sequência <es- + consoante> pode
+#: desaparecer" on p. 265; Teyssier (1989: 28), quoted in Vázquez Diéguez (2015: 244), writes estar [(i)ʃ'tar].
+_INITIAL_ES = re.compile(r"^[iɨ]?([ʃʒ])")
+_ES_WORD = re.compile(r"^es[^aeiouáéíóúâêôãõàs]")
+
+
+#: An unstressed high vowel before a vowel is a glide in casual European
+#: speech and a vowel in careful speech. Mateus & Andrade (1998, D.E.L.T.A.
+#: 14(1), §1.3): "in casual speech glides may be followed by any vowel"; §1.5
+#: gives passear pas[i]ar / pas[j]ar. Cruz-Ferreira (1999: 128) names /ɨ/ too:
+#: "the first vowel is an unstressed /ɨ/ or /u/ [...] the first vowel may lose
+#: its syllabicity", real /ʁɨ'al/. Each reading scores as the glide.
+_FRONT_BEFORE_VOWEL = re.compile("[iɨ](?=[aɐeɛɨoɔu])")
+_BACK_BEFORE_VOWEL = re.compile("u(?=[aɐeɛɨioɔ])")
+_VOWEL = re.compile("[aɐeɛɨioɔuəʊɪʌ]")
+
+
+def _stressed_vowels(marked: str) -> frozenset:
+    """Indexes, in ``marked`` with the marks of ``_SEG_DROP`` removed, of each
+    vowel that is the first vowel after a stress mark."""
+    out, i, after_mark = set(), 0, False
+    for ch in marked:
+        if ch in "ˈˌ":
+            after_mark = True
+        if ch in _SEG_DROP:
+            continue
+        if after_mark and _VOWEL.match(ch):
+            out.add(i)
+            after_mark = False
+        i += 1
+    return frozenset(out)
+
+
+def _before_primary(spaced: str) -> frozenset:
+    """Indexes, as in ``_stressed_vowels``, of the segments before the first
+    stress mark of a word that has a primary mark. ``spaced`` keeps the spaces between words,
+    which take no index. A word with no primary mark has none."""
+    out, i = set(), 0
+    for word in spaced.split(" "):
+        pre = "ˈ" in word
+        for ch in word:
+            if ch in "ˈˌ":
+                pre = False
+            if ch in _SEG_DROP:
+                continue
+            if pre:
+                out.add(i)
+            i += 1
+    return frozenset(out)
+
+
+def _glide(pattern: re.Pattern, glide: str, ipa: str, stressed: frozenset,
+           pretonic: frozenset = frozenset()) -> str:
+    """``ipa`` with each unstressed match of ``pattern`` read as ``glide``. An
+    [ɨ] glides before a stressed vowel (Cruz-Ferreira 1999: 128, real
+    /ʁɨ'al/) or before the stress of its word (Mateus & Andrade 1998, §1.3,
+    ex. 8: realeza, adiantar). No source covers a post-tonic [ɨ] (cítreo)."""
+    def read(m):
+        if m.start() in stressed or (m.group() == "ɨ" and m.end() not in stressed
+                                     and m.start() not in pretonic):
+            return m.group()
+        return glide
+    return pattern.sub(read, ipa)
+
+
+#: Brazilian optional processes. Each reading of a process scores as one.
+#: - Coda /R/ "is extremely variable in BP" (Barbosa & Albano 2004: 228), so a
+#:   rhotic before a consonant or at the word end is one segment.
+#: - "In casual and fast speech, adjacent heterosyllabic vowels usually turn
+#:   into diphthongs" (Barbosa & Albano 2004: 230): the glide rule above.
+#: - Vowel epenthesis in an obstruent cluster is variable (Collischonn 2004,
+#:   SIGNUM 7(1): 64, presence or absence as the dependent variable; 69%
+#:   pretonic, 24% postonic, p. 67), so an [i] between the two consonants of
+#:   a written obstruent cluster (cacto, obtuso, ignaro) is dropped. The labial
+#:   nasal triggers it too ("e a nasal labial", amnésia, p. 66), so ⟨mn⟩ is a
+#:   cluster; /n/ does not (p. 66, n. 5). The vowel may be written [i ɪ ĩ].
+#: - The glide of a final stressed syllable closed by /S/ is variable: Leiria
+#:   (Organon 28: 133) finds it in 41% of 1,725 contexts, and gives "a
+#:   ditongação é uma regra variável" as hypothesis 3 (p. 134). So the [j] of
+#:   a final stressed vowel + /S/ is dropped. The source has no unstressed data.
+#: The strong R has several phones in one variety. European: "foram registadas
+#: as variantes [ʁ, ʀ, r, χ, x, ɹ̝, ʁ̞, ʀ̝, ɦ], por ordem decrescente de
+#: frequência" in the Lisbon sub-region (Pereira 2020, R-forte, p. iii).
+#: Brazilian: /r/ "varies considerably across the Brazilian territory", a velar
+#: fricative that "can nevertheless be realised as a glottal fricative"
+#: (Barbosa & Albano 2004: 228). Each phone of the strong R scores as [ʁ]; the
+#: alveolar trill [r] is the tap in the folds, so it stays outside the step.
+_STRONG_R = re.compile("[ʀχx]")
+_BR_STRONG_R = re.compile("[ʀχxh]")
+
+#: A BP vowel is nasalised "in stressed position before the archiphoneme /N/
+#: [...] as well as before heterosyllabic nasal consonants": (em) cima
+#: [ˈsĩmɐ], soma [ˈsõmɐ]; before the stress it is nasalised before /N/ or
+#: /ɲ/, ganhar [ɡɐ̃ˈɲaɾ] (Barbosa & Albano 2004: 229). The pt-BR Wiktionary
+#: rows write a stressed vowel before [m n ɲ] + vowel nasal 55 times and oral
+#: 35 times. So a stressed vowel before a nasal onset, and any vowel before
+#: [ɲ], scores as oral.
+#: Before the stress BP keeps the quality of the stressed vowel, "[i e a o u
+#: ĩ ẽ ɐ̃ õ ũ]", and a final unstressed ⟨a⟩ is [ɐ] (Barbosa & Albano 2004:
+#: 229). The pt-BR Wiktionary rows write a pretonic oral ⟨a⟩ as [a] 431 times
+#: and [ɐ] 62 times, and a final unstressed ⟨a⟩ as [ɐ] 227 times, [a] 19 times
+#: and [ə] 10 times. So a pretonic oral [ɐ] not before a nasal consonant scores
+#: as [a], and a final unstressed [a ə] as [ɐ].
+_BR_PRETONIC_A = re.compile("ɐ(?![\u0303mnɲ])")
+_BR_FINAL_A = re.compile("[aə](?=[sʃz]?$)")
+
+_BR_NASAL_ONSET = re.compile("([aɐeɛioɔu])\u0303(?=([mnɲ])[aɐeɛioɔuɨəɪʊ])")
+#: A word-final /R/ drops in BP. "In infinitives, however, this sound usually
+#: drops word-finally" (Barbosa & Albano 2004: 228). In Rio it drops in 73% to
+#: 82% of verbs and in 32% to 39% of non-verbs (Callou, Moraes & Leite 1998,
+#: DELTA 14: 67, Tabela 1), so the drop is variable in both classes. A
+#: word-final rhotic and no rhotic score as one reading when the word ends in ⟨r⟩.
+_BR_FINAL_R = re.compile("ɾ$")
+
+#: Coda /S/ is alveolar in São Paulo: "The archiphoneme /S/ surfaces either as
+#: a voiced or as a voiceless alveolar fricative" (Barbosa & Albano 2004:
+#: 229). In Rio it "is usually pronounced as the post-alveolar sounds [ʃ] and
+#: [ʒ]" (Brito 2016, Cadernos de Estudos Linguísticos 58(1): 141). So a coda
+#: [ʃ ʒ] scores as [s z]. The second half of an affricate stays.
+_BR_CODA_S = re.compile("(?<!\u0361)([ʃʒ])(?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
+_BR_CODA_R = re.compile("[ɾɹɻɽrʁχxhʀ](?![aɐeɛiɪɨoɔuʊəʌjw\u0303])")
+_CLUSTER = re.compile("([pbtdcgfv])(?=[bcçdfgjkmnpqstvxz])|(m)(?=n)")
+_FIRST = {"p": "p", "b": "b", "t": "t", "d": "d", "c": "k", "g": "ɡ", "f": "f", "v": "v", "m": "m"}
+_SECOND = {"b": "b", "c": "[ks]", "ç": "s", "d": "d", "f": "f", "g": "[ɡʒ]", "j": "ʒ", "k": "k",
+           "m": "m", "n": "n", "p": "p", "q": "k", "s": "[szʃʒ]", "t": "t", "v": "v", "x": "[ʃks]",
+           "z": "z"}
+
+
+#: The spellings of each first consonant, for a written vowel after it.
+_FIRST_SPELLED = {"p": "p", "b": "b", "t": "t", "d": "d", "k": "(?:c|qu|k)", "ɡ": "(?:g|gu)",
+                  "f": "f", "v": "v", "m": "m"}
+
+
+def _second_spelled(second: str) -> str:
+    """The letters whose ``_SECOND`` class shares a sound with ``second``."""
+    sounds = set(re.sub("[][]", "", second))
+    return "[" + "".join(k for k, v in _SECOND.items() if sounds & set(re.sub("[][]", "", v))) + "]"
+
+
+def _drop_epenthesis(word: str, ipa: str) -> str:
+    """``ipa`` with no [i] between the consonants of each written cluster.
+    Each written first consonant + ⟨i e⟩ + second consonant between the last
+    cluster and this one is a lexical vowel, so that many IPA matches are kept."""
+    lower, pos, written = word.lower(), 0, 0
+    for m in _CLUSTER.finditer(lower):
+        first, second = _FIRST[m.group(m.lastindex)], _SECOND[lower[m.end()]]
+        lexical = len(re.findall(f"{_FIRST_SPELLED[first]}[iíeéê]{_second_spelled(second)}",
+                                 lower[written:m.start()]))
+        written = m.end()
+        hits = list(re.compile(f"({first})(?:\u0361[ʃʒ])?[iɪ]\u0303?(?={second})").finditer(ipa, pos))
+        if len(hits) > lexical:
+            hit = hits[lexical]
+            ipa = ipa[:hit.start()] + hit.group(1) + ipa[hit.end():]
+            pos = hit.start() + len(hit.group(1))
+    return ipa
+
+
+_BR_FINAL_GLIDE_S = re.compile("([aɐeɛoɔu]\u0303?)[jɪ]([sʃz])$")
+#: A written ⟨a e o⟩ in a final stressed syllable before ⟨s z⟩: accented,
+#: before ⟨z⟩ in a word with no written accent elsewhere, or the one vowel of a
+#: monosyllable. A written ⟨i⟩ or a written diphthong there (raiz, pais), a
+#: paroxytone (Pérez) and an unstressed clitic (nos, dos) are outside the step.
+_BR_OXYTONE_S = re.compile(
+    "(?<![aeiouáéíóúâêô])(?:[áéóâêô]s|[aeo]z|(?<=^[^aeiouáéíóúâêô])[aeo]s|(?<=^[^aeiouáéíóúâêô]{2})[aeo]s)$")
+
+_BR_CLITICS = frozenset({"as", "os", "das", "dos", "nas", "nos", "pelas", "pelos", "vos", "lhes", "mas"})
+_WRITTEN_ACCENT = re.compile("[áéíóúâêô]")
+
+
+#: The accepted processes: name, the lects it applies to, and its sources. The
+#: sources and quotes are in docs/benchmarking.md. ``accept_variants`` runs
+#: each step by its name here.
+ACCEPTED_PROCESSES = (
+    ("glide", "pt-PT pt-BR", "Mateus & Andrade 1998; Cruz-Ferreira 1999: 128; Barbosa & Albano 2004: 230"),
+    ("strong_r", "pt-PT pt-BR", "Pereira 2020: iii; Barbosa & Albano 2004: 228"),
+    ("initial_es", "pt-PT", "Vázquez Diéguez 2015: 250, 265"),
+    ("pretonic_a", "pt-BR", "Barbosa & Albano 2004: 229-230"),
+    ("final_a", "pt-BR", "Barbosa & Albano 2004: 229-230"),
+    ("nasal_onset", "pt-BR", "Barbosa & Albano 2004: 230"),
+    ("coda_r", "pt-BR", "Barbosa & Albano 2004: 228; Cristófaro Silva 2025: 246; Gregio 2012: 81"),
+    ("final_r", "pt-BR", "Barbosa & Albano 2004: 228; Callou, Moraes & Leite 1998: 67"),
+    ("coda_s", "pt-BR", "Barbosa & Albano 2004: 229; Brito 2016: 141"),
+    ("epenthesis", "pt-BR", "Collischonn 2004: 64, 67"),
+    ("final_glide_s", "pt-BR", "Leiria, Organon 28: 133"),
+)
+
+
+def accept_variants(word: str, ipa: str, brazilian: bool = False,
+                    stressed: frozenset = frozenset(), skip: frozenset = frozenset(),
+                    pretonic: frozenset = frozenset()) -> str:
+    """The normalized ``ipa`` with each sourced optional process read one way:
+    for European Portuguese a word-initial ⟨es⟩ vowel removed, and for both
+    an unstressed high vowel before a vowel read as a glide and each phone of
+    the strong R read as [ʁ]. ``stressed``
+    holds the indexes of the stressed vowels of ``ipa``, and ``pretonic`` the
+    indexes before the stress of their word. The steps named in
+    ``skip`` do not run."""
+    lower = word.lower()
+    if "glide" not in skip:
+        ipa = _glide(_BACK_BEFORE_VOWEL, "w", _glide(_FRONT_BEFORE_VOWEL, "j", ipa, stressed, pretonic), stressed)
+    if "strong_r" not in skip:
+        ipa = (_BR_STRONG_R if brazilian else _STRONG_R).sub("ʁ", ipa)
+    if not brazilian:
+        if "initial_es" not in skip and _ES_WORD.match(lower):
+            ipa = _INITIAL_ES.sub(r"\1", ipa)
+        return ipa
+    if stressed:
+        first, last = min(stressed), max(stressed)
+        if "pretonic_a" not in skip:
+            ipa = _BR_PRETONIC_A.sub(lambda m: "a" if m.start() < first else m.group(), ipa)
+        if "final_a" not in skip:
+            ipa = _BR_FINAL_A.sub(lambda m: "ɐ" if m.start() > last else m.group(), ipa)
+    if "nasal_onset" not in skip:
+        ipa = _BR_NASAL_ONSET.sub(
+            lambda m: m.group(1) if m.start() in stressed or m.group(2) == "ɲ" else m.group(), ipa)
+    if "coda_r" not in skip:
+        ipa = _BR_CODA_R.sub("ɾ", ipa)
+    if "final_r" not in skip and lower.endswith("r"):
+        ipa = _BR_FINAL_R.sub("", ipa)
+    if "coda_s" not in skip:
+        ipa = _BR_CODA_S.sub(lambda m: "s" if m.group(1) == "ʃ" else "z", ipa)
+    if "epenthesis" not in skip:
+        ipa = _drop_epenthesis(word, ipa)
+    if ("final_glide_s" not in skip and _BR_OXYTONE_S.search(lower) and lower not in _BR_CLITICS
+            and not (lower.endswith("z") and _WRITTEN_ACCENT.search(lower[:-2]))):
+        ipa = _BR_FINAL_GLIDE_S.sub(r"\1\2", ipa)
+    return ipa
+
+
+def _folded(ipa: str, region: tuple, keep_spaces: bool = False) -> str:
+    s = unicodedata.normalize("NFD", ipa)
+    for written, sound in region + _NOTATION + _LIGATURES:
+        s = s.replace(unicodedata.normalize("NFD", written), unicodedata.normalize("NFD", sound))
+    if keep_spaces:
+        return " ".join(s.split())
+    return "".join(ch for ch in s if not ch.isspace())
+
+
+def segments(ipa: str, region: tuple = _INFOPEDIA, word: Optional[str] = None,
+             brazilian: bool = False, skip: frozenset = frozenset()) -> List[str]:
+    """The segments of ``ipa`` under the board's segment rule, after the
+    notation folds. With ``word``, the accepted variants are one reading."""
+    marked = _folded(ipa, region)
+    s = "".join(ch for ch in marked if ch not in _SEG_DROP)
+    if word is not None:
+        s = accept_variants(word, s, brazilian, _stressed_vowels(marked), skip,
+                            _before_primary(_folded(ipa, region, keep_spaces=True)))
+    out: List[str] = []
+    join = False
+    for ch in s:
+        if ch in _SEG_TIES:
+            join = bool(out)
+            if out:
+                out[-1] += "\u0361"
+        elif out and (join or unicodedata.combining(ch) or ch in _SEG_MODIFIERS):
+            out[-1] += ch
+            join = False
+        else:
+            out.append(ch)
+    return out
+
+
+def normalize(ipa: str, region: tuple = _INFOPEDIA) -> str:
+    """The segments of ``ipa`` joined into one string."""
+    return "".join(segments(ipa, region))
+
+
+def _levenshtein(a, b) -> int:
     if a == b:
         return 0
     if not a:
@@ -115,7 +459,9 @@ def _levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
-def score_word(hyp: str, golds: List[str]) -> Tuple[int, int]:
+def score_word(hyp: str, golds: List[str], region: tuple = _INFOPEDIA,
+               word: Optional[str] = None, brazilian: bool = False,
+               skip: frozenset = frozenset()) -> Tuple[int, int]:
     """(edit distance, reference length) against the CLOSEST gold variant.
 
     A word with several attested pronunciations is correct if it matches
@@ -123,15 +469,9 @@ def score_word(hyp: str, golds: List[str]) -> Tuple[int, int]:
     so multi-variant words are not penalised for the variants they did
     not choose.
     """
-    h = normalize(hyp)
-    best: Optional[Tuple[int, int]] = None
-    for gold in golds:
-        r = normalize(gold)
-        d = _levenshtein(h, r)
-        if best is None or d / max(len(r), 1) < best[0] / max(best[1], 1):
-            best = (d, len(r))
-    assert best is not None
-    return best
+    h = segments(hyp, region, word, brazilian, skip)
+    return min((_levenshtein(h, r), len(r))
+               for r in (segments(g, region, word, brazilian, skip) for g in golds))
 
 
 # ─── stress accuracy ────────────────────────────────────────────────────────
@@ -276,32 +616,16 @@ def stress_accuracy(hits: int, n_stress: int) -> Optional[float]:
 # ─── rules-only phonemization ───────────────────────────────────────────────
 
 def rules_only_ipa(word: str, dialect_code: str) -> str:
-    """Phonemize *word* with the dialect's grapheme rules ONLY.
-
-    The dialect inventory is built normally, then its lexicon exception
-    table is emptied, so every word takes the rule path. The engine and
-    inventory are cached per dialect (module-level), because inventory
-    construction loads the full tugalex map.
-    """
-    inv = _rules_only_inventory(dialect_code)
-    from tugaphone.tokenizer import Sentence
-    return Sentence(word, dialect=inv).ipa.strip()
+    """``phonemize(word, dialect_code)`` with the packaged lexicon emptied."""
+    return _rules_only_engine(dialect_code).transcribe(word).strip()
 
 
-_INV_CACHE: Dict[str, object] = {}
-
-
-def _rules_only_inventory(dialect_code: str):
-    inv = _INV_CACHE.get(dialect_code)
-    if inv is None:
-        from tugaphone.registry import get_dialect_inventory
-        inv = get_dialect_inventory(dialect_code)
-        try:
-            inv.IRREGULAR_WORDS = {}
-        except Exception:  # frozen dataclass
-            object.__setattr__(inv, "IRREGULAR_WORDS", {})
-        _INV_CACHE[dialect_code] = inv
-    return inv
+@functools.lru_cache(maxsize=None)
+def _rules_only_engine(dialect_code: str) -> G2P:
+    lect = resolve_lect(dialect_code)
+    rules = pipeline(lect)
+    rules.lexicon.clear()
+    return G2P(lect, pipeline=rules)
 
 
 # ─── fixtures ───────────────────────────────────────────────────────────────
@@ -330,9 +654,9 @@ def refresh_fixtures() -> None:
         ipa = (row.get("ipa_narrow") or "").strip()
         if not region or not word or not ipa:
             continue
-        variants = by_region.setdefault(region, {}).setdefault(word, [])
-        if ipa not in variants:
-            variants.append(ipa)
+        variants = by_region.setdefault(region, {}).setdefault(word, {})
+        known = variants.get(ipa, "none").split("+")
+        variants[ipa] = merge_sources(known + row_sources(row).split("+"))
 
     os.makedirs(FIXTURE_DIR, exist_ok=True)
     for dialect, region in sorted(DIALECT_TO_REGION.items()):
@@ -349,63 +673,117 @@ def refresh_fixtures() -> None:
                 f"# source sha256={digest}\n"
                 f"# sample: seed={SAMPLE_SEED} words={len(sample)}"
                 f" (cap {FIXTURE_WORDS})\n"
-                "# columns: word<TAB>ipa_narrow (one row per variant)\n"
+                "# columns: word<TAB>ipa_narrow<TAB>sources (one row per variant)\n"
             )
             for word, variants in sample:
-                for ipa in variants:
-                    fh.write(f"{word}\t{ipa}\n")
+                for ipa, sources in variants.items():
+                    fh.write(f"{word}\t{ipa}\t{sources}\n")
         print(f"wrote {path} ({len(sample)} words)", file=sys.stderr)
 
 
-def load_fixture(dialect: str) -> Dict[str, List[str]]:
-    """word → attested IPA variants, from the committed fixture."""
-    golds: Dict[str, List[str]] = {}
+_SOURCES = ("wiktionary", "infopedia", "michaelis")
+
+
+def merge_sources(names: List[str]) -> str:
+    """``names`` in a fixed order, joined by ``+``, or ``none``."""
+    return "+".join(name for name in _SOURCES if name in names) or "none"
+
+
+def row_sources(row: dict) -> str:
+    """The sources of a gold row, joined by ``+``, or ``none``."""
+    return merge_sources([name for name in _SOURCES if row.get(f"{name}_url")])
+
+
+def load_fixture_rows(dialect: str) -> Dict[str, List[Tuple[str, str]]]:
+    """word → (ipa, sources) for each attested variant, from the fixture."""
+    golds: Dict[str, List[Tuple[str, str]]] = {}
     with open(fixture_path(dialect), encoding="utf-8") as fh:
         for line in fh:
             if line.startswith("#") or not line.strip():
                 continue
-            word, ipa = line.rstrip("\n").split("\t")
-            golds.setdefault(word, []).append(ipa)
+            word, ipa, sources = line.rstrip("\n").split("\t")
+            # Infopédia joins the readings of one entry with a comma.
+            golds.setdefault(word, []).extend((v, sources) for v in ipa.split(","))
     return golds
+
+
+def load_fixture(dialect: str) -> Dict[str, List[str]]:
+    """word → attested IPA variants, from the committed fixture."""
+    return {word: [ipa for ipa, _ in rows] for word, rows in load_fixture_rows(dialect).items()}
+
+
+def _score_rows(hyp: str, rows: List[Tuple[str, str]], region: str, extra: tuple = (),
+                word: Optional[str] = None, brazilian: bool = False,
+                skip: frozenset = frozenset()) -> Tuple[int, int, tuple]:
+    """(edits, gold segments, folds) against the closest variant, each variant
+    under the folds of its own sources."""
+    by_folds: Dict[tuple, List[str]] = {}
+    for ipa, sources in rows:
+        by_folds.setdefault(source_notation(sources, region), []).append(ipa)
+    return min(score_word(hyp, golds, folds + extra, word, brazilian, skip) + (folds,)
+               for folds, golds in by_folds.items())
 
 
 # ─── scoring ────────────────────────────────────────────────────────────────
 
 def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
-    golds = load_fixture(dialect)
+    golds = load_fixture_rows(dialect)
+    region = DIALECT_TO_REGION[dialect]
     words = sorted(golds)
     if limit is not None:
         words = words[:limit]
+    european = dialect.startswith("pt-PT")
+    brazilian = dialect.startswith("pt-BR")
     err = tot = exact = failed = n_stress = stress_hits = 0
+    err_acc = tot_acc = err_ph = tot_ph = 0
     confusion: Dict[Tuple[str, str], int] = {}
+    lect = "pt-PT" if european else "pt-BR"
+    processes = [name for name, lects, _ in ACCEPTED_PROCESSES if lect in lects.split()]
+    without: Dict[str, int] = dict.fromkeys(processes, 0) if european or brazilian else {}
     for word in words:
         try:
             hyp = rules_only_ipa(word, dialect)
         except Exception:
             failed += 1
             continue
-        hit = score_stress(word, hyp, golds[word])
+        rows = golds[word]
+        variants = [ipa for ipa, _ in rows]
+        hit = score_stress(word, hyp, variants)
         if hit is not None:
             n_stress += 1
             stress_hits += hit
-        d, n = score_word(hyp, golds[word])
+        d, n, folds = _score_rows(hyp, rows, region)
         err += d
         tot += n
+        d_ph, n_ph, _ = _score_rows(hyp, rows, region, _PHONEME_MERGES)
+        err_ph += d_ph
+        tot_ph += n_ph
+        if european or brazilian:
+            d_acc, n_acc, _ = _score_rows(hyp, rows, region, word=word, brazilian=brazilian)
+            err_acc += d_acc
+            tot_acc += n_acc
+            for name in without:
+                without[name] += _score_rows(hyp, rows, region, word=word, brazilian=brazilian,
+                                             skip=frozenset((name,)))[0]
         if d == 0:
             exact += 1
         else:
-            _count_confusions(hyp, golds[word], confusion)
+            _count_confusions(hyp, variants, confusion, folds)
     top_confusions = sorted(confusion.items(),
                             key=lambda kv: kv[1], reverse=True)[:20]
     return {
         "dialect": dialect,
         "region": DIALECT_TO_REGION[dialect],
+        "reference_kind": REFERENCE_KIND[dialect],
         "n": len(words),
         "failed": failed,
         "per": round(err / tot, 4) if tot else None,
+        "per_phoneme": round(err_ph / tot_ph, 4) if tot_ph else None,
+        "per_accepted": round(err_acc / tot_acc, 4) if tot_acc else None,
         "word_accuracy": round(exact / len(words), 4) if words else None,
         "stress_acc": stress_accuracy(stress_hits, n_stress),
         "n_stress": n_stress,
+        "accepted_edits": {name: e - err_acc for name, e in without.items()},
         "top_confusions": [
             {"got": a, "expected": b, "count": c}
             for (a, b), c in top_confusions
@@ -415,12 +793,13 @@ def score_dialect(dialect: str, limit: Optional[int] = None) -> dict:
 
 
 def _count_confusions(hyp: str, golds: List[str],
-                      confusion: Dict[Tuple[str, str], int]) -> None:
+                      confusion: Dict[Tuple[str, str], int],
+                      region: tuple) -> None:
     """Character-level substitution/indel pairs vs the closest variant."""
     import difflib
-    h = normalize(hyp)
-    r = min((normalize(g) for g in golds),
-            key=lambda r: _levenshtein(h, r) / max(len(r), 1))
+    h = normalize(hyp, region)
+    r = min((normalize(g, region) for g in golds),
+            key=lambda r: (_levenshtein(h, r), len(r)))
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(
             None, h, r).get_opcodes():
         if op == "equal":
@@ -431,48 +810,139 @@ def _count_confusions(hyp: str, golds: List[str],
 
 # ─── reports ────────────────────────────────────────────────────────────────
 
+def scoreboard_alt(rows: List[dict]) -> str:
+    """Alt text of the scoreboard figure, read from the same rows as the table."""
+    by_per = sorted((r for r in rows if r["reference_kind"] == "human"),
+                    key=lambda r: r["per"])
+    low, high = by_per[0], by_per[-1]
+    return (f"Rules-only PER against human gold: {low['dialect']} {low['per']:.3f}, the lowest, and "
+            f"{high['dialect']} {high['per']:.3f}, the highest.")
+
+
+def _table(rows: List[dict], region_head: str, rate_head: str, match_head: str) -> List[str]:
+    lines = [
+        f"| Dialect | {region_head} | Words | {rate_head} | {rate_head}, variants accepted "
+        f"| {match_head} | Stress words | Stress {match_head.split()[-1]} |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for r in rows:
+        stress = ("n/a" if r.get("stress_acc") is None
+                  else f"{r['stress_acc']:.4f}")
+        accepted = ("n/a" if r.get("per_accepted") is None
+                    else f"{r['per_accepted']:.4f}")
+        lines.append(
+            f"| {r['dialect']} | {r['region']} | {r['n']} "
+            f"| {r['per']:.4f} | {accepted} | {r['word_accuracy']:.4f} "
+            f"| {r.get('n_stress', 0)} | {stress} |")
+    return lines
+
+
 def write_reports(rows: List[dict]) -> None:
     os.makedirs(os.path.dirname(RESULTS_JSON), exist_ok=True)
     with open(RESULTS_JSON, "w", encoding="utf-8") as fh:
         json.dump(rows, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
+    with open(SCOREBOARD_MD, "w", encoding="utf-8") as fh:
+        fh.write(render_scoreboard(rows))
 
+
+def _ledger(rows: List[dict]) -> List[str]:
+    """The table of edits that each accepted process absorbs per dialect."""
+    rows = [r for r in rows if r.get("accepted_edits")]
+    lines = [
+        "",
+        "## Edits that each accepted process absorbs",
+        "",
+        "Each cell is the number of edits that come back when the process is the",
+        "one process that does not run. Two processes can absorb the same edit,",
+        "so a column does not add up to the gap between strict and accepted PER.",
+        "",
+        "| Process | Lects | Source | " + " | ".join(r["dialect"] for r in rows) + " |",
+        "|---|---|---|" + "---:|" * len(rows),
+    ]
+    for name, lects, source in ACCEPTED_PROCESSES:
+        cells = [str(r["accepted_edits"].get(name, "")) for r in rows]
+        lines.append(f"| {name} | {lects} | {source} | " + " | ".join(cells) + " |")
+    return lines
+
+
+def render_scoreboard(rows: List[dict]) -> str:
+    """The text of docs/scoreboard.md for the result ``rows``."""
     lines = [
         "# Scoreboard: rules-only PER and stress accuracy per dialect",
+        "<!-- agent-hint",
+        "covers: the rules-only PER and stress accuracy of each dialect",
+        "source: benchmarks/results.json, tests/data/gold/",
+        "generated: yes, by scripts/benchmark.py. Edit the generator, not the page",
+        (
+            'verify: .venv/bin/python -c "import json,re;r={x['
+            "'dialect']:x for x in json.load(open('be"
+            "nchmarks/results.json'))};t=re.findall(r"
+            "'^\\\\| (\\\\S+) \\\\| \\\\S+ \\\\| (\\\\d+) \\\\| ([\\"
+            "\\d.]+) \\\\|',open('docs/scoreboard.md').r"
+            'ead(),re.M);assert len(t)==len(r) and al'
+            "l(float(p)==r[d]['per'] and int(n)==r[d]"
+            '[\'n\'] for d,n,p in t)"'
+        ),
+        "see: benchmarking.md",
+        "-->",
         "",
-        "Generated by `python scripts/benchmark.py` from the committed gold",
+        "Generated by `python scripts/benchmark.py` from the committed reference",
         "fixtures (`tests/data/gold/`), which are fixed-seed samples of",
         "[TigreGotico/portuguese-unified-pronunciation-lexicon]"
         "(https://huggingface.co/datasets/TigreGotico/"
         "portuguese-unified-pronunciation-lexicon).",
-        "Rules-only: the lexicon exception path is emptied, so the number",
-        "measures grapheme-rule quality, not lexicon lookup coverage. See",
-        "[benchmarking.md](benchmarking.md).",
         "",
-        "Stress accuracy is the share of the stress-eligible gold words",
+        "Rules-only: the packaged lexicon is emptied, so the number measures",
+        "the rules, not the lexicon. See [benchmarking.md](benchmarking.md).",
+        "",
+        "Stress accuracy is the share of the stress-eligible reference words",
         "(one word, one primary mark, two syllables or more) whose primary",
-        "stress lands on the gold's syllable. PER cannot see that choice.",
+        "stress lands on the reference syllable. PER cannot see that choice.",
         "",
-        "| Dialect | Gold region | Words | PER | Word accuracy "
-        "| Stress words | Stress accuracy |",
-        "|---|---|---|---|---|---|---|",
+        "<picture>",
+        '  <source media="(prefers-color-scheme: dark)" srcset="img/scoreboard-dark.svg">',
+        f'  <img alt="{scoreboard_alt(rows)}" src="img/scoreboard.svg">',
+        "</picture>",
+        "",
+        "`img/plot_scoreboard.py` makes this figure from",
+        "`benchmarks/results.json`. It shows only the dialects with human gold.",
+        "",
+        "PER, variants accepted counts each reading of a cited optional process as",
+        "one: for European Portuguese a word-initial ⟨es⟩ vowel (Vázquez Diéguez",
+        "2015: 250, 265), a glide before a vowel (Mateus & Andrade 1998;",
+        "Cruz-Ferreira 1999: 128) and the phones of the strong R (Pereira 2020: iii);",
+        "for Brazilian Portuguese the strong R, an unstressed ⟨a⟩, a nasal vowel before a nasal onset, the coda /R/ and /S/, the word-final /R/ and the glide before a",
+        "vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent cluster",
+        "(Collischonn 2004: 64, 67) and the glide of a final stressed vowel before",
+        "/S/ (Leiria, Organon 28: 133). See docs/benchmarking.md.",
+        "",
     ]
-    for r in rows:
-        stress = ("—" if r.get("stress_acc") is None
-                  else f"{r['stress_acc']:.4f}")
-        lines.append(
-            f"| {r['dialect']} | {r['region']} | {r['n']} "
-            f"| {r['per']:.4f} | {r['word_accuracy']:.4f} "
-            f"| {r.get('n_stress', 0)} | {stress} |")
+    human = [r for r in rows if r["reference_kind"] == "human"]
+    lupo = [r for r in rows if r["reference_kind"] == "portal_lupo"]
+    lines += ["## PER against human gold", ""]
+    lines += _table(human, "Gold region", "PER", "Word accuracy")
+    lines += _ledger(human)
+    lines += [
+        "",
+        "## Agreement with a machine reference (Portal LUPo)",
+        "",
+        "The reference rows of these dialects come from the Portal da Língua",
+        "Portuguesa. The Portal makes them with its rule-based LUPo generator,",
+        "so they are machine output, not human gold. The rate is the share of",
+        "segments where tugaphone and LUPo disagree. A disagreement is not",
+        "always a tugaphone error.",
+        "",
+    ]
+    lines += _table(lupo, "Reference region", "Disagreement", "Word agreement")
     lines += [
         "",
         "",
         "---",
-        "[← Benchmarking](benchmarking.md) · [Home](../README.md)",
+        "[← Benchmarking](benchmarking.md) · [Home](index.md)",
         "",
     ]
-    with open(SCOREBOARD_MD, "w", encoding="utf-8") as fh:
-        fh.write("\n".join(lines))
+    return "\n".join(lines)
 
 
 def main() -> None:

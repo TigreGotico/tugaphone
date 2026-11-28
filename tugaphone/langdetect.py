@@ -144,6 +144,7 @@ _MODEL_DIR = Path(__file__).parent / "data" / "langdetect"
 def _load_gz(markov_chain_cls, path: Path):
     """Load a gzip-compressed markovonnx JSON model via a temporary file."""
     import gzip
+    import os
     import tempfile
 
     with gzip.open(path, "rb") as fh:
@@ -154,7 +155,6 @@ def _load_gz(markov_chain_cls, path: Path):
     try:
         return markov_chain_cls.load(tmp_path)
     finally:
-        import os
         os.unlink(tmp_path)
 
 
@@ -193,17 +193,11 @@ def is_keep_word(word: str) -> bool:
                            or fold_diacritics(core) in _KEEP_FOLDED)
 
 
-def _wrap(word: str) -> List[str]:
-    return [_BOS] + list(word) + [_EOS]
-
-
 class MarkovLangDetector:
     """Four char-Markov models scoring a word as pt / es / fr / en."""
 
     def __init__(self, models: Dict[str, "object"]):
         self._models = models
-
-    # -- construction ---------------------------------------------------------
 
     @classmethod
     def from_dir(cls, model_dir: Path = _MODEL_DIR) -> Optional["MarkovLangDetector"]:
@@ -217,28 +211,23 @@ class MarkovLangDetector:
         """
         try:
             from markovonnx import MarkovChain
-        except Exception:
+        except ImportError:
             return None
         models = {}
         for lang in LANGS:
             gz = model_dir / f"{lang}.json.gz"
             plain = model_dir / f"{lang}.json"
-            try:
-                if gz.is_file():
-                    models[lang] = _load_gz(MarkovChain, gz)
-                elif plain.is_file():
-                    models[lang] = MarkovChain.load(str(plain))
-                else:
-                    return None
-            except Exception:
+            if gz.is_file():
+                models[lang] = _load_gz(MarkovChain, gz)
+            elif plain.is_file():
+                models[lang] = MarkovChain.load(str(plain))
+            else:
                 return None
         return cls(models)
 
-    # -- scoring --------------------------------------------------------------
-
     def score(self, word: str) -> Dict[str, float]:
         """Length-normalized log-perplexity per language (lower = better fit)."""
-        seq = _wrap(_normalize(word))
+        seq = [_BOS, *_normalize(word), _EOS]
         out: Dict[str, float] = {}
         for lang, mc in self._models.items():
             ppx = mc.perplexity([seq])
@@ -257,10 +246,7 @@ class MarkovLangDetector:
         genuinely ambiguous embed routes to the expected language.
         """
         core = _normalize(word)
-        if not core:
-            return "pt", {}
-        if is_keep_word(core):
-            # Unambiguously native wordform: never route out of Portuguese.
+        if not core or is_keep_word(core):
             return "pt", {}
         scores = self.score(word)
         best = min(scores, key=scores.get)
@@ -269,9 +255,8 @@ class MarkovLangDetector:
         if (scores["pt"] - scores[best]) < margin:
             return "pt", scores
         # Tie-break among foreign models within a margin of the winner.
-        if default_side is not None and default_side in scores:
-            if (scores[default_side] - scores[best]) < margin:
-                return default_side, scores
+        if default_side in scores and scores[default_side] - scores[best] < margin:
+            return default_side, scores
         return best, scores
 
     def is_contact(self, word: str, margin: float = DEFAULT_MARGIN) -> bool:

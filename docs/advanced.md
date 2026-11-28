@@ -1,4 +1,11 @@
 # Advanced
+<!-- agent-hint
+covers: the lexicon boundary, number scales and integration with the sibling libraries
+source: tugaphone/lattice_core.py, tugaphone/number_utils.py, pyproject.toml
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/advanced.md
+see: architecture.md, api.md
+-->
 
 Once the basic `phonemize_sentence` loop is clear, this is what sits underneath
 it.
@@ -18,8 +25,9 @@ orthography2ipa's own extension points, and takes syllabification from
 orthography2ipa:
 
 1. **Normalization**, orthographic rewrites
-   (`tugaphone.text_normalization.normalize_orthography`), number/ordinal
-   verbalization (`tugaphone.number_utils.normalize_numbers`) and sense-based
+   (`tugaphone.text_normalization.normalize_orthography`), the reading of
+   numbers, dates and times by text2spoken
+   (`tugaphone.number_utils.normalize_numbers`) and sense-based
    homograph marking (`bifonia.add_extra_diacritics`) run before the lattice
    sees the text. The rewrites and the numbers are the pipeline's `expand`, and
    the homograph marks are its `mark`.
@@ -56,27 +64,27 @@ and a rules reading share one notation.
 
 ## Number normalization
 
-`normalize_numbers` spells digits out before transcription and is independently
-useful for any TTS front-end:
+`normalize_numbers` reads numbers, dates, clock times, money and measures with
+[text2spoken](https://github.com/TigreGotico/text2spoken), in the `pt-PT` or
+`pt-BR` variety of the lect:
 
 ```python
 from tugaphone.number_utils import normalize_numbers
 
-normalize_numbers("vou comprar 1 casa")      # 'vou comprar uma casa'  (feminine)
-normalize_numbers("vou adotar 1 cão")        # 'vou adotar um cão'      (masculine)
-normalize_numbers("897654356789098", "pt-PT")  # long scale (biliões)
-normalize_numbers("897654356789098", "pt-BR")  # short scale (trilhões)
+normalize_numbers("vou comprar 1 casa")        # 'vou comprar uma casa'
+normalize_numbers("vou adotar 1 cão")          # 'vou adotar um cão'
+normalize_numbers("897654356789098", "pt-PT")
+# 'oitocentos e noventa e sete biliões seiscentos e cinquenta e quatro mil trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito'
+normalize_numbers("897654356789098", "pt-BR")
+# 'oitocentos e noventa e sete trilhões seiscentos e cinquenta e quatro bilhões trezentos e cinquenta e seis milhões setecentos e oitenta e nove mil e noventa e oito'
 ```
 
-Gender comes first from an ordinal marker (`º`, `ª`) and from a label head
-before the number (`artigo 1`). Next comes the gender of the following noun in
-tugalex (`TugaLexicon.get_noun_gender`), then a preceding article (`a`, `as`,
-`o`, `os` and their contractions with `de`). Last, for a word that tugalex does
-not know, the ending decides (`-a`, `-dade`, `-age`, `-agem` endings are
-feminine). [numbers.md](numbers.md#gender-inference) gives the full rule list. Pass
-`strict=False` to leave unparseable tokens in place instead of raising. Inside
-the pipeline this runs in the engine's `expand` step, so a bare digit in the
-input sentence is verbalized before the lattice transcribes it.
+`pt-PT` reads the long scale (biliões). `pt-BR` reads the short scale (trilhões).
+
+text2spoken owns the reading rules, gender agreement included.
+[numbers.md](numbers.md) shows which lect reads which variety. Inside the
+pipeline this runs in the engine's `expand` step, so a bare digit in the
+input sentence is read before the lattice transcribes it.
 
 ## Integration with sibling libraries
 
@@ -87,26 +95,18 @@ usable on its own:
   candidate lattice and the lect specs that are tugaphone's core.
 - [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons), the `pt-PT` and
   `pt-BR` residual lexicons.
+- [`text2spoken`](https://github.com/TigreGotico/text2spoken), numbers, dates,
+  times, money and abbreviations for `normalize_numbers`.
+- [`desacordo_ortografico`](https://github.com/TigreGotico/desacordo_ortografico),
+  old spellings to AO1990, the spelling step of `expand`.
 - [`tugalex`](https://github.com/TigreGotico/tugalex), the noun and given-name
-  genders, and the phonetic lexicon of the legacy `tugaphone.dialects`
-  inventories (`LEXICON`).
-- [`silabificador`](https://github.com/TigreGotico/silabificador), the
-  syllabifier of the `tugaphone.tokenizer` token tree. The phonemization path
-  does not use it.
+  genders, and the gender of a given name for `D.` (Dom or Dona).
 - [`bifonia`](https://github.com/TigreGotico/bifonia), meaning-based
   heterophone disambiguation, called via `add_extra_diacritics` in the
   pipeline's `mark` step.
 
 A TTS front-end typically wires `tugaphone` as the G2P stage: pass text and a
 target lect code, hand the returned IPA string to the acoustic model.
-
-## The token-feature API
-
-`tugaphone.tokenizer` and `tugaphone.dialects` expose a token tree (manner,
-place, voicing, vowel height, syllable roles, CV skeletons) and back the
-rules-only benchmark baseline. This is a feature-inspection surface, **not** the
-phonemization path, `phonemize_sentence` runs on the lattice and never routes
-through it. See [tokenizer.md](tokenizer.md).
 
 ## Where next
 
@@ -116,8 +116,6 @@ through it. See [tokenizer.md](tokenizer.md).
 - [homographs.md](homographs.md), meaning-based disambiguation
 - [numbers.md](numbers.md), number normalization and gender agreement
 - [text_normalization.md](text_normalization.md), the orthographic rewrites that run ahead of number normalization
-- [tokenizer.md](tokenizer.md), inspect syllables, stress and graphemes directly
-
 
 ---
-[← Tokenizer](tokenizer.md) · [Home](../README.md) · [Benchmarking →](benchmarking.md)
+[← API](api.md) · [Home](index.md) · [Development →](development.md)

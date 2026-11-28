@@ -8,14 +8,12 @@ the caller (number/ordinal verbalization, sense-based homograph marking, the
 ``pt-PT`` residual lexicon, syllabification), wired through orthography2ipa's
 own extension points. See :mod:`tugaphone.lattice_core`.
 """
-import warnings
 from typing import Optional
 
 from tugaphone.version import __version__
-from tugaphone.lattice_core import pipeline
-from tugaphone.lattice_core import phonemize as _phonemize
-from tugaphone.lattice_core import phonemize
+from tugaphone.lattice_core import phonemize, pipeline
 from tugaphone.registry import is_supported, list_dialects, resolve_lect
+from tugaphone.content_revision import revision
 from tugaphone.accent import (
     force_accent,
     respell,
@@ -37,56 +35,16 @@ class TugaPhonemizer:
     lects; the full list comes from :func:`tugaphone.list_dialects`.
     """
 
-    def __init__(self) -> None:
-        """Create a phonemizer. Construction does no work.
-
-        The orthography2ipa engine for a lect is built on the first call for
-        that lect and reused by the calls after it.
-        """
-
     def phonemize_sentence(self, sentence: str, lang: str = "pt-PT",
-                           contact: str = "none",
-                           regional_dialect: Optional[object] = None) -> str:
-        """Phonemize ``sentence`` for the ``lang`` dialect.
+                           contact: str = "none") -> str:
+        """Phonemize raw ``sentence`` for the ``lang`` lect: see :func:`tugaphone.phonemize`.
 
-        Digits, abbreviations and other written conventions are spelled out
-        and heterophonic homographs are marked before the lattice transcribes
-        the text, so the caller passes raw text.
-
-        Parameters:
-            sentence: Input text to phonemize.
-            lang: BCP-47 lect code to target. National standards, sub-regional
-                varieties and the African/Asian lects all resolve to an
-                orthography2ipa spec; see :func:`tugaphone.list_dialects`.
-            contact: Embedded-language policy. Defaults to ``"none"`` — the
-                engine-only path, so the out-of-the-box output is unchanged by
-                this feature (Portuguese shares the Romance character-shape with
-                its contact languages too tightly for statistical routing to be
-                safe by default). Opt in with ``"auto"`` (detect and classify
-                each contact word among es/fr/en, unclassified words falling to
-                the dialect's side) or force a single lattice with ``"es"`` /
-                ``"fr"`` / ``"en"``. Contact words are transcribed through the
-                orthography2ipa contact lattice and nativized onto the Portuguese
-                inventory; see :mod:`tugaphone.codeswitch`. Any other value
-                raises ``ValueError``.
-            regional_dialect: Deprecated and ignored. ``lang`` alone selects
-                the dialect; the regional accent is encoded in the
-                orthography2ipa lect spec, not applied as a post-hoc transform.
-                Passing it emits a ``DeprecationWarning``.
-
-        Returns:
-            Space-separated IPA for each word, with ``ˈ`` before each stressed
-            syllable.
+        ``contact`` is the embedded-language policy, ``"none"`` (the default),
+        ``"auto"``, ``"es"``, ``"fr"`` or ``"en"``; see :mod:`tugaphone.codeswitch`.
+        Returns space-separated IPA per word, with ``ˈ`` before
+        each stressed syllable. An unknown ``contact`` raises ``ValueError``.
         """
-        if regional_dialect is not None:
-            warnings.warn(
-                "regional_dialect= is deprecated and ignored; select the "
-                "accent through lang= (e.g. lang='pt-PT-x-porto'). The accent "
-                "is encoded in the orthography2ipa lect spec.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        return _phonemize(sentence, lang, contact)
+        return phonemize(sentence, lang, contact)
 
     @staticmethod
     def force_accent(text: str, lect: str, mode: str = "ipa",
@@ -125,20 +83,7 @@ __all__ = [
     "RespellRule",
     "DEFAULT_RESPELL_RULES",
     "pipeline",
+    "revision",
     "__version__",
 ]
 
-
-if __name__ == "__main__":
-    ph = TugaPhonemizer()
-    sentences = [
-        "O gato dorme.",
-        "Tu falas português muito bem.",
-        "O comboio chegou à estação.",
-        "Vou pôr a manteiga no frigorífico.",
-    ]
-    for s in sentences:
-        print(s)
-        for code in ["pt-PT", "pt-PT-x-porto", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
-            print(f"{code} → {ph.phonemize_sentence(s, code)}")
-        print("######")

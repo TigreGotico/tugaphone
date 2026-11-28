@@ -1,4 +1,11 @@
 # API Reference
+<!-- agent-hint
+covers: the public classes and functions of tugaphone with their signatures and defaults
+source: tugaphone/__init__.py, tugaphone/accent.py, tugaphone/registry.py, tugaphone/number_utils.py
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/api.md
+see: quickstart.md, architecture.md
+-->
 
 Every public symbol, with the signatures and return shapes as they exist in the
 source.
@@ -8,17 +15,16 @@ source.
 The phonemizer entry class. It drives the orthography2ipa lattice, see
 [architecture.md](architecture.md).
 
-```python
+```text
 TugaPhonemizer()
 ```
 
 ### `phonemize_sentence`
 
-```python
+```text
 phonemize_sentence(sentence: str,
                    lang: str = "pt-PT",
-                   contact: str = "none",
-                   regional_dialect=None) -> str
+                   contact: str = "none") -> str
 ```
 
 Transcribes `sentence` to IPA for the target dialect through the orthography2ipa
@@ -37,10 +43,6 @@ every word as Portuguese, `"auto"` detects Spanish, French and English words,
 and `"es"`, `"fr"` or `"en"` forces one contact lattice. Any other value raises
 `ValueError`. See [codeswitch.md](codeswitch.md).
 
-`regional_dialect` is **deprecated and ignored**. The accent is selected
-entirely by `lang`, it is encoded in the orthography2ipa lect spec, not applied
-as a post-hoc transform. Passing it emits a `DeprecationWarning`.
-
 ```python
 from tugaphone import TugaPhonemizer
 
@@ -51,7 +53,7 @@ ph.phonemize_sentence("O vinho é bom.", "pt-PT-x-porto")  # 'u ˈbiɲu ˈjɛ ˈ
 
 ### `force_accent` (staticmethod)
 
-```python
+```text
 TugaPhonemizer.force_accent(text: str, lect: str, mode: str = "ipa",
                             base_lect: str = "pt-PT",
                             overlay: AccentOverlay | None = None) -> str
@@ -62,7 +64,7 @@ argument.
 
 ### `is_supported` (staticmethod)
 
-```python
+```text
 TugaPhonemizer.is_supported(lang: str) -> bool
 ```
 
@@ -85,13 +87,12 @@ is_supported("en-US")              # False
 
 ## `tugaphone.phonemize`
 
-```python
+```text
 phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str
 ```
 
 The function behind `TugaPhonemizer.phonemize_sentence`, with the same `lang`
-and `contact` arguments and the same return value. It takes no
-`regional_dialect` argument.
+and `contact` arguments and the same return value.
 
 ```python
 import tugaphone
@@ -106,7 +107,7 @@ root. See [accent_forcing.md](accent_forcing.md) for the guide.
 
 ### `force_accent`
 
-```python
+```text
 force_accent(text: str, lect: str, mode: str = "ipa",
              base_lect: str = "pt-PT",
              overlay: AccentOverlay | None = None,
@@ -121,7 +122,7 @@ Any other `mode` raises `ValueError`.
 
 ### `respell` / `respell_word`
 
-```python
+```text
 respell(text: str, target_lect: str, base_lect: str = "pt-PT", rules=…) -> str
 respell_word(word: str, target_lect: str, base_lect: str = "pt-PT", rules=…) -> str
 ```
@@ -141,7 +142,7 @@ shareable.
 
 ## `tugaphone.pipeline`
 
-```python
+```text
 pipeline(lect: str) -> orthography2ipa.Pipeline
 ```
 
@@ -153,13 +154,13 @@ output as `phonemize(text, lect)`, and `phonemize` builds its engine from this
 function.
 
 The function covers `contact="none"` only. With `contact="auto"`, `phonemize`
-sends contact words through the `es-ES`, `fr-FR` or `en-US` lattice, and one
+sends contact words through the `es-ES`, `fr-FR` or `en-GB` lattice, and one
 `Pipeline` cannot express that.
 
 `lect` must be a code of `list_dialects()`. Any other code raises `ValueError`.
 tugaphone and orthography2ipa resolve a loose tag differently: `resolve_lect("br")`
 gives `pt-PT`, and orthography2ipa resolves `br` to Breton. Resolve the tag with
-`resolve_lect` and pass the result to both. Each call returns a new `Pipeline`,
+`resolve_lect` and pass the result to both. Each call returns a separate `Pipeline`,
 because the lexicon is a mutable dict.
 
 ```python
@@ -168,7 +169,46 @@ import tugaphone
 
 lect = tugaphone.resolve_lect("pt_pt")
 engine = G2P(lect, pipeline=tugaphone.pipeline(lect))
-engine.transcribe("Tenho 3 gatos.")   # same as tugaphone.phonemize("Tenho 3 gatos.", lect)
+engine.transcribe("Tenho 3 gatos.")
+# 'ˈteɲu ˈtɾeʒ ˈɡatuʃ'
+```
+
+The result equals `tugaphone.phonemize("Tenho 3 gatos.", lect)`.
+
+A program that already drives `orthography2ipa.G2P` gets tugaphone's output the
+same way for any lect:
+
+```python
+from orthography2ipa import G2P
+import tugaphone
+
+engine = G2P("pt-BR", pipeline=tugaphone.pipeline("pt-BR"))
+print(engine.transcribe("o gato dorme"))
+# u ˈɡatu ˈdoɾmi
+```
+
+## `tugaphone.revision`
+
+```text
+revision(lang: str = "pt-PT") -> str
+```
+
+Returns `tugaphone==<version>` first, then `<Name>==<version>` for each installed
+distribution in the `Requires-Dist` of tugaphone. The dependencies are sorted by
+canonical name and joined with `;`. Each name is spelled as the metadata of the
+distribution spells it. A new release of any of them, also one that changes only
+the code of orthography2ipa, changes the revision. A voice can record the revision
+of the lect it was trained on and compare it at load time.
+
+A dependency that is not installed, or that an extra or a false environment
+marker excludes, is left out. The value is the same for every `lang`, and the
+call does not import `phonemize` or run a subprocess.
+
+```python
+import tugaphone
+
+revision = tugaphone.revision("pt-PT")
+print(revision.split(";")[0].split("==")[0])   # tugaphone
 ```
 
 ## `tugaphone.registry`
@@ -178,93 +218,112 @@ are re-exported from the package root.
 
 | Symbol | Role |
 |--------|------|
-| `resolve_lect(lang="pt-PT")` | Resolve any BCP-47 code (case-insensitive, alias-aware) to the orthography2ipa lect code that answers for it, unresolved codes fall back to the parent tag, then `pt-PT`. |
+| `resolve_lect(lang="pt-PT")` | Resolve any BCP-47 code (case-insensitive, alias-aware) to the orthography2ipa lect code that answers for it, an unresolved code takes the nearest lect, then `pt-PT`. |
 | `list_dialects()` | Sorted list of every reachable lect code (the Portuguese-family orthography2ipa specs). |
 | `is_supported(lang)` | Whether `lang` names a lect, itself or through an alias. See [`is_supported`](#is_supported-staticmethod). |
 | `default_contact(lect)` | The contact language that `contact="auto"` gives an unclassified word: `"es"` for `pt-UY`, `"en"` for every other lect. |
 | `PACKAGED_LEXICON_LECTS` | The lects that take a packaged orthography2ipa lexicon: `pt-PT` and `pt-BR`. |
-| `lexicon_region(lect)` | **Deprecated**, returns `None`: no lect takes a `tugalex` region map. Emits a `DeprecationWarning` that names the removal release. |
-| `normalize_dialect_code(lang)` | BCP-47 case normalization (`PT-pt-X-PORTO` → `pt-PT-x-porto`). |
-| `resolve_dialect(lang)` | **Deprecated** alias for `resolve_lect`, emits a `DeprecationWarning`. |
-| `get_dialect_inventory(lang="pt-PT")` | **Deprecated**, returns the `tugaphone.dialects` inventory of the nearest national standard. Emits a `DeprecationWarning` and goes in tugaphone 2.0.0. |
 
 ```python
 from tugaphone import resolve_lect, list_dialects
 
-resolve_lect("pt-PT-x-lisboa")   # 'pt-PT-x-lisbon'  (alias)
+resolve_lect("pt-PT-x-lisboa")   # 'pt-PT-x-lisbon'
 "pt-BR-x-sp" in list_dialects()  # True
+```
+
+`pt-PT-x-lisboa` is an alias of `pt-PT-x-lisbon`.
+
+## `tugaphone.lattice_core.normalize_spelling`
+
+```text
+normalize_spelling(text: str, lect: str) -> str
+```
+
+The spelling step, the first part of the `expand` step of the pipeline. It
+rewrites the old spellings of `text` in the AO1990 norm of `lect` with
+desacordo_ortografico: `ao1990-br` for the Brazilian lects and `pt-UY`,
+`ao1990-pt` for every other lect. Pass a code of `list_dialects()`: a loose tag
+such as `"pt"` raises `ValueError`, so resolve it with `resolve_lect` first. Most
+text that is already in the AO1990 spelling stays as written.
+[text_normalization.md](text_normalization.md#old-spellings) lists the changes
+it makes to modern text, such as *ideia* → *idéia* for the Brazilian lects.
+
+```python
+from tugaphone.lattice_core import normalize_spelling
+normalize_spelling("A acção da pharmacia foi rápida.", "pt-PT")   # 'A ação da farmácia foi rápida.'
+normalize_spelling("Tive uma ideia.", "pt-BR")                    # 'Tive uma idéia.'
 ```
 
 ## `tugaphone.number_utils`
 
 ### `normalize_numbers`
 
-```python
+```text
 normalize_numbers(text: str, lang: str = "pt-PT", strict: bool = True,
                   scale: str | None = None) -> str
 ```
 
-Replaces numeric tokens in a sentence with their Portuguese written form,
-inferring gender and ordinality from the surrounding words. `pt-PT` uses the
-long scale (biliões), `pt-BR` the short scale (trilhões), and `scale="long"` or
-`scale="short"` overrides that choice. With `strict=False`, tokens that fail to
-format are left untouched instead of raising. This runs
-inside the engine's `expand` step before the lattice sees the text.
+Reads the numbers, dates, clock times, money, measures and abbreviations of
+`text` with text2spoken, in the variety of `lang`, and reads the forms that
+text2spoken leaves as written with the
+[fallback rewrites](text_normalization.md#fallback-rewrites). The rest of the
+text stays as written. `pt-PT` uses the long scale (biliões) and `pt-BR` the
+short scale (trilhões); `scale="long"` or `scale="short"` overrides the scale.
+A form that is still unread stays as written, and a form with digits gives an
+`UnreadFormWarning`. With `strict=True`, the default, an error in text2spoken
+raises; with `strict=False`, `text` comes back as written. See
+[numbers.md](numbers.md).
 
 ```python
 from tugaphone.number_utils import normalize_numbers
-normalize_numbers("vou comprar 1 casa")    # 'vou comprar uma casa'
-normalize_numbers("vou adotar 1 cão")      # 'vou adotar um cão'
-normalize_numbers("comprei 2 casas")       # 'comprei duas casas'
+normalize_numbers("vou comprar 1 casa")                  # 'vou comprar uma casa'
+normalize_numbers("Nasceu a 25/12/2023.")                # 'Nasceu a vinte e cinco de dezembro de dois mil e vinte e três.'
+normalize_numbers("A reunião é às 19h30.", "pt-BR")      # 'A reunião é às dezenove horas e trinta minutos.'
 ```
 
-### `NumberParser`
+### `text2spoken_tag`
 
-A classmethod-based helper underneath `normalize_numbers`. Useful when you need
-finer control or want to interrogate a single token.
+```text
+text2spoken_tag(lang: str) -> str
+```
 
-| Method | Returns |
-|--------|---------|
-| `pronounce_number_word(word, prev_word=None, next_word=None, gender=None, as_ordinal=None, is_brazilian=False, scale=None)` | Spelled-out form of one numeric token. |
-| `to_int(word)` / `is_int(word)` | Integer value (ordinal markers stripped) / membership test. |
-| `to_float(word)` / `is_float(word)` | Float value / membership test. |
-| `is_decimal(word)` | `True` for a non-scientific decimal like `"10,4"`. |
-| `is_scientific_notation(word)` | `True` for forms like `"1.5e10"`. |
-| `pronounce_scientific(word, is_brazilian=False, scale=None)` | Spoken form of scientific notation. |
-| `is_ordinal(word, next_word=None)` | Detects `º`/`ª` markers, attached or separate. |
-| `get_number_gender(word, prev_word=None, next_word=None)` | `"feminine"` or `"masculine"`. |
+The text2spoken variety that a lect reads: `"pt-PT"` for the lects of the
+`ao1990-pt` spelling norm and `"pt-BR"` for the lects of `ao1990-br`.
 
 ```python
-from tugaphone.number_utils import NumberParser
-NumberParser.pronounce_number_word("19", is_brazilian=True)                    # 'dezenove'
-NumberParser.pronounce_number_word("19", is_brazilian=False)                   # 'dezanove'
-NumberParser.pronounce_number_word("1", as_ordinal=True, gender="masculine")   # 'primeiro'
-NumberParser.get_number_gender("1", next_word="casa")                          # 'feminine'
+from tugaphone.number_utils import text2spoken_tag
+text2spoken_tag("pt-AO")   # 'pt-PT'
+text2spoken_tag("pt-UY")   # 'pt-BR'
 ```
 
-## `tugaphone.tokenizer` and `tugaphone.dialects`
+## `tugaphone.text_normalization`
 
-**Deprecated.** Both modules and `tugaphone.registry.get_dialect_inventory`
-emit a `DeprecationWarning` and go in tugaphone 2.0.0. The phonemization path
-does not use them.
+### `normalize_text`
 
-These modules are the token-tree **feature** API and the rules-only benchmark
-baseline. They are not the phonemization path, `phonemize_sentence` runs on the
-orthography2ipa lattice and never routes through them. Use them to inspect
-manner, place, voicing, vowel height, syllable roles and CV skeletons. See
-[tokenizer.md](tokenizer.md) for the full model, the public surface is:
+```text
+normalize_text(text: str, lang: str = "pt-PT") -> str
+```
 
-| Symbol | Role |
-|--------|------|
-| `Sentence(surface, words=[], dialect=EuropeanPortuguese())` | Top-level container, `.ipa`, `.words`, `.n_words`, `.features`. |
-| `WordToken` | `.surface`, `.syllables`, `.n_syllables`, `.graphemes`, `.stressed_syllable_idx`, `.ipa`, `.features`, phonological summaries `.stress_pattern`, `.syllable_structure_pattern`, `.phoneme_count`, `.vowel_sequence`, `.consonant_sequence`, `.has_diphthongs`, `.has_nasal_sounds`, `.has_palatal_sounds`, `.has_consonant_clusters`, `.is_homograph`, `.is_irregular`. |
-| `GraphemeToken` | `.surface`, `.ipa`, `.is_diphthong`, `.is_nasal`, `.is_digraph`, `.features`, syllable features `.syllable_position`, `.phonological_weight`, `.has_complex_onset`, `.is_palatal`, `.triggers_palatalization`, `.is_vowel_grapheme`/`.is_consonant_grapheme`. |
-| `CharToken` | character-level predicates (`.is_vowel`, `.is_consonant`, `.ipa`, ...), articulatory features `.manner_of_articulation`, `.place_of_articulation`, `.voicing`, `.vowel_height`/`.vowel_backness`/`.vowel_roundedness`, syllable role `.is_nucleus`/`.is_onset`/`.is_coda`. |
+The words a speaker of `lang` says for `text`: the `expand` step of the
+pipeline after the spelling step. It expands abbreviations, acronyms and
+letter-digit codes, then reads the numbers as `normalize_numbers` does, then
+reads the Roman numerals that text2spoken leaves. See
+[text_normalization.md](text_normalization.md).
 
-`tugaphone.dialects` supplies the `DialectInventory` subclasses those tokens
-read (`EuropeanPortuguese`, `BrazilianPortuguese`, `AngolanPortuguese`,
-`MozambicanPortuguese`, `TimoresePortuguese`, and city inventories) plus the
-module-level `LEXICON` (`TugaLexicon()`) instance.
+```python
+from tugaphone.text_normalization import normalize_text
+normalize_text("O Sr. presidente pagou 20%.")   # 'O Senhor presidente pagou vinte por cento.'
+```
+
+### The rewrites
+
+`normalize_orthography(text, lang="pt-PT")` runs the rewrites of tugaphone 1.7
+and leaves the digits for `normalize_numbers`. Each rewrite is public:
+`separate_unit_symbols`, `split_number_ranges`, `expand_clock_times`,
+`normalize_number_separators`, `expand_abbreviations`,
+`expand_regnal_numerals(text, lang)`, `expand_acronyms` and
+`expand_letter_digit_codes(text, lang)`. See
+[text_normalization.md](text_normalization.md) for each one.
 
 ## Where next
 
@@ -272,8 +331,6 @@ module-level `LEXICON` (`TugaLexicon()`) instance.
 - [dialects.md](dialects.md), the lect codes and aliases
 - [homographs.md](homographs.md), meaning-based disambiguation
 - [numbers.md](numbers.md), number normalization and gender agreement
-- [tokenizer.md](tokenizer.md), the token tree and feature extraction
-
 
 ---
-[← Text normalization](text_normalization.md) · [Home](../README.md) · [Tokenizer →](tokenizer.md)
+[← Text normalization](text_normalization.md) · [Home](index.md) · [Advanced →](advanced.md)

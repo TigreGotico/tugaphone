@@ -1,11 +1,20 @@
 # Benchmarking
+<!-- agent-hint
+covers: how tugaphone measures accuracy and which scripts run each benchmark
+source: scripts/tts_gold_benchmark.py, scripts/pt_br_gold_benchmark.py, scripts/benchmark.py, scripts/check_benchmark_regression.py
+generated: no
+verify: for s in tts_gold_benchmark pt_br_gold_benchmark benchmark check_benchmark_regression; do test -f scripts/$s.py || exit 1; done; grep -oE -- '--[a-z][a-z-]+' docs/benchmarking.md | sort -u | while read f; do grep -q -- "$f" scripts/*.py || { echo "unknown flag $f"; exit 1; }; done
+see: scoreboard.md, architecture.md
+-->
 
 tugaphone is measured against two golds, one per path. The
 **phonemization pipeline**, a dialect selected by its lect code, driving the
 orthography2ipa lattice, is scored sentence-level against orthography2ipa's TTS
-gold. The **rules-only grapheme cascade** (the benchmark baseline, not the
-pipeline) is scored word-level against the unified pronunciation gold, those
-numbers live in [scoreboard.md](scoreboard.md).
+gold. The same pipeline with its packaged lexicon emptied, **rules-only**, is
+scored word-level against the unified pronunciation lexicon. Only pt-PT and
+pt-BR have human gold there. The other six dialects score against Portal LUPo
+machine output, so their number is agreement with a machine reference, not an
+error rate. Those numbers are in [scoreboard.md](scoreboard.md).
 
 ## Pipeline: the TTS-gold harness
 
@@ -68,7 +77,7 @@ O2I_ROOT=/path/to/orthography2ipa python scripts/pt_br_gold_benchmark.py \
     --alib-bahia alib-bahia-coda-s.tsv --lects pt-BR pt-BR-x-sp
 ```
 
-PER folds the notation of a source into the spec's symbols: [ɪ ʊ ə] and the
+This script folds the notation of a source into the spec's symbols: [ɪ ʊ ə] and the
 fricative rhotics. It folds nothing else, so a `pt-BR-x-sp` row pays for the tap
 and the dropped infinitive ⟨r⟩ that the spec writes and the NILC file does not.
 
@@ -93,8 +102,10 @@ against `pt-BR`.
 
 ## Rules-only baseline
 
-The sections below measure the grapheme cascade in `tugaphone.tokenizer` /
-`tugaphone.dialects`, the rules-only baseline, not the lattice pipeline, against the unified pronunciation lexicon gold.
+The sections below measure the phonemization pipeline with its packaged lexicon
+emptied against the unified pronunciation lexicon. A benchmark code that
+is not a tugaphone lect goes through `resolve_lect` (`pt-BR-x-sao-paulo` is
+`pt-BR-x-sp`, `pt-BR-x-rio-janeiro` is `pt-BR-x-rj`).
 
 ## Gold source
 
@@ -108,30 +119,37 @@ and a narrow phonetic (`ipa_narrow`) transcription.
 The harness scores **`ipa_narrow`**, it matches tugaphone's
 transcription depth (explicit [ɐ ɨ ɾ ʀ ɫ]).
 
-One gold region is scored per registered dialect code:
+One reference region is scored per registered dialect code. The reference
+kind (`reference_kind` in `benchmarks/results.json`) tells the source of its
+rows:
 
-| Dialect code | Gold region |
-|---|---|
-| pt-PT | pt-PT |
-| pt-PT-x-lisbon | pt-PT-x-lisboa |
-| pt-BR | pt-BR |
-| pt-BR-x-sao-paulo | pt-BR-x-saopaulo |
-| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro |
-| pt-AO | pt-AO |
-| pt-MZ | pt-MZ-x-maputo |
-| pt-TL | pt-TL-x-dili |
+- `human`: Infopédia, Wiktionary or Michaelis rows. The score is PER against
+  human gold.
+- `portal_lupo`: Portal da Língua Portuguesa rows. The Portal makes these rows
+  with its rule-based LUPo generator. The score is the disagreement rate with a
+  machine reference. A disagreement is not always a tugaphone error.
+
+| Dialect code | Reference region | Reference kind |
+|---|---|---|
+| pt-PT | pt-PT | human |
+| pt-PT-x-lisbon | pt-PT-x-lisboa | portal_lupo |
+| pt-BR | pt-BR | human |
+| pt-BR-x-sao-paulo | pt-BR-x-saopaulo | portal_lupo |
+| pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | portal_lupo |
+| pt-AO | pt-AO | portal_lupo |
+| pt-MZ | pt-MZ-x-maputo | portal_lupo |
+| pt-TL | pt-TL-x-dili | portal_lupo |
 
 ## Rules-only mode, and why it is non-circular
 
-tugaphone ships a lexicon (tugalex) built from the same sources as the
-gold. Scoring the normal lookup-first path would therefore measure
-*lexicon coverage*, a word found in the lexicon scores perfectly by
-construction, and say nothing about the grapheme rules that handle
-every out-of-vocabulary word.
+A lexicon built from the same sources as the gold would make a
+lookup-first score measure *lexicon coverage*: a word found in the
+lexicon scores perfectly by construction, and the score says nothing
+about the grapheme rules that handle every out-of-vocabulary word.
 
-The harness instead empties the lexicon exception table
-(`DialectInventory.IRREGULAR_WORDS = {}`) before scoring, so **every**
-gold word takes the rule path. The number is then a per-word honest
+The harness empties the lexicon of a copy of the lect's
+`tugaphone.lattice_core.pipeline`, so **every** gold word takes the
+orthography2ipa rule path. The shipped pipeline keeps its lexicon. The number is then a per-word honest
 measurement: the rules never saw the answer.
 
 ## Offline fixtures
@@ -148,13 +166,103 @@ python scripts/benchmark.py --refresh-fixtures
 
 ## Scoring
 
-Both sides are normalized identically, NFC, stress marks and
-syllable/tie joiners removed, whitespace collapsed, then a
-character-level edit distance is taken against the **closest** attested
-variant of the word (a word with several valid pronunciations is not
-penalised for the variants it did not choose). Reported per dialect:
+Both sides go through one segment rule, the rule of the shared phonemizer PER
+board. The text is NFD. The ligatures ⟨ʧ ʤ ʦ ʣ⟩ become the tied forms. Stress
+marks, syllable dots, joiners and spaces are removed. A segment is one base
+symbol with its combining marks and modifier letters ⟨ʰ ʲ ʷ ˠ ˤ ː ˑ⟩, and a tie
+bar joins the next base symbol into the same segment, so [t͡ʃ] is one segment.
 
-- **PER**: summed edit distance divided by summed reference length.
+Before the segment rule, a notation fold maps a symbol to the one that a source
+calls the same phone. Phone PER uses only these folds:
+
+| written | scored as | source |
+|---|---|---|
+| ⟨ə⟩ | ⟨ɨ⟩ in the Infopédia rows of pt-PT | Cruz-Ferreira (1999), *Handbook of the IPA* p. 127: the vowel "is often represented as /ə/" |
+| ⟨r⟩ | ⟨ɾ⟩ in the Infopédia rows of pt-PT | Infopédia's own readings: caro ˈkaru against carro ˈkaʀu, and ⟨r⟩ in a tap position in 28,162 of 28,183 words (`portuguese-unified-pronunciation-lexicon@23898e1`, `ipa_narrow`) |
+| ⟨ã⟩ | ⟨ɐ̃⟩ | Cruz-Ferreira (1999: 127) and Barbosa & Albano (2004), JIPA 34(2) p. 229 write the low nasal vowel ⟨ɐ̃⟩ |
+| ⟨tʃ dʒ⟩ | ⟨t͡ʃ d͡ʒ⟩ | the same affricate without its tie bar |
+| ⟨ⁿ ( ) '⟩ | removed | markup for optional segments and ASCII stress |
+
+Phoneme PER adds the merge of the phones of one rhotic phoneme:
+
+| written | scored as | source |
+|---|---|---|
+| ⟨χ ʀ⟩ | ⟨ʁ⟩ | Pereira (2020), *R-forte do português europeu*: the trill [ʀ] and the uvular and velar fricatives are variants of one /ʀ/ |
+| ⟨ɹ⟩ | ⟨ɾ⟩ | Barbosa & Albano (2004: 228): the pt-BR /R/ "is extremely variable" |
+
+| ⟨ɪ ʊ⟩ | ⟨i u⟩ in the Wiktionary and Michaelis rows of pt-BR | the rows' own usage: in pt-BR rows from Wiktionary only (single words with no ⟨á é í ó ú â ê ô⟩ in the last three letters, ⟨-e⟩ not after ⟨e i u⟩ and ⟨-o⟩ not after ⟨o i u⟩), Wiktionary writes final unstressed ⟨-e⟩ as [i] 258 times and [ɪ] 44 times, and ⟨-o⟩ as [u] 606 times and [ʊ] 139 times; Michaelis writes [ɪ ʊ] in 0 of 20,580 rows (`portuguese-unified-pronunciation-lexicon@23898e1`, `ipa_narrow`) |
+
+A fold applies by the source of the gold row, which the third column of each
+fixture names. A row that several sources attest takes the folds of all of
+them. A fold needs evidence that its source writes the two symbols for one
+sound. Barbosa & Albano (2004: 229) plot [ʊ ɪ] apart from [u i], so no source
+without such evidence folds them. No fold maps pt-BR ⟨ə⟩ to [ɐ]. The pt-BR
+Wiktionary rows write the glide after a nasal vowel with and without the tilde
+([ɐ̃w̃] 23 times, [ɐ̃w] 10 times), and BP has no oral glide there (Barbosa &
+Albano 2004: 230), so [w̃ j̃] after a nasal vowel folds to [w j]. The pt-AO, pt-MZ and pt-TL Portal rows write the trill as ⟨r⟩ beside the tap
+⟨ɾ⟩, so its ⟨r⟩ does not fold.
+Barbosa & Albano (2004: 229) plot [ʊ ɪ] apart from [u i], and no source found
+calls the other pairs one phone. Each word scores against its **closest**
+attested variant, so a word with several valid pronunciations is not penalised
+for the variants it did not choose. Reported per dialect:
+
+- **PER** (`per`): phone PER, the summed segment edits divided by the summed
+  gold segments. Each report gives it beside the accepted PER.
+- **phoneme PER** (`per_phoneme`): the same sum with the rhotic merge.
+- **PER, variants accepted** (`per_accepted`, pt-PT and pt-BR dialects): the
+  same PER, with cited optional processes scored as one reading on both sides.
+  The pt frontend gate uses this number. A voice learns phones, and each
+  process here is a variation of the phones that a speaker can make either way.
+  For the European dialects there are three. First, [iʃ], [ɨʃ] and [ʃ] scored as one reading of a word-initial
+  ⟨es⟩ + consonant on both sides. This is a variant of the sound, not of the
+  notation, so the plain PER keeps it as an error. Vázquez Diéguez (2015,
+  *Anuario de Estudios Filológicos* 38) gives "esc- [(i)ʃk]" and "est- [(i)ʃt]"
+  on p. 250 and "Na sequência <es- + consoante> pode desaparecer" on p. 265.
+  Teyssier (1989: 28), quoted in Vázquez Diéguez (2015: 244), writes estar [(i)ʃ'tar]. A stressed ⟨e⟩ (este), a
+  double ⟨ss⟩ (essência) and initial ⟨ex⟩ stay outside the step.
+  Second, an unstressed [i ɨ u] before a vowel scores as the glide [j w] on
+  both sides: afeável [ɐfɨˈavɛɫ] for [ɐˈfjavɛɫ]. Mateus & Andrade (1998,
+  *D.E.L.T.A.* 14(1), §1.3) give the glide in casual speech, "in casual speech
+  glides may be followed by any vowel", and the vowel in careful speech; §1.5
+  gives passear pas[i]ar / pas[j]ar. Cruz-Ferreira (1999: 128) names /ɨ/:
+  "the first vowel is an unstressed /ɨ/ or /u/ [...] the first vowel may lose
+  its syllabicity", real /ʁɨ'al/. A stressed vowel (dia [ˈdiɐ]) stays a vowel.
+  Third, each phone of the strong R ([ʀ χ x]) scores as [ʁ]. Pereira (2020,
+  *O R-forte em Português Europeu*, p. iii) records "[ʁ, ʀ, r, χ, x, ɹ̝, ʁ̞, ʀ̝,
+  ɦ], por ordem decrescente de frequência" in the Lisbon sub-region. The
+  alveolar trill [r] is the tap in the Infopédia folds, so it stays outside the
+  step.
+
+  A fixture row that holds several Infopédia readings joined by a comma
+  (abadejo [ɐbɐˈdɐʒu,ɐbɐˈdeʒu]) scores as one variant for each reading.
+
+  For the Brazilian dialects there are nine:
+
+  | Process | Accepted reading | Source |
+  |---|---|---|
+  | Unstressed ⟨a⟩ | A pretonic oral [ɐ] not before [m n ɲ] is [a], and a final unstressed [a ə] is [ɐ]: acontece [akõˈtesi] for [ɐkõˈtesi], célula [ˈsɛlulɐ] for [ˈsɛlulə]. | Barbosa & Albano (2004: 229): before the stress, "[i e a o u ĩ ẽ ɐ̃ õ ũ]". The Wiktionary rows write the pretonic ⟨a⟩ [a] 431 times and [ɐ] 62 times, and the final ⟨a⟩ [ɐ] 227 times, [a] 19 times and [ə] 10 times. |
+  | Nasal onset | A stressed vowel before [m n ɲ] + vowel, and any vowel before [ɲ], is oral: cimo [ˈsimu] for [ˈsĩmu]. | Barbosa & Albano (2004: 229): nasalised allophones "in stressed position before the archiphoneme /N/ [...] as well as before heterosyllabic nasal consonants"; before the stress, before /N/ or /ɲ/. The Wiktionary rows write the stressed case nasal 55 times and oral 35 times. |
+  | Coda /S/ | A coda [ʃ ʒ] is [s z]: cesta [ˈsestɐ] for [ˈseʃtɐ]. | Barbosa & Albano (2004: 229), São Paulo: /S/ "surfaces either as a voiced or as a voiceless alveolar fricative". Brito (2016, *Cadernos de Estudos Linguísticos* 58(1): 141), Rio: "usually pronounced as the post-alveolar sounds [ʃ] and [ʒ]". |
+  | Word-final /R/ | In a word that ends in ⟨r⟩, a final rhotic and no rhotic are one reading: comprar [kõˈpɾa] for [kõˈpɾaɾ], lagar. | Barbosa & Albano (2004: 228): "In infinitives, however, this sound usually drops word-finally". Callou, Moraes & Leite (1998, *DELTA* 14: 67, Tabela 1): in Rio the drop is 73% to 82% in verbs and 32% to 39% in non-verbs. |
+  | Coda /R/ | Each rhotic before a consonant or at the word end is [ɾ]. | Barbosa & Albano (2004: 228): /R/ "is extremely variable in BP". Cristófaro Silva (2025, *Caligrama* 30(3): 246): coda /R/ "reflete a neutralização do contraste entre o R-forte e o r-fraco, podendo se manifestar como um tepe, fricativas posteriores ou aproximantes retroflexas". Gregio (2012, *Intercâmbio* 26: 81): fricatives in Rio, Belo Horizonte and the Northeast, the tap in São Paulo and Porto Alegre, the retroflex in the interior. Callou, Moraes & Leite (1998, *DELTA* 14: 62–63): in Rio the range goes from a trill to a fricative and to deletion. |
+  | Strong R | Each of [ʀ χ x h] is [ʁ]. | Barbosa & Albano (2004: 228): /r/ "varies considerably across the Brazilian territory"; a velar fricative that "can nevertheless be realised as a glottal fricative". |
+  | Glide before a vowel | An unstressed [i ɨ u] before a vowel is [j w], as for European Portuguese. | Barbosa & Albano (2004: 230): "In casual and fast speech, adjacent heterosyllabic vowels usually turn into diphthongs". |
+  | Epenthesis | No [i] between the two consonants of a written obstruent cluster: cacto [ˈkaktu] for [ˈkakitu], advogado [advoˈɡadu] for [ad͡ʒivoˈɡadu]. | Collischonn (2004, *SIGNUM* 7(1): 64): presence or absence of the vowel is the dependent variable; 69% before the stress and 24% after it (p. 67). |
+  | Glide before /S/ | No [j] after a written ⟨a e o⟩ of a final stressed syllable before ⟨s z⟩: escocês [eskoˈses] for [eskoˈsejs], três, arroz. | Leiria (*Organon* 28: 133): the glide in 41% of 1,725 contexts; hypothesis 3 (p. 134): "a ditongação é uma regra variável". The source has no unstressed data, so lápis, Pérez and the clitics nos and dos stay outside the step. |
+
+  The epenthesis step reads the spelling, so a written vowel (Guiné, bidê)
+  stays. A written ⟨i⟩ or diphthong before the final ⟨s z⟩ (raiz, pais) is not
+  the inserted glide, so it stays too. The step applies to every pt-BR
+  dialect. The sources of the last two processes give rates for southern
+  varieties only (VARSUL: Porto Alegre, Florianópolis, Curitiba).
+
+  `ACCEPTED_PROCESSES` in `scripts/benchmark.py` names each process, its
+  lects and its sources. For each dialect, `accepted_edits` in
+  `benchmarks/results.json` gives the edits that each process absorbs: the
+  accepted edits with that one process off, minus the accepted edits with all
+  processes on. The scoreboard prints this ledger. A process that absorbs
+  many edits moves the metric toward the system output, so a reviewer checks
+  its source first.
 - **word accuracy**: exact matches after normalization.
 - **stress accuracy** (`stress_acc`, with its word count `n_stress`): the share
   of stress-eligible gold words whose primary stress lands on the gold's
@@ -202,9 +310,9 @@ a segment error, and PER already counts it.
 the committed fixtures and compares against the committed baseline
 (`benchmarks/results.json`), failing CI when any dialect's PER rises or
 its stress accuracy falls by more than 0.005 absolute. A dialect whose
-baseline has a stress accuracy and whose new score has none also fails.
+baseline has a stress accuracy and whose rescored row has none also fails.
 Improvements never fail, commit the
-regenerated baseline with the improving change so the new level becomes
+regenerated baseline with the improving change so the improved level becomes
 the floor. The gate fails closed when fewer rows than registered
 dialects are scored, so a broken fixture cannot produce a silent green.
 
@@ -213,6 +321,5 @@ python scripts/benchmark.py                    # rescore + rewrite reports
 python scripts/check_benchmark_regression.py   # gate
 ```
 
-
 ---
-[← Advanced](advanced.md) · [Home](../README.md) · [Scoreboard →](scoreboard.md)
+[← Development](development.md) · [Home](index.md) · [Scoreboard →](scoreboard.md)

@@ -8,7 +8,7 @@ import textwrap
 import o2i_lexicons
 import pytest
 from orthography2ipa import G2P, clear_lexicons, register_lexicon
-from orthography2ipa.lexicon import parse_lexicon_text
+from orthography2ipa import parse_lexicon_text
 
 from tugaphone import lattice_core, list_dialects, phonemize
 
@@ -34,7 +34,7 @@ def test_a_packaged_entry_reaches_the_pt_pt_output(word):
 
 
 @pytest.mark.parametrize("lect, kind, word", [
-    ("pt-PT", "exception", "táxi"),      # ⟨x⟩ as [ks]: the spelling cannot show it
+    ("pt-PT", "exception", "alvíxaras"), # ⟨x⟩ as [s]: the spelling cannot show it
     ("pt-PT", "patch", "indemnizar"),    # a rule could reach it
     ("pt-BR", "exception", "foto"),      # the height of a stressed mid vowel
     ("pt-BR", "patch", "joga"),          # the stem vowel of a rhizotonic verb form
@@ -52,10 +52,31 @@ def test_a_packaged_entry_reaches_the_pt_br_output():
     assert phonemize("táxi", "pt-BR") == "ˈtaksi"
 
 
+# VOP lemma 56027: "fractura - nome feminino ... Brasil ... variante AO de : fratura". The
+# pt-PT lexicon keys fractura, fracturamento and fracturar are pre-AO1990 spellings, so the
+# spelling step reads them as fratura, fraturamento and fraturar before the lexicon.
+PRE_AO1990_KEYS = {"pt-PT": {"fractura": "fratura", "fracturamento": "fraturamento",
+                             "fracturar": "fraturar"}, "pt-BR": {}}
+
+
 @pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
 def test_every_entry_reaches_the_output(lect):
-    entries = packaged(lect)
+    entries = {word: ipa for word, ipa in packaged(lect).items()
+               if word not in PRE_AO1990_KEYS[lect]}
     assert {word: phonemize(word, lect) for word in entries} == entries
+
+
+def test_a_word_bifonia_marks_reaches_its_lexicon_entry():
+    # bifonia adds a trema to «equitativo» before the lexicon step.
+    assert phonemize("equitativo", "pt-PT") == packaged("pt-PT")["equitativo"]
+
+
+@pytest.mark.parametrize("lect", ["pt-PT", "pt-BR"])
+def test_a_pre_ao1990_key_reads_as_its_ao1990_form(lect):
+    rewritten = {word: lattice_core.normalize_spelling(word, lect) for word in packaged(lect)}
+    assert {word: new for word, new in rewritten.items() if new != word} == PRE_AO1990_KEYS[lect]
+    for old, new in PRE_AO1990_KEYS[lect].items():
+        assert phonemize(old, lect) == phonemize(new, lect)
 
 
 @pytest.mark.parametrize(
@@ -95,3 +116,20 @@ def test_a_plain_engine_stays_on_the_rules_in_a_fresh_process():
     assert (after_br, after_pt) == (rules_br, rules_pt)
     assert (lexicon_br, lexicon_pt) == (packaged("pt-BR")["táxi"], packaged("pt-PT")["basebol"])
     assert (rules_br, rules_pt) != (lexicon_br, lexicon_pt)
+
+
+# AO1990 Nota Explicativa 4.2 b): a mute c or p does not keep the vowel before it open
+# (corar, padeiro stay open with no consonant; accionar, actual reduce beside it), so the
+# vowel is lexical and comes from the o2i-lexicons entry. The readings are Infopédia's in the
+# spec's symbols: afetar ɐfɛˈtar, receção ʀəsɛˈsɐ̃w̃, respetivo ʀəʃpɛˈtivu. The spelling step
+# gives the pre-AO1990 spellings the same reading.
+@pytest.mark.parametrize("word, reading", [
+    ("afetar", "ɐfɛˈtaɾ"),
+    ("receção", "ʁɨsɛˈsɐ̃w̃"),
+    ("respetivo", "ʁɨʃpɛˈtivu"),
+    ("afectar", "ɐfɛˈtaɾ"),
+    ("recepção", "ʁɨsɛˈsɐ̃w̃"),
+    ("respectivo", "ʁɨʃpɛˈtivu"),
+])
+def test_the_vowel_before_a_dropped_c_or_p_reads_open(word, reading):
+    assert phonemize(word, "pt-PT") == reading

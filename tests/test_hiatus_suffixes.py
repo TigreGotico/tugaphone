@@ -19,31 +19,28 @@ turn the hiatus back into a diphthong.
 """
 import pytest
 
-from tugaphone.tokenizer import Sentence
-from tugaphone.registry import get_dialect_inventory
+import re
+import unicodedata
+
+from tugaphone import phonemize
+
+# A vowel, an optional stress mark, then [i] before [ɲ]: the [i] is a nucleus
+# of its own after another nucleus, so the two are in hiatus. The mark after
+# [i] is the later stress of a verb (embainhar ẽbɐiˈɲaɾ).
+HIATUS_BEFORE_NH = re.compile("[aɐeɛəɨioɔuʊ][\u0303]?[ˈˌ]?i[ˈˌ]?ɲ")
 
 
-def _rules_only(dialect_code="pt-PT"):
-    inv = get_dialect_inventory(dialect_code)
-    object.__setattr__(inv, "IRREGULAR_WORDS", {})
-    return inv
-
-
-@pytest.fixture(scope="module")
-def pt():
-    return _rules_only()
-
-
-def ipa(word, inv):
-    return Sentence(word, dialect=inv).ipa.strip()
+def ipa(word):
+    return phonemize(word, "pt-PT").strip()
 
 
 # Vowel + -inh-: the suffix vowel is a syllable of its own and carries
 # the stress.
 HIATUS_WORDS = [
     "rainha", "rainhas", "moinho", "moinhos", "campainha", "bainha",
-    "bainhas", "ladainha", "tainha", "sainha", "remoinho", "embainhar",
-    "amoinhar", "arruinhar", "cainho", "azoinha",
+    "bainhas", "ladainha", "tainha", "sainha", "remoinho",
+    "embainhar", "amoinhar", "arruinhar",
+    "cainho", "azoinha",
 ]
 
 # Controls: -inha/-inho after a consonant, and true diphthongs that
@@ -56,19 +53,15 @@ DIPHTHONG_CONTROLS = [
 
 
 @pytest.mark.parametrize("word", HIATUS_WORDS)
-def test_suffix_vowel_is_its_own_syllable(word, pt):
-    sent = Sentence(word, dialect=pt)
-    syllables = sent.words[0].syllables
-    assert "i" in syllables, (
-        f"{word}: expected a bare 'i' syllable (hiatus), got {syllables}")
+def test_suffix_vowel_is_its_own_syllable(word):
+    out = unicodedata.normalize("NFD", ipa(word))
+    assert HIATUS_BEFORE_NH.search(out), f"{word}: expected a hiatus before [ɲ], got {out}"
 
 
 @pytest.mark.parametrize("word", DIPHTHONG_CONTROLS)
-def test_controls_keep_their_syllabification(word, pt):
-    sent = Sentence(word, dialect=pt)
-    syllables = sent.words[0].syllables
-    assert "i" not in syllables, (
-        f"{word}: must not gain a hiatus break, got {syllables}")
+def test_controls_keep_their_syllabification(word):
+    out = unicodedata.normalize("NFD", ipa(word))
+    assert not HIATUS_BEFORE_NH.search(out), f"{word}: must not gain a hiatus break, got {out}"
 
 
 @pytest.mark.parametrize("word,expected", [
@@ -82,10 +75,11 @@ def test_controls_keep_their_syllabification(word, pt):
     ("vizinha", "vi·ˈzi·ɲɐ"),
     ("sozinho", "su·ˈzi·ɲu"),
     ("farinha", "fɐ·ˈɾi·ɲɐ"),
-    ("raia", "ˈʁɐj·ɐ"),
+    ("raia", "ˈʁaj·ɐ"),  # Infopédia ˈʀajɐ, with [a] (praia ˈprajɐ)
     ("moita", "ˈmoj·tɐ"),
 ])
-def test_european_portuguese_ipa(word, expected, pt):
-    assert ipa(word, pt) == expected
+def test_european_portuguese_ipa(word, expected):
+    """The expected forms carry syllable dots; the output carries none."""
+    assert ipa(word) == expected.replace("·", "")
 
 

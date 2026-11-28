@@ -5,26 +5,12 @@ by running the phonemizer.
 """
 
 import pytest
-from orthography2ipa import resolve
+from linguatag import lang_matches
+from orthography2ipa import available_codes, resolve
 
-from tugaphone.registry import (normalize_dialect_code, resolve_lect,
-                                resolve_dialect, PACKAGED_LEXICON_LECTS, lexicon_region,
-                                list_dialects,
-                                get_dialect_inventory)
-
-
-class TestNormalization:
-    def test_casing(self):
-        assert normalize_dialect_code("PT-pt-X-PORTO") == "pt-PT-x-porto"
-
-    def test_major(self):
-        assert normalize_dialect_code("pt-br") == "pt-BR"
-
-    def test_bare(self):
-        assert normalize_dialect_code("PT") == "pt"
-
-    def test_private_use_subtags_stay_lowercase(self):
-        assert normalize_dialect_code("pt-BR-X-SP") == "pt-BR-x-sp"
+from tugaphone.registry import (_OWN_ORTHOGRAPHY, resolve_lect,
+                                PACKAGED_LEXICON_LECTS,
+                                list_dialects)
 
 
 class TestResolution:
@@ -99,12 +85,6 @@ class TestPackagedLexiconLects:
         # A sub-lect would take its parent's forms over its own spec's phonology.
         assert PACKAGED_LEXICON_LECTS == {"pt-PT", "pt-BR"}
 
-    @pytest.mark.parametrize("lect", ["pt-PT", "pt-PT-x-lisbon", "pt-BR", "pt-TL"])
-    def test_lexicon_region_is_deprecated_and_names_no_region(self, lect):
-        from tugaphone.version import VERSION_MAJOR
-
-        with pytest.warns(DeprecationWarning, match=f"removed in tugaphone {VERSION_MAJOR + 1}.0.0"):
-            assert lexicon_region(lect) is None
 
 
 class TestListDialects:
@@ -117,9 +97,15 @@ class TestListDialects:
         # aliases are not canonical codes
         assert "pt" not in codes and "pt-PT-x-lisboa" not in codes
 
-    def test_resolve_dialect_deprecated(self):
-        with pytest.deprecated_call():
-            assert resolve_dialect("pt-BR") == "pt-BR"
+    def test_no_portuguese_family_spec_is_a_clade(self):
+        # The lect list keeps clade nodes because no Portuguese-family spec is
+        # one. A clade among them would surface as a dialect.
+        without_clades = sorted(
+            c for c in available_codes()
+            if lang_matches(c, "pt") and c not in _OWN_ORTHOGRAPHY
+        )
+        assert list_dialects() == without_clades
+
 
 
 @pytest.fixture(scope="module")
@@ -148,11 +134,6 @@ class TestPhonemizerIntegration:
         import unicodedata
         got = unicodedata.normalize("NFC", pho.phonemize_sentence(self.SENTENCE, code))
         assert got == unicodedata.normalize("NFC", expected)
-
-    def test_regional_dialect_kwarg_deprecated_and_ignored(self, pho):
-        with pytest.deprecated_call():
-            out = pho.phonemize_sentence("gato", "pt-PT", regional_dialect=object())
-        assert out == pho.phonemize_sentence("gato", "pt-PT")
 
     def test_unrecognised_tag_matches_default(self, pho):
         assert (pho.phonemize_sentence(self.SENTENCE, "pt-PT-x-nowhere")

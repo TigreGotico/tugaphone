@@ -17,22 +17,14 @@ import sys
 
 import pytest
 
-from tugaphone.registry import get_dialect_inventory
-from tugaphone.tokenizer import Sentence, is_grapheme_silent
+from tugaphone import phonemize
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 from benchmark import normalize, stress_hit  # noqa: E402
 
 
-@pytest.fixture(scope="module")
-def pt():
-    inv = get_dialect_inventory("pt-PT")
-    object.__setattr__(inv, "IRREGULAR_WORDS", {})
-    return inv
-
-
-def ipa(word, inv):
-    return Sentence(word, dialect=inv).ipa.strip()
+def ipa(word):
+    return phonemize(word, "pt-PT").strip()
 
 
 # word, Infopédia transcription, the consonant + u reading it requires
@@ -53,8 +45,8 @@ ROWS = [
 
 
 @pytest.mark.parametrize("word,gold,onset", ROWS)
-def test_u_after_q_g(word, gold, onset, pt):
-    out = normalize(ipa(word, pt))
+def test_u_after_q_g(word, gold, onset):
+    out = normalize(ipa(word))
     at = out.index(onset[0])
     if onset.endswith("w"):
         assert out[at:at + 2] == onset, out
@@ -63,9 +55,9 @@ def test_u_after_q_g(word, gold, onset, pt):
 
 
 @pytest.mark.parametrize("word,gold,onset", ROWS)
-def test_stress_on_the_gold_syllable(word, gold, onset, pt):
+def test_stress_on_the_gold_syllable(word, gold, onset):
     """A u read as a vowel adds a nucleus, and the mark lands on it."""
-    out = ipa(word, pt)
+    out = ipa(word)
     assert stress_hit(out, gold), out
 
 
@@ -81,5 +73,12 @@ def test_stress_on_the_gold_syllable(word, gold, onset, pt):
     ("q", "ando", "quando", False),
     ("g", "arda", "guarda", False),
 ])
-def test_is_grapheme_silent(before, after, word, silent, pt):
-    assert is_grapheme_silent("u", before, after, word, pt) is silent
+def test_u_is_silent(before, after, word, silent):
+    """A silent u leaves the consonant bare; a spoken one is the glide [w]."""
+    out = normalize(ipa(word))
+    consonant = "k" if before.endswith("q") else "ɡ"
+    at = out.index(consonant)
+    if silent:
+        assert out[at + 1] not in "uw", out
+    else:
+        assert out[at + 1] == "w", out

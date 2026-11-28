@@ -1,4 +1,11 @@
 # Quickstart: zero to hero
+<!-- agent-hint
+covers: how to install tugaphone and phonemize a first sentence in each dialect
+source: tugaphone/__init__.py:TugaPhonemizer, tugaphone/registry.py, pyproject.toml
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/quickstart.md
+see: architecture.md, dialects.md, api.md
+-->
 
 `tugaphone` turns Portuguese text into IPA phonemes, and it does it per dialect.
 Give it a sentence and a Lusophone dialect code, get back a phoneme string with
@@ -13,15 +20,26 @@ pt-BR → u ˈɡatu ˈdoɾmi
 ## 1. Install
 
 ```bash
-pip install tugaphone            # from PyPI
-pip install -e .                 # from a source checkout
+uv pip install --prerelease=allow tugaphone      # from PyPI
+uv pip install --prerelease=allow -e .           # from a source checkout
 ```
 
-Runtime dependencies (`ovos-number-parser`, `silabificador`, `tugalex`,
-`bifonia`, `orthography2ipa`, `o2i-lexicons`) install automatically. The `pt-PT`
+Runtime dependencies (`text2spoken`, `silabificador`, `tugalex`,
+`bifonia`, `orthography2ipa`, `o2i-lexicons`, `desacordo_ortografico`) install automatically. The `pt-PT`
 and `pt-BR` lexicons ship inside [`o2i-lexicons`](https://github.com/TigreGotico/o2i-lexicons),
 so a phonemization call needs no network. See
 [advanced.md](advanced.md#the-lexicon-boundary).
+
+The package defines one extra for users, `langdetect`. The `test` extra is for
+development.
+
+```bash
+uv pip install --prerelease=allow "tugaphone[langdetect]"
+```
+
+The `langdetect` extra installs `markovonnx`, which scores the statistical
+code-switch detector. Without it, code-switch detection uses an orthographic
+heuristic. See [codeswitch.md](codeswitch.md).
 
 ## 2. The one thing to understand
 
@@ -61,7 +79,7 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 | Code | Region |
 |------|--------|
 | `pt-PT` | European Portuguese (Lisbon) |
-| `pt-BR` | Brazilian Portuguese (Rio) |
+| `pt-BR` | Brazilian Portuguese (São Paulo norm; Rio is `pt-BR-x-rj`) |
 | `pt-AO` | Angolan Portuguese (Luanda) |
 | `pt-MZ` | Mozambican Portuguese (Maputo) |
 | `pt-TL` | Timorese Portuguese (Dili) |
@@ -82,8 +100,8 @@ print(ph.phonemize_sentence(sentence, "pt-PT"))
 # ˈvo ˈpoɾ ɐ mɐ̃ˈtejɡɐ nu fɾiɡuˈɾifiku
 ```
 
-Digits need no preparation. `phonemize_sentence` spells them out with gender
-agreement before it transcribes the sentence. The `normalize_numbers` helper
+Digits need no preparation. `phonemize_sentence` reads numbers, dates and
+clock times with text2spoken before it transcribes the sentence. The `normalize_numbers` helper
 exposes that step on its own:
 
 ```python
@@ -102,8 +120,10 @@ extra argument is needed:
 ```python
 ph = TugaPhonemizer()
 print(ph.phonemize_sentence("O vinho é muito bom.", "pt-PT-x-porto"))
-# u ˈbiɲu ˈjɛ ˈmũj̃tu ˈbõ   (betacism: vinho → binho, rising diphthong: é → jɛ)
+# u ˈbiɲu ˈjɛ ˈmũj̃tu ˈbõ
 ```
+
+The accent shows betacism (*vinho* reads as *binho*) and a rising diphthong (*é* reads as *jɛ*).
 
 See [dialects.md](dialects.md) for the full list of European and Brazilian
 sub-regional codes and the legacy aliases.
@@ -116,8 +136,6 @@ sub-regional codes and the legacy aliases.
 - [homographs.md](homographs.md), meaning-based disambiguation
 - [numbers.md](numbers.md), number normalization and gender agreement
 - [advanced.md](advanced.md), the pipeline internals and integration
-- [tokenizer.md](tokenizer.md), the `Sentence → Word → Grapheme → Character` feature model
-
 
 ---
-[Home](../README.md) · [Architecture →](architecture.md)
+[Home](index.md) · [Comparison →](comparison.md)

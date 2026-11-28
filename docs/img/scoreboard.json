@@ -1,0 +1,12 @@
+[
+ {
+  "dialect": "pt-PT",
+  "per": 0.0768,
+  "stress_acc": 0.9879
+ },
+ {
+  "dialect": "pt-BR",
+  "per": 0.0973,
+  "stress_acc": 0.9765
+ }
+]

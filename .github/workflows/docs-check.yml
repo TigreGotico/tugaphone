@@ -1,0 +1,32 @@
+name: Docs check
+
+on:
+  pull_request:
+    branches: [dev]
+  workflow_dispatch:
+
+jobs:
+  docs-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+      - name: Install
+        run: |
+          pip install uv
+          UV_PRERELEASE=allow uv pip install --system -e ".[langdetect]"
+      - name: Figure data matches the committed result files
+        run: |
+          for script in docs/img/plot_*.py; do DOCS_FIGURES_DATA_ONLY=1 python "$script"; done
+          git diff --exit-code -- 'docs/img/*.json'
+      - name: Docs code examples print what their comments state
+        run: python scripts/check_docs_examples.py README.md docs/*.md
+
+  docs_check:
+    uses: OpenVoiceOS/gh-automations/.github/workflows/docs-check.yml@dev
+    with:
+      docs_standard: true
+      hf_space: TigreGotico/tugaphone
+    secrets: inherit

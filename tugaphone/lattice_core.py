@@ -14,9 +14,11 @@ What tugaphone adds sits in the stages orthography2ipa leaves to the caller,
 wired through orthography2ipa's own extension points rather than bolted on after
 the fact:
 
-* **expansion** — orthographic rewrites (:mod:`tugaphone.text_normalization`)
-  and gender-aware number/ordinal expansion (:mod:`tugaphone.number_utils`) run
-  as the pipeline's ``expand``, before the lattice sees the text;
+* **expansion** — the spelling step (:mod:`desacordo_ortografico`), orthographic
+  rewrites (:mod:`tugaphone.text_normalization`) and text2spoken, which reads
+  numbers, dates, times, money, measures and abbreviations
+  (:mod:`tugaphone.number_utils`), run as the pipeline's ``expand``, before the
+  lattice sees the text;
 * **marks** — sense-based heterophone marking (:mod:`bifonia`) runs as the
   pipeline's ``mark``, on the whole sentence after ``expand``. It adds marks
   and keeps every letter, and the engine checks that;
@@ -33,27 +35,104 @@ the fact:
 from __future__ import annotations
 
 import functools
+import re
 from typing import List
 
 from bifonia import add_extra_diacritics
+from desacordo_ortografico import convert as convert_spelling
 from orthography2ipa import G2P, Pipeline, packaged_lexicon
 
 from tugaphone.codeswitch import split_runs, transcribe_contact
-from tugaphone.number_utils import normalize_numbers
 from tugaphone.registry import (PACKAGED_LEXICON_LECTS, default_contact,
-                                list_dialects, resolve_lect)
-from tugaphone.text_normalization import normalize_orthography
+                                list_dialects, resolve_lect, spelling_norm)
+from tugaphone.text_normalization import normalize_text
 
 _VALID_CONTACT = ("auto", "es", "fr", "en", "none")
 
-def _expander(lect: str):
-    """The orthography2ipa ``expand`` callable tugaphone supplies for ``lect``.
+#: The desacordo_ortografico features of the spelling step, per AO1990 norm. The
+#: Brazilian group keeps the trema: in a 1943 or 1971 text it is the only mark of
+#: a pronounced u (sangüíneo), and G2P cannot recover that u from the AO1990 form.
+#: It also leaves out ptbr-divergence, which picks one form of a VOLP dual
+#: (epilético → epiléptico); AO1990 Base IV 1.º c) leaves that choice to the writer.
+SPELLING_FEATURES = {
+    "ao1990-pt": frozenset({"1911-word-map", "trema", "ao-map-consonant", "base-iv",
+                            "initial-sc", "ao-map-diacritic"}),
+    "ao1990-br": frozenset({"1911-word-map", "base-iv", "initial-sc", "hyphen-lexical"}),
+}
 
-    Orthographic rewrites (ranges, clock times, European number separators,
-    abbreviations, regnal numerals, letter-spelled acronyms) run first, since
-    they produce the digit tokens and words number verbalization then reads.
-    Numbers and ordinals are verbalized next, so ``mark`` sees their
-    spelled-out words.
+#: A word token, the same shape desacordo_ortografico's rules use, so the extra
+#: Brazilian step below rewrites words without touching punctuation or spacing.
+_WORD_RE = re.compile(r"[0-9A-Za-zÀ-ɏ]+(?:[-'’][0-9A-Za-zÀ-ɏ]+)*")
+
+
+def _is_single_e_acute(word: str, restored: str) -> bool:
+    """Whether ``restored`` differs from ``word`` only by one ``e`` → ``é``."""
+    if len(word) != len(restored):
+        return False
+    diffs = [(a, b) for a, b in zip(word, restored) if a != b]
+    if len(diffs) != 1:
+        return False
+    a, b = diffs[0]
+    return a.lower() == "e" and b.lower() == "é"
+
+
+def _open_ei_diphthong(text: str) -> str:
+    """Re-accent the open ``éi`` AO1990 Base IX 3.º dropped in Brazilian paroxytones.
+
+    For each word that holds an unaccented ``ei``, the backward conversion toward
+    ``br_1971`` gives the pre-AO1990 spelling, which marks the open diphthong. The
+    result replaces the word only when it differs from it by exactly one ``e`` → ``é``:
+    a closed ``ei`` word (``feia``) and any word whose conversion changes more than
+    that accent stay as written. desacordo_ortografico holds only the singular of these
+    words, so a plural that ends in ``s`` (``ideias``) converts unchanged: its stem is
+    tried instead, and the final letter is reattached to the restored stem.
+    """
+
+    def rewrite(match: re.Match) -> str:
+        word = match.group(0)
+        if "ei" not in word.lower():
+            return word
+        restored = convert_spelling(word, "ao1990-br", "br_1971")
+        if _is_single_e_acute(word, restored):
+            return restored
+        if restored == word and word.endswith(("s", "S")):
+            stem = word[:-1]
+            stem_restored = convert_spelling(stem, "ao1990-br", "br_1971")
+            if _is_single_e_acute(stem, stem_restored):
+                return stem_restored + word[-1]
+        return word
+
+    return _WORD_RE.sub(rewrite, text)
+
+
+def normalize_spelling(text: str, lect: str) -> str:
+    """Rewrite the old spellings of ``text`` in the AO1990 norm of ``lect``.
+
+    "A acção da pharmacia" becomes "A ação da farmácia". Case and punctuation
+    stay. Modern text stays as written, the dual forms included (pt-PT sector,
+    pt-BR facto), with these changes:
+
+    * a name in an old spelling takes the AO1990 spelling (Sophia → Sofia,
+      Rachel → Raquel), although AO1990 Base XXI lets a name keep its spelling;
+    * for the Brazilian lects, the hyphen rules of AO1990 change the word count
+      (há-de → há de, manda-chuva → mandachuva);
+    * for the Brazilian lects, an AO1990 paroxytone that lost the accent of an
+      open ``éi`` (Base IX 3.º) takes its pre-AO1990 spelling, which marks the
+      open vowel (ideia becomes idéia).
+    """
+    norm = spelling_norm(lect)
+    text = convert_spelling(text, "etymological", norm, features=SPELLING_FEATURES[norm])
+    if norm == "ao1990-br":
+        text = _open_ei_diphthong(text)
+    return text
+
+
+def _expander(lect: str):
+    """The orthography2ipa ``expand`` callable for ``lect``.
+
+    :func:`normalize_spelling` runs first, so the later stages read AO1990
+    text, then :func:`tugaphone.text_normalization.normalize_text` spells out
+    the text, so ``mark`` sees words.
 
     The engine joins the expanded runs and the forced words back into one
     sentence for ``mark``, so the spaces at the ends of a run are kept: the
@@ -66,7 +145,8 @@ def _expander(lect: str):
             return text
         lead = text[:len(text) - len(text.lstrip())]
         trail = text[len(text.rstrip()):]
-        return lead + normalize_numbers(normalize_orthography(words, lect), lect) + trail
+        words = normalize_spelling(words, lect)
+        return lead + normalize_text(words, lect) + trail
 
     return expand
 
@@ -77,7 +157,7 @@ def pipeline(lect: str) -> Pipeline:
     ``G2P(lect, pipeline=pipeline(lect)).transcribe(text)`` gives the same
     output as ``phonemize(text, lect)`` with ``contact="none"``. The
     ``contact="auto"`` path sends contact words through the ``es-ES``,
-    ``fr-FR`` or ``en-US`` lattice, and one ``Pipeline`` cannot express that.
+    ``fr-FR`` or ``en-GB`` lattice, and one ``Pipeline`` cannot express that.
 
     The pipeline holds the lect's packaged lexicon, the number expansion and the
     homograph marks, with ``lect`` selecting bifonia's per-lect marks. The
@@ -122,25 +202,22 @@ def _validate_contact(contact: str) -> None:
 def phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str:
     """Phonemize ``text`` for ``lang`` through the orthography2ipa lattice.
 
-    Portuguese tokens are transcribed by the ``lang`` lattice (numbers verbalized
-    by the normalizer, cross-word sandhi preserved within contiguous Portuguese
-    runs); detected contact-language tokens are transcribed through the
-    ``es-ES``/``fr-FR``/``en-US`` lattice and nativized onto the Portuguese
-    inventory (see :mod:`tugaphone.codeswitch`). ``contact`` is one of ``auto``
-    (detect and classify each contact word among es/fr/en, unclassified words
-    falling to the dialect's side), ``es``, ``fr``, ``en`` or ``none`` (the
-    default: disable switching — the engine-only, behaviour-preserving path).
+    ``contact`` is ``"none"`` (the default: every word is Portuguese),
+    ``"auto"`` (each contact word is classified among es/fr/en), or ``"es"``,
+    ``"fr"`` or ``"en"``. Contact words go through that language's lattice and
+    are nativized onto the Portuguese inventory (see :mod:`tugaphone.codeswitch`).
+    Any other ``contact`` raises ``ValueError``. Returns space-separated IPA per
+    word, with ``ˈ`` before each stressed syllable.
     """
     _validate_contact(contact)
     lect = resolve_lect(lang)
     if contact == "none":
         return engine(lect).transcribe(text)
 
-    side = default_contact(lect)
-    runs = split_runs(text, contact, default_side=side)
+    runs = split_runs(text, contact, default_side=default_contact(lect))
     out: List[str] = []
-    # Transcribe contiguous Portuguese tokens as one phrase to preserve sandhi;
-    # nativize each contact token individually.
+    # Contiguous Portuguese tokens are transcribed as one phrase, so the
+    # cross-word sandhi between them stays.
     pt_buffer: List[str] = []
 
     def flush() -> None:
@@ -151,7 +228,7 @@ def phonemize(text: str, lang: str = "pt-PT", contact: str = "none") -> str:
     for contact_lang, token in runs:
         if contact_lang is not None:
             flush()
-            out.append(transcribe_contact(token, contact_lang))
+            out.append(transcribe_contact(token, contact_lang, lect))
         else:
             pt_buffer.append(token)
     flush()

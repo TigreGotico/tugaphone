@@ -17,15 +17,13 @@ resolve to their orthography2ipa equivalents through :data:`_ALIASES`.
 """
 from __future__ import annotations
 
+import functools
 import warnings
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
-from orthography2ipa import available_codes, resolve, resolves_exactly
+from linguatag import closest_lang, parse_tag, with_default_region
+from orthography2ipa import ancestry_chain, available_codes, resolve, resolves_exactly
 
-from tugaphone.version import VERSION_MAJOR
-
-#: Portuguese-family lect codes orthography2ipa ships, the canonical dialects.
-_PT_PREFIXES = ("pt-", "pt_")
 
 #: Lects written in another orthography, so the modern Portuguese text stages do
 #: not apply. orthography2ipa keeps their specs. Barranquenho and
@@ -33,91 +31,77 @@ _PT_PREFIXES = ("pt-", "pt_")
 #: ``orthography2ipa.G2P("ext-PT-x-barranco")``.
 _OWN_ORTHOGRAPHY = frozenset({"pt-PT-x-medieval"})
 
-
-def _canonical_codes() -> List[str]:
-    return sorted(
-        c for c in available_codes()
-        if c.startswith(_PT_PREFIXES) and c not in _OWN_ORTHOGRAPHY
-    )
-
-
-_CANONICAL: List[str] = _canonical_codes()
+# No Portuguese-family spec is a clade node, so the list keeps clades:
+# filtering them out loads every spec orthography2ipa ships.
+_CANONICAL: List[str] = sorted(
+    c for c in available_codes(include_clades=True)
+    if parse_tag(c).language == "pt" and c not in _OWN_ORTHOGRAPHY
+)
 _CANONICAL_SET = set(_CANONICAL)
 
 
 #: Legacy / convenience codes → the orthography2ipa lect that answers for them.
 _ALIASES: Dict[str, str] = {
-    "pt": "pt-PT",
-    "pt-pt-x-lisboa": "pt-PT-x-lisbon",
-    "pt-pt-x-acores": "pt-PT-x-acores",
-    "pt-pt-x-azores": "pt-PT-x-acores",
-    "pt-pt-x-sao-miguel": "pt-PT-x-sao-miguel",
-    "pt-pt-x-north": "pt-PT-x-minho",
-    "pt-pt-x-norte": "pt-PT-x-minho",
-    "pt-pt-x-fafe": "pt-PT-x-minho",
-    "pt-pt-x-famalicao": "pt-PT-x-viana",
-    "pt-pt-x-transmontano": "pt-PT-x-trasosmontes",
-    "pt-pt-x-tras-os-montes": "pt-PT-x-trasosmontes",
-    "pt-pt-x-central": "pt-PT-x-coimbra",
-    "pt-br-x-sao-paulo": "pt-BR-x-sp",
-    "pt-br-x-rio-janeiro": "pt-BR-x-rj",
-    "pt-br-x-rio": "pt-BR-x-rj",
+    "pt-PT-x-lisboa": "pt-PT-x-lisbon",
+    "pt-PT-x-acores": "pt-PT-x-acores",
+    "pt-PT-x-azores": "pt-PT-x-acores",
+    "pt-PT-x-sao-miguel": "pt-PT-x-sao-miguel",
+    "pt-PT-x-north": "pt-PT-x-minho",
+    "pt-PT-x-norte": "pt-PT-x-minho",
+    "pt-PT-x-fafe": "pt-PT-x-minho",
+    "pt-PT-x-famalicao": "pt-PT-x-viana",
+    "pt-PT-x-transmontano": "pt-PT-x-tras-os-montes",
+    "pt-PT-x-tras-os-montes": "pt-PT-x-tras-os-montes",
+    "pt-PT-x-central": "pt-PT-x-coimbra",
+    "pt-BR-x-sao-paulo": "pt-BR-x-sp",
+    "pt-BR-x-rio-janeiro": "pt-BR-x-rj",
+    "pt-BR-x-rio": "pt-BR-x-rj",
+    "pt-BR-x-rio-grande-do-sul": "pt-BR-x-sul",
+    "pt-BR-x-rio-grande-do-norte": "pt-BR",
+    # The orthography2ipa notes for pt-PT-x-terceira call it "the best-described
+    # member of the CENTRAL group of the Azores (Terceira, Graciosa, São Jorge,
+    # Pico, Faial)", so each central island takes it. São Miguel has its own lect.
+    "pt-PT-x-acores-sao-miguel": "pt-PT-x-sao-miguel",
+    "pt-PT-x-acores-terceira": "pt-PT-x-terceira",
+    "pt-PT-x-acores-faial": "pt-PT-x-terceira",
+    "pt-PT-x-acores-pico": "pt-PT-x-terceira",
+    "pt-PT-x-acores-sao-jorge": "pt-PT-x-terceira",
+    "pt-PT-x-acores-graciosa": "pt-PT-x-terceira",
+    "pt-PT-x-azores-sao-miguel": "pt-PT-x-sao-miguel",
+    "pt-PT-x-azores-terceira": "pt-PT-x-terceira",
+    "pt-PT-x-azores-faial": "pt-PT-x-terceira",
+    "pt-PT-x-azores-pico": "pt-PT-x-terceira",
+    "pt-PT-x-azores-sao-jorge": "pt-PT-x-terceira",
+    "pt-PT-x-azores-graciosa": "pt-PT-x-terceira",
 }
 
 
 #: Lects that take a packaged orthography2ipa lexicon. ``o2i-lexicons`` ships a
 #: residual lexicon for ``pt-PT`` and for ``pt-BR``: the words the lect's rules
-#: get wrong, as exceptions and patches, and tugaphone takes both. It is not enabled for a sub-lect, because it would overwrite that
-#: spec's phonology with the parent's forms. Every other lect runs on the rules
-#: alone.
+#: get wrong, as exceptions and patches, and tugaphone takes both. A sub-lect
+#: does not take it, because it would overwrite that spec's phonology with the
+#: parent's forms. Every other lect runs on the rules alone.
 PACKAGED_LEXICON_LECTS = frozenset({"pt-PT", "pt-BR"})
 
-#: The release that removes :func:`lexicon_region`.
-LEXICON_REGION_REMOVAL_VERSION = f"{VERSION_MAJOR + 1}.0.0"
-
-
-def normalize_dialect_code(lang: str) -> str:
-    """Normalize the casing of a BCP-47 tag (``PT-pt-X-PORTO`` → ``pt-PT-x-porto``).
-
-    The language subtag is lowercased, two-letter region subtags are
-    uppercased, and everything else (the ``x`` private-use marker and its
-    subtags) is lowercased. The tag structure is not validated.
-    """
-    segments = (lang or "").strip().split("-")
-    normalized = []
-    in_private_use = False
-    for i, seg in enumerate(segments):
-        low = seg.lower()
-        if low == "x":
-            in_private_use = True
-            normalized.append(low)
-        elif i > 0 and len(seg) == 2 and not in_private_use:
-            normalized.append(seg.upper())
-        else:
-            normalized.append(low)
-    return "-".join(normalized)
 
 
 def resolve_lect(lang: str = "pt-PT") -> str:
     """Resolve ``lang`` to the orthography2ipa lect code that answers for it.
 
-    Resolution order: a legacy alias, then the code itself, each matched
-    exactly against the canonical codes or the old keys orthography2ipa keeps
-    as aliases, then a progressive pop of trailing subtags
-    (``pt-PT-x-unknown`` → ``pt-PT``). An unresolved code falls back to
-    ``pt-PT``, preserving the European Portuguese default. A code that does not
-    name a lect itself warns, because the caller gets another variety.
+    A legacy alias or the code itself, each matched exactly against the
+    canonical codes or the old keys orthography2ipa keeps as aliases. A legacy
+    alias followed by more subtags takes the alias's lect, with trailing subtags
+    removed one at a time (``pt-PT-x-lisboa-foo`` → ``pt-PT-x-lisbon``). Any
+    other code takes the nearest lect (``pt-PT-x-unknown`` → ``pt-PT``). A code with
+    no nearby lect falls back to ``pt-PT``, preserving the European Portuguese
+    default. A code that does not name a lect itself warns, because the caller
+    gets another variety.
     """
-    canon = normalize_dialect_code(lang).lower()
-    key = canon
-    lect = None
-    while key and not (lect := _named_lect(key)):
-        key = key.rpartition("-")[0]
-    resolved = lect or "pt-PT"
-    if key != canon or lect is None:
-        warnings.warn(f"{lang!r} is not a tugaphone lect; using {resolved}",
+    lect, named = _resolve(lang)
+    if not named:
+        warnings.warn(f"{lang!r} is not a tugaphone lect; using {lect}",
                       stacklevel=2)
-    return resolved
+    return lect
 
 
 def is_supported(lang: str) -> bool:
@@ -128,49 +112,53 @@ def is_supported(lang: str) -> bool:
     orthography (``pt-PT-x-medieval``, Barranquenho) and an unknown sub-tag
     (``pt-PT-x-unknown``) all return ``False``.
     """
-    return _named_lect(normalize_dialect_code(lang).lower()) is not None
+    return _resolve(lang)[1]
 
 
-def _named_lect(key: str) -> Optional[str]:
-    """The canonical dialect that the lowercased tag ``key`` names, or ``None``."""
-    return _registered(_ALIASES.get(key, key))
-
-
-def _registered(code: str) -> Optional[str]:
-    """The canonical dialect that ``code`` names exactly, or ``None``.
-
-    Canonical codes compare case-insensitively. A code orthography2ipa renamed
-    reaches its spec through the exact alias orthography2ipa keeps for the old
-    key; nearest-language guessing never counts as a match.
-    """
-    folded = code.lower()
-    for lect in _CANONICAL:
-        if lect.lower() == folded:
-            return lect
+@functools.lru_cache(maxsize=4096)
+def _resolve(lang: str) -> Tuple[str, bool]:
+    """The lect that answers for ``lang`` and whether ``lang`` names it."""
+    tag = with_default_region((lang or "").strip())
+    code = _ALIASES.get(tag, tag)
+    if code in _CANONICAL_SET:
+        return code, True
+    # A code orthography2ipa renamed reaches its spec through the exact alias
+    # orthography2ipa keeps for the old key; nearest-language guessing never
+    # counts as a match.
     if resolves_exactly(code) and (lect := resolve(code)) in _CANONICAL_SET:
-        return lect
-    return None
+        return lect, True
+    prefix = tag.rpartition("-")[0]
+    while prefix and prefix not in _ALIASES:
+        prefix = prefix.rpartition("-")[0]
+    if prefix:
+        return resolve(_ALIASES[prefix]), False
+    return closest_lang(tag, _CANONICAL, lects="standard") or "pt-PT", False
 
 
-def lexicon_region(lect: str) -> Optional[str]:
-    """Deprecated: the ``tugalex`` region whose lexicon overlays ``lect``.
-
-    No lect takes a ``tugalex`` region map, so the answer is ``None`` for every
-    lect. :data:`PACKAGED_LEXICON_LECTS` names the lects that take a lexicon.
-    """
-    warnings.warn(
-        "lexicon_region() is deprecated and returns None: no lect takes a "
-        "tugalex region map. Use PACKAGED_LEXICON_LECTS. It will be removed in "
-        f"tugaphone {LEXICON_REGION_REMOVAL_VERSION}.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return None
 
 
 def list_dialects() -> List[str]:
     """Every canonical dialect code (the Portuguese-family orthography2ipa specs)."""
     return list(_CANONICAL)
+
+
+#: The AO1990 norm of each national standard, in desacordo_ortografico's names.
+_SPELLING_NORMS: Dict[str, str] = {"pt-PT": "ao1990-pt", "pt-BR": "ao1990-br"}
+
+
+@functools.lru_cache(maxsize=None)
+def spelling_norm(lect: str) -> str:
+    """The AO1990 norm whose spelling ``lect`` reads: ``ao1990-pt`` or ``ao1990-br``.
+
+    A lect follows the norm of the nearest of ``pt-PT`` and ``pt-BR`` in its
+    orthography2ipa lineage, itself included. The European sub-lects and the
+    African and Asian lects descend from ``pt-PT``; the Brazilian sub-lects and
+    ``pt-UY`` descend from ``pt-BR``. A lect under neither raises ``ValueError``.
+    """
+    for code in (lect, *ancestry_chain(lect)):
+        if code in _SPELLING_NORMS:
+            return _SPELLING_NORMS[code]
+    raise ValueError(f"{lect!r} descends from neither pt-PT nor pt-BR")
 
 
 #: Lects that embed Spanish rather than English by default. ``pt-UY`` is
@@ -187,59 +175,3 @@ def default_contact(lect: str) -> str:
     *portunhol*) embeds Spanish instead.
     """
     return "es" if lect in _SPANISH_CONTACT_LECTS else "en"
-
-
-# --------------------------------------------------------------------------
-# Backwards-compatible shims (deprecated).
-# --------------------------------------------------------------------------
-
-def get_dialect_inventory(lang: str = "pt-PT"):
-    """Deprecated: a tugaphone :class:`~tugaphone.dialects.DialectInventory` for ``lang``.
-
-    Retained for the rules-only benchmark baseline and the token-feature API,
-    which read the private grapheme cascade rather than the lattice. The
-    phonemization path (:func:`tugaphone.lattice_core.phonemize`) does not use
-    it. The nearest national inventory is chosen from the resolved lect family.
-    It goes in the next major release, together with :mod:`tugaphone.dialects`.
-    """
-    warnings.warn(
-        "get_dialect_inventory() is deprecated and will be removed in tugaphone "
-        f"{VERSION_MAJOR + 1}.0.0, together with tugaphone.dialects.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    # The warning above names tugaphone.dialects, so its import stays silent.
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", DeprecationWarning)
-        from tugaphone.dialects import (EuropeanPortuguese, BrazilianPortuguese,
-                                        AngolanPortuguese, MozambicanPortuguese,
-                                        TimoresePortuguese)
-
-    lect = resolve_lect(lang)
-    if lect.startswith("pt-BR"):
-        return BrazilianPortuguese()
-    if lect == "pt-AO":
-        return AngolanPortuguese()
-    if lect == "pt-MZ":
-        return MozambicanPortuguese()
-    if lect == "pt-TL":
-        return TimoresePortuguese()
-    return EuropeanPortuguese()
-
-
-def resolve_dialect(lang: str = "pt-PT") -> str:
-    """Deprecated alias for :func:`resolve_lect`.
-
-    .. deprecated::
-        A dialect is now an orthography2ipa lect code, not a
-        ``DialectEntry``. Use :func:`resolve_lect`.
-    """
-    import warnings
-
-    warnings.warn(
-        "resolve_dialect() is deprecated; a dialect is an orthography2ipa lect "
-        "code — use resolve_lect().",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return resolve_lect(lang)

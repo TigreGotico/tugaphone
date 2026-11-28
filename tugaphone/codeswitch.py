@@ -1,41 +1,27 @@
 """Code-switch handling: embedded Spanish / French / English routed and nativized.
 
-Real Portuguese text is bilingual, and in the modern register trilingual. The
-Brazilian tech/media register embeds **English** heavily (``download``, ``app``,
-``site``, ``feedback``, ``streaming``, product and band names); European and
-African writing embeds English loans too, and on the Uruguayan border
-(``pt-UY``, *portunhol*) Portuguese embeds **Spanish**; quoted French fragments
-and Gallicisms turn up throughout. A TTS frontend that hands such a word to the
-Portuguese lattice mispronounces it, and one that hands it to the raw
-Spanish/French/English lattice can emit phones outside the Portuguese inventory
-the voice was trained on.
+Portuguese text embeds English loans (``download``, ``site``, ``feedback``),
+Spanish on the Uruguayan border (``pt-UY``, *portunhol*) and French fragments.
+The Portuguese lattice mispronounces such a word, and the raw contact lattice
+can emit phones outside the Portuguese inventory the voice was trained on.
 
-tugaphone takes arbtok's **total-nativization** stance — *never drop a segment,
-always project it onto the target inventory* — but keeps the machinery simple: a
-word-level decision (the char-Markov detector in :mod:`tugaphone.langdetect`,
-with an orthographic heuristic as fallback) decides whether a token is Portuguese
-or contact-language and, if contact, which of es/fr/en; a detected contact word
-is transcribed through the orthography2ipa ``es-ES`` / ``fr-FR`` / ``en-US``
-lattice, and every phone in that result is projected onto the target Portuguese
-lect's phoneme inventory. There is no sub-word alignment.
+So a word-level decision (the char-Markov detector in :mod:`tugaphone.langdetect`,
+with an orthographic heuristic as fallback) routes each token to Portuguese or
+to one of es/fr/en. A contact word is transcribed through the orthography2ipa
+``es-ES`` / ``fr-FR`` / ``en-GB`` lattice, and each phone of the result is
+projected onto the Portuguese inventory (arbtok's total nativization: never
+drop a segment). There is no sub-word alignment. Portuguese already has
+``/v z ʃ ʒ ʁ ɲ ʎ w j/`` and the nasal vowels, so only the interdentals
+``/θ ð/``, French ``/y ø œ/``, English ``/ɹ/`` and ``/ŋ/`` move.
 
-Because Portuguese already has ``/v z ʃ ʒ ʁ/``, the palatal ``/ɲ ʎ/``, the glides
-``/w j/`` and a full set of **nasal vowels**, the projections are far gentler than
-Basque's — most contact phones are already Portuguese phones and pass through
-unchanged. Only the genuinely non-Portuguese segments move: the interdentals
-``/θ ð/``, French ``/y ø œ/``, the English rhotic ``/ɹ/`` and velar nasal ``/ŋ/``.
+The ``contact`` parameter selects the contact language:
 
-The contact language is chosen by the ``contact`` parameter:
-
-* ``"none"`` (default) — disable code-switching; every token is transcribed as
-  Portuguese. This is the default because Portuguese shares the Romance
-  character-shape with Spanish and French too tightly for statistical routing to
-  be safe unattended, so code-switching is opt-in and the out-of-the-box output
-  is unchanged by this feature;
-* ``"auto"`` — detect contact words and, *per word*, classify them as English,
-  French or Spanish; an unclassified contact word falls to the dialect's default
-  side (Uruguayan border → Spanish, everywhere else → English; see
-  :func:`tugaphone.registry.default_contact`);
+* ``"none"`` (default) — every token is Portuguese. Portuguese shares the
+  Romance character-shape with Spanish and French too tightly for statistical
+  routing to be safe unattended, so code-switching is opt-in;
+* ``"auto"`` — classify each contact word as English, French or Spanish; an
+  unclassified contact word falls to the dialect's default side
+  (:func:`tugaphone.registry.default_contact`);
 * ``"es"`` / ``"fr"`` / ``"en"`` — force that contact lattice for detected
   contact words.
 
@@ -50,34 +36,21 @@ claim. The per-table comments mark which is which.
 
 Curated loanword lexicon
 -------------------------
-``tugaphone/data/loanwords.json`` is a set of common-noun English loans
-(``online``, ``software``, ``site``, ``airbag``, ...) that a Portuguese speaker
-pronounces with (an approximation of) their English sound but that the
-orthographic heuristic and the Markov detector's conservative margin can miss,
-because they are spelled with Portuguese-legal letters and carry no non-native
-digraph. Membership routes the word onto the ``en`` contact path
-(:func:`is_known_loanword`, wired into :func:`is_contact_word`,
-:func:`contact_language` and the ``auto``-contact classifier), exactly as if
-the orthographic/statistical signal had flagged it; the word is still
-transcribed by the ordinary ``en-US`` lattice and nativized by
-:func:`_nativize` above, not by a stored pronunciation. Lookup is whole-word
-and case-insensitive, never on a substring.
+``tugaphone/data/loanwords.json`` holds common-noun English loans (``online``,
+``software``, ``airbag``, ...) that a Portuguese speaker says close to English
+but that the heuristic and the detector's margin miss, because they use only
+Portuguese letters. A whole-word, case-insensitive hit routes the word onto the
+``en`` path (:func:`is_known_loanword`); the ``en-GB`` lattice and
+:func:`_nativize` still give its pronunciation.
 
 The word list is ported from `logus2k/tts_eu_pt
 <https://github.com/logus2k/tts_eu_pt>`_ (Antonio Cruz, Apache-2.0), which
-curated it to common nouns only (proper nouns and acronyms excluded) and
-shipped each entry with an ``en-GB`` IPA transcription generated offline with
-espeak. tugaphone keeps that upstream IPA in the data file as documentation
-and NL-TDD test-gold material only — it is a raw-English-phonology
-transcription (``ə ɪ ɹ ɒ ʌ θ h ː``) and is never read at phonemization time;
-production pronunciation always comes from tugaphone's own ``en-US`` lattice
-projected through :func:`_nativize`. A further ~140 entries the upstream list
-carried were dropped before shipping here: entries that collide with an
-existing ``tugalex`` Portuguese pronunciation (``cover``, ``face``, ``for``,
-``media``, ..., where the word is already a lusophonized loan in the curated
-Portuguese lexicon and must keep that pronunciation, not the raw-English one),
-and proper nouns/brand names/personal names the upstream curation missed
-(``aberdeen``, ``batman``, ``google``, U.S. state and city names, ...).
+curated it to common nouns only. Its ``en-GB`` IPA (generated offline with
+espeak) stays in the data file as documentation and test gold, and is never
+read at phonemization time. About 140 upstream entries are left out: words that
+already have a lusophonized ``tugalex`` pronunciation (``cover``, ``face``,
+``for``, ``media``, ...) and proper nouns the upstream curation missed
+(``aberdeen``, ``batman``, ``google``, ...).
 """
 from __future__ import annotations
 
@@ -87,8 +60,11 @@ import re
 from pathlib import Path
 from typing import Dict, FrozenSet, List, Optional, Tuple
 
-from orthography2ipa.markup import parse_markup
+from linguatag import with_default_region
+from orthography2ipa import G2P
+from orthography2ipa import parse_markup
 
+from tugaphone import langdetect
 from tugaphone.langdetect import is_keep_word
 from tugaphone.text_normalization import stays_portuguese
 
@@ -147,11 +123,6 @@ _ENGLISH_STOPWORDS = {
 
 #: Union of all contact stopwords, for the language-agnostic contact test.
 _CONTACT_STOPWORDS = _SPANISH_STOPWORDS | _FRENCH_STOPWORDS | _ENGLISH_STOPWORDS
-
-# Lookup is whole-word only (never a substring). A hit forces the token onto
-# the English contact route; the word is still transcribed and nativized by
-# the normal ``en-US`` lattice path (:func:`transcribe_contact`), not by a
-# stored pronunciation. See the module docstring for provenance/rationale.
 
 _LOANWORD_DATA = Path(__file__).parent / "data" / "loanwords.json"
 
@@ -248,7 +219,7 @@ _NATIVIZE_COMMON = {
     "ɥ": "j",    # labial-palatal glide → palatal glide
     "ə": "ɐ",    # mid-central vowel → Portuguese /ɐ/
     "ɑ": "a",    # back open → /a/
-    "ɜ": "ɛ", "ɐ": "ɐ",
+    "ɜ": "ɛ",
 }
 
 #: Romance-specific projection (Spanish + French). Portuguese keeps ``/ʁ/``,
@@ -302,19 +273,34 @@ def _nativize(ipa: str, english: bool = False) -> str:
 # The contact transcriber.
 # ---------------------------------------------------------------------------
 
-_CONTACT_CODE = {"es": "es-ES", "fr": "fr-FR", "en": "en-US"}
+@functools.lru_cache(maxsize=None)
+def _contact_engine(contact: str) -> G2P:
+    """A cached orthography2ipa engine for the contact lattice."""
+    return G2P(with_default_region(contact))
+
+
+#: Assis (2007), Adaptações fonológicas de estrangeirismos do inglês no PB,
+#: MA dissertation, UNESP: Brazilian speakers read an English word-initial /r/
+#: as the native strong r ("optam por [h]", p. 80, ranking and rock), and the
+#: final /θ/ of bluetooth as /f/ ("normalmente o substituem por /f/", p. 79).
+#: The source has Brazilian data only.
+_ENGLISH_ONSET_R = re.compile(r"^(ˈ?)ɹ")
+_ENGLISH_FINAL_THETA = re.compile(r"θ$")
 
 
 @functools.lru_cache(maxsize=None)
-def _contact_engine(contact: str):
-    """A cached orthography2ipa engine for the contact lattice."""
-    from orthography2ipa import G2P
-    return G2P(_CONTACT_CODE[contact])
+def _strong_r(lect: str) -> str:
+    """The lect's strong r: the onset of its reading of «rato»."""
+    return G2P(lect).transcribe("rato").lstrip("ˈ")[0]
 
 
-def transcribe_contact(word: str, contact: str) -> str:
-    """Transcribe a contact *word* and nativize it onto the Portuguese inventory."""
+def transcribe_contact(word: str, contact: str, lect: str = "pt-PT") -> str:
+    """Transcribe a contact *word* and nativize it onto the Portuguese inventory
+    of *lect*."""
     ipa = _contact_engine(contact).transcribe(word)
+    if contact == "en" and lect.startswith("pt-BR"):
+        ipa = _ENGLISH_ONSET_R.sub(r"\g<1>" + _strong_r(lect), ipa)
+        ipa = _ENGLISH_FINAL_THETA.sub("f", ipa)
     return _nativize(ipa, english=(contact == "en"))
 
 
@@ -335,9 +321,7 @@ def _classify(token: str, default_side: str) -> Optional[str]:
     """
     if is_known_loanword(token):
         return "en"
-    from tugaphone.langdetect import get_detector
-
-    detector = get_detector()
+    detector = langdetect.get_detector()
     if detector is not None:
         lang, _ = detector.detect(token, default_side=default_side)
         return None if lang == "pt" else lang
@@ -352,9 +336,7 @@ def _is_contact(token: str) -> bool:
     heuristic)."""
     if is_known_loanword(token):
         return True
-    from tugaphone.langdetect import get_detector
-
-    detector = get_detector()
+    detector = langdetect.get_detector()
     if detector is not None:
         return detector.is_contact(token)
     return is_contact_word(token)

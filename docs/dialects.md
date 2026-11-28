@@ -1,9 +1,20 @@
 # Dialects
+<!-- agent-hint
+covers: which lect codes exist, how aliases resolve and which lects take a lexicon
+source: tugaphone/registry.py, orthography2ipa.available_codes
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/dialects.md
+see: architecture.md, accent_forcing.md
+-->
 
 A tugaphone dialect *is* an orthography2ipa lect spec. The dialect set is the
 Portuguese-family lects orthography2ipa ships, each reachable by its BCP-47
 code. Select one through the `lang` argument to `phonemize_sentence`, `lang`
 changes the phonology, not just the spelling.
+
+tugaphone covers Portuguese lects only. No other leader language (es-CO, fr-FR,
+it-IT, de-DE, nl-NL, da-DK, kab, hi-IN, bn-IN, mwr) is in scope;
+[orthography2ipa](https://github.com/TigreGotico/orthography2ipa) covers them.
 
 ```python
 from tugaphone import TugaPhonemizer
@@ -28,11 +39,26 @@ installed orthography2ipa. The lists below group the codes it returns.
 
 | Code | Variety |
 |------|---------|
-| `pt-PT` | European Portuguese |
-| `pt-BR` | Brazilian Portuguese |
-| `pt-AO` | Angolan Portuguese |
-| `pt-MZ` | Mozambican Portuguese |
-| `pt-TL` | Timorese Portuguese |
+| `pt-PT` | European Portuguese, heavy vowel reduction, post-alveolar fricatives, uvular /ʁ/ |
+| `pt-BR` | Brazilian Portuguese, fuller vowels, /t d/ palatalisation, l-vocalisation |
+| `pt-AO` | Angolan Portuguese, moderate reduction, in contact with Bantu languages (Undolo 2014; Chavagne 2005, cited in the orthography2ipa spec notes) |
+| `pt-MZ` | Mozambican Portuguese: weaker unstressed vowel reduction than European (`cidade` siˈdade), alveolar trill /r/ (Gonçalves 2010; Nhatuve 2019, cited in the orthography2ipa spec notes) |
+| `pt-TL` | Timorese Portuguese, the acrolectal norm, in contact with Tetum, alveolar trill /r/ (Albuquerque 2010, cited in the orthography2ipa spec notes) |
+
+The same sentence reads differently in each standard:
+
+```python
+from tugaphone import TugaPhonemizer
+
+ph = TugaPhonemizer()
+for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
+    print(code, "→", ph.phonemize_sentence("Choveu muito ontem.", code))
+# pt-PT → ʃuˈvew ˈmũj̃tu ˈõtɐ̃j̃
+# pt-BR → ʃoˈvew ˈmũj̃tu ˈõtẽj̃
+# pt-AO → ʃoˈvew ˈmũj̃tʊ ˈõtẽj̃
+# pt-MZ → ʃoˈvew ˈmũj̃tu ˈõtẽ
+# pt-TL → ʃoˈvew ˈmũj̃to ˈõtẽj̃
+```
 
 ### European sub-regional varieties
 
@@ -64,11 +90,21 @@ print(ph.phonemize_sentence("A vila é bonita.", "pt-PT-x-madeira"))
 
 `pt-BR-x-sp`, `pt-BR-x-rj`, `pt-BR-x-mg`, `pt-BR-x-pr`, `pt-BR-x-sul`,
 `pt-BR-x-caipira`, `pt-BR-x-fluminen`, `pt-BR-x-bahia`, `pt-BR-x-recife`,
-`pt-BR-x-ce`, `pt-BR-x-norte`, `pt-BR-x-cuiaba`, `pt-BR-x-floripa`.
+`pt-BR-x-ce`, `pt-BR-x-norte`, `pt-BR-x-cuiaba`, `pt-BR-x-floripa`,
+`pt-BR-x-paraiba`.
 
 ```python
 print(ph.phonemize_sentence("noite", "pt-BR"))       # ˈnojt͡ʃi
 print(ph.phonemize_sentence("noite", "pt-BR-x-recife"))  # ˈnojti
+```
+
+`pt-BR-x-paraiba` reads Paraíba as the VALPB studies describe João Pessoa.
+It shares the stops before [i] with Recife. Its coda /S/ is alveolar, and it
+is palatal only before /t d/ (Hora, Henrique & Amorim 2018: 283-284):
+
+```python
+print(ph.phonemize_sentence("A casca do texto.", "pt-BR-x-recife"))   # ɐ ˈkaʃkɐ du ˈteʃtu
+print(ph.phonemize_sentence("A casca do texto.", "pt-BR-x-paraiba"))  # ɐ ˈkaskɐ du ˈteʃtu
 ```
 
 ### African, Asian and other lects
@@ -102,6 +138,7 @@ keeps as an alias.
 | `pt-BR-x-sao-paulo` | `pt-BR-x-sp` |
 | `pt-BR-x-rio-janeiro`, `pt-BR-x-rio` | `pt-BR-x-rj` |
 | `pt-BR-x-fluminense` | `pt-BR-x-fluminen` |
+| `pt-BR-x-pb` | `pt-BR-x-paraiba` |
 
 ```python
 from tugaphone import resolve_lect
@@ -142,6 +179,5 @@ would overwrite the sub-lect spec's phonology with the parent's forms. See
 - [numbers.md](numbers.md), number normalization
 - [api.md](api.md), full class reference
 
-
 ---
-[← Architecture](architecture.md) · [Home](../README.md) · [Accent forcing →](accent_forcing.md)
+[← Architecture](architecture.md) · [Home](index.md) · [Accent forcing →](accent_forcing.md)

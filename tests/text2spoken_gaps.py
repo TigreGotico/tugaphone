@@ -1,0 +1,33 @@
+"""Readings where text2spoken differs from the value that a test cites.
+
+Each mark names one class of misreading of a form that text2spoken reads, and
+the text2spoken issue for it. tugaphone has no fallback for these: text2spoken
+fixes them. A strict xfail turns red when text2spoken gives the cited reading,
+so the mark comes off.
+"""
+import pytest
+
+from tugaphone.number_utils import UnreadFormWarning
+
+
+ISSUES = "https://github.com/TigreGotico/text2spoken/issues"
+
+
+def _misreading(reason: str, issue: int):
+    return pytest.mark.xfail(raises=(AssertionError, UnreadFormWarning), strict=True, reason=f"{reason}. {ISSUES}/{issue}")
+
+
+MINUS_RANGE = _misreading("text2spoken reads '10−20' between two numbers as 'dez menos vinte', not a range", 250)
+PRENOMINAL_CARDINAL = _misreading(
+    "text2spoken reads 'O XXV Congresso' as 'O Vinte e cinco Congresso'; a numeral before its noun "
+    "is an ordinal (Ciberdúvidas 11716)", 248)
+NUMBER_SIGN = _misreading(
+    "text2spoken reads the '#' of '#7#' as the word 'número' and keeps the closing '#' "
+    "('número sete#'); a number between two marks reads alone ('#sete#')", 250)
+SCALE_PAIR = _misreading(
+    "text2spoken reads 'entre 1 e 2 mil pessoas' as 'entre um e 2 mil pessoas': before a scale word it "
+    "reads the first number of a pair and leaves the second as written", 283)
+COUNTED_NOUN_RESOLVER = _misreading(
+    "text2spoken reads 'De 1 A 3 semanas' as 'um A', 'entre outras. 300' as 'trezentas', 'Comprou [2] casas' "
+    "as '[dois]', 'Em 2014 algumas' as 'duas mil' and 'Ganhou 2 outra vez' as 'duas'; the counted-noun "
+    "resolver takes the wrong noun or number", 602)

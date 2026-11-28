@@ -65,19 +65,27 @@ def _iter_demo() -> Iterable[dict]:
 def _load_full() -> List[Tuple[str, str]]:
     """(sentence, lect) pairs over the full pt-family sentence gold."""
     import importlib.util
+    import os
     from importlib import import_module
     from pathlib import Path
 
+    # orthography2ipa's scripts/benchmark.py, from $O2I_ROOT or from above an
+    # editable install. A scripts/ directory counts only next to the
+    # orthography2ipa package, never tugaphone's own scripts/benchmark.py.
     o2i_file = Path(import_module("orthography2ipa").__file__).resolve()
-    for parent in o2i_file.parents:
-        cand = parent / "scripts" / "benchmark.py"
-        if cand.exists():
+    roots = [Path(os.environ["O2I_ROOT"])] if os.environ.get("O2I_ROOT") else []
+    roots += o2i_file.parents
+    for root in roots:
+        cand = root / "scripts" / "benchmark.py"
+        if cand.exists() and (root / "orthography2ipa" / "__init__.py").exists():
             spec = importlib.util.spec_from_file_location("_o2i_bench", cand)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             break
     else:
-        raise RuntimeError("orthography2ipa benchmark gold not found")
+        raise RuntimeError(
+            "orthography2ipa's scripts/benchmark.py is not in its wheel: set "
+            "O2I_ROOT to an orthography2ipa checkout, or install orthography2ipa editable")
 
     lects = sorted(set(module._PORTUGUESE_TTS_LANGS) & set(list_dialects()))
     pairs: List[Tuple[str, str]] = []

@@ -1,4 +1,11 @@
 # Architecture
+<!-- agent-hint
+covers: how tugaphone drives the orthography2ipa lattice and which stage each library owns
+source: tugaphone/lattice_core.py, tugaphone/registry.py:PACKAGED_LEXICON_LECTS
+generated: no
+verify: .venv/bin/python scripts/check_docs_examples.py docs/architecture.md
+see: dialects.md, api.md, advanced.md
+-->
 
 tugaphone phonemizes Portuguese by driving the shared
 [orthography2ipa](https://github.com/TigreGotico/orthography2ipa) candidate
@@ -36,13 +43,15 @@ from orthography2ipa itself:
 
 ### 1. Normalization / verbalization
 
-Orthographic rewrites (`tugaphone.text_normalization.normalize_orthography`:
-ranges, clock times, separators, abbreviations, Roman numerals, acronyms),
-gender-aware number and ordinal expansion
-(`tugaphone.number_utils.normalize_numbers`) and sense-based
+The spelling step (`tugaphone.lattice_core.normalize_spelling`) rewrites old
+spellings in the AO1990 spelling of the lect (*pharmacia* → *farmácia*). Then
+orthographic rewrites (`tugaphone.text_normalization.normalize_orthography`:
+abbreviations, acronyms, letter-digit codes, the multiplication sign), the
+reading of numbers, dates, clock times, money, measures and Roman numerals by
+text2spoken (`tugaphone.number_utils.normalize_numbers`) and sense-based
 heterophonic-homograph marking (`bifonia.add_extra_diacritics`, e.g. *sede*
 thirst `/ˈsedɨ/` vs seat `/ˈsɛdɨ/`) run in that order before the lattice sees the
-text. The rewrites and the numbers are the `expand` field of the orthography2ipa
+text. The spelling step, the rewrites and the numbers are the `expand` field of the orthography2ipa
 `Pipeline`, and the homograph marks are its `mark` field. Numbers are verbalized before homograph marking, so their spelled-out
 words are available to it. All three are orthographic, pre-lattice
 transformations.
@@ -69,8 +78,7 @@ no sub-lect takes one.
 ### 3. Syllabification
 
 tugaphone does not own this stage. The engine uses the bundled splitter of
-orthography2ipa, which reads the diphthongs and hiatus of the lect spec. The
-`tugaphone.tokenizer` token tree syllabifies with `silabificador`.
+orthography2ipa, which reads the diphthongs and hiatus of the lect spec.
 
 ## What comes from where
 
@@ -80,7 +88,7 @@ orthography2ipa, which reads the diphthongs and hiatus of the lect spec. The
 | Dialect phenomena (betacism, rising diphthongs, palatalization, `/u/` fronting, …) | orthography2ipa lect spec (`allophone_rules`) |
 | Cross-word sandhi (coda-sibilant voicing, …) | orthography2ipa lect spec (`sandhi_rules`) |
 | Stress placement | orthography2ipa lect spec (stress rules) |
-| Number / ordinal verbalization | tugaphone (`number_utils`, via `Pipeline.expand`) |
+| Number, date and time reading | text2spoken, called by tugaphone (`number_utils`, via `Pipeline.expand`) |
 | Sense-based homograph marking | tugaphone (`bifonia`, via `Pipeline.mark`) |
 | `pt-PT` and `pt-BR` residual lexicons | `o2i-lexicons`, passed by tugaphone through `Pipeline` |
 | Syllabification | orthography2ipa (the bundled splitter) |
@@ -102,15 +110,9 @@ for code in ["pt-PT", "pt-BR", "pt-AO", "pt-MZ", "pt-TL"]:
 # pt-TL → o ˈɡato ˈdɔrme
 ```
 
-## The token-feature API
-
-`tugaphone.tokenizer` and `tugaphone.dialects` are a token-tree linguistic
-**feature** API (manner, place, voicing, vowel height, syllable roles, CV
-skeletons) and the rules-only benchmark baseline. They are **not** the
-phonemization path, `phonemize_sentence` never routes through them. Both
-modules and `tugaphone.registry.get_dialect_inventory` are deprecated: they emit
-a `DeprecationWarning` and go in tugaphone 2.0.0. See
-[tokenizer.md](tokenizer.md) for the feature model.
+Every IPA sample in these docs is the output of the orthography2ipa lect specs
+that tugaphone resolves at run time, so a spec change in orthography2ipa can
+change a sample.
 
 ## Where next
 
@@ -118,6 +120,5 @@ a `DeprecationWarning` and go in tugaphone 2.0.0. See
 - [api.md](api.md), the public surface
 - [benchmarking.md](benchmarking.md), how accuracy is measured
 
-
 ---
-[← Quickstart](quickstart.md) · [Home](../README.md) · [Dialects →](dialects.md)
+[← Comparison](comparison.md) · [Home](index.md) · [Dialects →](dialects.md)
