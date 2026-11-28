@@ -97,7 +97,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "3.6"
+HARNESS_VERSION = "3.7"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -205,6 +205,22 @@ def _stressed_vowels(marked: str) -> frozenset:
             after_mark = False
         i += 1
     return frozenset(out)
+
+
+def _primary_vowel(marked: str):
+    """The index, as in ``_stressed_vowels``, of the first vowel after the last
+    primary mark: a compound that the gold writes with two primary marks
+    (ˈpoɾkʊdɐˈtɛχɐ) has its main stress on the last one."""
+    out, i, after_mark = None, 0, False
+    for ch in marked:
+        if ch == "ˈ":
+            after_mark = True
+        if ch in _SEG_DROP:
+            continue
+        if after_mark and _VOWEL.match(ch):
+            out, after_mark = i, False
+        i += 1
+    return out
 
 
 def _glide(pattern: re.Pattern, glide: str, ipa: str, stressed: frozenset) -> str:
@@ -335,12 +351,14 @@ ACCEPTED_PROCESSES = (
 
 
 def accept_variants(word: str, ipa: str, brazilian: bool = False,
-                    stressed: frozenset = frozenset(), skip: frozenset = frozenset()) -> str:
+                    stressed: frozenset = frozenset(), skip: frozenset = frozenset(),
+                    primary=None) -> str:
     """The normalized ``ipa`` with each sourced optional process read one way:
     for European Portuguese a word-initial ⟨es⟩ vowel removed, and for both
     an unstressed high vowel before a vowel read as a glide and each phone of
     the strong R read as [ʁ]. ``stressed``
-    holds the indexes of the stressed vowels of ``ipa``. The steps named in
+    holds the indexes of the stressed vowels of ``ipa``, and ``primary`` the
+    index of the vowel with the primary stress. The steps named in
     ``skip`` do not run."""
     lower = word.lower()
     if "glide" not in skip:
@@ -352,7 +370,9 @@ def accept_variants(word: str, ipa: str, brazilian: bool = False,
             ipa = _INITIAL_ES.sub(r"\1", ipa)
         return ipa
     if stressed:
-        first, last = min(stressed), max(stressed)
+        # A vowel after a secondary stress and before the primary one is still pretonic.
+        first = min(stressed) if primary is None else primary
+        last = max(stressed)
         if "pretonic_a" not in skip:
             ipa = _BR_PRETONIC_A.sub(lambda m: "a" if m.start() < first else m.group(), ipa)
         if "final_a" not in skip:
@@ -388,7 +408,7 @@ def segments(ipa: str, region: tuple = _INFOPEDIA, word: Optional[str] = None,
     marked = _folded(ipa, region)
     s = "".join(ch for ch in marked if ch not in _SEG_DROP)
     if word is not None:
-        s = accept_variants(word, s, brazilian, _stressed_vowels(marked), skip)
+        s = accept_variants(word, s, brazilian, _stressed_vowels(marked), skip, _primary_vowel(marked))
     out: List[str] = []
     join = False
     for ch in s:

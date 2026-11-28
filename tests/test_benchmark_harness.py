@@ -332,6 +332,11 @@ class TestBrazilianNasal:
         assert benchmark._score_rows("ˈsɛlulɐ", [("ˈsɛlulə", "wiktionary")], "pt-BR",
                                      word="célula", brazilian=True)[:2] == (0, 6)
 
+    def test_an_a_between_a_secondary_and_the_primary_stress_is_pretonic(self):
+        # #476: the secondary stress does not end the pretonic range.
+        assert benchmark.score_word("ˌɡwaʁdɐˈʃuvɐ", ["ˌɡwaʁdaˈʃuvɐ"], word="guarda-chuva",
+                                    brazilian=True) == (0, 10)
+
     def test_a_stressed_a_and_a_pretonic_a_before_a_nasal_stay(self):
         assert benchmark.score_word("ˈkasɐ", ["ˈkɐsɐ"], word="casa", brazilian=True) == (1, 4)
         assert benchmark.score_word("bɐˈnɐnɐ", ["baˈnɐnɐ"], word="banana", brazilian=True) == (1, 6)
