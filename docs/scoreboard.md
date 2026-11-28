@@ -40,7 +40,7 @@ vowel (Barbosa & Albano 2004: 228, 230), epenthesis in a written obstruent clust
 | Dialect | Gold region | Words | PER | PER, variants accepted | Word accuracy | Stress words | Stress accuracy |
 |---|---|---|---|---|---|---|---|
 | pt-BR | pt-BR | 993 | 0.0973 | 0.0526 | 0.4804 | 895 | 0.9765 |
-| pt-PT | pt-PT | 1000 | 0.0768 | 0.0457 | 0.5130 | 995 | 0.9879 |
+| pt-PT | pt-PT | 1000 | 0.0768 | 0.0491 | 0.5130 | 995 | 0.9879 |
 
 ## Edits that each accepted process absorbs
 
@@ -50,7 +50,7 @@ so a column does not add up to the gap between strict and accepted PER.
 
 | Process | Lects | Source | pt-BR | pt-PT |
 |---|---|---|---:|---:|
-| glide | pt-PT pt-BR | Mateus & Andrade 1998; Cruz-Ferreira 1999: 128; Barbosa & Albano 2004: 230 | 36 | 192 |
+| glide | pt-PT pt-BR | Mateus & Andrade 1998; Cruz-Ferreira 1999: 128; Barbosa & Albano 2004: 230 | 36 | 162 |
 | strong_r | pt-PT pt-BR | Pereira 2020: iii; Barbosa & Albano 2004: 228 | 19 | 89 |
 | initial_es | pt-PT | Vázquez Diéguez 2015: 250, 265 |  | 0 |
 | pretonic_a | pt-BR | Barbosa & Albano 2004: 229-230 | 48 |  |
@@ -76,7 +76,7 @@ always a tugaphone error.
 | pt-BR-x-rio-janeiro | pt-BR-x-riodejaneiro | 1000 | 0.1721 | 0.1318 | 0.1380 | 992 | 1.0000 |
 | pt-BR-x-sao-paulo | pt-BR-x-saopaulo | 1000 | 0.1535 | 0.1086 | 0.1930 | 992 | 0.9980 |
 | pt-MZ | pt-MZ-x-maputo | 1000 | 0.1377 | n/a | 0.2940 | 992 | 1.0000 |
-| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0683 | 0.0383 | 0.5750 | 994 | 0.9980 |
+| pt-PT-x-lisbon | pt-PT-x-lisboa | 1000 | 0.0683 | 0.0400 | 0.5750 | 994 | 0.9980 |
 | pt-TL | pt-TL-x-dili | 1000 | 0.3644 | n/a | 0.0140 | 985 | 0.9970 |
 
 

@@ -281,6 +281,11 @@ class TestAcceptedGlide:
         assert benchmark.score_word("ʁɨˈaɫ", ["ʁjˈaɫ"], word="real") == (0, 4)
         assert benchmark.score_word("ɐmɐjʒuˈaɾ", ["ɐmɐjʒˈwaɾ"], word="ameijoar") == (0, 8)
 
+    def test_a_reduced_vowel_before_an_unstressed_vowel_stays(self):
+        # #473: Cruz-Ferreira (1999: 128) covers /ɨ/ only before a stressed vowel.
+        assert benchmark.score_word("mɨɐ", ["mjɐ"], word="x") == (1, 3)
+        assert benchmark.score_word("ˈsitɾɨu", ["ˈsitɾju"], word="citreo") == (1, 6)
+
     def test_phone_per_keeps_the_glide_an_edit(self):
         assert benchmark.score_word("ɐdiɐˈmẽtu", ["ɐdjɐˈmẽtu"]) == (1, 8)
 
