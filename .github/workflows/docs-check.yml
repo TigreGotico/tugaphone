@@ -23,3 +23,10 @@ jobs:
           git diff --exit-code -- 'docs/img/*.json'
       - name: Docs code examples print what their comments state
         run: python scripts/check_docs_examples.py README.md docs/*.md
+
+  docs_check:
+    uses: OpenVoiceOS/gh-automations/.github/workflows/docs-check.yml@dev
+    with:
+      docs_standard: true
+      hf_space: TigreGotico/tugaphone
+    secrets: inherit
