@@ -97,7 +97,7 @@ SAMPLE_SEED = 20260713
 
 #: Bump when the scoring method itself changes (normalization, alignment),
 #: so a baseline produced by an older method is never compared against.
-HARNESS_VERSION = "3.6"
+HARNESS_VERSION = "3.7"
 
 
 # ─── normalization + PER ────────────────────────────────────────────────────
@@ -208,8 +208,14 @@ def _stressed_vowels(marked: str) -> frozenset:
 
 
 def _glide(pattern: re.Pattern, glide: str, ipa: str, stressed: frozenset) -> str:
-    """``ipa`` with each unstressed match of ``pattern`` read as ``glide``."""
-    return pattern.sub(lambda m: m.group() if m.start() in stressed else glide, ipa)
+    """``ipa`` with each unstressed match of ``pattern`` read as ``glide``. An
+    [ɨ] glides only before a stressed vowel: Cruz-Ferreira (1999: 128) names
+    /ɨ/ for that case, and no source covers [ɨ] before an unstressed vowel."""
+    def read(m):
+        if m.start() in stressed or (m.group() == "ɨ" and m.end() not in stressed):
+            return m.group()
+        return glide
+    return pattern.sub(read, ipa)
 
 
 #: Brazilian optional processes. Each reading of a process scores as one.
